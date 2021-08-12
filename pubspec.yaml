@@ -1,0 +1,44 @@
+name: toktik
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.3
+  video_player: ^2.1.4 
+  stacked_services: ^0.8.6
+  get_it: ^7.1.3
+  stacked: ^2.1.7
+  cached_network_image: ^3.0.0
+  firebase_core : ^1.2.0
+  cloud_firestore: ^2.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  fonts:
+    - family:  TikTokIcons
+      fonts:
+       - asset: assets/fonts/TikTokIcons.ttf
+
