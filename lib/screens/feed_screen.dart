@@ -514,6 +514,7 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget videoCard(Video video) {
+
     return Stack(
       children: [
         video.controller != null
