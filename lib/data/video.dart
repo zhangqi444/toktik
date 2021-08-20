@@ -10,17 +10,17 @@ class Video {
   String comments;
   String url;
 
-  VideoPlayerController? controller;
+  VideoPlayerController controller;
 
   Video(
-      {required this.id,
-      required this.user,
-      required this.userPic,
-      required this.videoTitle,
-      required this.songName,
-      required this.likes,
-      required this.comments,
-      required this.url});
+      { this.id,
+       this.user,
+       this.userPic,
+       this.videoTitle,
+       this.songName,
+       this.likes,
+       this.comments,
+       this.url});
 
   Video.fromJson(Map<dynamic, dynamic> json)
       : id = json['id'],

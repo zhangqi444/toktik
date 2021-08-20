@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toktik/data/video.dart';
 import 'package:toktik/screens/feed_viewmodel.dart';
-import 'package:toktik/screens/messages_screen.dart';
+import 'package:toktik/page/message_page.dart';
 import 'package:toktik/screens/profile_screen.dart';
 import 'package:toktik/screens/search_screen.dart';
 import 'package:toktik/widgets/actions_toolbar.dart';
@@ -14,7 +14,7 @@ import 'package:stacked/stacked.dart';
 import 'package:video_player/video_player.dart';
 
 class FeedScreen extends StatefulWidget {
-  FeedScreen({Key? key}) : super(key: key);
+  FeedScreen({Key key}) : super(key: key);
 
   @override
   _FeedScreenState createState() => _FeedScreenState();
@@ -454,13 +454,13 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
           itemCount: feedViewModel.videoSource?.listVideos.length,
           onPageChanged: (index) {
-            index = index % (feedViewModel.videoSource!.listVideos.length);
+            index = index % (feedViewModel.videoSource.listVideos.length);
             feedViewModel.changeVideo(index);
           },
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
-            index = index % (feedViewModel.videoSource!.listVideos.length);
-            return videoCard(feedViewModel.videoSource!.listVideos[index]);
+            index = index % (feedViewModel.videoSource.listVideos.length);
+            return videoCard(feedViewModel.videoSource.listVideos[index]);
           },
         ),
         SafeArea(
@@ -505,7 +505,7 @@ class _FeedScreenState extends State<FeedScreen> {
       case 1:
         return SearchScreen();
       case 2:
-        return MessagesScreen();
+        return MessagePage();
       case 3:
         return ProfileScreen();
       default:
@@ -519,7 +519,7 @@ class _FeedScreenState extends State<FeedScreen> {
         video.controller != null
             ? GestureDetector(
                 onTap: () {
-                  if (video.controller!.value.isPlaying) {
+                  if (video.controller.value.isPlaying) {
                     video.controller?.pause();
                   } else {
                     video.controller?.play();
@@ -531,7 +531,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   child: SizedBox(
                     width: video.controller?.value.size.width ?? 0,
                     height: video.controller?.value.size.height ?? 0,
-                    child: VideoPlayer(video.controller!),
+                    child: VideoPlayer(video.controller),
                   ),
                 )),
               )

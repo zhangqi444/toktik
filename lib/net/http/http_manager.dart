@@ -1,4 +1,4 @@
-import 'package:connectivity/connectivity.dart';
+// import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -124,10 +124,10 @@ class HttpManager {
     //请求中loading
     EasyLoading.show();
     //检查网络是否连接
-    ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.none) {
-      throw (HttpError(HttpError.NETWORK_ERROR, "网络异常，请检查网络"));
-    }
+    // ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   throw (HttpError(HttpError.NETWORK_ERROR, "网络异常，请检查网络"));
+    // }
 
     //设置默认值
     params = params ?? {};
@@ -179,10 +179,10 @@ class HttpManager {
     //请求中loading
     EasyLoading.show();
     //检查网络是否连接
-    ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.none) {
-      throw (HttpError(HttpError.NETWORK_ERROR, "网络异常，请检查网络"));
-    }
+    // ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   throw (HttpError(HttpError.NETWORK_ERROR, "网络异常，请检查网络"));
+    // }
 
     //设置默认值
     params = params ?? {};

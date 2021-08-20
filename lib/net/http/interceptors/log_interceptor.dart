@@ -53,7 +53,7 @@ class LogInterceptors extends Interceptor {
       this.logPrint = print});
 
   @override
-  Future onRequest(RequestOptions options) async {
+  Future onRequest(RequestOptions options, RequestInterceptorHandler r) async {
     if (request) {
       _printRequestHeader(options);
     }
@@ -87,10 +87,10 @@ class LogInterceptors extends Interceptor {
   }
 
   @override
-  Future onError(DioError err) async {
+  Future onError(DioError err, ErrorInterceptorHandler e) async {
     if (error) {
-      if (err.type == DioErrorType.RESPONSE) {
-        final uri = err.response.request.uri;
+      if (err.type == DioErrorType.response) {
+        final uri = err.response.requestOptions.uri;
         _printBoxed(
             header:
                 'DioError ║ Status: ${err.response.statusCode} ${err.response.statusMessage}',
@@ -108,7 +108,7 @@ class LogInterceptors extends Interceptor {
   }
 
   @override
-  Future onResponse(Response response) async {
+  Future onResponse(Response response, ResponseInterceptorHandler r) async {
     _printResponseHeader(response);
     if (responseHeader) {
       final responseHeaders = Map<String, String>();
@@ -149,8 +149,8 @@ class LogInterceptors extends Interceptor {
   }
 
   void _printResponseHeader(Response response) {
-    final uri = response?.request?.uri;
-    final method = response.request.method;
+    final uri = response?.requestOptions.uri;
+    final method = response.requestOptions.method;
     _printBoxed(
         header:
             'Response ║ $method ║ Status: ${response.statusCode} ${response.statusMessage}',

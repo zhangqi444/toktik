@@ -4,12 +4,12 @@ import 'package:toktik/util/sp_util.dart';
 
 class HeaderInterceptor implements Interceptor{
   @override
-  Future onError(DioError err)async {
+  Future onError(DioError err, ErrorInterceptorHandler i)async {
     return err;
   }
 
   @override
-  Future onRequest(RequestOptions options) async{
+  Future onRequest(RequestOptions options, RequestInterceptorHandler i) async{
     int userUid = -1;
     await SPUtil.getInt(SPKeys.userUid).then((uid){
       userUid = uid;
@@ -25,7 +25,7 @@ class HeaderInterceptor implements Interceptor{
   }
 
   @override
-  Future onResponse(Response response) async{
+  Future onResponse(Response response, ResponseInterceptorHandler i) async{
     return response;
   }
 
