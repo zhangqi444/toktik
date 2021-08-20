@@ -1,0 +1,9 @@
+.dart_tool
+.idea
+build/*
+.flutter-plugins-dependencies
+.packages
+.flutter-plugins
+.idea/misc.xml
+.idea/toktik.iml
+ios/build
