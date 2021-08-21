@@ -11,7 +11,7 @@ import 'package:toktik/page/message_page.dart';
 // import 'package:toktik/page/modify_info_page.dart';
 // import 'package:toktik/page/register_page.dart';
 // import 'package:toktik/page/scan_page.dart';
-// import 'package:toktik/page/scroll_page.dart';
+import 'package:toktik/page/scroll_page.dart';
 // import 'package:toktik/page/search_page.dart';
 // import 'package:toktik/page/setting_page.dart';
 // import 'package:toktik/page/shoot_page.dart';
@@ -26,7 +26,7 @@ import 'package:get/get.dart';
 class RouterManager{
   static final routes = [
     // GetPage(name: Routers.test, page: () => TestPage()),
-    // GetPage(name: Routers.scroll, page: () => ScrollPage()),
+    GetPage(name: Routers.scroll, page: () => ScrollPage()),
     // GetPage(name: Routers.main, page: () => MainPage()),
     // GetPage(name: Routers.user, page: () => UserPage()),
     // GetPage(name: Routers.shoot, page: () => ShootPage()),
