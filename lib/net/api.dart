@@ -1,15 +1,15 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/model/response/follow_response.dart';
 import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
-import 'package:toktik/model/response/upload_response.dart';
 import 'package:toktik/model/response/upload_token_response.dart';
 import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/model/response/user_info_response.dart';
@@ -23,6 +23,7 @@ import 'package:toktik/model/star_model.dart';
 import 'package:toktik/model/user_model.dart';
 import 'package:toktik/model/video_model.dart';
 import 'package:toktik/model/living_commend_model.dart';
+import 'package:toktik/models/ModelProvider.dart';
 import 'package:toktik/net/http/http_manager.dart';
 import 'package:toktik/net/http/http_method.dart';
 import 'package:toktik/net/http_constant.dart';
@@ -121,8 +122,26 @@ class Api{
 
   ///获取热门作品列表
   static Future<FeedListResponse> getHotFeedList(int cursor,int count) async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.hotFeedList+'?cursor=$cursor&count=$count', cancelTokenTag: 'getHotFeedList');
-    return FeedListResponse().fromJson(result);
+    try {
+      List<Post> posts = await Amplify.DataStore.query(Post.classType);
+
+      Future<Map<String, dynamic>> convert(Post post) async{
+        var result = post.toJson();
+        result['content'] = {
+          'attachments': jsonDecode(post.attachments)['data'],
+          'music': post.music.toJson(),
+          'text': post.text,
+        };
+        List<User> userList = await Amplify.DataStore.query(User.classType, where: User.ID.eq(post.user.id));
+        result['user'] = userList[0].toJson();
+        return result;
+      }
+
+      var parsed = await Future.wait(posts.map((post) async => await convert(post)));
+      return FeedListResponse().fromJson({'list': parsed.toList()});
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
   }
 
   ///获取好友作品列表
