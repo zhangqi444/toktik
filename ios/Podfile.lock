@@ -338,6 +338,65 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
+  - Amplify (1.11.0):
+    - Amplify/Default (= 1.11.0)
+  - Amplify/Default (1.11.0)
+  - amplify_api (0.0.1):
+    - Amplify (~> 1.11.0)
+    - amplify_core
+    - AmplifyPlugins/AWSAPIPlugin (~> 1.11.0)
+    - Flutter
+  - amplify_auth_cognito (0.0.1):
+    - Amplify (~> 1.11.0)
+    - amplify_core
+    - AmplifyPlugins/AWSCognitoAuthPlugin (~> 1.11.0)
+    - Flutter
+    - ObjectMapper
+  - amplify_core (0.0.1):
+    - Flutter
+  - amplify_datastore (0.0.1):
+    - Amplify (~> 1.11.0)
+    - amplify_core
+    - AmplifyPlugins/AWSDataStorePlugin (~> 1.11.0)
+    - Flutter
+  - amplify_flutter (0.0.1):
+    - Amplify (~> 1.11.0)
+    - amplify_core
+    - AmplifyPlugins/AWSCognitoAuthPlugin (~> 1.11.0)
+    - AWSPluginsCore (~> 1.11.0)
+    - Flutter
+  - AmplifyPlugins/AWSAPIPlugin (1.11.0):
+    - AppSyncRealTimeClient (~> 1.4)
+    - AWSCore (~> 2.24.0)
+    - AWSPluginsCore (= 1.11.0)
+  - AmplifyPlugins/AWSCognitoAuthPlugin (1.11.0):
+    - AWSAuthCore (~> 2.24.0)
+    - AWSCognitoIdentityProvider (~> 2.24.0)
+    - AWSCognitoIdentityProviderASF (~> 2.24.0)
+    - AWSCore (~> 2.24.0)
+    - AWSMobileClient (~> 2.24.0)
+    - AWSPluginsCore (= 1.11.0)
+  - AmplifyPlugins/AWSDataStorePlugin (1.11.0):
+    - AWSCore (~> 2.24.0)
+    - AWSPluginsCore (= 1.11.0)
+    - SQLite.swift (= 0.12.2)
+  - AppSyncRealTimeClient (1.5.0):
+    - Starscream (~> 3.1.1)
+  - AWSAuthCore (2.24.5):
+    - AWSCore (= 2.24.5)
+  - AWSCognitoIdentityProvider (2.24.5):
+    - AWSCognitoIdentityProviderASF (= 2.24.5)
+    - AWSCore (= 2.24.5)
+  - AWSCognitoIdentityProviderASF (2.24.5)
+  - AWSCore (2.24.5)
+  - AWSMobileClient (2.24.5):
+    - AWSAuthCore (= 2.24.5)
+    - AWSCognitoIdentityProvider (= 2.24.5)
+    - AWSCognitoIdentityProviderASF (= 2.24.5)
+    - AWSCore (= 2.24.5)
+  - AWSPluginsCore (1.11.0):
+    - Amplify (= 1.11.0)
+    - AWSCore (~> 2.24.0)
   - BoringSSL-GRPC (0.0.7):
     - BoringSSL-GRPC/Implementation (= 0.0.7)
     - BoringSSL-GRPC/Interface (= 0.0.7)
@@ -420,6 +479,7 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - ObjectMapper (4.2.0)
   - path_provider (0.0.1):
     - Flutter
   - PromisesObjC (2.0.0)
@@ -428,10 +488,19 @@ PODS:
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
+  - SQLite.swift (0.12.2):
+    - SQLite.swift/standard (= 0.12.2)
+  - SQLite.swift/standard (0.12.2)
+  - Starscream (3.1.1)
   - video_player (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - amplify_api (from `.symlinks/plugins/amplify_api/ios`)
+  - amplify_auth_cognito (from `.symlinks/plugins/amplify_auth_cognito/ios`)
+  - amplify_core (from `.symlinks/plugins/amplify_core/ios`)
+  - amplify_datastore (from `.symlinks/plugins/amplify_datastore/ios`)
+  - amplify_flutter (from `.symlinks/plugins/amplify_flutter/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
@@ -443,6 +512,15 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - abseil
+    - Amplify
+    - AmplifyPlugins
+    - AppSyncRealTimeClient
+    - AWSAuthCore
+    - AWSCognitoIdentityProvider
+    - AWSCognitoIdentityProviderASF
+    - AWSCore
+    - AWSMobileClient
+    - AWSPluginsCore
     - BoringSSL-GRPC
     - Firebase
     - FirebaseCore
@@ -455,9 +533,22 @@ SPEC REPOS:
     - gRPC-Core
     - leveldb-library
     - nanopb
+    - ObjectMapper
     - PromisesObjC
+    - SQLite.swift
+    - Starscream
 
 EXTERNAL SOURCES:
+  amplify_api:
+    :path: ".symlinks/plugins/amplify_api/ios"
+  amplify_auth_cognito:
+    :path: ".symlinks/plugins/amplify_auth_cognito/ios"
+  amplify_core:
+    :path: ".symlinks/plugins/amplify_core/ios"
+  amplify_datastore:
+    :path: ".symlinks/plugins/amplify_datastore/ios"
+  amplify_flutter:
+    :path: ".symlinks/plugins/amplify_flutter/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   firebase_core:
@@ -475,6 +566,20 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
+  Amplify: cf25ee17b0762b3bacd4d4d49891ddada6bee912
+  amplify_api: 5ef7294d41dadf25acb1c145869931d82022a9b2
+  amplify_auth_cognito: 38761b51a433d49ecf5927de45488fcbf81a8c29
+  amplify_core: 8b38d20089fe4f225c14db6892f586bd03824a42
+  amplify_datastore: c0f2bcf9410731862612c986a9f331cb4f8691e4
+  amplify_flutter: 77665b732c1b8d04ed7f3eeb5a743f0b75838db1
+  AmplifyPlugins: bb73475de41297a7244e8f3fdbf40cdad8115048
+  AppSyncRealTimeClient: 2b4482b1770a3e5cf64f9714a6d198550017b5a2
+  AWSAuthCore: 73f2e518d32f094b656fea905651bc3288ef05c0
+  AWSCognitoIdentityProvider: d32ff306a4d3aafcdc42ce40bd36e44d3f274201
+  AWSCognitoIdentityProviderASF: 1ccfe4092b617de54f203c1b728e7be6f49716c1
+  AWSCore: 2d4b06b24e2f882deec23567438195818b16a3f2
+  AWSMobileClient: 72e55c9c7162516feab354aa67f4d38dcecdcfc7
+  AWSPluginsCore: 1670f03a8612d60bd84c541ffa34f538e4037052
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   cloud_firestore: e0516b69697b348db9a4d65f3b610dfd5ba3ac1e
   Firebase: ff8c73105b90e33e1dc6c8e5445d7adc2ccdc7c1
@@ -490,12 +595,15 @@ SPEC CHECKSUMS:
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  SQLite.swift: d2b4642190917051ce6bd1d49aab565fe794eea3
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
 
-PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+PODFILE CHECKSUM: cc1f88378b4bfcf93a6ce00d2c587857c6008d3b
 
 COCOAPODS: 1.11.0.beta.2
