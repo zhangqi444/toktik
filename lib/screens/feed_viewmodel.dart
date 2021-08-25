@@ -12,7 +12,7 @@ class FeedViewModel extends BaseViewModel {
   int actualScreen = 0;
 
   FeedViewModel() {
-    videoSource = VideosAPI();
+    // videoSource = VideosAPI();
   }
 
   changeVideo(index) async {

@@ -6,6 +6,7 @@ import 'package:toktik/event/close_main_drawer_event.dart';
 import 'package:toktik/page/user_page.dart';
 import 'package:toktik/page/widget/user_right_menu_widget.dart';
 import 'package:get/get.dart';
+import 'package:toktik/screens/feed_screen.dart';
 
 ///负责MainPage与UserPage页的滑动
 class ScrollPage extends StatefulWidget {
@@ -26,12 +27,10 @@ class _ScrollPageState extends State<ScrollPage> {
     Application.eventBus.on<CloseMainDrawerEvent>().listen((event) {
       drawerKey.currentState.close();
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-
 
     return Stack(
       children: [
@@ -39,7 +38,7 @@ class _ScrollPageState extends State<ScrollPage> {
             controller: _pageController,
             physics: mainPageScrollController.scrollPageViewScrollPage.value ? null : NeverScrollableScrollPhysics(),
             children: [
-              MainPage(pageController:_pageController),
+              FeedScreen(pageController:_pageController),
               Obx(()=>UserPage(pageController:_pageController,isLoginUser: false,uid:mainPageScrollController.uidCuttent.value ,)),
             ],
             onPageChanged: (index){

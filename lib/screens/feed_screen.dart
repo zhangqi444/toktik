@@ -1,7 +1,12 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/data/video.dart';
+import 'package:toktik/page/home_tab_recommend_page.dart';
 import 'package:toktik/screens/feed_viewmodel.dart';
 import 'package:toktik/page/message_page.dart';
 import 'package:toktik/screens/profile_screen.dart';
@@ -13,22 +18,60 @@ import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 import 'package:video_player/video_player.dart';
 
+// Amplify Flutter Packages
+import 'package:amplify_flutter/amplify.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+// Generated in previous step
+import '../models/ModelProvider.dart';
+import '../amplifyconfiguration.dart';
+
 class FeedScreen extends StatefulWidget {
-  FeedScreen({Key key}) : super(key: key);
+  PageController _scrollPageController;
+
+  FeedScreen({Key key, PageController pageController}){
+    this._scrollPageController = pageController;
+  }
 
   @override
-  _FeedScreenState createState() => _FeedScreenState();
+  _FeedScreenState createState() => _FeedScreenState(_scrollPageController);
 }
 
 class _FeedScreenState extends State<FeedScreen> {
   final locator = GetIt.instance;
   final feedViewModel = GetIt.instance<FeedViewModel>();
+  final MainPageScrollController mainPageScrollController = Get.put(MainPageScrollController());
+  PageController _scrollPageController;
+
+  _FeedScreenState(PageController _scrollPageController);
+
   @override
   void initState() {
-    feedViewModel.loadVideo(0);
-    feedViewModel.loadVideo(1);
-
     super.initState();
+    _configureAmplify();
+  }
+
+  void _configureAmplify() async {
+
+    final AmplifyDataStore _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+    final AmplifyAPI _apiPlugin = AmplifyAPI();
+    final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
+
+    await Amplify.addPlugins([
+      _dataStorePlugin,
+      _apiPlugin,
+      _authPlugin
+    ]);
+
+    // Once Plugins are added, configure Amplify
+    await Amplify.configure(amplifyconfig);
+    try {
+      mainPageScrollController.setAmplifyConfigured(true);
+      Amplify.DataStore.clear();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -41,7 +84,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Widget videoScreen() {
     return Scaffold(
-      backgroundColor: GetIt.instance<FeedViewModel>().actualScreen == 0
+      backgroundColor: feedViewModel.actualScreen == 0
           ? Colors.black
           : Colors.white,
       body: Stack(
@@ -445,56 +488,21 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Widget feedVideos() {
-    return Stack(
-      children: [
-        PageView.builder(
-          controller: PageController(
-            initialPage: 0,
-            viewportFraction: 1,
-          ),
-          itemCount: feedViewModel.videoSource?.listVideos.length,
-          onPageChanged: (index) {
-            index = index % (feedViewModel.videoSource.listVideos.length);
-            feedViewModel.changeVideo(index);
-          },
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            index = index % (feedViewModel.videoSource.listVideos.length);
-            return videoCard(feedViewModel.videoSource.listVideos[index]);
-          },
-        ),
-        SafeArea(
-          child: Container(
-            padding: EdgeInsets.only(top: 20),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text('Following',
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white70)),
-                  SizedBox(
-                    width: 7,
-                  ),
-                  Container(
-                    color: Colors.white70,
-                    height: 10,
-                    width: 1.0,
-                  ),
-                  SizedBox(
-                    width: 7,
-                  ),
-                  Text('For You',
-                      style: TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white))
-                ]),
-          ),
-        ),
-      ],
+    double contentHeight = MediaQuery.of(context).size.height - 48 - MediaQueryData.fromWindow(window).padding.top;
+
+    return Obx(() =>
+      mainPageScrollController.amplifyConfigured.value
+        ? HomeTabRecommendPage(
+            contentHeight: contentHeight,
+            pageController: _scrollPageController
+        )
+        : Scaffold(
+            body: Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          )
     );
   }
 
