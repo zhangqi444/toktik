@@ -1,10 +1,9 @@
-import 'package:flutter/rendering.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
-import 'package:toktik/model/user_model.dart';
 import 'package:get/get.dart';
 ///用来控制首页滑动、存储当前播放视频的用户model数据
 class MainPageScrollController extends GetxController{
 
+  var amplifyConfigured = false.obs;
 
   //MainPage的底部导航当前选中bar的位置
   var indexBottomBarMainPage = 0.obs;
@@ -26,6 +25,10 @@ class MainPageScrollController extends GetxController{
   //设置视频播放页视频的高度
   void setVideoViewHeight(double height){
     videoViewHeight.value = height;
+  }
+
+  void setAmplifyConfigured(bool amplifyConfigured) {
+    this.amplifyConfigured.value = amplifyConfigured;
   }
 
   //MainPage底部导航选中指定的bar
