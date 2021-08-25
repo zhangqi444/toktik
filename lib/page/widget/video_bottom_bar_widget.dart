@@ -37,7 +37,7 @@ class _VideoBottomBarWidgetState extends State<VideoBottomBarWidget> {
                 width: 200,
                 height: 25,
                 child: Marquee(
-                  text: '用户创作的原生--${widget.video.user.nickname}',
+                  text: 'original sound - ${widget.video.user.nickname}  ',
                   style: TextStyle(fontSize: 15,color: Colors.white),),
               )
             ],
