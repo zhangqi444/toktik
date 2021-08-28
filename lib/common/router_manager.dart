@@ -3,10 +3,10 @@
 // import 'package:toktik/page/home_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
 // import 'package:toktik/page/home_tab_focus_page.dart';
-// import 'package:toktik/page/home_tab_recommend_page.dart';
+import 'package:toktik/page/home_tab_recommend_page.dart';
 // import 'package:toktik/page/living_page.dart';
 // import 'package:toktik/page/login_page.dart';
-// import 'package:toktik/page/main_page.dart';
+import 'package:toktik/page/main_page.dart';
 import 'package:toktik/page/message_page.dart';
 // import 'package:toktik/page/modify_info_page.dart';
 // import 'package:toktik/page/register_page.dart';
@@ -17,7 +17,7 @@ import 'package:toktik/page/scroll_page.dart';
 // import 'package:toktik/page/shoot_page.dart';
 // import 'package:toktik/page/test.dart';
 // import 'package:toktik/page/user_info_edit_page.dart';
-// import 'package:toktik/page/user_page.dart';
+import 'package:toktik/page/user_page.dart';
 // import 'package:toktik/page/video_list_page.dart';
 // import 'package:toktik/page/my_tiktok_code_page.dart';
 import 'package:get/get.dart';
@@ -27,14 +27,14 @@ class RouterManager{
   static final routes = [
     // GetPage(name: Routers.test, page: () => TestPage()),
     GetPage(name: Routers.scroll, page: () => ScrollPage()),
-    // GetPage(name: Routers.main, page: () => MainPage()),
-    // GetPage(name: Routers.user, page: () => UserPage()),
+    GetPage(name: Routers.main, page: () => MainPage()),
+    GetPage(name: Routers.user, page: () => UserPage()),
     // GetPage(name: Routers.shoot, page: () => ShootPage()),
     // GetPage(name: Routers.home, page: () => HomePage()),
     GetPage(name: Routers.message, page: () => MessagePage()),
     // GetPage(name: Routers.homeTabCity, page: () => HomeTabCityPage()),
     // GetPage(name: Routers.homeTabFocus, page: () => HomeTabFocusPage()),
-    // GetPage(name: Routers.homeTabRecommend, page: () => HomeTabRecommendPage()),
+    GetPage(name: Routers.homeTabRecommend, page: () => HomeTabRecommendPage()),
     // GetPage(name: Routers.videoList, page: () => VideoListPage()),
     // GetPage(name: Routers.search, page: () => SearchPage()),
     // GetPage(name: Routers.scan, page: () => ScanPage()),
