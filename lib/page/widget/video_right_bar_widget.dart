@@ -3,8 +3,6 @@ import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:like_button/like_button.dart';
 
-import 'disk_widget.dart';
-
 class VideoRightBarWidget extends StatefulWidget {
 
   final Function onClickComment;

@@ -13,7 +13,6 @@ import 'package:video_player/video_player.dart';
 
 import '../../res/colors.dart';
 import '../../util/screen_utils.dart';
-import '../../util/screen_utils.dart';
 import 'disk_widget.dart';
 import 'like_gesture_widget.dart';
 

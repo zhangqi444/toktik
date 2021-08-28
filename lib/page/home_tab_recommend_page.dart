@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
+import 'package:toktik/controller/recommend_page_controller.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_widget.dart';
 import 'package:toktik/res/colors.dart';
@@ -13,7 +14,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class HomeTabRecommendPage extends StatefulWidget {
   double contentHeight;
   PageController pageController;
-  HomeTabRecommendPage({Key key,this.contentHeight,this.pageController}) : super(key: key);
+  HomeTabRecommendPage({Key key, this.contentHeight, this.pageController}) : super(key: key);
 
   @override
   _HomeTabRecommendPageState createState() {
@@ -22,6 +23,7 @@ class HomeTabRecommendPage extends StatefulWidget {
 }
 
 class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
+  RecommendPageController _controller = Get.put(RecommendPageController());
   MainPageScrollController _mainController = Get.find();
   PageController _pageController = PageController(keepPage: true);
   FeedController _feedController = Get.put(FeedController());
