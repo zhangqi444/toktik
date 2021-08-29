@@ -92,7 +92,9 @@ class UserController extends GetxController{
   ///获取登录用户的uid
   void getLoginUserUid(){
     SPUtil.getInt(SPKeys.userUid).then((uid){
-      loginUserUid.value = uid;
+      // TODO: add the correct default uid
+      // loginUserUid.value = uid == null ? "f96e082f-9fff-4ebd-ac14-8cf8b42ba8d4" : uid;
+      loginUserUid.value = uid == null ? 3 : uid;
     });
   }
 
