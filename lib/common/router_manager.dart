@@ -1,6 +1,6 @@
 // import 'package:toktik/page/feed_publish_page.dart';
 // import 'package:toktik/page/friend_page.dart';
-// import 'package:toktik/page/home_page.dart';
+import 'package:toktik/page/home_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
 // import 'package:toktik/page/home_tab_focus_page.dart';
 import 'package:toktik/page/home_tab_recommend_page.dart';
@@ -30,7 +30,7 @@ class RouterManager{
     GetPage(name: Routers.main, page: () => MainPage()),
     GetPage(name: Routers.user, page: () => UserPage()),
     // GetPage(name: Routers.shoot, page: () => ShootPage()),
-    // GetPage(name: Routers.home, page: () => HomePage()),
+    GetPage(name: Routers.home, page: () => HomePage()),
     GetPage(name: Routers.message, page: () => MessagePage()),
     // GetPage(name: Routers.homeTabCity, page: () => HomeTabCityPage()),
     // GetPage(name: Routers.homeTabFocus, page: () => HomeTabFocusPage()),

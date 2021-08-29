@@ -1,14 +1,17 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:toktik/screens/feed_screen.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:toktik/service_locator.dart';
+
+import 'common/router_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   setup();
-  runApp(MaterialApp(
+  runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    home: FeedScreen(),
+    defaultTransition: Transition.rightToLeft,
+    getPages: RouterManager.routes,
+    initialRoute: Routers.scroll,
   ));
 }

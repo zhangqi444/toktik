@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
@@ -31,9 +29,7 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
   @override
   void initState() {
     super.initState();
-    if(_mainController.amplifyConfigured.value) {
-      _feedController.refreshHotFeedList(_refreshController);
-    }
+    _feedController.refreshHotFeedList(_refreshController);
   }
 
   @override
