@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
+import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/data/video.dart';
+import 'package:toktik/page/home_page.dart';
 import 'package:toktik/page/home_tab_recommend_page.dart';
+import 'package:toktik/page/user_page.dart';
 import 'package:toktik/screens/feed_viewmodel.dart';
 import 'package:toktik/page/message_page.dart';
 import 'package:toktik/screens/profile_screen.dart';
@@ -27,24 +30,23 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import '../models/ModelProvider.dart';
 import '../amplifyconfiguration.dart';
 
-class FeedScreen extends StatefulWidget {
-  PageController _scrollPageController;
+class MainPage extends StatefulWidget {
+  PageController _pageController;
 
-  FeedScreen({Key key, PageController pageController}){
-    this._scrollPageController = pageController;
+  MainPage({Key key, PageController pageController}){
+    this._pageController = pageController;
   }
 
   @override
-  _FeedScreenState createState() => _FeedScreenState(_scrollPageController);
+  _MainPageState createState() => _MainPageState();
 }
 
-class _FeedScreenState extends State<FeedScreen> {
+class _MainPageState extends State<MainPage> {
   final locator = GetIt.instance;
   final feedViewModel = GetIt.instance<FeedViewModel>();
   final MainPageScrollController mainPageScrollController = Get.put(MainPageScrollController());
-  PageController _scrollPageController;
-
-  _FeedScreenState(PageController _scrollPageController);
+  PageController _pageController = PageController(keepPage: true);
+  UserController _userController = Get.put(UserController());
 
   @override
   void initState() {
@@ -76,6 +78,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _userController.getLoginUserUid();
     return ViewModelBuilder<FeedViewModel>.reactive(
         disposeViewModel: false,
         builder: (context, model, child) => videoScreen(),
@@ -103,7 +106,7 @@ class _FeedScreenState extends State<FeedScreen> {
               if (index == 0)
                 return scrollFeed();
               else
-                return profileView();
+                return UserPage(pageController:_pageController,isLoginUser: false,uid:mainPageScrollController.uidCuttent.value ,);
             },
           )
         ],
@@ -121,7 +124,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 Container(
                   decoration: BoxDecoration(
                       border:
-                          Border(bottom: BorderSide(color: Colors.black12))),
+                      Border(bottom: BorderSide(color: Colors.black12))),
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,7 +150,7 @@ class _FeedScreenState extends State<FeedScreen> {
                         ClipOval(
                           child: CachedNetworkImage(
                             imageUrl:
-                                "https://www.andersonsobelcosmetic.com/wp-content/uploads/2018/09/chin-implant-vs-fillers-best-for-improving-profile-bellevue-washington-chin-surgery.jpg",
+                            "https://www.andersonsobelcosmetic.com/wp-content/uploads/2018/09/chin-implant-vs-fillers-best-for-improving-profile-bellevue-washington-chin-surgery.jpg",
                             height: 100.0,
                             width: 100.0,
                             placeholder: (context, url) =>
@@ -164,7 +167,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     Text(
                       "@Charlotte21",
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
                       height: 20,
@@ -338,7 +341,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               child: CachedNetworkImage(
                                 fit: BoxFit.fill,
                                 imageUrl:
-                                    "https://media.giphy.com/media/tOueglJrk5rS8/giphy.gif",
+                                "https://media.giphy.com/media/tOueglJrk5rS8/giphy.gif",
                                 placeholder: (context, url) => Padding(
                                   padding: const EdgeInsets.all(35.0),
                                   child: CircularProgressIndicator(),
@@ -361,7 +364,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               child: CachedNetworkImage(
                                 fit: BoxFit.fill,
                                 imageUrl:
-                                    "https://media.giphy.com/media/665IPY24jyWFa/giphy.gif",
+                                "https://media.giphy.com/media/665IPY24jyWFa/giphy.gif",
                                 placeholder: (context, url) => Padding(
                                   padding: const EdgeInsets.all(35.0),
                                   child: CircularProgressIndicator(),
@@ -384,7 +387,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               child: CachedNetworkImage(
                                 fit: BoxFit.fill,
                                 imageUrl:
-                                    "https://media.giphy.com/media/chjX2ypYJKkr6/giphy.gif",
+                                "https://media.giphy.com/media/chjX2ypYJKkr6/giphy.gif",
                                 placeholder: (context, url) => Padding(
                                   padding: const EdgeInsets.all(35.0),
                                   child: CircularProgressIndicator(),
@@ -411,7 +414,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               child: CachedNetworkImage(
                                 fit: BoxFit.fill,
                                 imageUrl:
-                                    "https://media.giphy.com/media/sC60eX0OVIH7O/giphy.gif",
+                                "https://media.giphy.com/media/sC60eX0OVIH7O/giphy.gif",
                                 placeholder: (context, url) => Padding(
                                   padding: const EdgeInsets.all(35.0),
                                   child: CircularProgressIndicator(),
@@ -434,7 +437,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               child: CachedNetworkImage(
                                 fit: BoxFit.fill,
                                 imageUrl:
-                                    "https://media.giphy.com/media/NsXhybxnMKsh2/giphy.gif",
+                                "https://media.giphy.com/media/NsXhybxnMKsh2/giphy.gif",
                                 placeholder: (context, url) => Padding(
                                   padding: const EdgeInsets.all(35.0),
                                   child: CircularProgressIndicator(),
@@ -457,7 +460,7 @@ class _FeedScreenState extends State<FeedScreen> {
                               child: CachedNetworkImage(
                                 fit: BoxFit.fill,
                                 imageUrl:
-                                    "https://media.giphy.com/media/HE6hyf47yAX1S/giphy.gif",
+                                "https://media.giphy.com/media/HE6hyf47yAX1S/giphy.gif",
                                 placeholder: (context, url) => Padding(
                                   padding: const EdgeInsets.all(35.0),
                                   child: CircularProgressIndicator(),
@@ -487,29 +490,29 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  Widget feedVideos() {
-    double contentHeight = MediaQuery.of(context).size.height - 48 - MediaQueryData.fromWindow(window).padding.top;
-
-    return Obx(() =>
-      mainPageScrollController.amplifyConfigured.value
-        ? HomeTabRecommendPage(
-            contentHeight: contentHeight,
-            pageController: _scrollPageController
-        )
-        : Scaffold(
-            body: Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          )
-    );
-  }
+  // Widget feedVideos() {
+  //   double contentHeight = MediaQuery.of(context).size.height - 48 - MediaQueryData.fromWindow(window).padding.top;
+  //
+  //   return Obx(() =>
+  //     mainPageScrollController.amplifyConfigured.value
+  //       ? HomeTabRecommendPage(
+  //           contentHeight: contentHeight,
+  //           pageController: _pageController
+  //       )
+  //       : Scaffold(
+  //           body: Container(
+  //             child: Center(
+  //               child: CircularProgressIndicator(),
+  //             ),
+  //           ),
+  //         )
+  //   );
+  // }
 
   Widget currentScreen() {
     switch (feedViewModel.actualScreen) {
       case 0:
-        return feedVideos();
+        return HomePage(pageController:_pageController);
       case 1:
         return SearchScreen();
       case 2:
@@ -517,57 +520,57 @@ class _FeedScreenState extends State<FeedScreen> {
       case 3:
         return ProfileScreen();
       default:
-        return feedVideos();
+      // return HomePage(pageController:_pageController);
     }
   }
 
-  Widget videoCard(Video video) {
-
-    return Stack(
-      children: [
-        video.controller != null
-            ? GestureDetector(
-                onTap: () {
-                  if (video.controller.value.isPlaying) {
-                    video.controller?.pause();
-                  } else {
-                    video.controller?.play();
-                  }
-                },
-                child: SizedBox.expand(
-                    child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    width: video.controller?.value.size.width ?? 0,
-                    height: video.controller?.value.size.height ?? 0,
-                    child: VideoPlayer(video.controller),
-                  ),
-                )),
-              )
-            : Container(
-                color: Colors.black,
-                child: Center(
-                  child: Text("Loading"),
-                ),
-              ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                VideoDescription(video.user, video.videoTitle, video.songName),
-                ActionsToolbar(video.likes, video.comments,
-                    "https://www.andersonsobelcosmetic.com/wp-content/uploads/2018/09/chin-implant-vs-fillers-best-for-improving-profile-bellevue-washington-chin-surgery.jpg"),
-              ],
-            ),
-            SizedBox(height: 20)
-          ],
-        ),
-      ],
-    );
-  }
+  // Widget videoCard(Video video) {
+  //
+  //   return Stack(
+  //     children: [
+  //       video.controller != null
+  //           ? GestureDetector(
+  //               onTap: () {
+  //                 if (video.controller.value.isPlaying) {
+  //                   video.controller?.pause();
+  //                 } else {
+  //                   video.controller?.play();
+  //                 }
+  //               },
+  //               child: SizedBox.expand(
+  //                   child: FittedBox(
+  //                 fit: BoxFit.cover,
+  //                 child: SizedBox(
+  //                   width: video.controller?.value.size.width ?? 0,
+  //                   height: video.controller?.value.size.height ?? 0,
+  //                   child: VideoPlayer(video.controller),
+  //                 ),
+  //               )),
+  //             )
+  //           : Container(
+  //               color: Colors.black,
+  //               child: Center(
+  //                 child: Text("Loading"),
+  //               ),
+  //             ),
+  //       Column(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         children: <Widget>[
+  //           Row(
+  //             mainAxisSize: MainAxisSize.max,
+  //             crossAxisAlignment: CrossAxisAlignment.end,
+  //             children: <Widget>[
+  //               VideoDescription(video.user, video.videoTitle, video.songName),
+  //               ActionsToolbar(video.likes, video.comments,
+  //                   "https://www.andersonsobelcosmetic.com/wp-content/uploads/2018/09/chin-implant-vs-fillers-best-for-improving-profile-bellevue-washington-chin-surgery.jpg"),
+  //             ],
+  //           ),
+  //           SizedBox(height: 20)
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   @override
   void dispose() {
