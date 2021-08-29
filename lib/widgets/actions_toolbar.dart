@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:toktik/utils/tik_tok_icons_icons.dart';
+import 'package:toktik/util/tik_tok_icons_icons.dart';
 import 'package:toktik/widgets/circle_image_animation.dart';
 
 class ActionsToolbar extends StatelessWidget {
