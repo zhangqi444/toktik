@@ -60,26 +60,27 @@ class _VideoWidgetState extends State<VideoWidget> {
     double scale = 1;
     double videoLayoutWidth;
     double videoLayoutHeight;
-    if(_videoPlayerController.value.isInitialized){
-
-      double rateWidthHeightContent = screenWidth(context) / widget.contentHeight;
-      double rateWidthContentVideo = screenWidth(context) / _videoPlayerController.value.size.width;
-      double heightVideoByRate = _videoPlayerController.value.size.height * rateWidthContentVideo;
-      print('视频宽:${_videoPlayerController.value.size.width} 视频高:${_videoPlayerController.value.size.height}');
-      print('视频宽高比:${_videoPlayerController.value.size.width/_videoPlayerController.value.size.height}');
-      print('屏幕宽:${screenWidth(context)}  高：${screenHeight(context)}');
-      print('内容高度:${widget.contentHeight}');
-      print('内容宽高比例:$rateWidthHeightContent');
-      print('比例:$rateWidthContentVideo');
-      print('比例换算视频高度:$heightVideoByRate');
-      if(widget.contentHeight > heightVideoByRate ){
-        double rateHeightContentVideo = widget.contentHeight /  _videoPlayerController.value.size.height;
-        videoLayoutHeight = heightVideoByRate;
-        videoLayoutWidth = screenWidth(context);
-        scale = widget.contentHeight / videoLayoutHeight;
-        print('width:$videoLayoutWidth height:$videoLayoutHeight scale:$scale rate:$rateHeightContentVideo');
-      }
-    }
+    // TODO: not scaling the video based on screen size for now
+    // if(_videoPlayerController.value.isInitialized){
+    //
+    //   double rateWidthHeightContent = screenWidth(context) / widget.contentHeight;
+    //   double rateWidthContentVideo = screenWidth(context) / _videoPlayerController.value.size.width;
+    //   double heightVideoByRate = _videoPlayerController.value.size.height * rateWidthContentVideo;
+    //   print('视频宽:${_videoPlayerController.value.size.width} 视频高:${_videoPlayerController.value.size.height}');
+    //   print('视频宽高比:${_videoPlayerController.value.size.width/_videoPlayerController.value.size.height}');
+    //   print('屏幕宽:${screenWidth(context)}  高：${screenHeight(context)}');
+    //   print('内容高度:${widget.contentHeight}');
+    //   print('内容宽高比例:$rateWidthHeightContent');
+    //   print('比例:$rateWidthContentVideo');
+    //   print('比例换算视频高度:$heightVideoByRate');
+    //   if(widget.contentHeight > heightVideoByRate ){
+    //     double rateHeightContentVideo = widget.contentHeight /  _videoPlayerController.value.size.height;
+    //     videoLayoutHeight = heightVideoByRate;
+    //     videoLayoutWidth = screenWidth(context);
+    //     scale = widget.contentHeight / videoLayoutHeight;
+    //     print('width:$videoLayoutWidth height:$videoLayoutHeight scale:$scale rate:$rateHeightContentVideo');
+    //   }
+    // }
 
 
     return Scaffold(
