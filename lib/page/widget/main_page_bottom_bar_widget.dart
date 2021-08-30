@@ -49,7 +49,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
   _getLayoutBottomBar(){
     return Container(
       key: bottomBarKey,
-      height: 48,
+      height: 50 + (Platform.isIOS ? 40 : 10) * 1.0,
       decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
       child: Column(
         children: <Widget>[
@@ -78,41 +78,6 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
         ],
       ),
     );
-    // return Container(
-    //   key: bottomBarKey,
-    //   color:Colors.black,
-    //   height: 48,
-    //   child: Row(
-    //     children: [
-    //       Expanded(
-    //           flex: 1,
-    //           child: _getAnimatedText('首页',0)
-    //       ),
-    //       Expanded(
-    //           flex: 1,
-    //           child: _getAnimatedText('朋友',1)
-    //       ),
-    //       Expanded(
-    //           flex: 1,
-    //           child:InkWell(
-    //             onTap: (){
-    //               Application.eventBus.fire(StopPlayEvent());
-    //               Get.toNamed(Routers.shoot);
-    //             },
-    //             child: Image.asset('assets/images/shoot_btn.webp'),
-    //           )
-    //       ),
-    //       Expanded(
-    //           flex: 1,
-    //           child:_getAnimatedText('消息',2)
-    //       ),
-    //       Expanded(
-    //           flex: 1,
-    //           child:_getAnimatedText('我',3)
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget get customCreateIcon => Container(

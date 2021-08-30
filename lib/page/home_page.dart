@@ -11,7 +11,6 @@ import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/page/home_tab_recommend_page.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
-import 'package:oktoast/oktoast.dart';
 
 ///首页
 class HomePage extends StatefulWidget {
@@ -29,17 +28,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   MainPageScrollController _mainPageScrollController = Get.find();
   TabController _tabController;
-  PageController  _pageController;
+  PageController _pageController;
   double _screenHeight;
   double _screenWidth;
-
 
   @override
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 2, vsync: this,initialIndex:1);
-    _pageController = PageController(initialPage: 1,keepPage: true);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
+    _pageController = PageController(initialPage: 1, keepPage: true);
     WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       //   statusBarColor: Colors.black,
@@ -54,12 +52,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.dispose();
     _tabController.dispose();
     _pageController.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     _screenHeight = MediaQuery.of(context).size.height;
     _screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -78,11 +74,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             height: MediaQueryData.fromWindow(window).padding.top,
           ),
           Positioned(
-              top: MediaQueryData.fromWindow(window).padding.top,
               child: _getContent()),
-          Positioned(
-              top: MediaQueryData.fromWindow(window).padding.top,
-              child: _getTopLayout()),
+          // TODO: remove living for now
+          // Positioned(
+          //     top: MediaQueryData.fromWindow(window).padding.top,
+          //     child: _getTopLayout()),
         ],
       ),
     );
@@ -109,14 +105,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Container(
             margin: EdgeInsets.only(right: 10),
             child: InkWell(
-                onTap: (){
+                onTap: () {
                   Application.eventBus.fire(StopPlayEvent());
                   Get.toNamed(Routers.search);
                 },
-                child:  Image.asset('assets/images/search.webp',width: 35,height: 35,color:ColorRes.color_2)
+                child: Image.asset('assets/images/search.webp',width: 35,height: 35,color:ColorRes.color_2)
             ),
           ),
-
         ],
       ),
     );
@@ -150,10 +145,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-
-
   _getContent() {
-    double contentHeight = MediaQuery.of(context).size.height - 48 - MediaQueryData.fromWindow(window).padding.top;
+    double contentHeight = MediaQuery.of(context).size.height - 40 - MediaQueryData.fromWindow(window).padding.top;
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width,
@@ -163,6 +156,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: PageView(
             controller: _pageController,
             children: [
+              // TODO: keep only one tab for now.
               // HomeTabCityPage(),
               // HomeTabFocusPage(
               //   contentHeight: contentHeight,

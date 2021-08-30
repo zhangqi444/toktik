@@ -89,7 +89,6 @@ class MainPage extends StatelessWidget {
               pageController:_scrollPageController,
               isLoginUser: false,
               userModel: loginUserModel,
-
             );
           }else{
             return UserPage(
@@ -100,7 +99,6 @@ class MainPage extends StatelessWidget {
             );
           }
         });
-
     }
   }
 }
