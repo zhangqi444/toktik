@@ -40,11 +40,14 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return  SmartRefresher(
-      controller: _refreshController,
-      onRefresh: (){_feedController.refreshHotFeedList(_refreshController);},
-      onLoading: (){_feedController.getHotFeedList(_refreshController);},
-      child: _getVideoList(context),
+    return  Scaffold(
+        backgroundColor: ColorRes.color_1,
+        body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: (){_feedController.refreshHotFeedList(_refreshController);},
+        onLoading: (){_feedController.getHotFeedList(_refreshController);},
+        child: _getVideoList(context),
+      )
     );
   }
 
