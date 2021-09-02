@@ -26,6 +26,11 @@ class User extends Model {
   final String nickname;
   final int uid;
   final String portrait;
+  final String bio;
+  final TemporalDate birth;
+  final int gender;
+  final String city;
+  final String profession;
 
   @override
   getInstanceType() => classType;
@@ -36,14 +41,36 @@ class User extends Model {
   }
 
   const User._internal(
-      {@required this.id, this.nickname, this.uid, this.portrait});
+      {@required this.id,
+      this.nickname,
+      this.uid,
+      this.portrait,
+      this.bio,
+      this.birth,
+      this.gender,
+      this.city,
+      this.profession});
 
-  factory User({String id, String nickname, int uid, String portrait}) {
+  factory User(
+      {String id,
+      String nickname,
+      int uid,
+      String portrait,
+      String bio,
+      TemporalDate birth,
+      int gender,
+      String city,
+      String profession}) {
     return User._internal(
         id: id == null ? UUID.getUUID() : id,
         nickname: nickname,
         uid: uid,
-        portrait: portrait);
+        portrait: portrait,
+        bio: bio,
+        birth: birth,
+        gender: gender,
+        city: city,
+        profession: profession);
   }
 
   bool equals(Object other) {
@@ -57,7 +84,12 @@ class User extends Model {
         id == other.id &&
         nickname == other.nickname &&
         uid == other.uid &&
-        portrait == other.portrait;
+        portrait == other.portrait &&
+        bio == other.bio &&
+        birth == other.birth &&
+        gender == other.gender &&
+        city == other.city &&
+        profession == other.profession;
   }
 
   @override
@@ -71,33 +103,74 @@ class User extends Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("nickname=" + "$nickname" + ", ");
     buffer.write("uid=" + (uid != null ? uid.toString() : "null") + ", ");
-    buffer.write("portrait=" + "$portrait");
+    buffer.write("portrait=" + "$portrait" + ", ");
+    buffer.write("bio=" + "$bio" + ", ");
+    buffer.write("birth=" + (birth != null ? birth.format() : "null") + ", ");
+    buffer.write(
+        "gender=" + (gender != null ? gender.toString() : "null") + ", ");
+    buffer.write("city=" + "$city" + ", ");
+    buffer.write("profession=" + "$profession");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  User copyWith({String id, String nickname, int uid, String portrait}) {
+  User copyWith(
+      {String id,
+      String nickname,
+      int uid,
+      String portrait,
+      String bio,
+      TemporalDate birth,
+      int gender,
+      String city,
+      String profession}) {
     return User(
         id: id ?? this.id,
         nickname: nickname ?? this.nickname,
         uid: uid ?? this.uid,
-        portrait: portrait ?? this.portrait);
+        portrait: portrait ?? this.portrait,
+        bio: bio ?? this.bio,
+        birth: birth ?? this.birth,
+        gender: gender ?? this.gender,
+        city: city ?? this.city,
+        profession: profession ?? this.profession);
   }
 
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         nickname = json['nickname'],
         uid = json['uid'],
-        portrait = json['portrait'];
+        portrait = json['portrait'],
+        bio = json['bio'],
+        birth = json['birth'] != null
+            ? TemporalDate.fromString(json['birth'])
+            : null,
+        gender = json['gender'],
+        city = json['city'],
+        profession = json['profession'];
 
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'nickname': nickname, 'uid': uid, 'portrait': portrait};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nickname': nickname,
+        'uid': uid,
+        'portrait': portrait,
+        'bio': bio,
+        'birth': birth?.format(),
+        'gender': gender,
+        'city': city,
+        'profession': profession
+      };
 
   static final QueryField ID = QueryField(fieldName: "user.id");
   static final QueryField NICKNAME = QueryField(fieldName: "nickname");
   static final QueryField UID = QueryField(fieldName: "uid");
   static final QueryField PORTRAIT = QueryField(fieldName: "portrait");
+  static final QueryField BIO = QueryField(fieldName: "bio");
+  static final QueryField BIRTH = QueryField(fieldName: "birth");
+  static final QueryField GENDER = QueryField(fieldName: "gender");
+  static final QueryField CITY = QueryField(fieldName: "city");
+  static final QueryField PROFESSION = QueryField(fieldName: "profession");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
@@ -126,6 +199,31 @@ class User extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: User.PORTRAIT,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.BIO,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.BIRTH,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.date)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.GENDER,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.int)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.CITY,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.PROFESSION,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });

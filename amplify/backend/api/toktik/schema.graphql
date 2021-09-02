@@ -20,5 +20,10 @@ type User @model @auth(rules: [{allow: public}]) {
   nickname: String
   uid: Int
   portrait: String
+  bio: String
+  birth: AWSDate
+  gender: Int
+  city: String
+  profession: String
 }
  
