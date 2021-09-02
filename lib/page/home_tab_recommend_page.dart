@@ -29,7 +29,9 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
   @override
   void initState() {
     super.initState();
-    _feedController.refreshHotFeedList(_refreshController);
+    if(_mainController.amplifyConfigured.value) {
+      _feedController.refreshHotFeedList(_refreshController);
+    }
   }
 
   @override
@@ -41,8 +43,8 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-        backgroundColor: ColorRes.color_1,
-        body: SmartRefresher(
+      backgroundColor: ColorRes.color_1,
+      body: SmartRefresher(
         controller: _refreshController,
         onRefresh: (){_feedController.refreshHotFeedList(_refreshController);},
         onLoading: (){_feedController.getHotFeedList(_refreshController);},
@@ -55,8 +57,12 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
     return Obx((){
       List<FeedListList> videoList = _feedController.hotFeedList;
       if(null == videoList || videoList.length == 0){
-        return Container(color: ColorRes.color_1,);
-      }else{
+        // TODO: the retry here is infinite. We should have retry control.
+        if(_mainController.amplifyConfigured.value) {
+          _feedController.refreshHotFeedList(_refreshController);
+        }
+        return Container(color: ColorRes.color_1);
+      } else {
         return PageView.builder(
           controller: _pageController,
           itemCount: videoList.length,
