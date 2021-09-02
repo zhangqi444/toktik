@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
@@ -59,11 +60,30 @@ class Api{
     return UserInfoResponse().fromJson(result);
   }
 
-
   ///获取用户资料信息(扩展)
   static Future<UserInfoExResponse> getUserInfoEx(String uid) async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.userInfoEx+uid, cancelTokenTag: 'getUserInfoEx',);
-    return UserInfoExResponse().fromJson(result);
+    try {
+      List<User> users = await Amplify.DataStore.query(User.classType, where: User.UID.eq(uid));
+
+      Map<String, dynamic> convert(User user) {
+        Map<String, dynamic> result = {};
+        var userJson = user.toJson();
+        result['user'] = userJson;
+        // TODO: generate counts from server side
+        var rng = new Random();
+        result['followerCount'] = rng.nextInt(100);
+        result['followingCount'] = rng.nextInt(100);
+        result['likeCount'] = rng.nextInt(100);
+        result['relation'] = '';
+        return result;
+      }
+
+      var parsed = users.map((user) => convert(user)).toList();
+      return UserInfoExResponse().fromJson(parsed[0]);
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+
   }
 
   ///更新用户资料信息
