@@ -57,7 +57,8 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       ));
     });
 
-    _userController.getUserWorkList(_userController.loginUserUid.value);
+    // TODO: disbale before we have the api reday.
+    // _userController.getUserWorkList(_userController.loginUserUid.value);
   }
 
   @override
@@ -154,10 +155,10 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
               unselectedLabelStyle:TextStyle(fontSize: 15,color: Colors.grey),
               tabs: <Widget>[
                 Tab(
-                  child: Obx(()=>Text('作品 ${_userController.userWorkList.length}'),),
+                  child: Obx(()=>Text('Video ${_userController.userWorkList.length}'),),
                 ),
                 Tab(
-                  child: Text('喜欢 6',
+                  child: Text('Like 6',
                   ),
                 ),
               ],
@@ -243,8 +244,6 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
           return UserMoreBottomSheet();
         });
   }
-
-
 
 }
 

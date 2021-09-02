@@ -105,7 +105,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           borderRadius: BorderRadius.circular(2),
         ),
         alignment: Alignment.center,
-        child: Text('编辑资料',style: TextStyle(color: Colors.white,fontSize: 15),),
+        child: Text('Edit Profile',style: TextStyle(color: Colors.white,fontSize: 15),),
       ),
     );
   }
@@ -125,7 +125,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           borderRadius: BorderRadius.circular(2),
         ),
         alignment: Alignment.center,
-        child: Text(focus?'取消关注':'+  关注',style: TextStyle(color: Colors.white,fontSize: 15),),
+        child: Text(focus?'Unfollow':'+  Follow',style: TextStyle(color: Colors.white,fontSize: 15),),
       ),
     );
   }
@@ -140,7 +140,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.user.nickname,
             style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 22),),),
           SizedBox(height: 5,),
-          Text('抖音号：${widget.uid}',
+          Text('ID：${widget.uid}',
             style: TextStyle(color: ColorRes.color_2,fontSize: 12),
           ),
           SizedBox(height: 10,),
@@ -198,19 +198,19 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.likeCount.toString(),
             style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),),),
           SizedBox(width: 2,),
-          Text('获赞',
+          Text('Likes',
             style: TextStyle(color: ColorRes.color_2,fontSize: 13),),
           SizedBox(width: 15,),
           Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.followingCount.toString(),
             style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),),),
           SizedBox(width: 2,),
-          Text('关注',
+          Text('Following',
             style: TextStyle(color: ColorRes.color_2,fontSize: 13),),
           SizedBox(width: 15,),
           Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.followerCount.toString(),
             style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16),),),
           SizedBox(width: 2,),
-          Text('粉丝',
+          Text('Followers',
             style: TextStyle(color: ColorRes.color_2,fontSize: 13),),
         ],
     );
@@ -244,7 +244,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
         String birth = _userController.userInfoExResponse.value.user.birth;
         List<String> tempArr = birth.split('-');
         int age = DateTime.now().year - int.parse(tempArr[0]);
-        return  Text('$age岁',
+        return  Text('$age',
           style: TextStyle(color: Colors.grey,fontSize: 10),);
       }
     });
