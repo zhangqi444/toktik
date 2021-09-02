@@ -54,7 +54,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 5,
+            height: 4,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
