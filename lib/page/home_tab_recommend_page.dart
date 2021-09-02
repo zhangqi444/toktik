@@ -63,10 +63,11 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             return VideoWidget(
-              video:videoList[index] ,
+              video: videoList[index],
               showFocusButton: true,
               contentHeight: widget.contentHeight,
               onClickHeader: (){
+                _mainController.setCurrentUserOfVideo(videoList[index].user);
                 widget.pageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
               },
             );
