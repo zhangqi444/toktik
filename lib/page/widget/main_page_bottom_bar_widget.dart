@@ -62,11 +62,11 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
               menuButton('Home', TikTokIcons.home, 0),
               menuButton('Search', TikTokIcons.search, 1),
               SizedBox(
-                width: 15,
+                width: 12.5,
               ),
               customCreateIcon,
               SizedBox(
-                width: 15,
+                width: 12.5,
               ),
               menuButton('Messages', TikTokIcons.messages, 2),
               menuButton('Profile', TikTokIcons.profile, 3)
