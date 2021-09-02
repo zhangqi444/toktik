@@ -36,8 +36,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
-    _pageController = PageController(initialPage: 1, keepPage: true);
+    _tabController = TabController(length: 1, vsync: this, initialIndex: 0);
+    _pageController = PageController(initialPage: 0, keepPage: true);
     WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       //   statusBarColor: Colors.black,
