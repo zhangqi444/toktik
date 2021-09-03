@@ -334,7 +334,7 @@ List<VideoModel> videoModelList = List.generate(6, (i) {
 
 //评论的本地假数据
 List<CommentModel> commentList = [
-  CommentModel('爱丽丝',  'assets/images/header_0.jpg','千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！', false, 234, '2分钟前'),
+  CommentModel('Alis',  'assets/images/header_0.jpg','千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！', false, 234, '2分钟前'),
   CommentModel('一条小团团',  'assets/images/header_1.jpg','芙蓉不及美人妆，水殿风来珠翠香', false, 688, '9分钟前'),
   CommentModel('伊素婉',  'assets/images/header_2.jpg', '届笑春桃兮，云堆翠髻；唇绽樱颗兮，榴齿含香',false, 7567, '6分钟前'),
   CommentModel('超级马里奥',  'assets/images/header_3.jpg','朱粉不深匀,闲花淡淡香。细看诸处好,人人道,柳腰身', false, 3543, '23分钟前'),
@@ -368,12 +368,12 @@ List<String> videoTitleList = [
 
 //视频作者
 List<String> authorList = [
-  '爱丽丝',
-  '一条小团团',
-  '伊素婉',
-  '超级马里奥',
-  '肖了个邦',
-  '惠子',
+  'Alis',
+  'Tom',
+  'GreenBeast',
+  'Mario',
+  'Chopin',
+  'Jerry',
 ];
 //作者头像
 List<String> authorHeaderUrlList = [
@@ -450,7 +450,7 @@ List<MessageModel> messageList = List.generate(20, (index) {
   MessageModel model = MessageModel();
   model.imgUrl = videoMusicImageList[index%6];
   model.title = authorList[index%6];
-  model.desc = index%2 == 0?'一条小团团赞了你的作品 · 6:12':'[发布了新作品] · 06-06';
+  model.desc = index%2 == 0?'started following you · 2h':'Just viewed the video you shared · 2w';
   return model;
 });
 //明星列表

@@ -30,17 +30,17 @@ class _MessagePageState extends State<MessagePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorRes.color_1,
+      backgroundColor: ColorRes.color_2,
       appBar: AppBar(
-        backgroundColor: ColorRes.color_1,
-        title: Text('消息',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+        backgroundColor: ColorRes.color_2,
+        title: Text('All activity',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: Colors.black)),
         centerTitle: true,
         elevation: 0,
         actions: [
           Container(
             margin: EdgeInsets.only(right: 20),
             alignment: Alignment.centerLeft,
-            child: Text('创建群聊',style: TextStyle(fontSize: 14),),
+            child: Text('Group Chat',style: TextStyle(fontSize: 14, color: Colors.black),),
           )
         ],
       ),
@@ -62,13 +62,13 @@ class _MessagePageState extends State<MessagePage>{
         margin: EdgeInsets.only(left: 16,right: 16,top: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2),
-          color: Colors.white.withAlpha(20),
+          color: Colors.black.withAlpha(20),
         ),
         child:  Row(
           children: [
-            Image.asset('assets/images/search.webp',width: 22,height: 22,color: Colors.white,),
+            Image.asset('assets/images/search.webp',width: 22,height: 22,color: Colors.black,),
             SizedBox(width: 5,),
-            Text('搜索',style: TextStyle(fontSize: 13,color: Colors.white),)
+            Text('Search',style: TextStyle(fontSize: 13,color: Colors.black),)
           ],
         ),
       ),
@@ -111,19 +111,19 @@ class _MessagePageState extends State<MessagePage>{
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(model.title,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.white),),
+                  Text(model.title,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500,color: Colors.black),),
                   SizedBox(height: 5,),
-                  Text(model.desc,style: TextStyle(fontSize: 12,color: ColorRes.color_2),),
+                  Text(model.desc,style: TextStyle(fontSize: 12,color: ColorRes.color_1),),
                 ],
               ),
           ),
           Positioned(
               right: 0,
-              child: Icon(Icons.arrow_forward_ios_outlined,color: ColorRes.color_2,size: 15,),
+              child: Icon(Icons.arrow_forward_ios_outlined,color: ColorRes.color_1,size: 15,),
           ),
           Positioned(
               bottom: 0,
-              child: Divider(color: Colors.white,height:1,)),
+              child: Divider(color: Colors.black,height:1,)),
         ],
       ),
     );
