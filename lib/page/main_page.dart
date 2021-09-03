@@ -4,9 +4,9 @@ import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/net/api.dart';
-// import 'package:toktik/page/friend_page.dart';
 import 'package:toktik/page/home_page.dart';
 import 'package:toktik/page/message_page.dart';
+import 'package:toktik/page/search_page.dart';
 import 'package:toktik/page/user_page.dart';
 import 'package:toktik/page/widget/main_page_bottom_bar_widget.dart';
 import 'package:toktik/res/colors.dart';
@@ -23,12 +23,14 @@ import '../amplifyconfiguration.dart';
 import 'home_page.dart';
 
 class MainPage extends StatelessWidget {
-  final MainPageScrollController mainPageController = Get.find();
+  final MainPageScrollController _mainPageController = Get.find();
   PageController _scrollPageController;
   UserController _userController = Get.put(UserController());
   MainPage({PageController pageController}){
     this._scrollPageController = pageController;
-    _configureAmplify();
+    if(!_mainPageController.amplifyConfigured.value) {
+      _configureAmplify();
+    }
   }
 
   void _configureAmplify() async {
@@ -46,7 +48,7 @@ class MainPage extends StatelessWidget {
     // Once Plugins are added, configure Amplify
     await Amplify.configure(amplifyconfig);
     try {
-      mainPageController.setAmplifyConfigured(true);
+      _mainPageController.setAmplifyConfigured(true);
       Amplify.DataStore.clear();
     } catch (e) {
       print(e);
@@ -63,22 +65,22 @@ class MainPage extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
       ));
     });
-    return Scaffold(
-      backgroundColor: mainPageController.indexBottomBarMainPage.value == 0
+    return Obx(()=>Scaffold(
+      backgroundColor: _mainPageController.indexBottomBarMainPage.value == 0
         ? Colors.black
         : Colors.white,
-      body: Obx(()=>_getBody()),
+      body: _getBody(),
       //底部导航
       bottomNavigationBar:  MainPageBottomBarWidget(),
-    );
+    ));
   }
 
   _getBody()  {
-    switch(mainPageController.indexBottomBarMainPage.value){
+    switch(_mainPageController.indexBottomBarMainPage.value){
       case 0:
         return HomePage(pageController:_scrollPageController);
       case 1:
-        // return FriendPage();
+        return SearchPage();
       case 2:
         return MessagePage();
       case 3:
