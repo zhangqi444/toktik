@@ -1,21 +1,11 @@
 # toktik
 
-A new Flutter application.
+## Set up
+#### 1. set up amplify CLI
+https://docs.amplify.aws/start/getting-started/installation/q/integration/flutter/#option-2-follow-the-instructions
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-when setting amplify,you will be asked to specify aws region,choose the following option:
+When setting amplify,you will be asked to specify aws region,choose the following option:
 us-west-2
 
-
+#### 2. init amplify
+`amplify pull --appId d1mt6rg0ztrl8w --envName staging`
