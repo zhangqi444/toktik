@@ -17,7 +17,6 @@ class SPUtil{
     }
   }
 
-
   static  getInt(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int data = prefs.getInt(key);
@@ -29,7 +28,6 @@ class SPUtil{
     String data = prefs.getString(key);
     return data ?? null;
   }
-
 
   static  getDouble(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,7 +46,6 @@ class SPUtil{
     List data = prefs.getStringList(key);
     return data ?? null;
   }
-
 
   static remove(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
