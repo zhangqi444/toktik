@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SearchScreen extends StatefulWidget {
-  SearchScreen({Key key}) : super(key: key);
+class SearchPage extends StatefulWidget {
+  SearchPage({Key key}) : super(key: key);
 
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,7 +25,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: BoxDecoration(
                           color: Colors.black12,
                           borderRadius: BorderRadius.all(Radius.circular(5))),
-                      width: 350,
+                      width: 336,
                       height: 40,
                       child: Row(
                         children: [
