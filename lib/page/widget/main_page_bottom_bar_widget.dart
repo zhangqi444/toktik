@@ -83,7 +83,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
   Widget get customCreateIcon => Container(
       width: 45.0,
       height: 27.0,
-      child: Stack(children: [
+      child: Obx(() => Stack(children: [
         Container(
             margin: EdgeInsets.only(left: 10.0),
             width: CreateButtonWidth,
@@ -113,7 +113,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
                 size: 20.0,
               ),
             )),
-      ]));
+      ])));
 
   // _getAnimatedText(String barName,int index){
   //   return TextButton(
@@ -148,21 +148,22 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
   Widget menuButton(String text, IconData icon, int index) {
     return GestureDetector(
         onTap: () {
-          if(index == 0){
+          if(index == 0 || index == 1){
             mainPageScrollController.selectIndexBottomBarMainPage(index);
           }else{
             SPUtil.getString(SPKeys.token).then((text){
               String token = text;
-              if(token != null && token.length > 0){
+              //TODO: bypass the login token check for now
+              // if(token != null && token.length > 0){
                 mainPageScrollController.selectIndexBottomBarMainPage(index);
-              }else{
-                Application.eventBus.fire(StopPlayEvent());
-                Get.toNamed(Routers.login);
-              }
+              // }else{
+              //   Application.eventBus.fire(StopPlayEvent());
+              //   Get.toNamed(Routers.login);
+              // }
             });
           }
         },
-        child: Container(
+        child: Obx(() => Container(
           height: 45,
           width: 80,
           child: Column(
@@ -170,12 +171,8 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
             children: <Widget>[
               Icon(icon,
                   color: mainPageScrollController.indexBottomBarMainPage == 0
-                      ? mainPageScrollController.indexBottomBarMainPage == index
-                      ? Colors.white
-                      : Colors.white70
-                      : mainPageScrollController.indexBottomBarMainPage == index
-                      ? Colors.black
-                      : Colors.black54,
+                      ? (mainPageScrollController.indexBottomBarMainPage == index ? Colors.white : Colors.white70)
+                      : (mainPageScrollController.indexBottomBarMainPage == index ? Colors.black : Colors.black54),
                   size: NavigationIconSize),
               SizedBox(
                 height: 7,
@@ -183,22 +180,15 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
               Text(
                 text,
                 style: TextStyle(
-                    fontWeight:
-                    mainPageScrollController.indexBottomBarMainPage == index
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+                    fontWeight: mainPageScrollController.indexBottomBarMainPage == index ? FontWeight.bold : FontWeight.normal,
                     color: mainPageScrollController.indexBottomBarMainPage == 0
-                        ? mainPageScrollController.indexBottomBarMainPage == index
-                        ? Colors.white
-                        : Colors.white70
-                        : mainPageScrollController.indexBottomBarMainPage == index
-                        ? Colors.black
-                        : Colors.black54,
+                        ? (mainPageScrollController.indexBottomBarMainPage == index ? Colors.white : Colors.white70)
+                        : (mainPageScrollController.indexBottomBarMainPage == index ? Colors.black : Colors.black54),
                     fontSize: 11.0),
               )
             ],
           ),
-        ));
+        )));
   }
 
   void setSystemStatusBarStyle(int index) {
