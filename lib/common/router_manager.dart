@@ -12,7 +12,7 @@ import 'package:toktik/page/message_page.dart';
 // import 'package:toktik/page/register_page.dart';
 // import 'package:toktik/page/scan_page.dart';
 import 'package:toktik/page/scroll_page.dart';
-// import 'package:toktik/page/search_page.dart';
+import 'package:toktik/page/search_page.dart';
 // import 'package:toktik/page/setting_page.dart';
 // import 'package:toktik/page/shoot_page.dart';
 // import 'package:toktik/page/test.dart';
@@ -36,7 +36,7 @@ class RouterManager{
     // GetPage(name: Routers.homeTabFocus, page: () => HomeTabFocusPage()),
     GetPage(name: Routers.homeTabRecommend, page: () => HomeTabRecommendPage()),
     // GetPage(name: Routers.videoList, page: () => VideoListPage()),
-    // GetPage(name: Routers.search, page: () => SearchPage()),
+    GetPage(name: Routers.search, page: () => SearchPage()),
     // GetPage(name: Routers.scan, page: () => ScanPage()),
     // GetPage(name: Routers.tikTokCode, page: () => MyTikTokCodePage()),
     // GetPage(name: Routers.living, page: () => LivingPage()),
