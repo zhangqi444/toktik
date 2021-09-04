@@ -44,9 +44,9 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     _scrollController.addListener(() {
       double position =_scrollController.offset;
       bool showTitle = _userPageController.showTitle.value;
-      if(position >  145 && !showTitle){
+      if(position > 145 && !showTitle){
         _userPageController.setShowTitle(true);
-      }else if(position <  145 && showTitle){
+      }else if(position < 145 && showTitle){
         _userPageController.setShowTitle(false);
       }
     });
@@ -98,7 +98,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         onPressed: (){
           widget._scrollPageController.animateToPage(0, duration: Duration(milliseconds: 400), curve: Curves.linear);
         },
-        icon: Icon(Icons.arrow_back_ios_rounded,color: Colors.black,),
+        icon: Icon(Icons.arrow_back_ios_rounded,color: Colors.white,),
       ),
       actions: [
         IconButton(
@@ -109,7 +109,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
               _showMore();
             }
           },
-          icon: Icon( widget._isLoginUser?Icons.menu:Icons.more_horiz_rounded,color: Colors.black,),
+          icon: Icon( widget._isLoginUser?Icons.menu:Icons.more_horiz_rounded,color: Colors.white,),
         ),
       ],
       elevation: 0,
@@ -120,7 +120,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userInfoExResponse.value.user.nickname:'')),
         centerTitle:true,
         background: Image.asset(
-          'assets/images/bg_1.jpg',
+          'assets/images/bg_3.jpg',
           fit: BoxFit.cover,
         ),
       ),

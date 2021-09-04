@@ -39,7 +39,12 @@ class _ScrollPageState extends State<ScrollPage> {
           physics: mainPageScrollController.scrollPageViewScrollPage.value ? new ClampingScrollPhysics() : new NeverScrollableScrollPhysics(),
           children: [
             MainPage(pageController:_pageController),
-            Obx(()=>UserPage(pageController:_pageController,isLoginUser: false,uid:mainPageScrollController.uidCuttent.value ,)),
+            Obx(()=>
+              Scaffold(
+                backgroundColor: Colors.white,
+                body: UserPage(pageController: _pageController, isLoginUser: false, uid: mainPageScrollController.uidCuttent.value)
+              )
+            ),
           ],
           onPageChanged: (index){
           },

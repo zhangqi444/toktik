@@ -71,7 +71,7 @@ class MainPage extends StatelessWidget {
         : Colors.white,
       body: _getBody(),
       //底部导航
-      bottomNavigationBar:  MainPageBottomBarWidget(),
+      bottomNavigationBar: MainPageBottomBarWidget(),
     ));
   }
 
