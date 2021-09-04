@@ -13,7 +13,7 @@ class UserInfoExUser with JsonConvert<UserInfoExUser> {
 	int uid;
 	String nickname;
 	String portrait;
-	String bio;
+	String bio = "";
 	String birth;
 	int gender;
 	String city;

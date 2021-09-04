@@ -35,6 +35,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   PageController _pageController = PageController(keepPage: true);
   ScrollController _scrollController = ScrollController();
   UserController _userController = Get.put(UserController());
+
   @override
   void initState() {
     super.initState();

@@ -26,7 +26,6 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   void initState() {
     super.initState();
     _userController.getUserInfoEx(widget.uid.toString());
-
   }
 
   //获取控件高度
@@ -137,7 +136,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 10,),
-          Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.user.nickname,
+          Obx(()=>Text(_userController.userInfoExResponse.value.user == null ? '' : _userController.userInfoExResponse.value.user.nickname,
             style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 22),),),
           SizedBox(height: 5,),
           Text('ID：${widget.uid}',
@@ -146,7 +145,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           SizedBox(height: 10,),
           Divider(color: Colors.grey.withAlpha(100),height: 0.05,),
           SizedBox(height: 10,),
-          Obx(()=> Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.user.bio,
+          Obx(()=> Text(_userController.userInfoExResponse.value.user == null ? '' : _userController.userInfoExResponse.value.user.bio,
             style: TextStyle(color: Colors.white,fontSize: 14),),),
           SizedBox(height: 5,),
           _getSexCity(),
