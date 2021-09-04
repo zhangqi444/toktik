@@ -16,7 +16,7 @@ class UserPage extends StatefulWidget {
   PageController _scrollPageController;
   bool _isLoginUser;
   int uid;
-  UserPage({PageController pageController,bool isLoginUser,UserModel userModel,int uid}){
+  UserPage({PageController pageController, bool isLoginUser, UserModel userModel, int uid}){
     this._scrollPageController = pageController;
     this._isLoginUser = isLoginUser;
     this.uid = uid;
@@ -54,7 +54,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
       ));
     });
 
@@ -74,7 +74,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: ColorRes.color_1,
+      backgroundColor: ColorRes.color_2,
       body: CustomScrollView(
         controller: _scrollController,
         physics: BouncingScrollPhysics(),
@@ -90,15 +90,15 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
 
   _getSliverAppBar(){
     return  SliverAppBar(
-      brightness:Brightness.dark,
-      backgroundColor:ColorRes.color_1,
+      brightness:Brightness.light,
+      backgroundColor:ColorRes.color_2,
       pinned: true,
-      expandedHeight: 200,
+      expandedHeight: 100,
       leading: widget._isLoginUser?null:IconButton(
         onPressed: (){
           widget._scrollPageController.animateToPage(0, duration: Duration(milliseconds: 400), curve: Curves.linear);
         },
-        icon: Icon(Icons.arrow_back_ios_rounded,color: Colors.white,),
+        icon: Icon(Icons.arrow_back_ios_rounded,color: Colors.black,),
       ),
       actions: [
         IconButton(
@@ -109,7 +109,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
               _showMore();
             }
           },
-          icon: Icon( widget._isLoginUser?Icons.menu:Icons.more_horiz_rounded,color: Colors.white,),
+          icon: Icon( widget._isLoginUser?Icons.menu:Icons.more_horiz_rounded,color: Colors.black,),
         ),
       ],
       elevation: 0,
@@ -148,19 +148,18 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         child: PreferredSize(
           preferredSize: Size.fromHeight(48),
           child: Container(
-            color: ColorRes.color_1,
+            color: ColorRes.color_2,
             child: TabBar(
               controller: _tabController,
               indicatorColor: ColorRes.color_4,
-              labelStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white),
+              labelStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black),
               unselectedLabelStyle:TextStyle(fontSize: 15,color: Colors.grey),
               tabs: <Widget>[
                 Tab(
-                  child: Obx(()=>Text('Video ${_userController.userWorkList.length}'),),
+                  child: Obx(()=>Text('Video ${_userController.userWorkList.length}', style: TextStyle(color: Colors.black)),),
                 ),
                 Tab(
-                  child: Text('Like 6',
-                  ),
+                  child: Text('Like 6', style: TextStyle(color: Colors.black)),
                 ),
               ],
               onTap: (index){
@@ -205,7 +204,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   Widget _getPageLayout(int index) {
 
     return Container(
-      color: ColorRes.color_1,
+      color: ColorRes.color_2,
       child: GridView.builder(
         //处理GridView顶部空白
         padding: EdgeInsets.zero,
