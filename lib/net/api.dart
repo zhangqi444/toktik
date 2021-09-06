@@ -149,7 +149,7 @@ class Api{
         var result = post.toJson();
         result['content'] = {
           'attachments': jsonDecode(post.attachments)['data'],
-          'music': post.music.toJson(),
+          'music': post.music != null ? post.music.toJson() : null,
           'text': post.text,
         };
         List<User> userList = await Amplify.DataStore.query(User.classType, where: User.ID.eq(post.user.id));
