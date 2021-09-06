@@ -1,4 +1,4 @@
-// import 'package:toktik/page/feed_publish_page.dart';
+import 'package:toktik/page/feed_publish_page.dart';
 // import 'package:toktik/page/friend_page.dart';
 import 'package:toktik/page/home_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
@@ -14,7 +14,7 @@ import 'package:toktik/page/message_page.dart';
 import 'package:toktik/page/scroll_page.dart';
 import 'package:toktik/page/search_page.dart';
 // import 'package:toktik/page/setting_page.dart';
-// import 'package:toktik/page/shoot_page.dart';
+import 'package:toktik/page/shoot_page.dart';
 // import 'package:toktik/page/test.dart';
 // import 'package:toktik/page/user_info_edit_page.dart';
 import 'package:toktik/page/user_page.dart';
@@ -29,7 +29,7 @@ class RouterManager{
     GetPage(name: Routers.scroll, page: () => ScrollPage()),
     GetPage(name: Routers.main, page: () => MainPage()),
     GetPage(name: Routers.user, page: () => UserPage()),
-    // GetPage(name: Routers.shoot, page: () => ShootPage()),
+    GetPage(name: Routers.shoot, page: () => ShootPage()),
     GetPage(name: Routers.home, page: () => HomePage()),
     GetPage(name: Routers.message, page: () => MessagePage()),
     // GetPage(name: Routers.homeTabCity, page: () => HomeTabCityPage()),
@@ -45,7 +45,7 @@ class RouterManager{
     // GetPage(name: Routers.setting, page: () => SettingPage()),
     // GetPage(name: Routers.editUserInfo, page: () => UserInfoEditPage()),
     // GetPage(name: Routers.modifyUserInfo, page: () => ModifyInfoPage()),
-    // GetPage(name: Routers.feedPublish, page: () => FeedPublishPage()),
+    GetPage(name: Routers.feedPublish, page: () => FeedPublishPage()),
   ];
 
 

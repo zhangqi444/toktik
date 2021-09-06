@@ -80,70 +80,46 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
     );
   }
 
-  Widget get customCreateIcon => Container(
-      width: 45.0,
-      height: 27.0,
-      child: Obx(() => Stack(children: [
-        Container(
-            margin: EdgeInsets.only(left: 10.0),
-            width: CreateButtonWidth,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 250, 45, 108),
-                borderRadius: BorderRadius.circular(7.0))),
-        Container(
-            margin: EdgeInsets.only(right: 10.0),
-            width: CreateButtonWidth,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(255, 32, 211, 234),
-                borderRadius: BorderRadius.circular(7.0))),
-        Center(
-            child: Container(
-              height: double.infinity,
+  Widget get customCreateIcon => GestureDetector(
+      onTap: () {
+        Application.eventBus.fire(StopPlayEvent());
+        Get.toNamed(Routers.shoot);
+      },
+      child: Container(
+        width: 45.0,
+        height: 27.0,
+        child: Obx(() => Stack(children: [
+          Container(
+              margin: EdgeInsets.only(left: 10.0),
               width: CreateButtonWidth,
               decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 250, 45, 108),
+                  borderRadius: BorderRadius.circular(7.0))),
+          Container(
+              margin: EdgeInsets.only(right: 10.0),
+              width: CreateButtonWidth,
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 32, 211, 234),
+                  borderRadius: BorderRadius.circular(7.0))),
+          Center(
+              child: Container(
+                height: double.infinity,
+                width: CreateButtonWidth,
+                decoration: BoxDecoration(
+                    color: mainPageScrollController.indexBottomBarMainPage == 0
+                        ? Colors.white
+                        : Colors.black,
+                    borderRadius: BorderRadius.circular(7.0)),
+                child: Icon(
+                  Icons.add,
                   color: mainPageScrollController.indexBottomBarMainPage == 0
-                      ? Colors.white
-                      : Colors.black,
-                  borderRadius: BorderRadius.circular(7.0)),
-              child: Icon(
-                Icons.add,
-                color: mainPageScrollController.indexBottomBarMainPage == 0
-                    ? Colors.black
-                    : Colors.white,
-                size: 20.0,
-              ),
-            )),
-      ])));
-
-  // _getAnimatedText(String barName,int index){
-  //   return TextButton(
-  //       onPressed: (){
-  //         if(index == 0){
-  //           mainPageScrollController.selectIndexBottomBarMainPage(index);
-  //         }else{
-  //           SPUtil.getString(SPKeys.token).then((text){
-  //             String token = text;
-  //             if(token != null && token.length > 0){
-  //               mainPageScrollController.selectIndexBottomBarMainPage(index);
-  //             }else{
-  //               Application.eventBus.fire(StopPlayEvent());
-  //               Get.toNamed(Routers.login);
-  //             }
-  //           });
-  //         }
-  //
-  //       },
-  //       style: ButtonStyle(
-  //         overlayColor: MaterialStateProperty.all(Colors.transparent),
-  //       ),
-  //       child:Obx(()=>  Text(barName,style: TextStyle(
-  //           color: mainPageScrollController.indexBottomBarMainPage.value == index ? Colors.white:Colors.grey,
-  //           fontSize: mainPageScrollController.indexBottomBarMainPage.value == index ? 16:15,
-  //           fontWeight: FontWeight.bold
-  //       ),),
-  //       )
-  //   );
-  // }
+                      ? Colors.black
+                      : Colors.white,
+                  size: 20.0,
+                ),
+              )),
+        ])))
+  );
 
   Widget menuButton(String text, IconData icon, int index) {
     return GestureDetector(
