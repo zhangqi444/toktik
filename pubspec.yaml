@@ -31,9 +31,13 @@ dependencies:
   marquee: ^2.1.0
   stacked: ^2.1.7
   cached_network_image: ^3.0.0
-  firebase_core : ^1.2.0
   event_bus: ^2.0.0
-  cloud_firestore: ^2.2.0
+  # 相机插件，还在开发中
+  camera: ^0.8.1
+  # 图片选择
+  image_picker: ^0.8.2
+  # 获取视频缩略图
+  video_thumbnail: ^0.2.5
   # loading
   flutter_easyloading: ^3.0.0
   shared_preferences: ^2.0.5
