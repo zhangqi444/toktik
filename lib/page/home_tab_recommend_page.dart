@@ -23,15 +23,13 @@ class HomeTabRecommendPage extends StatefulWidget {
 class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
   RecommendPageController _controller = Get.put(RecommendPageController());
   MainPageScrollController _mainController = Get.find();
-  PageController _pageController = PageController(keepPage: true);
+  PageController _pageController = PageController(initialPage: 0, keepPage: true);
   FeedController _feedController = Get.put(FeedController());
   RefreshController _refreshController = RefreshController(initialRefresh: false);
+
   @override
   void initState() {
     super.initState();
-    if(_mainController.amplifyConfigured.value) {
-      _feedController.refreshHotFeedList(_refreshController);
-    }
   }
 
   @override
