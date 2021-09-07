@@ -1,7 +1,10 @@
+import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
+import 'package:toktik/common/application.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/recommend_page_controller.dart';
+import 'package:toktik/event/amplify_configured_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_widget.dart';
 import 'package:toktik/res/colors.dart';
@@ -20,16 +23,24 @@ class HomeTabRecommendPage extends StatefulWidget {
   }
 }
 
-class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
+class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with AutomaticKeepAliveClientMixin {
   RecommendPageController _controller = Get.put(RecommendPageController());
   MainPageScrollController _mainController = Get.find();
   PageController _pageController = PageController(initialPage: 0, keepPage: true);
   FeedController _feedController = Get.put(FeedController());
   RefreshController _refreshController = RefreshController(initialRefresh: false);
+  var amplifyConfiguredListner;
 
   @override
   void initState() {
     super.initState();
+    if(!Amplify.isConfigured) {
+      amplifyConfiguredListner = Application.eventBus.on<AmplifyConfiguredEvent>().listen((event) {
+        _feedController.refreshHotFeedList(_refreshController);
+      });
+    } else {
+      _feedController.refreshHotFeedList(_refreshController);
+    }
   }
 
   @override
@@ -37,7 +48,9 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
     super.dispose();
     _pageController.dispose();
     _refreshController.dispose();
+    amplifyConfiguredListner && amplifyConfiguredListner.cancel();
   }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -55,10 +68,6 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
     return Obx((){
       List<FeedListList> videoList = _feedController.hotFeedList;
       if(null == videoList || videoList.length == 0){
-        // TODO: the retry here is infinite. We should have retry control.
-        if(_mainController.amplifyConfigured.value) {
-          _feedController.refreshHotFeedList(_refreshController);
-        }
         return Container(color: ColorRes.color_1);
       } else {
         return PageView.builder(
@@ -84,4 +93,11 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> {
 
     });
   }
+
+  /**
+   * To stop the page from rebuilding, please follow this
+   * https://developpaper.com/three-ways-to-keep-the-state-of-the-original-page-after-page-switching-by-flutter/
+   */
+  @override
+  bool get wantKeepAlive => true;
 }
