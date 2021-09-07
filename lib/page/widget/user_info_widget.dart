@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/res/colors.dart';
@@ -9,7 +10,11 @@ import 'package:get/get.dart';
 class UserInfoWidget extends StatefulWidget {
   bool isLoginUser;
   int uid;
-  UserInfoWidget({this.isLoginUser, this.uid});
+
+  UserInfoWidget({bool isLoginUser, int uid}){
+    this.isLoginUser = isLoginUser;
+    this.uid = uid;
+  }
 
   @override
   _UserInfoWidgetState createState() {
@@ -22,10 +27,10 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   double _widgetHeight = 320;
   bool focus = false;
   bool isLoginUser = true;
+
   @override
   void initState() {
     super.initState();
-    _userController.getUserInfoEx(widget.uid.toString());
   }
 
   //获取控件高度
@@ -184,7 +189,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
             color: ColorRes.color_2.withAlpha(50),
             borderRadius: BorderRadius.circular(2),
           ),
-          child:  Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.user.city,
+          child:  Text(_userController.userInfoExResponse.value.user == null ? '' : _userController.userInfoExResponse.value.user.city,
             style: TextStyle(color: Colors.black,fontSize: 10),),
         ),
       ],
