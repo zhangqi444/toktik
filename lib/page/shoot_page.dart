@@ -93,7 +93,8 @@ class _ShootPageState extends State<ShootPage> {
     double cameraHeight = _cameraController.value.previewSize.height;
     double scale = height / cameraHeight;
     return Transform.scale(
-        scale: scale,
+        // TODO: don't apply scale for now
+        scale: 1.0,
         alignment: Alignment.topCenter,
         child:  CameraPreview(_cameraController),
     );
