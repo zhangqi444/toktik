@@ -60,7 +60,9 @@ class UserController extends GetxController{
   ///获取用户资料信息(扩展)
   void getUserInfoEx(String uid) async{
     var response = await Api.getUserInfoEx(uid);
-    userInfoExResponse.value = response;
+    if(response != null) {
+      userInfoExResponse.value = response;
+    }
   }
 
   ///更新用户资料
