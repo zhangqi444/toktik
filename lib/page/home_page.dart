@@ -25,7 +25,7 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   MainPageScrollController _mainPageScrollController = Get.find();
   TabController _tabController;
   PageController _pageController;
@@ -139,9 +139,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         onTap: (index){
           _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.linear);
         },
-
       ),
-
     );
   }
 
@@ -182,5 +180,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
+
+  /**
+   * To stop the page from rebuilding, please follow this
+   * https://developpaper.com/three-ways-to-keep-the-state-of-the-original-page-after-page-switching-by-flutter/
+   */
+  @override
+  bool get wantKeepAlive => true;
 
 }
