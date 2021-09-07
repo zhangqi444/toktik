@@ -1,9 +1,14 @@
+import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:toktik/common/application.dart';
+import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/controller/user_page_controller.dart';
+import 'package:toktik/event/amplify_configured_event.dart';
+import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/model/user_model.dart';
 import 'package:toktik/page/widget/user_info_widget.dart';
 import 'package:toktik/page/widget/user_item_grid_widget.dart';
@@ -11,6 +16,7 @@ import 'package:toktik/page/widget/user_more_bottom_sheet.dart';
 import 'package:toktik/page/widget/user_work_list_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/sp_util.dart';
 
 class UserPage extends StatefulWidget {
   PageController _scrollPageController;
@@ -36,6 +42,8 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   ScrollController _scrollController = ScrollController();
   UserController _userController = Get.put(UserController());
 
+  var amplifyConfiguredListner;
+
   @override
   void initState() {
     super.initState();
@@ -57,9 +65,19 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         statusBarIconBrightness: Brightness.light,
       ));
     });
+  }
 
-    // TODO: disbale before we have the api reday.
-    // _userController.getUserWorkList(_userController.loginUserUid.value);
+  void initData() async {
+    var uid = widget.uid;
+    if(widget._isLoginUser) {
+      uid = _userController.loginUserUid.value;
+    }
+    UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
+    if(uid != null && (userEx == null || userEx.uid != _userController.loginUserUid)) {
+      await _userController.getUserInfoEx(uid.toString());
+      // TODO: disbale before we have the api reday.
+      // _userController.getUserWorkList(uid);
+    }
   }
 
   @override
@@ -68,11 +86,23 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     _tabController.dispose();
     _pageController.dispose();
     _scrollController.dispose();
+    if(amplifyConfiguredListner != null) {
+      amplifyConfiguredListner.cancel();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
+    // This is necessary to be in build as this page is used for main page as well.
+    // To the profile tab switching, this page will not be recreated, so the data
+    // needs to be refreshed in build().
+    if(!Amplify.isConfigured) {
+      amplifyConfiguredListner = Application.eventBus.on<AmplifyConfiguredEvent>().listen((event) {
+        initData();
+      });
+    } else {
+      initData();
+    }
     return Scaffold(
       backgroundColor: ColorRes.color_2,
       body: CustomScrollView(
@@ -96,7 +126,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       expandedHeight: 100,
       leading: widget._isLoginUser?null:IconButton(
         onPressed: (){
-          widget._scrollPageController.animateToPage(0, duration: Duration(milliseconds: 400), curve: Curves.linear);
+          widget._scrollPageController.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
         },
         icon: Icon(Icons.arrow_back_ios_rounded,color: Colors.white,),
       ),

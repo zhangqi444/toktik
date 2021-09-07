@@ -48,7 +48,9 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
     super.dispose();
     _pageController.dispose();
     _refreshController.dispose();
-    amplifyConfiguredListner && amplifyConfiguredListner.cancel();
+    if(amplifyConfiguredListner != null) {
+      amplifyConfiguredListner.cancel();
+    }
   }
 
   @override
