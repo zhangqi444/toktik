@@ -129,13 +129,12 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
           }else{
             SPUtil.getString(SPKeys.token).then((text){
               String token = text;
-              //TODO: bypass the login token check for now
-              // if(token != null && token.length > 0){
+              if(token != null && token.length > 0){
                 mainPageScrollController.selectIndexBottomBarMainPage(index);
-              // }else{
-              //   Application.eventBus.fire(StopPlayEvent());
-              //   Get.toNamed(Routers.login);
-              // }
+              } else {
+                Application.eventBus.fire(StopPlayEvent());
+                Get.toNamed(Routers.login);
+              }
             });
           }
         },
