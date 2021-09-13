@@ -140,13 +140,13 @@ class User extends Model {
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         nickname = json['nickname'],
-        uid = json['uid'],
+        uid = (json['uid'] as num)?.toInt(),
         portrait = json['portrait'],
         bio = json['bio'],
         birth = json['birth'] != null
             ? TemporalDate.fromString(json['birth'])
             : null,
-        gender = json['gender'],
+        gender = (json['gender'] as num)?.toInt(),
         city = json['city'],
         profession = json['profession'];
 

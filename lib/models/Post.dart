@@ -144,9 +144,9 @@ class Post extends Model {
             ? Music.fromJson(new Map<String, dynamic>.from(json['music']))
             : null,
         attachments = json['attachments'],
-        likeCount = json['likeCount'],
-        commentCount = json['commentCount'],
-        shareCount = json['shareCount'];
+        likeCount = (json['likeCount'] as num)?.toInt(),
+        commentCount = (json['commentCount'] as num)?.toInt(),
+        shareCount = (json['shareCount'] as num)?.toInt();
 
   Map<String, dynamic> toJson() => {
         'id': id,
