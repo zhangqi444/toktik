@@ -79,7 +79,7 @@ class Api{
       }
 
       var parsed = users.map((user) => convert(user)).toList();
-      return parsed != null ? UserInfoExResponse().fromJson(parsed[0]) : null;
+      return (parsed != null && parsed.length > 0) ? UserInfoExResponse().fromJson(parsed[0]) : null;
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
