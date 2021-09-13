@@ -35,7 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
         cursorWidth: 2,
       decoration: InputDecoration(
         border: InputBorder.none,
-        hintText: '请输入邮箱'
+        hintText: 'Email'
       ),
       onChanged: (text){
         account = text;
@@ -48,7 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
       obscureText: true,
       decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: '请输入密码'
+          hintText: 'Password'
       ),
       onChanged: (text){
         pwd = text;
@@ -61,7 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
       obscureText: true,
       decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: '请再次输入密码'
+          hintText: 'Confirm password'
       ),
       onChanged: (text){
         pwdRepeat = text;
@@ -160,14 +160,14 @@ class _RegisterPageState extends State<RegisterPage> {
             if(pwd == pwdRepeat){
               loginController.register(account, pwd, pwdRepeat);
             }else{
-              EasyLoading.showToast('两次输入的密码不一致');
+              EasyLoading.showToast('The password confirmation did not match with the password.');
             }
 
           }else{
-            EasyLoading.showToast('请填写完整');
+            EasyLoading.showToast('Please fill in the missing field.');
           }
         },
-        child: Text('注册',style: TextStyle(color: Colors.white,fontSize: 20),),
+        child: Text('Create account',style: TextStyle(color: Colors.white,fontSize: 20),),
         color: ColorRes.color_3,
         shape: RoundedRectangleBorder(
             borderRadius:BorderRadius.circular(5)

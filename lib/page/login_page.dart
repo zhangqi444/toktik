@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         cursorWidth: 2,
       decoration: InputDecoration(
         border: InputBorder.none,
-        hintText: '请输入邮箱'
+        hintText: 'Email'
       ),
       onChanged: (text){
         account = text;
@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
       obscureText: true,
       decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: '请输入密码'
+          hintText: 'Password'
       ),
       onChanged: (text){
         pwd = text;
@@ -131,10 +131,10 @@ class _LoginPageState extends State<LoginPage> {
           if(null != account && account.length > 0 && null != pwd && pwd.length > 0){
             loginController.login(account, pwd);
           }else{
-            EasyLoading.showToast('请填写完整邮箱和密码');
+            EasyLoading.showToast('Check your info and try again.');
           }
         },
-        child: Text('登录',style: TextStyle(color: Colors.white,fontSize: 20),),
+        child: Text('Log in',style: TextStyle(color: Colors.white,fontSize: 20),),
         color: ColorRes.color_3,
         shape: RoundedRectangleBorder(
             borderRadius:BorderRadius.circular(5)
@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: (){
                   EasyLoading.showToast('功能待开发');
                 },
-                child: Text('忘记密码',style: TextStyle(color: Colors.white),),
+                child: Text('Forget password',style: TextStyle(color: Colors.white),),
               )),
           Positioned(
               right: 0,
@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: (){
                   Get.toNamed(Routers.register);
                 },
-                child: Text('注册',style: TextStyle(color: Colors.white),),
+                child: Text('Sign up',style: TextStyle(color: Colors.white),),
               )),
         ],
       ),
