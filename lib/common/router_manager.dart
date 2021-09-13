@@ -5,11 +5,11 @@ import 'package:toktik/page/home_page.dart';
 // import 'package:toktik/page/home_tab_focus_page.dart';
 import 'package:toktik/page/home_tab_recommend_page.dart';
 // import 'package:toktik/page/living_page.dart';
-// import 'package:toktik/page/login_page.dart';
+import 'package:toktik/page/login_page.dart';
 import 'package:toktik/page/main_page.dart';
 import 'package:toktik/page/message_page.dart';
 // import 'package:toktik/page/modify_info_page.dart';
-// import 'package:toktik/page/register_page.dart';
+import 'package:toktik/page/register_page.dart';
 // import 'package:toktik/page/scan_page.dart';
 import 'package:toktik/page/scroll_page.dart';
 import 'package:toktik/page/search_page.dart';
@@ -40,8 +40,8 @@ class RouterManager{
     // GetPage(name: Routers.scan, page: () => ScanPage()),
     // GetPage(name: Routers.tikTokCode, page: () => MyTikTokCodePage()),
     // GetPage(name: Routers.living, page: () => LivingPage()),
-    // GetPage(name: Routers.login, page: () => LoginPage(),transition: Transition.downToUp,),
-    // GetPage(name: Routers.register, page: () => RegisterPage()),
+    GetPage(name: Routers.login, page: () => LoginPage(),transition: Transition.downToUp,),
+    GetPage(name: Routers.register, page: () => RegisterPage()),
     // GetPage(name: Routers.setting, page: () => SettingPage()),
     // GetPage(name: Routers.editUserInfo, page: () => UserInfoEditPage()),
     // GetPage(name: Routers.modifyUserInfo, page: () => ModifyInfoPage()),
