@@ -1,11 +1,32 @@
+type Share @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  to: String
+  user: User @connection
+  post: Post @connection
+}
+
+type Comment @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  user: User @connection
+  post: Post @connection
+  text: String
+}
+
+type Like @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  user: User @connection
+  post: Post @connection
+  value: Boolean
+}
+
 type Post @model @auth(rules: [{allow: public}]) {
   id: ID!
   text: String
   user: User @connection
   music: Music @connection
-  commentCount: Int
-  likeCount: Int
   attachments: AWSJSON
+  likeCount: Int
+  commentCount: Int
   shareCount: Int
 }
 

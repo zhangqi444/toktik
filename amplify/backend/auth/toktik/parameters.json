@@ -18,9 +18,7 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [
         "Requires Lowercase",
-        "Requires Numbers",
-        "Requires Symbols",
-        "Requires Uppercase"
+        "Requires Numbers"
     ],
     "requiredAttributes": [
         "email"
@@ -58,5 +56,6 @@
     "thirdPartyAuth": false,
     "authProviders": [],
     "usernameCaseSensitive": false,
-    "dependsOn": []
+    "dependsOn": [],
+    "hostedUI": false
 }

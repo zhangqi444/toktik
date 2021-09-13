@@ -138,7 +138,6 @@ Parameters:
   adminQueries:
     Type: String
             
-            
   
   thirdPartyAuth:
     Type: String
@@ -155,6 +154,11 @@ Parameters:
   dependsOn:
     Type: CommaDelimitedList
       
+            
+  
+  hostedUI:
+    Type: String
+            
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   
@@ -230,8 +234,8 @@ Resources:
           MinimumLength: !Ref passwordPolicyMinLength
           RequireLowercase: true
           RequireNumbers: true
-          RequireSymbols: true
-          RequireUppercase: true
+          RequireSymbols: false
+          RequireUppercase: false
       
       UsernameAttributes: !Ref usernameAttributes
       

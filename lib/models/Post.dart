@@ -27,9 +27,9 @@ class Post extends Model {
   final String text;
   final User user;
   final Music music;
-  final int commentCount;
-  final int likeCount;
   final String attachments;
+  final int likeCount;
+  final int commentCount;
   final int shareCount;
 
   @override
@@ -45,9 +45,9 @@ class Post extends Model {
       this.text,
       this.user,
       this.music,
-      this.commentCount,
-      this.likeCount,
       this.attachments,
+      this.likeCount,
+      this.commentCount,
       this.shareCount});
 
   factory Post(
@@ -55,18 +55,18 @@ class Post extends Model {
       String text,
       User user,
       Music music,
-      int commentCount,
-      int likeCount,
       String attachments,
+      int likeCount,
+      int commentCount,
       int shareCount}) {
     return Post._internal(
         id: id == null ? UUID.getUUID() : id,
         text: text,
         user: user,
         music: music,
-        commentCount: commentCount,
-        likeCount: likeCount,
         attachments: attachments,
+        likeCount: likeCount,
+        commentCount: commentCount,
         shareCount: shareCount);
   }
 
@@ -82,9 +82,9 @@ class Post extends Model {
         text == other.text &&
         user == other.user &&
         music == other.music &&
-        commentCount == other.commentCount &&
-        likeCount == other.likeCount &&
         attachments == other.attachments &&
+        likeCount == other.likeCount &&
+        commentCount == other.commentCount &&
         shareCount == other.shareCount;
   }
 
@@ -100,13 +100,13 @@ class Post extends Model {
     buffer.write("text=" + "$text" + ", ");
     buffer.write("user=" + (user != null ? user.toString() : "null") + ", ");
     buffer.write("music=" + (music != null ? music.toString() : "null") + ", ");
-    buffer.write("commentCount=" +
-        (commentCount != null ? commentCount.toString() : "null") +
-        ", ");
+    buffer.write("attachments=" + "$attachments" + ", ");
     buffer.write("likeCount=" +
         (likeCount != null ? likeCount.toString() : "null") +
         ", ");
-    buffer.write("attachments=" + "$attachments" + ", ");
+    buffer.write("commentCount=" +
+        (commentCount != null ? commentCount.toString() : "null") +
+        ", ");
     buffer.write(
         "shareCount=" + (shareCount != null ? shareCount.toString() : "null"));
     buffer.write("}");
@@ -119,18 +119,18 @@ class Post extends Model {
       String text,
       User user,
       Music music,
-      int commentCount,
-      int likeCount,
       String attachments,
+      int likeCount,
+      int commentCount,
       int shareCount}) {
     return Post(
         id: id ?? this.id,
         text: text ?? this.text,
         user: user ?? this.user,
         music: music ?? this.music,
-        commentCount: commentCount ?? this.commentCount,
-        likeCount: likeCount ?? this.likeCount,
         attachments: attachments ?? this.attachments,
+        likeCount: likeCount ?? this.likeCount,
+        commentCount: commentCount ?? this.commentCount,
         shareCount: shareCount ?? this.shareCount);
   }
 
@@ -143,9 +143,9 @@ class Post extends Model {
         music = json['music'] != null
             ? Music.fromJson(new Map<String, dynamic>.from(json['music']))
             : null,
-        commentCount = json['commentCount'],
-        likeCount = json['likeCount'],
         attachments = json['attachments'],
+        likeCount = json['likeCount'],
+        commentCount = json['commentCount'],
         shareCount = json['shareCount'];
 
   Map<String, dynamic> toJson() => {
@@ -153,9 +153,9 @@ class Post extends Model {
         'text': text,
         'user': user?.toJson(),
         'music': music?.toJson(),
-        'commentCount': commentCount,
-        'likeCount': likeCount,
         'attachments': attachments,
+        'likeCount': likeCount,
+        'commentCount': commentCount,
         'shareCount': shareCount
       };
 
@@ -169,9 +169,9 @@ class Post extends Model {
       fieldName: "music",
       fieldType: ModelFieldType(ModelFieldTypeEnum.model,
           ofModelName: (Music).toString()));
-  static final QueryField COMMENTCOUNT = QueryField(fieldName: "commentCount");
-  static final QueryField LIKECOUNT = QueryField(fieldName: "likeCount");
   static final QueryField ATTACHMENTS = QueryField(fieldName: "attachments");
+  static final QueryField LIKECOUNT = QueryField(fieldName: "likeCount");
+  static final QueryField COMMENTCOUNT = QueryField(fieldName: "commentCount");
   static final QueryField SHARECOUNT = QueryField(fieldName: "shareCount");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -207,9 +207,9 @@ class Post extends Model {
         ofModelName: (Music).toString()));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Post.COMMENTCOUNT,
+        key: Post.ATTACHMENTS,
         isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.int)));
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: Post.LIKECOUNT,
@@ -217,9 +217,9 @@ class Post extends Model {
         ofType: ModelFieldType(ModelFieldTypeEnum.int)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Post.ATTACHMENTS,
+        key: Post.COMMENTCOUNT,
         isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+        ofType: ModelFieldType(ModelFieldTypeEnum.int)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: Post.SHARECOUNT,

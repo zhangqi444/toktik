@@ -16,25 +16,48 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'Comment.dart';
+import 'Like.dart';
 import 'Music.dart';
 import 'Post.dart';
+import 'Share.dart';
 import 'User.dart';
 
+export 'Comment.dart';
+export 'Like.dart';
 export 'Music.dart';
 export 'Post.dart';
+export 'Share.dart';
 export 'User.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "79cd5d341328a80c022e9839117cd295";
+  String version = "188bcec55b2cd860a1abe1b1675bedf4";
   @override
-  List<ModelSchema> modelSchemas = [Music.schema, Post.schema, User.schema];
+  List<ModelSchema> modelSchemas = [
+    Comment.schema,
+    Like.schema,
+    Music.schema,
+    Post.schema,
+    Share.schema,
+    User.schema
+  ];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
 
   ModelType getModelTypeByModelName(String modelName) {
     switch (modelName) {
+      case "Comment":
+        {
+          return Comment.classType;
+        }
+        break;
+      case "Like":
+        {
+          return Like.classType;
+        }
+        break;
       case "Music":
         {
           return Music.classType;
@@ -43,6 +66,11 @@ class ModelProvider implements ModelProviderInterface {
       case "Post":
         {
           return Post.classType;
+        }
+        break;
+      case "Share":
+        {
+          return Share.classType;
         }
         break;
       case "User":
