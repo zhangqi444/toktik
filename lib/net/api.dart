@@ -41,7 +41,7 @@ class Api{
   ///登录
   static Future<LoginResponse> login(String username, String password) async {
 
-    await loguut();
+    await logout();
 
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
@@ -81,7 +81,7 @@ class Api{
     }
   }
 
-  static Future<LogoutResponse> loguut() async {
+  static Future<LogoutResponse> logout() async {
     try {
       var result = await Amplify.Auth.signOut();
       return result != null ? LogoutResponse().fromJson({}) : null;
