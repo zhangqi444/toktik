@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
@@ -11,5 +12,6 @@ Future<void> main() async {
     defaultTransition: Transition.rightToLeft,
     getPages: RouterManager.routes,
     initialRoute: Routers.scroll,
+    builder: EasyLoading.init(),
   ));
 }
