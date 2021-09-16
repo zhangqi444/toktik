@@ -14,31 +14,22 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
 
-  TextField accountField,pwdField,pwdRepeatField;
-  String account,pwd,pwdRepeat;
+  TextField usernameField, pwdField, pwdRepeatField;
+  String username, pwd, pwdRepeat; // username can be email or a name.
   UserController loginController = Get.find();
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
 
-    accountField = TextField(
-        cursorColor:ColorRes.color_1,
-        cursorWidth: 2,
+    usernameField = TextField(
+      cursorColor:ColorRes.color_1,
+      cursorWidth: 2,
       decoration: InputDecoration(
         border: InputBorder.none,
-        hintText: 'Email'
+        hintText: 'Email',
       ),
       onChanged: (text){
-        account = text;
+        username = text;
       },
     );
 
@@ -114,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(5)
       ),
-      child: accountField,
+      child: usernameField,
     );
   }
 
@@ -153,17 +144,17 @@ class _RegisterPageState extends State<RegisterPage> {
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: (){
-          if(null != account && account.length > 0
+          if(null != username && username.length > 0
               && null != pwd && pwd.length > 0
               && null != pwdRepeat && pwdRepeat.length>0){
 
             if(pwd == pwdRepeat){
-              loginController.register(account, pwd, pwdRepeat);
-            }else{
+              loginController.registerByEmail(username, pwd, pwdRepeat);
+            } else {
               EasyLoading.showToast('The password confirmation did not match with the password.');
             }
 
-          }else{
+          } else {
             EasyLoading.showToast('Please fill in the missing field.');
           }
         },

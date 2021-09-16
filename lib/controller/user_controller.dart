@@ -14,6 +14,23 @@ import 'package:toktik/net/api.dart';
 import 'package:toktik/util/sp_util.dart';
 import 'package:get/get.dart';
 
+enum AuthStatus {
+  USERNAME_EXISTS,
+  INVALID_PASSWORD,
+  CONFIRM_SIGN_UP_STEP,
+  INVALID_SIGN_IN_STATE,
+  SIGN_UP_DONE,
+  SIGN_IN_DONE,
+  USER_NOT_FOUND,
+  NOT_AUTHORIZED
+}
+
+extension ParseToString on AuthStatus {
+  String toShortString() {
+    return this.toString().split('.').last;
+  }
+}
+
 class UserController extends GetxController{
 
   MainPageScrollController mainPageController = Get.find();
@@ -21,6 +38,9 @@ class UserController extends GetxController{
   final userInfoExResponse = UserInfoExResponse().obs;//用户信息（扩展）
   final isLoginUser = true.obs;//是否是登录用户
   final loginUserUid = 0.obs;//登录用户的uid
+  final loginUserUsername = "".obs;//登录用户的uid
+  final isSignUpComplete = true.obs;
+  final loginUserSignUpStep = "".obs;
 
   //--------用户作品列表-------------
   final userWorkList = <UserWorkListList>[].obs;
@@ -30,27 +50,62 @@ class UserController extends GetxController{
   //--------用户作品列表-------------
 
   ///登录
-  void login(String account,String pwd) async{
-    var response = await Api.login(account, pwd);
-    SPUtil.set(SPKeys.userUid, response.uid);
-    SPUtil.set(SPKeys.token, response.token);
+  void login(String username, String pwd) async {
+    username = username.split('@')[0];
+    var response = await Api.login(username, pwd);
 
-    Get.offNamed(Routers.scroll);
-    mainPageController.selectIndexBottomBarMainPage(0);
+    if(response != null && response.isSignedIn) {
+      await getUserInfoEx(response.username);
 
-    EasyLoading.showToast('登录成功');
+      SPUtil.set(SPKeys.username, response.username);
+      SPUtil.set(SPKeys.token, response.token);
+      SPUtil.set(SPKeys.userId, userInfoExResponse.value.user.id);
+
+      Get.offAllNamed(Routers.scroll);
+      mainPageController.selectIndexBottomBarMainPage(0);
+      return;
+    }
+
+    if(response != null && response.status == AuthStatus.USER_NOT_FOUND.toShortString()) {
+      SPUtil.set(SPKeys.username, response.username);
+      Get.toNamed(Routers.register);
+      return;
+    }
+
+    EasyLoading.showToast('Check your info and try again.');
   }
 
   ///注册
-  void register(String account,String pwd,String pwdRepeat) async{
-    var response = await Api.register(account, pwd, pwdRepeat);
-    SPUtil.set(SPKeys.userUid, response.uid);
-    SPUtil.set(SPKeys.token, response.token);
-    Get.offAllNamed(Routers.scroll);
-    mainPageController.selectIndexBottomBarMainPage(0);
-    EasyLoading.showToast('注册成功');
+  void registerByEmail(String email, String pwd, String pwdRepeat) async{
+    String username = email.split("@")[0];
+    var response = await Api.registerByEmail(email, username, pwd, pwdRepeat);
+    if(response != null) {
+      SPUtil.set(SPKeys.username, response.username);
+      loginUserUsername.value = response.username;
+      isSignUpComplete.value = response.isSignUpComplete;
+      loginUserSignUpStep.value = response.status;
+      if(isSignUpComplete.value == false) {
+        if(response.status == AuthStatus.USERNAME_EXISTS.toShortString()) {
+          response = await Api.resendSignUpCode(username);
+        }
+        if(response.status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
+          Get.offAndToNamed(Routers.registerVerify);
+        } else {
+          EasyLoading.showToast('Failed to send verification code, please try again.');
+        }
+      }
+    }
   }
 
+  void registerVerify(String verificationCode) async {
+    var response = await Api.confirmSignUp(loginUserUsername.value, verificationCode, null);
+    if(response != null && response.isSignUpComplete && response.status == AuthStatus.SIGN_UP_DONE.toShortString())  {
+      await login(response.username, verificationCode);
+    } else {
+      EasyLoading.showToast('Failed to verify the email, please try again.');
+    }
+  }
+  
   ///获取用户资料信息
   void getUserInfo(String uid) async{
     var response = await Api.getUserInfo(uid);

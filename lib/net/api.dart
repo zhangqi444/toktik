@@ -3,14 +3,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
+import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/model/response/follow_response.dart';
 import 'package:toktik/model/response/login_response.dart';
+import 'package:toktik/model/response/logout_response.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
+import 'package:toktik/model/response/register_response.dart';
 import 'package:toktik/model/response/upload_token_response.dart';
 import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/model/response/user_info_response.dart';
@@ -35,23 +39,118 @@ class Api{
   /// ----------------------------------接口api--------------------------------------------------------
 
   ///登录
-  static Future<LoginResponse> login(String account,String pwd)async{
+  static Future<LoginResponse> login(String username, String password) async {
 
-    Map<String,String> map = HashMap();
-    map['email'] = account;
-    map['password'] = pwd;
-    var result = await HttpManager.getInstance().post(url: HttpConstant.login, cancelTokenTag: 'login',data: map);
+    await loguut();
+
+    Map<String, dynamic> result = HashMap();
+    result['username'] = username;
+    result['isSignedIn'] = false;
+    try {
+      SignInResult res = await Amplify.Auth.signIn(
+        username: username,
+        password: password,
+      );
+      if(res != null && res.nextStep.signInStep == "DONE") {
+        result['isSignedIn'] = res.isSignedIn;
+        result["status"] = AuthStatus.SIGN_IN_DONE.toShortString();
+        result['token'] = await _fetchAuthSession();
+      }
+    } on AuthException catch (e, stacktrack) {
+      if(e is InvalidStateException) {
+        result['isSignedIn'] = true;
+        result["status"] = AuthStatus.SIGN_IN_DONE.toShortString();
+        result['token'] = await _fetchAuthSession();
+      } else if(e is UserNotFoundException) {
+        result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
+      } else if(e is NotAuthorizedException) {
+        result["status"] = AuthStatus.NOT_AUTHORIZED.toShortString();
+      } else {
+        print("Fail to sign in: " + e.toString() + '\n' + stacktrack.toString());
+      }
+    }
     return LoginResponse().fromJson(result);
   }
 
+  static Future<String> _fetchAuthSession() async{
+    AuthSession authSession = await Amplify.Auth.fetchAuthSession(
+      options: CognitoSessionOptions(getAWSCredentials: true),
+    );
+    if(authSession != null && (authSession as CognitoAuthSession).identityId != null) {
+      return (authSession as CognitoAuthSession).userPoolTokens.accessToken;
+    }
+  }
+
+  static Future<LogoutResponse> loguut() async {
+    try {
+      var result = await Amplify.Auth.signOut();
+      return result != null ? LogoutResponse().fromJson({}) : null;
+    } on AuthException catch (e, stacktrack) {
+      print("Fail to sign out: " + e.toString() + '\n' + stacktrack.toString());
+    }
+  }
+
+  static Future<RegisterResponse> resendSignUpCode(String username) async{
+    Map<String, dynamic> result = HashMap();
+    result['username'] = username;
+    try {
+      ResendSignUpCodeResult res = await Amplify.Auth.resendSignUpCode(username: username);
+      if(res != null && res.codeDeliveryDetails != null) {
+        result["status"] = AuthStatus.CONFIRM_SIGN_UP_STEP;
+      }
+    } on AuthException catch (e, stacktrack) {
+      print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+    }
+    return RegisterResponse().fromJson(result);
+  }
+
   ///注册
-  static Future<LoginResponse> register(String account,String pwd,String pwdRepeat) async{
-    Map<String,String> map = HashMap();
-    map['email'] = account;
-    map['password'] = pwd;
-    map['repassword'] = pwdRepeat;
-    var result = await HttpManager.getInstance().post(url: HttpConstant.register, cancelTokenTag: 'register',data: map);
-    return LoginResponse().fromJson(result);
+  static Future<RegisterResponse> registerByEmail(String email, String username, String pwd, String pwdRepeat) async{
+    Map<String, dynamic> result = HashMap();
+    result['username'] = username;
+    try {
+      Map<String, String> userAttributes = HashMap();
+      userAttributes['email'] = email;
+      SignUpResult res = await Amplify.Auth.signUp(
+        username: username,
+        password: pwd,
+        options: CognitoSignUpOptions(
+            userAttributes: userAttributes
+        )
+      );
+      if(res != null) {
+        result["isSignUpComplete"] = res.isSignUpComplete;
+        result["status"] = res.nextStep.signUpStep;
+      }
+    } on AuthException catch (e, stacktrack) {
+      result["isSignUpComplete"] = false;
+      if(e is UsernameExistsException) {
+        result["status"] = AuthStatus.USERNAME_EXISTS.toShortString();
+      } else if(e is InvalidPasswordException) {
+        result["status"] = AuthStatus.INVALID_PASSWORD.toShortString();
+      } else {
+        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+      }
+    }
+    return result.length == 0 ? null : RegisterResponse().fromJson(result);
+  }
+
+  ///注册
+  static Future<RegisterResponse> confirmSignUp(
+      String username, String confirmationCode, ConfirmSignUpOptions options) async {
+    try {
+      SignUpResult res = await Amplify.Auth.confirmSignUp(
+          username: username, confirmationCode: confirmationCode, options: options);
+      if(res != null && res.isSignUpComplete && res.nextStep.signUpStep == "DONE") {
+        Map<String, dynamic> result = HashMap();
+        result["isSignUpComplete"] = res.isSignUpComplete;
+        result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
+        return RegisterResponse().fromJson(result);
+      }
+      return null;
+    } on AuthException catch (e, stacktrack) {
+      print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+    }
   }
 
   ///获取用户资料信息
@@ -61,9 +160,9 @@ class Api{
   }
 
   ///获取用户资料信息(扩展)
-  static Future<UserInfoExResponse> getUserInfoEx(String uid) async{
+  static Future<UserInfoExResponse> getUserInfoEx(String username) async{
     try {
-      List<User> users = await Amplify.DataStore.query(User.classType, where: User.UID.eq(uid));
+      List<User> users = await Amplify.DataStore.query(User.classType, where: User.USERNAME.eq(username));
 
       Map<String, dynamic> convert(User user) {
         Map<String, dynamic> result = {};
