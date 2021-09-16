@@ -128,6 +128,9 @@ class Api{
         result["status"] = AuthStatus.USERNAME_EXISTS.toShortString();
       } else if(e is InvalidPasswordException) {
         result["status"] = AuthStatus.INVALID_PASSWORD.toShortString();
+      } else if(e is InvalidParameterException) {
+        result["isSignUpComplete"] = true;
+        result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else {
         print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
       }
@@ -138,32 +141,42 @@ class Api{
   ///注册
   static Future<RegisterResponse> confirmSignUp(
       String username, String confirmationCode, ConfirmSignUpOptions options) async {
+    Map<String, dynamic> result = HashMap();
     try {
       SignUpResult res = await Amplify.Auth.confirmSignUp(
           username: username, confirmationCode: confirmationCode, options: options);
       if(res != null && res.isSignUpComplete && res.nextStep.signUpStep == "DONE") {
-        Map<String, dynamic> result = HashMap();
         result["isSignUpComplete"] = res.isSignUpComplete;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
-        return RegisterResponse().fromJson(result);
+      } else {
+        result = null;
       }
-      return null;
     } on AuthException catch (e, stacktrack) {
-      print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+      if(e is NotAuthorizedException) {
+        result["isSignUpComplete"] = true;
+        result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
+      } else {
+        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+      }
+    }
+    return RegisterResponse().fromJson(result);
+  }
+
+  static Future<UserInfoExResponse> createUser(String username) async {
+    try {
+      User user = User(username: username);
+      await Amplify.DataStore.save(user);
+      return _parseUsers([user], {username: username});
+    } catch (e, stacktrace) {
+      print("Could not create user: " + e.toString() + '\n' + stacktrace.toString());
     }
   }
 
-  ///获取用户资料信息
-  static Future<UserInfoResponse> getUserInfo(String id) async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.userInfo+id, cancelTokenTag: 'getUserInfo',);
-    return UserInfoResponse().fromJson(result);
-  }
-
   ///获取用户资料信息(扩展)
-  static Future<UserInfoExResponse> getUserInfoExByUsername(String username) async{
+  static Future<UserInfoExResponse> getUserInfoExByUsername(String username) async {
     try {
       List<User> users = await Amplify.DataStore.query(User.classType, where: User.USERNAME.eq(username));
-      return _parseUsers(users);
+      return _parseUsers(users, {username: username});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
@@ -172,17 +185,23 @@ class Api{
   static Future<UserInfoExResponse> getUserInfoEx(String id) async{
     try {
       List<User> users = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
-      return _parseUsers(users);
+      return _parseUsers(users, {id: id});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
   }
 
-  static UserInfoExResponse _parseUsers(List<User> users) {
+  static UserInfoExResponse _parseUsers(List<User> users, Map<String, dynamic> params) {
     Map<String, dynamic> convert(User user) {
       Map<String, dynamic> result = {};
       var userJson = user.toJson();
       result['user'] = userJson;
+      if(result['user']['username'] == null) {
+        result['user']['username'] = params['username'];
+      }
+      if(result['user']['id'] == null) {
+        result['user']['id'] = params['id'];
+      }
       // TODO: generate counts from server side
       var rng = new Random();
       result['followerCount'] = rng.nextInt(100);
