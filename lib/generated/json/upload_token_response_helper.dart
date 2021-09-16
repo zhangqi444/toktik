@@ -2,19 +2,14 @@ import 'package:toktik/model/response/upload_token_response.dart';
 
 uploadTokenResponseFromJson(UploadTokenResponse data, Map<String, dynamic> json) {
 	if (json['tokens'] != null) {
-		data.tokens = new List<UploadTokenToken>();
-		(json['tokens'] as List).forEach((v) {
-			data.tokens.add(new UploadTokenToken().fromJson(v));
-		});
+		data.tokens = (json['tokens'] as List).map((v) => UploadTokenToken().fromJson(v)).toList();
 	}
 	return data;
 }
 
 Map<String, dynamic> uploadTokenResponseToJson(UploadTokenResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	if (entity.tokens != null) {
-		data['tokens'] =  entity.tokens.map((v) => v.toJson()).toList();
-	}
+	data['tokens'] =  entity.tokens?.map((v) => v.toJson())?.toList();
 	return data;
 }
 
@@ -29,7 +24,7 @@ uploadTokenTokenFromJson(UploadTokenToken data, Map<String, dynamic> json) {
 		data.effectUrl = json['effectUrl'].toString();
 	}
 	if (json['headers'] != null) {
-		data.headers = new UploadTokenTokensHeaders().fromJson(json['headers']);
+		data.headers = UploadTokenTokensHeaders().fromJson(json['headers']);
 	}
 	return data;
 }
@@ -39,9 +34,7 @@ Map<String, dynamic> uploadTokenTokenToJson(UploadTokenToken entity) {
 	data['method'] = entity.method;
 	data['uploadUrl'] = entity.uploadUrl;
 	data['effectUrl'] = entity.effectUrl;
-	if (entity.headers != null) {
-		data['headers'] = entity.headers.toJson();
-	}
+	data['headers'] = entity.headers?.toJson();
 	return data;
 }
 
