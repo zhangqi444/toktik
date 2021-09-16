@@ -13,10 +13,14 @@ us-west-2
 
 ## FAQ
 
-### how to reset Auth.
+### How to reset Amplify Auth?
 1. `amplify remove auth`
 2. `amplify add auth`
 3. `amplify update api`
 
 https://github.com/aws-amplify/amplify-cli/issues/1805
 https://github.com/aws-amplify/amplify-cli/issues/3802 
+
+### How to auto generate model file under `lib/generated`?
+
+Please follow https://plugins.jetbrains.com/plugin/11415-flutterjsonbeanfactory
