@@ -39,7 +39,6 @@ type Music @model @auth(rules: [{allow: public}]) {
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   nickname: String
-  uid: Int
   portrait: String
   bio: String
   birth: AWSDate

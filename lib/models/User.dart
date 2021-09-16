@@ -24,7 +24,6 @@ class User extends Model {
   static const classType = const _UserModelType();
   final String id;
   final String nickname;
-  final int uid;
   final String portrait;
   final String bio;
   final TemporalDate birth;
@@ -44,7 +43,6 @@ class User extends Model {
   const User._internal(
       {@required this.id,
       this.nickname,
-      this.uid,
       this.portrait,
       this.bio,
       this.birth,
@@ -56,7 +54,6 @@ class User extends Model {
   factory User(
       {String id,
       String nickname,
-      int uid,
       String portrait,
       String bio,
       TemporalDate birth,
@@ -67,7 +64,6 @@ class User extends Model {
     return User._internal(
         id: id == null ? UUID.getUUID() : id,
         nickname: nickname,
-        uid: uid,
         portrait: portrait,
         bio: bio,
         birth: birth,
@@ -87,7 +83,6 @@ class User extends Model {
     return other is User &&
         id == other.id &&
         nickname == other.nickname &&
-        uid == other.uid &&
         portrait == other.portrait &&
         bio == other.bio &&
         birth == other.birth &&
@@ -107,7 +102,6 @@ class User extends Model {
     buffer.write("User {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("nickname=" + "$nickname" + ", ");
-    buffer.write("uid=" + (uid != null ? uid.toString() : "null") + ", ");
     buffer.write("portrait=" + "$portrait" + ", ");
     buffer.write("bio=" + "$bio" + ", ");
     buffer.write("birth=" + (birth != null ? birth.format() : "null") + ", ");
@@ -124,7 +118,6 @@ class User extends Model {
   User copyWith(
       {String id,
       String nickname,
-      int uid,
       String portrait,
       String bio,
       TemporalDate birth,
@@ -135,7 +128,6 @@ class User extends Model {
     return User(
         id: id ?? this.id,
         nickname: nickname ?? this.nickname,
-        uid: uid ?? this.uid,
         portrait: portrait ?? this.portrait,
         bio: bio ?? this.bio,
         birth: birth ?? this.birth,
@@ -148,7 +140,6 @@ class User extends Model {
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         nickname = json['nickname'],
-        uid = (json['uid'] as num)?.toInt(),
         portrait = json['portrait'],
         bio = json['bio'],
         birth = json['birth'] != null
@@ -162,7 +153,6 @@ class User extends Model {
   Map<String, dynamic> toJson() => {
         'id': id,
         'nickname': nickname,
-        'uid': uid,
         'portrait': portrait,
         'bio': bio,
         'birth': birth?.format(),
@@ -174,7 +164,6 @@ class User extends Model {
 
   static final QueryField ID = QueryField(fieldName: "user.id");
   static final QueryField NICKNAME = QueryField(fieldName: "nickname");
-  static final QueryField UID = QueryField(fieldName: "uid");
   static final QueryField PORTRAIT = QueryField(fieldName: "portrait");
   static final QueryField BIO = QueryField(fieldName: "bio");
   static final QueryField BIRTH = QueryField(fieldName: "birth");
@@ -202,11 +191,6 @@ class User extends Model {
         key: User.NICKNAME,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.UID,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.int)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: User.PORTRAIT,
