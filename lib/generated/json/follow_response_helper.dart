@@ -1,20 +1,16 @@
 import 'package:toktik/model/response/follow_response.dart';
 
 followResponseFromJson(FollowResponse data, Map<String, dynamic> json) {
-	if (json['uid'] != null) {
-		data.uid = json['uid'] is String
-				? int.tryParse(json['uid'])
-				: json['uid'].toInt();
+	if (json['id'] != null) {
+		data.id = json['id'].toString();
 	}
 	if (json['actionType'] != null) {
 		data.actionType = json['actionType'] is String
 				? int.tryParse(json['actionType'])
 				: json['actionType'].toInt();
 	}
-	if (json['relationUid'] != null) {
-		data.relationUid = json['relationUid'] is String
-				? int.tryParse(json['relationUid'])
-				: json['relationUid'].toInt();
+	if (json['relationUserId'] != null) {
+		data.relationUserId = json['relationUserId'].toString();
 	}
 	if (json['createTime'] != null) {
 		data.createTime = json['createTime'] is String
@@ -26,9 +22,9 @@ followResponseFromJson(FollowResponse data, Map<String, dynamic> json) {
 
 Map<String, dynamic> followResponseToJson(FollowResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	data['uid'] = entity.uid;
+	data['id'] = entity.id;
 	data['actionType'] = entity.actionType;
-	data['relationUid'] = entity.relationUid;
+	data['relationUserId'] = entity.relationUserId;
 	data['createTime'] = entity.createTime;
 	return data;
 }

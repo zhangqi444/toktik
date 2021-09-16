@@ -6,10 +6,8 @@ followRequestFromJson(FollowRequest data, Map<String, dynamic> json) {
 				? int.tryParse(json['actionType'])
 				: json['actionType'].toInt();
 	}
-	if (json['relationUid'] != null) {
-		data.relationUid = json['relationUid'] is String
-				? int.tryParse(json['relationUid'])
-				: json['relationUid'].toInt();
+	if (json['relationUserId'] != null) {
+		data.relationUserId = json['relationUserId'].toString();
 	}
 	return data;
 }
@@ -17,6 +15,6 @@ followRequestFromJson(FollowRequest data, Map<String, dynamic> json) {
 Map<String, dynamic> followRequestToJson(FollowRequest entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['actionType'] = entity.actionType;
-	data['relationUid'] = entity.relationUid;
+	data['relationUserId'] = entity.relationUserId;
 	return data;
 }

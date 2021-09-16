@@ -1,11 +1,6 @@
 import 'package:toktik/model/response/user_info_response.dart';
 
 userInfoResponseFromJson(UserInfoResponse data, Map<String, dynamic> json) {
-	if (json['uid'] != null) {
-		data.uid = json['uid'] is String
-				? int.tryParse(json['uid'])
-				: json['uid'].toInt();
-	}
 	if (json['id'] != null) {
 		data.id = json['id'].toString();
 	}
@@ -42,7 +37,6 @@ userInfoResponseFromJson(UserInfoResponse data, Map<String, dynamic> json) {
 
 Map<String, dynamic> userInfoResponseToJson(UserInfoResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	data['uid'] = entity.uid;
 	data['id'] = entity.id;
 	data['nickname'] = entity.nickname;
 	data['portrait'] = entity.portrait;

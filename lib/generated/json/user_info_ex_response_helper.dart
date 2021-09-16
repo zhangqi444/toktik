@@ -36,11 +36,6 @@ Map<String, dynamic> userInfoExResponseToJson(UserInfoExResponse entity) {
 }
 
 userInfoExUserFromJson(UserInfoExUser data, Map<String, dynamic> json) {
-	if (json['uid'] != null) {
-		data.uid = json['uid'] is String
-				? int.tryParse(json['uid'])
-				: json['uid'].toInt();
-	}
 	if (json['id'] != null) {
 		data.id = json['id'].toString();
 	}
@@ -77,7 +72,6 @@ userInfoExUserFromJson(UserInfoExUser data, Map<String, dynamic> json) {
 
 Map<String, dynamic> userInfoExUserToJson(UserInfoExUser entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	data['uid'] = entity.uid;
 	data['id'] = entity.id;
 	data['nickname'] = entity.nickname;
 	data['portrait'] = entity.portrait;

@@ -313,10 +313,8 @@ Map<String, dynamic> userWorkListListLocationToJson(UserWorkListListLocation ent
 }
 
 userWorkListListUserFromJson(UserWorkListListUser data, Map<String, dynamic> json) {
-	if (json['uid'] != null) {
-		data.uid = json['uid'] is String
-				? int.tryParse(json['uid'])
-				: json['uid'].toInt();
+	if (json['id'] != null) {
+		data.id = json['id'].toString();
 	}
 	if (json['nickname'] != null) {
 		data.nickname = json['nickname'].toString();
@@ -351,7 +349,7 @@ userWorkListListUserFromJson(UserWorkListListUser data, Map<String, dynamic> jso
 
 Map<String, dynamic> userWorkListListUserToJson(UserWorkListListUser entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	data['uid'] = entity.uid;
+	data['id'] = entity.id;
 	data['nickname'] = entity.nickname;
 	data['portrait'] = entity.portrait;
 	data['bio'] = entity.bio;
