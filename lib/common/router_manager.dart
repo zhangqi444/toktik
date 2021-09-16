@@ -10,6 +10,7 @@ import 'package:toktik/page/main_page.dart';
 import 'package:toktik/page/message_page.dart';
 // import 'package:toktik/page/modify_info_page.dart';
 import 'package:toktik/page/register_page.dart';
+import 'package:toktik/page/register_verify_page.dart';
 // import 'package:toktik/page/scan_page.dart';
 import 'package:toktik/page/scroll_page.dart';
 import 'package:toktik/page/search_page.dart';
@@ -42,6 +43,7 @@ class RouterManager{
     // GetPage(name: Routers.living, page: () => LivingPage()),
     GetPage(name: Routers.login, page: () => LoginPage(),transition: Transition.downToUp,),
     GetPage(name: Routers.register, page: () => RegisterPage()),
+    GetPage(name: Routers.registerVerify, page: () => RegisterVerifyPage()),
     // GetPage(name: Routers.setting, page: () => SettingPage()),
     // GetPage(name: Routers.editUserInfo, page: () => UserInfoEditPage()),
     // GetPage(name: Routers.modifyUserInfo, page: () => ModifyInfoPage()),
@@ -70,6 +72,7 @@ class Routers{
   static final String living = '/living';
   static final String login = '/login';
   static final String register = '/register';
+  static final String registerVerify = '/registerVerify';
   static final String setting = '/setting';
   static final String editUserInfo = '/editUserInfo';
   static final String modifyUserInfo = '/modifyUserInfo';
