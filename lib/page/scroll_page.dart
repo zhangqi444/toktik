@@ -83,16 +83,16 @@ class _ScrollPageState extends State<ScrollPage> {
           },
         ),
         ),
-        Obx(()=>DrawerController(
-            key: drawerKey,
-            alignment: DrawerAlignment.end,
-            isDrawerOpen: _userPageController.showRightMenu.value,
-            drawerCallback: (isOpened){
-              _userPageController.toggleRightMenu();
-            },
-            child: UserRightMenuWidget()
-        ),
-        ),
+        // Obx(()=>DrawerController(
+        //     key: drawerKey,
+        //     alignment: DrawerAlignment.end,
+        //     isDrawerOpen: _userPageController.showRightMenu.value,
+        //     drawerCallback: (isOpened){
+        //       _userPageController.toggleRightMenu();
+        //     },
+        //     child: UserRightMenuWidget()
+        // ),
+        // ),
       ],
     );
   }
