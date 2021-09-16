@@ -74,7 +74,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     }
     UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
     if(uid != null && (userEx == null || userEx.uid != _userController.loginUserUid)) {
-      await _userController.getUserInfoEx(uid.toString());
+      await _userController.getUserInfoExByUid(uid.toString());
       // TODO: disbale before we have the api reday.
       // _userController.getUserWorkList(uid);
     }
