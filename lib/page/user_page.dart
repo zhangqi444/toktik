@@ -148,7 +148,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: [StretchMode.zoomBackground],
         collapseMode: CollapseMode.parallax,
-        title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userInfoExResponse.value.user.nickname:'')),
+        title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userInfoExResponse.value.user.username:'')),
         centerTitle:true,
         background: Image.asset(
           'assets/images/bg_3.jpg',

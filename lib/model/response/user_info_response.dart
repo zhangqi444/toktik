@@ -3,7 +3,7 @@ import 'package:toktik/generated/json/base/json_field.dart';
 
 class UserInfoResponse with JsonConvert<UserInfoResponse> {
 	String id;
-	String nickname;
+	String username;
 	String portrait;
 	String bio;
 	String birth;

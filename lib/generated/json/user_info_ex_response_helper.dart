@@ -39,8 +39,8 @@ userInfoExUserFromJson(UserInfoExUser data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
 		data.id = json['id'].toString();
 	}
-	if (json['nickname'] != null) {
-		data.nickname = json['nickname'].toString();
+	if (json['username'] != null) {
+		data.username = json['username'].toString();
 	}
 	if (json['portrait'] != null) {
 		data.portrait = json['portrait'].toString();
@@ -73,7 +73,7 @@ userInfoExUserFromJson(UserInfoExUser data, Map<String, dynamic> json) {
 Map<String, dynamic> userInfoExUserToJson(UserInfoExUser entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['id'] = entity.id;
-	data['nickname'] = entity.nickname;
+	data['username'] = entity.username;
 	data['portrait'] = entity.portrait;
 	data['bio'] = entity.bio;
 	data['birth'] = entity.birth;

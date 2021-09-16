@@ -132,7 +132,7 @@ class UserController extends GetxController{
   void updateUserInfo() async{
     Map<String,dynamic> map = HashMap();
     map['id'] = userInfoResponse.value.id;
-    map['nickname'] = userInfoResponse.value.nickname;
+    map['username'] = userInfoResponse.value.username;
     map['portrait'] = userInfoResponse.value.portrait;
     map['bio'] = userInfoResponse.value.bio;
     map['birth'] = userInfoResponse.value.birth;
