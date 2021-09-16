@@ -76,7 +76,7 @@ class _ScrollPageState extends State<ScrollPage> {
             MainPage(pageController:_pageController),
             Scaffold(
                 backgroundColor: Colors.white,
-                body: UserPage(pageController: _pageController, isLoginUser: false, uid: mainPageScrollController.uidCuttent.value)
+                body: UserPage(pageController: _pageController, isLoginUser: false, id: mainPageScrollController.userIdCurrent.value)
             )
           ],
           onPageChanged: (index){

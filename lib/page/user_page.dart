@@ -21,11 +21,11 @@ import 'package:toktik/util/sp_util.dart';
 class UserPage extends StatefulWidget {
   PageController _scrollPageController;
   bool _isLoginUser;
-  int uid;
-  UserPage({PageController pageController, bool isLoginUser, UserModel userModel, int uid}){
+  String id;
+  UserPage({PageController pageController, bool isLoginUser, UserModel userModel, String id}){
     this._scrollPageController = pageController;
     this._isLoginUser = isLoginUser;
-    this.uid = uid;
+    this.id = id;
   }
 
   @override
@@ -68,15 +68,16 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   }
 
   void initData() async {
-    var uid = widget.uid;
+    var id = widget.id;
     if(widget._isLoginUser) {
-      uid = _userController.loginUserUid.value;
+      id = _userController.loginUserId.value;
+      widget.id = id;
     }
     UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
-    if(uid != null && (userEx == null || userEx.uid != _userController.loginUserUid)) {
-      await _userController.getUserInfoExByUid(uid.toString());
+    if(id != null && (userEx == null || userEx.id != _userController.loginUserId)) {
+      await _userController.getUserInfoEx(id);
       // TODO: disbale before we have the api reday.
-      // _userController.getUserWorkList(uid);
+      // _userController.getUserWorkList(id);
     }
   }
 
@@ -166,7 +167,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     return SliverToBoxAdapter(
       child: UserInfoWidget(
         isLoginUser: widget._isLoginUser,
-        uid: widget.uid,
+        id: widget.id,
       ),
     );
   }

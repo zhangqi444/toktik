@@ -37,8 +37,8 @@ class UserController extends GetxController{
   final userInfoResponse = UserInfoResponse().obs;//用户信息
   final userInfoExResponse = UserInfoExResponse().obs;//用户信息（扩展）
   final isLoginUser = true.obs;//是否是登录用户
-  final loginUserUid = 0.obs;//登录用户的uid
-  final loginUserUsername = "".obs;//登录用户的uid
+  final loginUserId = ''.obs;//登录用户的user id
+  final loginUserUsername = "".obs;//登录用户的username
   final isSignUpComplete = true.obs;
   final loginUserSignUpStep = "".obs;
 
@@ -55,7 +55,7 @@ class UserController extends GetxController{
     var response = await Api.login(username, pwd);
 
     if(response != null && response.isSignedIn) {
-      await getUserInfoEx(response.username);
+      await getUserInfoExByUsername(response.username);
 
       SPUtil.set(SPKeys.username, response.username);
       SPUtil.set(SPKeys.token, response.token);
@@ -107,22 +107,22 @@ class UserController extends GetxController{
   }
   
   ///获取用户资料信息
-  void getUserInfo(String uid) async{
-    var response = await Api.getUserInfo(uid);
+  void getUserInfo(String id) async{
+    var response = await Api.getUserInfo(id);
     userInfoResponse.value = response;
   }
 
   ///获取用户资料信息(扩展)
-  void getUserInfoExByUid(String uid) async{
-    var response = await Api.getUserInfoEx(uid);
+  void getUserInfoEx(String id) async{
+    var response = await Api.getUserInfoEx(id);
     if(response != null) {
       userInfoExResponse.value = response;
     }
   }
 
   ///获取用户资料信息(扩展)
-  void getUserInfoEx(String username) async{
-    var response = await Api.getUserInfoEx(username);
+  void getUserInfoExByUsername(String username) async{
+    var response = await Api.getUserInfoExByUsername(username);
     if(response != null) {
       userInfoExResponse.value = response;
     }
@@ -131,7 +131,7 @@ class UserController extends GetxController{
   ///更新用户资料
   void updateUserInfo() async{
     Map<String,dynamic> map = HashMap();
-    map['uid'] = userInfoResponse.value.uid;
+    map['id'] = userInfoResponse.value.id;
     map['nickname'] = userInfoResponse.value.nickname;
     map['portrait'] = userInfoResponse.value.portrait;
     map['bio'] = userInfoResponse.value.bio;
@@ -145,34 +145,34 @@ class UserController extends GetxController{
   }
 
   ///判断是否是登录用户
-  void isLoginUserByUid(int uid)async{
-    int loginUserUid = await SPUtil.getInt(SPKeys.userUid);
-    if(loginUserUid == uid){
+  void isLoginUserById(String id)async{
+    String loginUserId = await SPUtil.getString(SPKeys.userId);
+    if(loginUserId == id){
       isLoginUser.value = true;
     }else{
       isLoginUser.value = false;
     }
   }
 
-  ///获取登录用户的uid
-  void getLoginUserUid(){
-    SPUtil.getInt(SPKeys.userUid).then((uid){
-      loginUserUid.value = uid;
+  ///获取登录用户的id
+  void getLoginUserId(){
+    SPUtil.getString(SPKeys.userId).then((id){
+      loginUserId.value = id;
     });
   }
 
   ///获取用户作品列表
-  void getUserWorkList(int uid)async{
-    var result = await Api.getUserFeedList(uid, cursor, count);
+  void getUserWorkList(String id)async{
+    var result = await Api.getUserFeedList(id, cursor, count);
     userWorkList.value.addAll(result.xList);
     cursor = result.cursor;
   }
 
   ///关注
-  Future<FollowResponse> follow(int followType,int uid)async{
+  Future<FollowResponse> follow(int followType, String id)async{
     FollowRequest request = FollowRequest();
     request.actionType = followType;
-    request.relationUid = uid;
+    request.relationUserId = id;
     var result = await Api.follow(request);
     return result;
   }

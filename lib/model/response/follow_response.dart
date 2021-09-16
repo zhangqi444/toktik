@@ -1,8 +1,8 @@
 import 'package:toktik/generated/json/base/json_convert_content.dart';
 
 class FollowResponse with JsonConvert<FollowResponse> {
-	int uid;
+	String id;
 	int actionType;
-	int relationUid;
+	String relationUserId;
 	int createTime;
 }

@@ -9,11 +9,11 @@ import 'package:get/get.dart';
 ///用户信息
 class UserInfoWidget extends StatefulWidget {
   bool isLoginUser;
-  int uid;
+  String id;
 
-  UserInfoWidget({bool isLoginUser, int uid}){
+  UserInfoWidget({bool isLoginUser, String id}){
     this.isLoginUser = isLoginUser;
-    this.uid = uid;
+    this.id = id;
   }
 
   @override
@@ -144,7 +144,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           Obx(()=>Text(_userController.userInfoExResponse.value.user == null ? '' : _userController.userInfoExResponse.value.user.nickname,
             style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 22),),),
           SizedBox(height: 5,),
-          Text('ID：${widget.uid}',
+          Text('ID：${widget.id}',
             style: TextStyle(color: ColorRes.color_1,fontSize: 12),
           ),
           SizedBox(height: 10,),

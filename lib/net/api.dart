@@ -154,40 +154,51 @@ class Api{
   }
 
   ///获取用户资料信息
-  static Future<UserInfoResponse> getUserInfo(String uid) async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.userInfo+uid, cancelTokenTag: 'getUserInfo',);
+  static Future<UserInfoResponse> getUserInfo(String id) async{
+    var result = await HttpManager.getInstance().get(url: HttpConstant.userInfo+id, cancelTokenTag: 'getUserInfo',);
     return UserInfoResponse().fromJson(result);
   }
 
   ///获取用户资料信息(扩展)
-  static Future<UserInfoExResponse> getUserInfoEx(String username) async{
+  static Future<UserInfoExResponse> getUserInfoExByUsername(String username) async{
     try {
       List<User> users = await Amplify.DataStore.query(User.classType, where: User.USERNAME.eq(username));
-
-      Map<String, dynamic> convert(User user) {
-        Map<String, dynamic> result = {};
-        var userJson = user.toJson();
-        result['user'] = userJson;
-        // TODO: generate counts from server side
-        var rng = new Random();
-        result['followerCount'] = rng.nextInt(100);
-        result['followingCount'] = rng.nextInt(100);
-        result['likeCount'] = rng.nextInt(100);
-        result['relation'] = '';
-        return result;
-      }
-
-      var parsed = users.map((user) => convert(user)).toList();
-      return (parsed != null && parsed.length > 0) ? UserInfoExResponse().fromJson(parsed[0]) : null;
+      return _parseUsers(users);
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
+  }
 
+  static Future<UserInfoExResponse> getUserInfoEx(String id) async{
+    try {
+      List<User> users = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
+      return _parseUsers(users);
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
+
+  static UserInfoExResponse _parseUsers(List<User> users) {
+    Map<String, dynamic> convert(User user) {
+      Map<String, dynamic> result = {};
+      var userJson = user.toJson();
+      result['user'] = userJson;
+      // TODO: generate counts from server side
+      var rng = new Random();
+      result['followerCount'] = rng.nextInt(100);
+      result['followingCount'] = rng.nextInt(100);
+      result['likeCount'] = rng.nextInt(100);
+      result['relation'] = '';
+      return result;
+    }
+
+    var parsed = users.map((user) => convert(user)).toList();
+    return (parsed != null && parsed.length > 0) ? UserInfoExResponse().fromJson(parsed[0]) : null;
   }
 
   ///更新用户资料信息
   static Future<UserInfoResponse> updateUserInfo(Map<String,dynamic> map) async{
-    var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['uid'].toString(), cancelTokenTag: 'getUserInfo',data: map);
+    var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['id'].toString(), cancelTokenTag: 'getUserInfo',data: map);
     return UserInfoResponse().fromJson(result);
   }
 
@@ -234,8 +245,8 @@ class Api{
   }
 
   ///获取用户作品列表
-  static Future<UserWorkListResponse> getUserFeedList(int uid,int cursor,int count)async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?uid=$uid&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
+  static Future<UserWorkListResponse> getUserFeedList(String id, int cursor,int count)async{
+    var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?id=$id&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
     return UserWorkListResponse().fromJson(result);
   }
 

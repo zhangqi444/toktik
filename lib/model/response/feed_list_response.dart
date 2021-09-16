@@ -76,7 +76,7 @@ class FeedListListLocation with JsonConvert<FeedListListLocation> {
 }
 
 class FeedListListUser with JsonConvert<FeedListListUser> {
-	int uid;
+	String id;
 	String nickname;
 	String portrait;
 	String bio;

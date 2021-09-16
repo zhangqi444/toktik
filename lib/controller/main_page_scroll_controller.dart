@@ -15,11 +15,11 @@ class MainPageScrollController extends GetxController{
   var videoViewHeight = 0.0.obs;
 
   //当前播放视频的用户model
-  var uidCuttent = 0.obs;
+  var userIdCurrent = "".obs;
 
   //设置当前播放视频的用户model
   void setCurrentUserOfVideo(FeedListListUser userInfo){
-    uidCuttent.value = userInfo.uid;
+    userIdCurrent.value = userInfo.id;
   }
 
   //设置视频播放页视频的高度

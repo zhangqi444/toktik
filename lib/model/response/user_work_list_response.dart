@@ -76,7 +76,7 @@ class UserWorkListListLocation with JsonConvert<UserWorkListListLocation> {
 }
 
 class UserWorkListListUser with JsonConvert<UserWorkListListUser> {
-	int uid;
+	String id;
 	String nickname;
 	String portrait;
 	String bio;
