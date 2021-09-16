@@ -34,8 +34,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
 
     accountField = TextField(
-        cursorColor:ColorRes.color_1,
-        cursorWidth: 2,
+      cursorColor:ColorRes.color_1,
+      cursorWidth: 2,
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: 'Email'

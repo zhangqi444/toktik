@@ -46,5 +46,6 @@ type User @model @auth(rules: [{allow: public}]) {
   gender: Int
   city: String
   profession: String
+  username: String
 }
  

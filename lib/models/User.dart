@@ -31,6 +31,7 @@ class User extends Model {
   final int gender;
   final String city;
   final String profession;
+  final String username;
 
   @override
   getInstanceType() => classType;
@@ -49,7 +50,8 @@ class User extends Model {
       this.birth,
       this.gender,
       this.city,
-      this.profession});
+      this.profession,
+      this.username});
 
   factory User(
       {String id,
@@ -60,7 +62,8 @@ class User extends Model {
       TemporalDate birth,
       int gender,
       String city,
-      String profession}) {
+      String profession,
+      String username}) {
     return User._internal(
         id: id == null ? UUID.getUUID() : id,
         nickname: nickname,
@@ -70,7 +73,8 @@ class User extends Model {
         birth: birth,
         gender: gender,
         city: city,
-        profession: profession);
+        profession: profession,
+        username: username);
   }
 
   bool equals(Object other) {
@@ -89,7 +93,8 @@ class User extends Model {
         birth == other.birth &&
         gender == other.gender &&
         city == other.city &&
-        profession == other.profession;
+        profession == other.profession &&
+        username == other.username;
   }
 
   @override
@@ -109,7 +114,8 @@ class User extends Model {
     buffer.write(
         "gender=" + (gender != null ? gender.toString() : "null") + ", ");
     buffer.write("city=" + "$city" + ", ");
-    buffer.write("profession=" + "$profession");
+    buffer.write("profession=" + "$profession" + ", ");
+    buffer.write("username=" + "$username");
     buffer.write("}");
 
     return buffer.toString();
@@ -124,7 +130,8 @@ class User extends Model {
       TemporalDate birth,
       int gender,
       String city,
-      String profession}) {
+      String profession,
+      String username}) {
     return User(
         id: id ?? this.id,
         nickname: nickname ?? this.nickname,
@@ -134,7 +141,8 @@ class User extends Model {
         birth: birth ?? this.birth,
         gender: gender ?? this.gender,
         city: city ?? this.city,
-        profession: profession ?? this.profession);
+        profession: profession ?? this.profession,
+        username: username ?? this.username);
   }
 
   User.fromJson(Map<String, dynamic> json)
@@ -148,7 +156,8 @@ class User extends Model {
             : null,
         gender = (json['gender'] as num)?.toInt(),
         city = json['city'],
-        profession = json['profession'];
+        profession = json['profession'],
+        username = json['username'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -159,7 +168,8 @@ class User extends Model {
         'birth': birth?.format(),
         'gender': gender,
         'city': city,
-        'profession': profession
+        'profession': profession,
+        'username': username
       };
 
   static final QueryField ID = QueryField(fieldName: "user.id");
@@ -171,6 +181,7 @@ class User extends Model {
   static final QueryField GENDER = QueryField(fieldName: "gender");
   static final QueryField CITY = QueryField(fieldName: "city");
   static final QueryField PROFESSION = QueryField(fieldName: "profession");
+  static final QueryField USERNAME = QueryField(fieldName: "username");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
@@ -224,6 +235,11 @@ class User extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: User.PROFESSION,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.USERNAME,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
