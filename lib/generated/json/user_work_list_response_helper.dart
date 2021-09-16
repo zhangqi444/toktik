@@ -2,10 +2,7 @@ import 'package:toktik/model/response/user_work_list_response.dart';
 
 userWorkListResponseFromJson(UserWorkListResponse data, Map<String, dynamic> json) {
 	if (json['list'] != null) {
-		data.xList = new List<UserWorkListList>();
-		(json['list'] as List).forEach((v) {
-			data.xList.add(new UserWorkListList().fromJson(v));
-		});
+		data.xList = (json['list'] as List).map((v) => UserWorkListList().fromJson(v)).toList();
 	}
 	if (json['cursor'] != null) {
 		data.cursor = json['cursor'] is String
@@ -25,9 +22,7 @@ userWorkListResponseFromJson(UserWorkListResponse data, Map<String, dynamic> jso
 
 Map<String, dynamic> userWorkListResponseToJson(UserWorkListResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	if (entity.xList != null) {
-		data['list'] =  entity.xList.map((v) => v.toJson()).toList();
-	}
+	data['list'] =  entity.xList?.map((v) => v.toJson())?.toList();
 	data['cursor'] = entity.cursor;
 	data['count'] = entity.count;
 	data['hasMore'] = entity.hasMore;
@@ -46,10 +41,10 @@ userWorkListListFromJson(UserWorkListList data, Map<String, dynamic> json) {
 				: json['type'].toInt();
 	}
 	if (json['content'] != null) {
-		data.content = new UserWorkListListContent().fromJson(json['content']);
+		data.content = UserWorkListListContent().fromJson(json['content']);
 	}
 	if (json['location'] != null) {
-		data.location = new UserWorkListListLocation().fromJson(json['location']);
+		data.location = UserWorkListListLocation().fromJson(json['location']);
 	}
 	if (json['device'] != null) {
 		data.device = json['device'].toString();
@@ -70,7 +65,7 @@ userWorkListListFromJson(UserWorkListList data, Map<String, dynamic> json) {
 				: json['createTime'].toInt();
 	}
 	if (json['user'] != null) {
-		data.user = new UserWorkListListUser().fromJson(json['user']);
+		data.user = UserWorkListListUser().fromJson(json['user']);
 	}
 	if (json['likeCount'] != null) {
 		data.likeCount = json['likeCount'] is String
@@ -105,19 +100,13 @@ Map<String, dynamic> userWorkListListToJson(UserWorkListList entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['id'] = entity.id;
 	data['type'] = entity.type;
-	if (entity.content != null) {
-		data['content'] = entity.content.toJson();
-	}
-	if (entity.location != null) {
-		data['location'] = entity.location.toJson();
-	}
+	data['content'] = entity.content?.toJson();
+	data['location'] = entity.location?.toJson();
 	data['device'] = entity.device;
 	data['aclType'] = entity.aclType;
 	data['commentType'] = entity.commentType;
 	data['createTime'] = entity.createTime;
-	if (entity.user != null) {
-		data['user'] = entity.user.toJson();
-	}
+	data['user'] = entity.user?.toJson();
 	data['likeCount'] = entity.likeCount;
 	data['commentCount'] = entity.commentCount;
 	data['shareCount'] = entity.shareCount;
@@ -132,25 +121,16 @@ userWorkListListContentFromJson(UserWorkListListContent data, Map<String, dynami
 		data.text = json['text'].toString();
 	}
 	if (json['tag'] != null) {
-		data.tag = new List<UserWorkListListContentTag>();
-		(json['tag'] as List).forEach((v) {
-			data.tag.add(new UserWorkListListContentTag().fromJson(v));
-		});
+		data.tag = (json['tag'] as List).map((v) => UserWorkListListContentTag().fromJson(v)).toList();
 	}
 	if (json['at'] != null) {
-		data.at = new List<UserWorkListListContentAt>();
-		(json['at'] as List).forEach((v) {
-			data.at.add(new UserWorkListListContentAt().fromJson(v));
-		});
+		data.at = (json['at'] as List).map((v) => UserWorkListListContentAt().fromJson(v)).toList();
 	}
 	if (json['attachments'] != null) {
-		data.attachments = new List<UserWorkListListContentAttachmants>();
-		(json['attachments'] as List).forEach((v) {
-			data.attachments.add(new UserWorkListListContentAttachmants().fromJson(v));
-		});
+		data.attachments = (json['attachments'] as List).map((v) => UserWorkListListContentAttachmants().fromJson(v)).toList();
 	}
 	if (json['music'] != null) {
-		data.music = new UserWorkListListContentMusic().fromJson(json['music']);
+		data.music = UserWorkListListContentMusic().fromJson(json['music']);
 	}
 	return data;
 }
@@ -158,18 +138,10 @@ userWorkListListContentFromJson(UserWorkListListContent data, Map<String, dynami
 Map<String, dynamic> userWorkListListContentToJson(UserWorkListListContent entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['text'] = entity.text;
-	if (entity.tag != null) {
-		data['tag'] =  entity.tag.map((v) => v.toJson()).toList();
-	}
-	if (entity.at != null) {
-		data['at'] =  entity.at.map((v) => v.toJson()).toList();
-	}
-	if (entity.attachments != null) {
-		data['attachments'] =  entity.attachments.map((v) => v.toJson()).toList();
-	}
-	if (entity.music != null) {
-		data['music'] = entity.music.toJson();
-	}
+	data['tag'] =  entity.tag?.map((v) => v.toJson())?.toList();
+	data['at'] =  entity.at?.map((v) => v.toJson())?.toList();
+	data['attachments'] =  entity.attachments?.map((v) => v.toJson())?.toList();
+	data['music'] = entity.music?.toJson();
 	return data;
 }
 

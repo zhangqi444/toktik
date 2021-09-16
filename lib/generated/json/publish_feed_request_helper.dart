@@ -7,10 +7,10 @@ publishFeedRequestFromJson(PublishFeedRequest data, Map<String, dynamic> json) {
 				: json['type'].toInt();
 	}
 	if (json['content'] != null) {
-		data.content = new PublishFeedContent().fromJson(json['content']);
+		data.content = PublishFeedContent().fromJson(json['content']);
 	}
 	if (json['location'] != null) {
-		data.location = new PublishFeedLocation().fromJson(json['location']);
+		data.location = PublishFeedLocation().fromJson(json['location']);
 	}
 	if (json['device'] != null) {
 		data.device = json['device'].toString();
@@ -31,12 +31,8 @@ publishFeedRequestFromJson(PublishFeedRequest data, Map<String, dynamic> json) {
 Map<String, dynamic> publishFeedRequestToJson(PublishFeedRequest entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['type'] = entity.type;
-	if (entity.content != null) {
-		data['content'] = entity.content.toJson();
-	}
-	if (entity.location != null) {
-		data['location'] = entity.location.toJson();
-	}
+	data['content'] = entity.content?.toJson();
+	data['location'] = entity.location?.toJson();
 	data['device'] = entity.device;
 	data['aclType'] = entity.aclType;
 	data['commentType'] = entity.commentType;
@@ -48,25 +44,16 @@ publishFeedContentFromJson(PublishFeedContent data, Map<String, dynamic> json) {
 		data.text = json['text'].toString();
 	}
 	if (json['tag'] != null) {
-		data.tag = new List<PublishFeedContentTag>();
-		(json['tag'] as List).forEach((v) {
-			data.tag.add(new PublishFeedContentTag().fromJson(v));
-		});
+		data.tag = (json['tag'] as List).map((v) => PublishFeedContentTag().fromJson(v)).toList();
 	}
 	if (json['at'] != null) {
-		data.at = new List<PublishFeedContentAt>();
-		(json['at'] as List).forEach((v) {
-			data.at.add(new PublishFeedContentAt().fromJson(v));
-		});
+		data.at = (json['at'] as List).map((v) => PublishFeedContentAt().fromJson(v)).toList();
 	}
 	if (json['attachments'] != null) {
-		data.attachments = new List<PublishFeedContentAttachmants>();
-		(json['attachments'] as List).forEach((v) {
-			data.attachments.add(new PublishFeedContentAttachmants().fromJson(v));
-		});
+		data.attachments = (json['attachments'] as List).map((v) => PublishFeedContentAttachmants().fromJson(v)).toList();
 	}
 	if (json['music'] != null) {
-		data.music = new PublishFeedContentMusic().fromJson(json['music']);
+		data.music = PublishFeedContentMusic().fromJson(json['music']);
 	}
 	return data;
 }
@@ -74,18 +61,10 @@ publishFeedContentFromJson(PublishFeedContent data, Map<String, dynamic> json) {
 Map<String, dynamic> publishFeedContentToJson(PublishFeedContent entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['text'] = entity.text;
-	if (entity.tag != null) {
-		data['tag'] =  entity.tag.map((v) => v.toJson()).toList();
-	}
-	if (entity.at != null) {
-		data['at'] =  entity.at.map((v) => v.toJson()).toList();
-	}
-	if (entity.attachments != null) {
-		data['attachments'] =  entity.attachments.map((v) => v.toJson()).toList();
-	}
-	if (entity.music != null) {
-		data['music'] = entity.music.toJson();
-	}
+	data['tag'] =  entity.tag?.map((v) => v.toJson())?.toList();
+	data['at'] =  entity.at?.map((v) => v.toJson())?.toList();
+	data['attachments'] =  entity.attachments?.map((v) => v.toJson())?.toList();
+	data['music'] = entity.music?.toJson();
 	return data;
 }
 

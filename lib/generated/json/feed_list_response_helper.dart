@@ -2,10 +2,7 @@ import 'package:toktik/model/response/feed_list_response.dart';
 
 feedListResponseFromJson(FeedListResponse data, Map<String, dynamic> json) {
 	if (json['list'] != null) {
-		data.xList = new List<FeedListList>();
-		(json['list'] as List).forEach((v) {
-			data.xList.add(new FeedListList().fromJson(v));
-		});
+		data.xList = (json['list'] as List).map((v) => FeedListList().fromJson(v)).toList();
 	}
 	if (json['cursor'] != null) {
 		data.cursor = json['cursor'] is String
@@ -25,9 +22,7 @@ feedListResponseFromJson(FeedListResponse data, Map<String, dynamic> json) {
 
 Map<String, dynamic> feedListResponseToJson(FeedListResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	if (entity.xList != null) {
-		data['list'] =  entity.xList.map((v) => v.toJson()).toList();
-	}
+	data['list'] =  entity.xList?.map((v) => v.toJson())?.toList();
 	data['cursor'] = entity.cursor;
 	data['count'] = entity.count;
 	data['hasMore'] = entity.hasMore;
@@ -46,10 +41,10 @@ feedListListFromJson(FeedListList data, Map<String, dynamic> json) {
 				: json['type'].toInt();
 	}
 	if (json['content'] != null) {
-		data.content = new FeedListListContent().fromJson(json['content']);
+		data.content = FeedListListContent().fromJson(json['content']);
 	}
 	if (json['location'] != null) {
-		data.location = new FeedListListLocation().fromJson(json['location']);
+		data.location = FeedListListLocation().fromJson(json['location']);
 	}
 	if (json['device'] != null) {
 		data.device = json['device'].toString();
@@ -70,7 +65,7 @@ feedListListFromJson(FeedListList data, Map<String, dynamic> json) {
 				: json['createTime'].toInt();
 	}
 	if (json['user'] != null) {
-		data.user = new FeedListListUser().fromJson(json['user']);
+		data.user = FeedListListUser().fromJson(json['user']);
 	}
 	if (json['likeCount'] != null) {
 		data.likeCount = json['likeCount'] is String
@@ -105,19 +100,13 @@ Map<String, dynamic> feedListListToJson(FeedListList entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['id'] = entity.id;
 	data['type'] = entity.type;
-	if (entity.content != null) {
-		data['content'] = entity.content.toJson();
-	}
-	if (entity.location != null) {
-		data['location'] = entity.location.toJson();
-	}
+	data['content'] = entity.content?.toJson();
+	data['location'] = entity.location?.toJson();
 	data['device'] = entity.device;
 	data['aclType'] = entity.aclType;
 	data['commentType'] = entity.commentType;
 	data['createTime'] = entity.createTime;
-	if (entity.user != null) {
-		data['user'] = entity.user.toJson();
-	}
+	data['user'] = entity.user?.toJson();
 	data['likeCount'] = entity.likeCount;
 	data['commentCount'] = entity.commentCount;
 	data['shareCount'] = entity.shareCount;
@@ -132,25 +121,16 @@ feedListListContentFromJson(FeedListListContent data, Map<String, dynamic> json)
 		data.text = json['text'].toString();
 	}
 	if (json['tag'] != null) {
-		data.tag = new List<FeedListListContentTag>();
-		(json['tag'] as List).forEach((v) {
-			data.tag.add(new FeedListListContentTag().fromJson(v));
-		});
+		data.tag = (json['tag'] as List).map((v) => FeedListListContentTag().fromJson(v)).toList();
 	}
 	if (json['at'] != null) {
-		data.at = new List<FeedListListContentAt>();
-		(json['at'] as List).forEach((v) {
-			data.at.add(new FeedListListContentAt().fromJson(v));
-		});
+		data.at = (json['at'] as List).map((v) => FeedListListContentAt().fromJson(v)).toList();
 	}
 	if (json['attachments'] != null) {
-		data.attachments = new List<FeedListListContentAttachmants>();
-		(json['attachments'] as List).forEach((v) {
-			data.attachments.add(new FeedListListContentAttachmants().fromJson(v));
-		});
+		data.attachments = (json['attachments'] as List).map((v) => FeedListListContentAttachmants().fromJson(v)).toList();
 	}
 	if (json['music'] != null) {
-		data.music = new FeedListListContentMusic().fromJson(json['music']);
+		data.music = FeedListListContentMusic().fromJson(json['music']);
 	}
 	return data;
 }
@@ -158,18 +138,10 @@ feedListListContentFromJson(FeedListListContent data, Map<String, dynamic> json)
 Map<String, dynamic> feedListListContentToJson(FeedListListContent entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['text'] = entity.text;
-	if (entity.tag != null) {
-		data['tag'] =  entity.tag.map((v) => v.toJson()).toList();
-	}
-	if (entity.at != null) {
-		data['at'] =  entity.at.map((v) => v.toJson()).toList();
-	}
-	if (entity.attachments != null) {
-		data['attachments'] =  entity.attachments.map((v) => v.toJson()).toList();
-	}
-	if (entity.music != null) {
-		data['music'] = entity.music.toJson();
-	}
+	data['tag'] =  entity.tag?.map((v) => v.toJson())?.toList();
+	data['at'] =  entity.at?.map((v) => v.toJson())?.toList();
+	data['attachments'] =  entity.attachments?.map((v) => v.toJson())?.toList();
+	data['music'] = entity.music?.toJson();
 	return data;
 }
 
