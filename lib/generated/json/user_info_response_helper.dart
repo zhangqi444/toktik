@@ -6,6 +6,9 @@ userInfoResponseFromJson(UserInfoResponse data, Map<String, dynamic> json) {
 				? int.tryParse(json['uid'])
 				: json['uid'].toInt();
 	}
+	if (json['id'] != null) {
+		data.id = json['id'].toString();
+	}
 	if (json['nickname'] != null) {
 		data.nickname = json['nickname'].toString();
 	}
@@ -40,6 +43,7 @@ userInfoResponseFromJson(UserInfoResponse data, Map<String, dynamic> json) {
 Map<String, dynamic> userInfoResponseToJson(UserInfoResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['uid'] = entity.uid;
+	data['id'] = entity.id;
 	data['nickname'] = entity.nickname;
 	data['portrait'] = entity.portrait;
 	data['bio'] = entity.bio;

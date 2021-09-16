@@ -2,7 +2,7 @@ import 'package:toktik/model/response/user_info_ex_response.dart';
 
 userInfoExResponseFromJson(UserInfoExResponse data, Map<String, dynamic> json) {
 	if (json['user'] != null) {
-		data.user = new UserInfoExUser().fromJson(json['user']);
+		data.user = UserInfoExUser().fromJson(json['user']);
 	}
 	if (json['followerCount'] != null) {
 		data.followerCount = json['followerCount'] is String
@@ -27,9 +27,7 @@ userInfoExResponseFromJson(UserInfoExResponse data, Map<String, dynamic> json) {
 
 Map<String, dynamic> userInfoExResponseToJson(UserInfoExResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	if (entity.user != null) {
-		data['user'] = entity.user.toJson();
-	}
+	data['user'] = entity.user?.toJson();
 	data['followerCount'] = entity.followerCount;
 	data['followingCount'] = entity.followingCount;
 	data['likeCount'] = entity.likeCount;
@@ -42,6 +40,9 @@ userInfoExUserFromJson(UserInfoExUser data, Map<String, dynamic> json) {
 		data.uid = json['uid'] is String
 				? int.tryParse(json['uid'])
 				: json['uid'].toInt();
+	}
+	if (json['id'] != null) {
+		data.id = json['id'].toString();
 	}
 	if (json['nickname'] != null) {
 		data.nickname = json['nickname'].toString();
@@ -77,6 +78,7 @@ userInfoExUserFromJson(UserInfoExUser data, Map<String, dynamic> json) {
 Map<String, dynamic> userInfoExUserToJson(UserInfoExUser entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['uid'] = entity.uid;
+	data['id'] = entity.id;
 	data['nickname'] = entity.nickname;
 	data['portrait'] = entity.portrait;
 	data['bio'] = entity.bio;

@@ -11,6 +11,7 @@ class UserInfoExResponse with JsonConvert<UserInfoExResponse> {
 
 class UserInfoExUser with JsonConvert<UserInfoExUser> {
 	int uid;
+	String id;
 	String nickname;
 	String portrait;
 	String bio = "";
