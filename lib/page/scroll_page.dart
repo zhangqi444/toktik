@@ -1,3 +1,4 @@
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:flutter/material.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
@@ -48,11 +49,13 @@ class _ScrollPageState extends State<ScrollPage> {
     final AmplifyDataStore _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
     final AmplifyAPI _apiPlugin = AmplifyAPI();
     final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
+    final AmplifyAnalyticsPinpoint _analyticsPlugin = AmplifyAnalyticsPinpoint();
 
     await Amplify.addPlugins([
       _dataStorePlugin,
       _apiPlugin,
-      _authPlugin
+      _authPlugin,
+      _analyticsPlugin
     ]);
 
     // Once Plugins are added, configure Amplify
