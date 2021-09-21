@@ -1,0 +1,16 @@
+#set ($data = $util.map.copyAndRemoveAllKeys($ctx.args.input, []))
+$util.qr($data.put("createdAt", $util.time.nowISO8601()))
+$util.qr($data.put("updatedAt", $util.time.nowISO8601()))
+$util.qr($data.put("_lastChangedAt", $util.time.nowEpochMilliSeconds()))
+$util.qr($data.put("__typename", "Like"))
+$util.qr($data.put("_version", 1))
+
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        ## If object "id" should come from GraphQL arguments, change to $util.dynamodb.toDynamoDBJson($ctx.args.id)
+        "id": $util.dynamodb.toDynamoDBJson($util.autoId()),
+    },
+    "attributeValues" : $util.dynamodb.toMapValuesJson($data)
+}

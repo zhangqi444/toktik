@@ -47,4 +47,44 @@ type User @model @auth(rules: [{allow: public}]) {
   profession: String
   username: String
 }
- 
+
+enum ModelAttributeTypes {
+	binary
+	binarySet
+	bool
+	list
+	map
+	number
+	numberSet
+	string
+	stringSet
+	_null
+}
+
+input CreateLikeInput {
+	id: ID
+	value: Boolean
+	_version: Int
+	likeUserId: ID
+	likePostId: ID
+}
+
+input ModelBooleanInput {
+	ne: Boolean
+	eq: Boolean
+	attributeExists: Boolean
+	attributeType: ModelAttributeTypes
+}
+
+input ModelLikeConditionInput {
+	value: ModelBooleanInput
+	and: [ModelLikeConditionInput]
+	or: [ModelLikeConditionInput]
+	not: ModelLikeConditionInput
+}
+
+type Mutation {
+  createLikeDenormalized(input: CreateLikeInput!, condition: ModelLikeConditionInput): Like
+    @aws_api_key
+@aws_iam
+}
