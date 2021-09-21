@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
@@ -213,6 +214,22 @@ class Api{
 
     var parsed = users.map((user) => convert(user)).toList();
     return (parsed != null && parsed.length > 0) ? UserInfoExResponse().fromJson(parsed[0]) : null;
+  }
+
+  static void recordEvent(String eventName, String key, dynamic value) {
+    AnalyticsEvent event = AnalyticsEvent(eventName);
+    if(value is String) {
+      event.properties.addStringProperty(key, value);
+    } else if(value is bool) {
+      event.properties.addBoolProperty(key, value);
+    } else if(value is int) {
+      event.properties.addIntProperty(key, value);
+    } else if(value is double) {
+      event.properties.addDoubleProperty(key, value);
+    } else {
+      return;
+    }
+    Amplify.Analytics.recordEvent(event: event);
   }
 
   ///更新用户资料信息
