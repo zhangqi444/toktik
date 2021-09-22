@@ -31,18 +31,18 @@
       "Type": "Custom::EmptyResource",
       "Condition": "AlwaysFalse"
     },
-    "createLikeDenormalizedResource": {
-      "Type": "AWS::AppSync::Resolver",
+    "MutationUpsertLikeFunctionResource": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
           "Ref": "AppSyncApiId"
         },
+        "Name": "mutationUpsertLikeFunction",
         "DataSourceName": "LikeTable",
-        "TypeName": "Mutation",
-        "FieldName": "createLikeDenormalized",
+        "FunctionVersion": "2018-05-29",
         "RequestMappingTemplateS3Location": {
           "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.createLikeDenormalized.req.vtl",
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.mutationUpsertLikeFunction.req.vtl",
             {
               "S3DeploymentBucket": {
                 "Ref": "S3DeploymentBucket"
@@ -55,7 +55,7 @@
         },
         "ResponseMappingTemplateS3Location": {
           "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Mutation.createLikeDenormalized.res.vtl",
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.mutationUpsertLikeFunction.res.vtl",
             {
               "S3DeploymentBucket": {
                 "Ref": "S3DeploymentBucket"
@@ -67,6 +67,67 @@
           ]
         }
       }
+    },
+    "MutationDenormalizeUpdatePostFunctionResource": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "AppSyncApiId"
+        },
+        "Name": "mutationDenormalizeUpdatePostFunction",
+        "DataSourceName": "PostTable",
+        "FunctionVersion": "2018-05-29",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Sub": [
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.mutationDenormalizeUpdatePostFunction.req.vtl",
+            {
+              "S3DeploymentBucket": {
+                "Ref": "S3DeploymentBucket"
+              },
+              "S3DeploymentRootKey": {
+                "Ref": "S3DeploymentRootKey"
+              }
+            }
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Sub": [
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.mutationDenormalizeUpdatePostFunction.res.vtl",
+            {
+              "S3DeploymentBucket": {
+                "Ref": "S3DeploymentBucket"
+              },
+              "S3DeploymentRootKey": {
+                "Ref": "S3DeploymentRootKey"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "CreateLikeDenormalizedResource": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "AppSyncApiId"
+        },
+        "Kind": "PIPELINE",
+        "TypeName": "Mutation",
+        "FieldName": "createLikeDenormalized",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Fn::GetAtt": ["MutationUpsertLikeFunctionResource", "FunctionId"]
+            },
+            {
+              "Fn::GetAtt": ["MutationDenormalizeUpdatePostFunctionResource", "FunctionId"]
+            }
+          ]
+        },
+        "RequestMappingTemplate": "{}",
+        "ResponseMappingTemplate": "$util.toJson($ctx.result)"
+      },
+      "DependsOn": ["MutationUpsertLikeFunctionResource", "MutationDenormalizeUpdatePostFunctionResource"]
     }
   },
   "Conditions": {

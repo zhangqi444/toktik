@@ -25,6 +25,7 @@ import 'User.dart';
 
 export 'Comment.dart';
 export 'Like.dart';
+export 'ModelAttributeTypes.dart';
 export 'Music.dart';
 export 'Post.dart';
 export 'Share.dart';
