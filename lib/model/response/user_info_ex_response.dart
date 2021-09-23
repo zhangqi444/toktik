@@ -3,21 +3,21 @@ import 'package:toktik/generated/json/base/json_field.dart';
 
 class UserInfoExResponse with JsonConvert<UserInfoExResponse> {
 	UserInfoExUser user;
-	int followerCount;
-	int followingCount;
-	int likeCount;
+	int followerCount = 0;
+	int followingCount = 0;
+	int likeCount = 0;
 	String relation;
 }
 
 class UserInfoExUser with JsonConvert<UserInfoExUser> {
 	String id;
-	String nickname;
-	String portrait;
+	String username;
+	String portrait = "";
 	String bio = "";
-	String birth;
-	int gender;
-	String city;
-	String profession;
+	String birth = null;
+	int gender = 2;
+	String city = "";
+	String profession = "";
 	@JSONField(name: "create_time")
 	int createTime;
 }

@@ -26,7 +26,7 @@ class _VideoBottomBarWidgetState extends State<VideoBottomBarWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('@${widget.video.user.nickname}',style: _getTextStyle(),),
+          Text('@${widget.video.user.username}',style: _getTextStyle(),),
           SizedBox(height: 8,),
           Text('${widget.video.content.text}',style: _getTextStyle(),),
           SizedBox(height: 10,),
@@ -37,7 +37,7 @@ class _VideoBottomBarWidgetState extends State<VideoBottomBarWidget> {
                 width: 200,
                 height: 25,
                 child: Marquee(
-                  text: 'original sound - ${widget.video.user.nickname}  ',
+                  text: 'original sound - ${widget.video.user.username}  ',
                   style: TextStyle(fontSize: 15,color: Colors.white),),
               )
             ],

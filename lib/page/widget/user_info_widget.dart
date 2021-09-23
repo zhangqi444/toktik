@@ -83,7 +83,9 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
                 borderRadius: BorderRadius.circular(50),
                 border: Border.fromBorderSide(BorderSide(color: ColorRes.color_2,width: 2)),
                 image: DecorationImage(
-                    image: userEx == null?AssetImage('assets/images/person_holder.png'):NetworkImage(userEx.portrait),
+                    image: (userEx == null || userEx.portrait == null || userEx.portrait.isEmpty)
+                      ? AssetImage('assets/images/person_holder.png')
+                      : NetworkImage(userEx.portrait),
                   fit: BoxFit.cover
                 )
             ),
@@ -135,31 +137,34 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   }
 
   _getUserInfoLayout() {
-    return Container(
-      margin: EdgeInsets.only(left: 12,right: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10,),
-          Obx(()=>Text(_userController.userInfoExResponse.value.user == null ? '' : _userController.userInfoExResponse.value.user.nickname,
-            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 22),),),
-          SizedBox(height: 5,),
-          Text('ID：${widget.id}',
-            style: TextStyle(color: ColorRes.color_1,fontSize: 12),
-          ),
-          SizedBox(height: 10,),
-          Divider(color: Colors.black.withAlpha(100),height: 0.05,),
-          SizedBox(height: 10,),
-          Obx(()=> Text(_userController.userInfoExResponse.value.user == null ? '' : _userController.userInfoExResponse.value.user.bio,
-            style: TextStyle(color: Colors.black,fontSize: 14),),),
-          SizedBox(height: 5,),
-          _getSexCity(),
-          SizedBox(height: 10,),
-          _getNumberLayout(),
-          SizedBox(height: 10,),
-        ],
-      ),
-    );
+    return Obx(() {
+      var user = _userController.userInfoExResponse.value.user;
+      return Container(
+        margin: EdgeInsets.only(left: 12,right: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 10,),
+            Text(user == null ? '' : user.username,
+              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 22),),
+            SizedBox(height: 5,),
+            Text('ID：${widget.id}',
+              style: TextStyle(color: ColorRes.color_1,fontSize: 12),
+            ),
+            SizedBox(height: 10,),
+            Divider(color: Colors.black.withAlpha(100),height: 0.05,),
+            SizedBox(height: 10,),
+            Text(user == null ? '' : user.bio,
+              style: TextStyle(color: Colors.black,fontSize: 14),),
+            SizedBox(height: 5,),
+            _getSexCity(),
+            SizedBox(height: 10,),
+            _getNumberLayout(),
+            SizedBox(height: 10,),
+          ],
+        )
+      );
+    });
   }
 
   _getSexCity() {
@@ -189,7 +194,9 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
             color: ColorRes.color_2.withAlpha(50),
             borderRadius: BorderRadius.circular(2),
           ),
-          child:  Text(_userController.userInfoExResponse.value.user == null ? '' : _userController.userInfoExResponse.value.user.city,
+          child:  Text(_userController.userInfoExResponse.value.user == null || _userController.userInfoExResponse.value.user.city == null
+              ? ''
+              : _userController.userInfoExResponse.value.user.city,
             style: TextStyle(color: Colors.black,fontSize: 10),),
         ),
       ],
@@ -197,41 +204,43 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   }
   //获赞数、关注数、粉丝
   _getNumberLayout() {
-    return  Row(
-        children: [
-          Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.likeCount.toString(),
-            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16),),),
+    return Obx(() {
+      var response = _userController.userInfoExResponse.value;
+      return Row(
+        children:[
+          Text(response == null ? '' : response.likeCount.toString(),
+            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
           SizedBox(width: 2,),
           Text('Likes',
-            style: TextStyle(color: ColorRes.color_1,fontSize: 13),),
+            style: TextStyle(color: ColorRes.color_1,fontSize: 13)),
           SizedBox(width: 15,),
-          Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.followingCount.toString(),
-            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16),),),
+          Text(response == null ? '' : response.followingCount.toString(),
+            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
           SizedBox(width: 2,),
           Text('Following',
-            style: TextStyle(color: ColorRes.color_1,fontSize: 13),),
+            style: TextStyle(color: ColorRes.color_1,fontSize: 13)),
           SizedBox(width: 15,),
-          Obx(()=>Text(_userController.userInfoExResponse.value.user == null ?'':_userController.userInfoExResponse.value.followerCount.toString(),
-            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16),),),
+          Text(response == null ?'':response.followerCount.toString(),
+            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
           SizedBox(width: 2,),
           Text('Followers',
-            style: TextStyle(color: ColorRes.color_1,fontSize: 13),),
-        ],
-    );
+            style: TextStyle(color: ColorRes.color_1,fontSize: 13)),
+        ]);
+    });
   }
 
   //获取性别图标
   _getImgGender(BuildContext context) {
-    return  Obx((){
-      if(_userController.userInfoExResponse == null){
+    return Obx((){
+      var user = _userController.userInfoExResponse.value.user;
+      if(user == null || user.gender == null){
         return Image.asset('assets/images/male.webp',
           width: 10,
           height: 10,
         );
-      }else{
+      } else {
         int gender = 2;
-        UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
-        if(userEx != null) gender = userEx.gender;
+        if(user != null) gender = user.gender;
         return Image.asset(gender == 2?'assets/images/male.webp':'assets/images/famale.webp',
           width: 10,
           height: 10,
@@ -242,7 +251,8 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   //获取年龄
   _getAge(BuildContext context) {
     return Obx((){
-      if(_userController.userInfoExResponse.value.user == null){
+      var user = _userController.userInfoExResponse.value.user;
+      if(user == null || user.birth == null) {
         return Container();
       }else{
         String birth = _userController.userInfoExResponse.value.user.birth;

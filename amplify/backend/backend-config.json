@@ -52,5 +52,11 @@
         ]
       }
     }
+  },
+  "analytics": {
+    "toktik": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }

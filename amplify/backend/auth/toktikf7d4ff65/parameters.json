@@ -1,6 +1,6 @@
 {
     "identityPoolName": "toktikf7d4ff65_identitypool_f7d4ff65",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "toktikf7d4ff65",
     "userPoolName": "toktikf7d4ff65_userpool_f7d4ff65",
     "autoVerifiedAttributes": [

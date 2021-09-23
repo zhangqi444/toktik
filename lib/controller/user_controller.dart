@@ -40,7 +40,7 @@ class UserController extends GetxController{
   final loginUserId = ''.obs;//登录用户的user id
   final loginUserUsername = "".obs;//登录用户的username
   final isSignUpComplete = true.obs;
-  final loginUserSignUpStep = "".obs;
+  final loginUserSignUpPassword = "".obs;
 
   //--------用户作品列表-------------
   final userWorkList = <UserWorkListList>[].obs;
@@ -56,6 +56,9 @@ class UserController extends GetxController{
 
     if(response != null && response.isSignedIn) {
       await getUserInfoExByUsername(response.username);
+      if(userInfoExResponse.value == null || userInfoExResponse.value.user == null) {
+        await createUser(response.username);
+      }
 
       SPUtil.set(SPKeys.username, response.username);
       SPUtil.set(SPKeys.token, response.token);
@@ -83,33 +86,39 @@ class UserController extends GetxController{
       SPUtil.set(SPKeys.username, response.username);
       loginUserUsername.value = response.username;
       isSignUpComplete.value = response.isSignUpComplete;
-      loginUserSignUpStep.value = response.status;
       if(isSignUpComplete.value == false) {
         if(response.status == AuthStatus.USERNAME_EXISTS.toShortString()) {
-          response = await Api.resendSignUpCode(username);
-        }
-        if(response.status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
-          Get.offAndToNamed(Routers.registerVerify);
+          EasyLoading.showToast('The username or email is existing already, please try again.');
+        } else if(response.status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
+          loginUserSignUpPassword.value = pwd;
+          Get.toNamed(Routers.registerVerify);
         } else {
           EasyLoading.showToast('Failed to send verification code, please try again.');
         }
-      }
+      } else {
+        if(response.status == AuthStatus.SIGN_UP_DONE.toShortString()) {
+          await login(response.username, pwd);
+        }
+      } // reset the tmp password
     }
   }
 
   void registerVerify(String verificationCode) async {
     var response = await Api.confirmSignUp(loginUserUsername.value, verificationCode, null);
     if(response != null && response.isSignUpComplete && response.status == AuthStatus.SIGN_UP_DONE.toShortString())  {
-      await login(response.username, verificationCode);
+      var pwd = loginUserSignUpPassword.value;
+      loginUserSignUpPassword.value = '';
+      await login(response.username, pwd);
     } else {
       EasyLoading.showToast('Failed to verify the email, please try again.');
     }
   }
-  
-  ///获取用户资料信息
-  void getUserInfo(String id) async{
-    var response = await Api.getUserInfo(id);
-    userInfoResponse.value = response;
+
+  void createUser(String username) async {
+    var response = await Api.createUser(username);
+    if(response != null) {
+      userInfoExResponse.value = response;
+    }
   }
 
   ///获取用户资料信息(扩展)
@@ -132,7 +141,7 @@ class UserController extends GetxController{
   void updateUserInfo() async{
     Map<String,dynamic> map = HashMap();
     map['id'] = userInfoResponse.value.id;
-    map['nickname'] = userInfoResponse.value.nickname;
+    map['username'] = userInfoResponse.value.username;
     map['portrait'] = userInfoResponse.value.portrait;
     map['bio'] = userInfoResponse.value.bio;
     map['birth'] = userInfoResponse.value.birth;
