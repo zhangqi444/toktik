@@ -61,7 +61,7 @@ enum ModelAttributeTypes {
 	_null
 }
 
-input CreateLikeInput {
+input UpsertLikeInput {
 	id: ID
 	value: Boolean
 	_version: Int
@@ -76,15 +76,46 @@ input ModelBooleanInput {
 	attributeType: ModelAttributeTypes
 }
 
+input ModelStringInput {
+    ne: String
+    eq: String
+    le: String
+    lt: String
+    ge: String
+    gt: String
+    contains: String
+    notContains: String
+    between: [String]
+    beginsWith: String
+    attributeExists: Boolean
+    attributeType: ModelAttributeTypes
+    size: ModelSizeInput
+}
+
+input ModelSizeInput {
+    ne: Int
+    eq: Int
+    le: Int
+    lt: Int
+    ge: Int
+    gt: Int
+    between: [Int]
+}
+
 input ModelLikeConditionInput {
 	value: ModelBooleanInput
+	likePostId: ModelStringInput
+	likeUserId: ModelStringInput
 	and: [ModelLikeConditionInput]
 	or: [ModelLikeConditionInput]
 	not: ModelLikeConditionInput
 }
 
 type Mutation {
-  createLikeDenormalized(input: CreateLikeInput!, condition: ModelLikeConditionInput): Like
+    upsertLikeDenormalized(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like
+    @aws_api_key
+@aws_iam
+    upsertLike(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like
     @aws_api_key
 @aws_iam
 }

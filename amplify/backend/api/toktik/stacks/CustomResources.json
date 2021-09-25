@@ -105,7 +105,7 @@
         }
       }
     },
-    "CreateLikeDenormalizedResource": {
+    "UpsertLikeDenormalizedResource": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
@@ -113,7 +113,7 @@
         },
         "Kind": "PIPELINE",
         "TypeName": "Mutation",
-        "FieldName": "createLikeDenormalized",
+        "FieldName": "upsertLikeDenormalized",
         "PipelineConfig": {
           "Functions": [
             {
@@ -128,6 +128,27 @@
         "ResponseMappingTemplate": "$util.toJson($ctx.result)"
       },
       "DependsOn": ["MutationUpsertLikeFunctionResource", "MutationDenormalizeUpdatePostFunctionResource"]
+    },
+    "UpsertLikeResource": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "AppSyncApiId"
+        },
+        "Kind": "PIPELINE",
+        "TypeName": "Mutation",
+        "FieldName": "upsertLike",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Fn::GetAtt": ["MutationUpsertLikeFunctionResource", "FunctionId"]
+            }
+          ]
+        },
+        "RequestMappingTemplate": "{}",
+        "ResponseMappingTemplate": "$util.toJson($ctx.result)"
+      },
+      "DependsOn": ["MutationUpsertLikeFunctionResource"]
     }
   },
   "Conditions": {
