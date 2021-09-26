@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/sp_keys.dart';
@@ -124,6 +125,9 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
   Widget menuButton(String text, IconData icon, int index) {
     return GestureDetector(
         onTap: () {
+          // TODO: disable bottom tab for now.
+          EasyLoading.showToast("This feature is coming soon.", duration: Duration(seconds: 3));
+          return;
           if(index == 0 || index == 1){
             mainPageScrollController.selectIndexBottomBarMainPage(index);
           }else{
