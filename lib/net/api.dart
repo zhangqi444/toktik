@@ -216,19 +216,23 @@ class Api{
     return (parsed != null && parsed.length > 0) ? UserInfoExResponse().fromJson(parsed[0]) : null;
   }
 
-  static void recordEvent(String eventName, String key, dynamic value) {
+  static void recordEvent(String eventName, Map<String, dynamic> events) {
     AnalyticsEvent event = AnalyticsEvent(eventName);
-    if(value is String) {
-      event.properties.addStringProperty(key, value);
-    } else if(value is bool) {
-      event.properties.addBoolProperty(key, value);
-    } else if(value is int) {
-      event.properties.addIntProperty(key, value);
-    } else if(value is double) {
-      event.properties.addDoubleProperty(key, value);
-    } else {
-      return;
-    }
+    events.forEach((index, key) {
+      var value = events[key];
+      if(value is String) {
+        event.properties.addStringProperty(key, value);
+      } else if(value is bool) {
+        event.properties.addBoolProperty(key, value);
+      } else if(value is int) {
+        event.properties.addIntProperty(key, value);
+      } else if(value is double) {
+        event.properties.addDoubleProperty(key, value);
+      } else {
+        return;
+      }
+    });
+
     Amplify.Analytics.recordEvent(event: event);
   }
 
