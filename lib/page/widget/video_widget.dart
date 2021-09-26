@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
+import 'package:toktik/common/events.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
@@ -35,6 +36,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   VideoPlayerController _videoPlayerController;
   MainPageScrollController mainController = Get.find();
   bool _playing = false;
+  Stopwatch _durationSW = new Stopwatch();
 
   @override
   void initState() {
@@ -47,12 +49,21 @@ class _VideoWidgetState extends State<VideoWidget> {
     Application.eventBus.on<StopPlayEvent>().listen((event) {
       _videoPlayerController.pause();
     });
+    
+    mainController.recordEvent(
+        EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
+        {Events.VALUE: 1});
+    _durationSW.start();
   }
 
   @override
   void dispose() {
     super.dispose();
     _videoPlayerController.dispose();
+    _durationSW.stop();
+    mainController.recordEvent(
+        EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
+        {Events.TIME: _durationSW.elapsedMilliseconds});
   }
 
   @override
