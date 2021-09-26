@@ -94,22 +94,23 @@ class _VideoWidgetState extends State<VideoWidget> {
             child: _getVideoPlayer(videoLayoutWidth,videoLayoutHeight,scale),
           ),
 
-          Positioned(
-              right: 10,
-              bottom: 110,
-              child: VideoRightBarWidget(
-                video: widget.video,
-                showFocusButton: widget.showFocusButton,
-                onClickComment: (){
-                  showBottomComment();
-                },
-                onClickShare: (){
-                  showBottomShare();
-                },
-                onClickHeader: (){
-                  widget.onClickHeader?.call();
-                },
-              )),
+          // TODO: disable video right widget for now
+          // Positioned(
+          //     right: 10,
+          //     bottom: 110,
+          //     child: VideoRightBarWidget(
+          //       video: widget.video,
+          //       showFocusButton: widget.showFocusButton,
+          //       onClickComment: (){
+          //         showBottomComment();
+          //       },
+          //       onClickShare: (){
+          //         showBottomShare();
+          //       },
+          //       onClickHeader: (){
+          //         widget.onClickHeader?.call();
+          //       },
+          //     )),
           Positioned(
               right: 2,
               bottom: 20,
