@@ -32,7 +32,8 @@ class _VideoBottomBarWidgetState extends State<VideoBottomBarWidget> {
           SizedBox(height: 10,),
           Row(
             children: [
-              Image.asset('assets/images/tiktok_white.webp',width: 25,height: 25,),
+              // TODO: remove the tiktok icon for now
+              // Image.asset('assets/images/tiktok_white.webp',width: 25,height: 25,),
               Container(
                 width: 200,
                 height: 25,
