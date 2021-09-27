@@ -22,6 +22,7 @@ import 'Music.dart';
 import 'Post.dart';
 import 'Share.dart';
 import 'User.dart';
+import 'View.dart';
 
 export 'Comment.dart';
 export 'Like.dart';
@@ -30,10 +31,11 @@ export 'Music.dart';
 export 'Post.dart';
 export 'Share.dart';
 export 'User.dart';
+export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "64161bb598a2dabcd2cb809f9b5e6501";
+  String version = "012eb0c7f6b916e74c9c21f7e5086908";
   @override
   List<ModelSchema> modelSchemas = [
     Comment.schema,
@@ -41,7 +43,8 @@ class ModelProvider implements ModelProviderInterface {
     Music.schema,
     Post.schema,
     Share.schema,
-    User.schema
+    User.schema,
+    View.schema
   ];
   static final ModelProvider _instance = ModelProvider();
 
@@ -77,6 +80,11 @@ class ModelProvider implements ModelProviderInterface {
       case "User":
         {
           return User.classType;
+        }
+        break;
+      case "View":
+        {
+          return View.classType;
         }
         break;
       default:

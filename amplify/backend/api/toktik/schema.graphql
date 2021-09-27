@@ -1,3 +1,9 @@
+type View @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  post: Post @connection
+  user: User @connection
+}
+
 type Share @model @auth(rules: [{allow: public}]) {
   id: ID!
   to: String
@@ -49,73 +55,70 @@ type User @model @auth(rules: [{allow: public}]) {
 }
 
 enum ModelAttributeTypes {
-	binary
-	binarySet
-	bool
-	list
-	map
-	number
-	numberSet
-	string
-	stringSet
-	_null
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
 }
 
 input UpsertLikeInput {
-	id: ID
-	value: Boolean
-	_version: Int
-	likeUserId: ID
-	likePostId: ID
+  id: ID
+  value: Boolean
+  _version: Int
+  likeUserId: ID
+  likePostId: ID
 }
 
 input ModelBooleanInput {
-	ne: Boolean
-	eq: Boolean
-	attributeExists: Boolean
-	attributeType: ModelAttributeTypes
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
 }
 
 input ModelStringInput {
-    ne: String
-    eq: String
-    le: String
-    lt: String
-    ge: String
-    gt: String
-    contains: String
-    notContains: String
-    between: [String]
-    beginsWith: String
-    attributeExists: Boolean
-    attributeType: ModelAttributeTypes
-    size: ModelSizeInput
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
 }
 
 input ModelSizeInput {
-    ne: Int
-    eq: Int
-    le: Int
-    lt: Int
-    ge: Int
-    gt: Int
-    between: [Int]
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
 }
 
 input ModelLikeConditionInput {
-	value: ModelBooleanInput
-	likePostId: ModelStringInput
-	likeUserId: ModelStringInput
-	and: [ModelLikeConditionInput]
-	or: [ModelLikeConditionInput]
-	not: ModelLikeConditionInput
+  value: ModelBooleanInput
+  likePostId: ModelStringInput
+  likeUserId: ModelStringInput
+  and: [ModelLikeConditionInput]
+  or: [ModelLikeConditionInput]
+  not: ModelLikeConditionInput
 }
 
 type Mutation {
-    upsertLikeDenormalized(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like
-    @aws_api_key
-@aws_iam
-    upsertLike(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like
-    @aws_api_key
-@aws_iam
+  upsertLikeDenormalized(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key @aws_iam
+  upsertLike(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key
 }
+ 
