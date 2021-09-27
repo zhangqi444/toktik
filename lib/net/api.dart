@@ -25,6 +25,7 @@ import 'package:toktik/model/living_rank_model.dart';
 import 'package:toktik/model/message_model.dart';
 import 'package:toktik/model/music_rank_model.dart';
 import 'package:toktik/model/response/user_work_list_response.dart';
+import 'package:toktik/model/response/view_response.dart';
 import 'package:toktik/model/star_model.dart';
 import 'package:toktik/model/user_model.dart';
 import 'package:toktik/model/video_model.dart';
@@ -308,6 +309,16 @@ class Api{
 
       var parsed = await Future.wait(posts.map((post) async => await convert(post)));
       return FeedListResponse().fromJson({'list': parsed.toList()});
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
+
+  static Future<ViewResponse> viewPost(String postId, String userId) async{
+    try {
+      View newView = View(post: Post(id: postId), user: User(id: userId));
+      await Amplify.DataStore.save(newView);
+      return ViewResponse().fromJson(newView.toJson());
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }

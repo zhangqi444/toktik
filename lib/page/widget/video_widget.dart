@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/common/events.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
+import 'package:toktik/controller/post_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_bottom_bar_widget.dart';
@@ -35,6 +36,7 @@ class VideoWidget extends StatefulWidget {
 class _VideoWidgetState extends State<VideoWidget> {
   VideoPlayerController _videoPlayerController;
   MainPageScrollController mainController = Get.find();
+  PostController _postController = Get.put(PostController());
   bool _playing = false;
   Stopwatch _durationSW = new Stopwatch();
 
@@ -54,6 +56,8 @@ class _VideoWidgetState extends State<VideoWidget> {
         EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
         {Events.VALUE: 1});
     _durationSW.start();
+    _postController.viewPost(widget.video.id);
+
   }
 
   @override
@@ -209,7 +213,5 @@ class _VideoWidgetState extends State<VideoWidget> {
           return VideoShareWidget();
         });
   }
-
-
 
 }
