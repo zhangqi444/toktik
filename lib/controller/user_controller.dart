@@ -164,10 +164,16 @@ class UserController extends GetxController{
   }
 
   ///获取登录用户的id
-  void getLoginUserId(){
+  void loadLoginUserId(){
     SPUtil.getString(SPKeys.userId).then((id){
       loginUserId.value = id;
     });
+  }
+
+  ///获取登录用户的id
+  Future<String> getLoginUserId() async{
+    if(loginUserId.value != null) return loginUserId.value;
+    return await SPUtil.getString(SPKeys.userId);
   }
 
   ///获取用户作品列表

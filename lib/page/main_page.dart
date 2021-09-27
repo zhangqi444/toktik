@@ -24,7 +24,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _userController.getLoginUserId();
+    _userController.loadLoginUserId();
     WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
       //设置状态栏的颜色和图标模式
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
