@@ -18,14 +18,14 @@ class PublishFeedContent with JsonConvert<PublishFeedContent> {
 }
 
 class PublishFeedContentTag with JsonConvert<PublishFeedContentTag> {
-	int id;
+	String id;
 	String name;
 	int start;
 	int end;
 }
 
 class PublishFeedContentAt with JsonConvert<PublishFeedContentAt> {
-	int id;
+	String id;
 	String name;
 	int start;
 	int end;
@@ -42,7 +42,7 @@ class PublishFeedContentAttachmants with JsonConvert<PublishFeedContentAttachman
 }
 
 class PublishFeedContentMusic with JsonConvert<PublishFeedContentMusic> {
-	int id;
+	String id;
 	String name;
 	String url;
 	String img;

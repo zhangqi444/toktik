@@ -10,7 +10,7 @@ class UserWorkListResponse with JsonConvert<UserWorkListResponse> {
 }
 
 class UserWorkListList with JsonConvert<UserWorkListList> {
-	int id;
+	String id;
 	int type;
 	UserWorkListListContent content;
 	UserWorkListListLocation location;
@@ -36,14 +36,14 @@ class UserWorkListListContent with JsonConvert<UserWorkListListContent> {
 }
 
 class UserWorkListListContentTag with JsonConvert<UserWorkListListContentTag> {
-	int id;
+	String id;
 	String name;
 	int start;
 	int end;
 }
 
 class UserWorkListListContentAt with JsonConvert<UserWorkListListContentAt> {
-	int id;
+	String id;
 	String name;
 	int start;
 	int end;
@@ -60,7 +60,7 @@ class UserWorkListListContentAttachmants with JsonConvert<UserWorkListListConten
 }
 
 class UserWorkListListContentMusic with JsonConvert<UserWorkListListContentMusic> {
-	int id;
+	String id;
 	String name;
 	String url;
 	String img;

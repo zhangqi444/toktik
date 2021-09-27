@@ -31,9 +31,7 @@ Map<String, dynamic> feedListResponseToJson(FeedListResponse entity) {
 
 feedListListFromJson(FeedListList data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['type'] != null) {
 		data.type = json['type'] is String
@@ -147,9 +145,7 @@ Map<String, dynamic> feedListListContentToJson(FeedListListContent entity) {
 
 feedListListContentTagFromJson(FeedListListContentTag data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();
@@ -178,9 +174,7 @@ Map<String, dynamic> feedListListContentTagToJson(FeedListListContentTag entity)
 
 feedListListContentAtFromJson(FeedListListContentAt data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();
@@ -254,9 +248,7 @@ Map<String, dynamic> feedListListContentAttachmantsToJson(FeedListListContentAtt
 
 feedListListContentMusicFromJson(FeedListListContentMusic data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();

@@ -2,9 +2,7 @@ import 'package:toktik/model/response/publish_feed_response.dart';
 
 publishFeedResponseFromJson(PublishFeedResponse data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	return data;
 }

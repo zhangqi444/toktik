@@ -10,7 +10,7 @@ class FeedListResponse with JsonConvert<FeedListResponse> {
 }
 
 class FeedListList with JsonConvert<FeedListList> {
-	int id;
+	String id;
 	int type;
 	FeedListListContent content;
 	FeedListListLocation location;
@@ -36,14 +36,14 @@ class FeedListListContent with JsonConvert<FeedListListContent> {
 }
 
 class FeedListListContentTag with JsonConvert<FeedListListContentTag> {
-	int id;
+	String id;
 	String name;
 	int start;
 	int end;
 }
 
 class FeedListListContentAt with JsonConvert<FeedListListContentAt> {
-	int id;
+	String id;
 	String name;
 	int start;
 	int end;
@@ -60,7 +60,7 @@ class FeedListListContentAttachmants with JsonConvert<FeedListListContentAttachm
 }
 
 class FeedListListContentMusic with JsonConvert<FeedListListContentMusic> {
-	int id;
+	String id;
 	String name;
 	String url;
 	String img;

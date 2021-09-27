@@ -70,9 +70,7 @@ Map<String, dynamic> publishFeedContentToJson(PublishFeedContent entity) {
 
 publishFeedContentTagFromJson(PublishFeedContentTag data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();
@@ -101,9 +99,7 @@ Map<String, dynamic> publishFeedContentTagToJson(PublishFeedContentTag entity) {
 
 publishFeedContentAtFromJson(PublishFeedContentAt data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();
@@ -177,9 +173,7 @@ Map<String, dynamic> publishFeedContentAttachmantsToJson(PublishFeedContentAttac
 
 publishFeedContentMusicFromJson(PublishFeedContentMusic data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();

@@ -18,7 +18,7 @@ class FeedController extends GetxController{
   int countFriend = 10;
 
   ///发布单个视频
-  Future<int> publishFeed(String title,String videoUrl,String coverImgUrl,int duration,int width,int height) async{
+  Future<String> publishFeed(String title,String videoUrl,String coverImgUrl,int duration,int width,int height) async{
     PublishFeedRequest publishFeedRequest = PublishFeedRequest();
     PublishFeedContent publishFeedContent = PublishFeedContent();
     PublishFeedLocation publishFeedLocation = PublishFeedLocation();

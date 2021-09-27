@@ -31,9 +31,7 @@ Map<String, dynamic> userWorkListResponseToJson(UserWorkListResponse entity) {
 
 userWorkListListFromJson(UserWorkListList data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['type'] != null) {
 		data.type = json['type'] is String
@@ -147,9 +145,7 @@ Map<String, dynamic> userWorkListListContentToJson(UserWorkListListContent entit
 
 userWorkListListContentTagFromJson(UserWorkListListContentTag data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();
@@ -178,9 +174,7 @@ Map<String, dynamic> userWorkListListContentTagToJson(UserWorkListListContentTag
 
 userWorkListListContentAtFromJson(UserWorkListListContentAt data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();
@@ -254,9 +248,7 @@ Map<String, dynamic> userWorkListListContentAttachmantsToJson(UserWorkListListCo
 
 userWorkListListContentMusicFromJson(UserWorkListListContentMusic data, Map<String, dynamic> json) {
 	if (json['id'] != null) {
-		data.id = json['id'] is String
-				? int.tryParse(json['id'])
-				: json['id'].toInt();
+		data.id = json['id'].toString();
 	}
 	if (json['name'] != null) {
 		data.name = json['name'].toString();
