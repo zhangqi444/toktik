@@ -218,8 +218,7 @@ class Api{
 
   static void recordEvent(String eventName, Map<String, dynamic> events) {
     AnalyticsEvent event = AnalyticsEvent(eventName);
-    events.forEach((index, key) {
-      var value = events[key];
+    events.forEach((key, value) {
       if(value is String) {
         event.properties.addStringProperty(key, value);
       } else if(value is bool) {
