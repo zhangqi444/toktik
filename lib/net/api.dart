@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
@@ -318,6 +319,20 @@ class Api{
     try {
       View newView = View(post: Post(id: postId), user: User(id: userId));
       await Amplify.DataStore.save(newView);
+
+      String graphQLDocument =
+        '''mutation UpdatePostEx(\$input: UpdatePostInput!, \$add: AddPostInput!) {
+            updatePostEx(input: \$input, add: \$add) {
+            id
+            }
+      }''';
+
+      var operation = Amplify.API.mutate(
+          request: GraphQLRequest<String>(document: graphQLDocument, variables: {
+            'input': { 'id': postId },
+            'add': { 'viewCount': 1 },
+          }));
+      var post = await operation.response;
       return ViewResponse().fromJson(newView.toJson());
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
