@@ -34,6 +34,7 @@ type Post @model @auth(rules: [{allow: public}]) {
   likeCount: Int
   commentCount: Int
   shareCount: Int
+  viewCount: Int
 }
 
 type Music @model @auth(rules: [{allow: public}]) {
@@ -73,6 +74,18 @@ input UpsertLikeInput {
   _version: Int
   likeUserId: ID
   likePostId: ID
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
 }
 
 input ModelBooleanInput {
@@ -117,8 +130,39 @@ input ModelLikeConditionInput {
   not: ModelLikeConditionInput
 }
 
+input AddPostInput {
+  likeCount: Int
+  commentCount: Int
+  shareCount: Int
+  viewCount: Int
+}
+
+input UpdatePostInput {
+  id: ID!
+  text: String
+  attachments: AWSJSON
+  likeCount: Int
+  commentCount: Int
+  shareCount: Int
+  _version: Int
+  postUserId: ID
+  postMusicId: ID
+}
+
+input ModelPostConditionInput {
+  text: ModelStringInput
+  attachments: ModelStringInput
+  likeCount: ModelIntInput
+  commentCount: ModelIntInput
+  shareCount: ModelIntInput
+  and: [ModelPostConditionInput]
+  or: [ModelPostConditionInput]
+  not: ModelPostConditionInput
+}
+
 type Mutation {
   upsertLikeDenormalized(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key @aws_iam
   upsertLike(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key
+  updatePostEx(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
 }
  

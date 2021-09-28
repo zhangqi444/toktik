@@ -31,6 +31,7 @@ class Post extends Model {
   final int likeCount;
   final int commentCount;
   final int shareCount;
+  final int viewCount;
 
   @override
   getInstanceType() => classType;
@@ -48,7 +49,8 @@ class Post extends Model {
       this.attachments,
       this.likeCount,
       this.commentCount,
-      this.shareCount});
+      this.shareCount,
+      this.viewCount});
 
   factory Post(
       {String id,
@@ -58,7 +60,8 @@ class Post extends Model {
       String attachments,
       int likeCount,
       int commentCount,
-      int shareCount}) {
+      int shareCount,
+      int viewCount}) {
     return Post._internal(
         id: id == null ? UUID.getUUID() : id,
         text: text,
@@ -67,7 +70,8 @@ class Post extends Model {
         attachments: attachments,
         likeCount: likeCount,
         commentCount: commentCount,
-        shareCount: shareCount);
+        shareCount: shareCount,
+        viewCount: viewCount);
   }
 
   bool equals(Object other) {
@@ -85,7 +89,8 @@ class Post extends Model {
         attachments == other.attachments &&
         likeCount == other.likeCount &&
         commentCount == other.commentCount &&
-        shareCount == other.shareCount;
+        shareCount == other.shareCount &&
+        viewCount == other.viewCount;
   }
 
   @override
@@ -107,8 +112,11 @@ class Post extends Model {
     buffer.write("commentCount=" +
         (commentCount != null ? commentCount.toString() : "null") +
         ", ");
+    buffer.write("shareCount=" +
+        (shareCount != null ? shareCount.toString() : "null") +
+        ", ");
     buffer.write(
-        "shareCount=" + (shareCount != null ? shareCount.toString() : "null"));
+        "viewCount=" + (viewCount != null ? viewCount.toString() : "null"));
     buffer.write("}");
 
     return buffer.toString();
@@ -122,7 +130,8 @@ class Post extends Model {
       String attachments,
       int likeCount,
       int commentCount,
-      int shareCount}) {
+      int shareCount,
+      int viewCount}) {
     return Post(
         id: id ?? this.id,
         text: text ?? this.text,
@@ -131,7 +140,8 @@ class Post extends Model {
         attachments: attachments ?? this.attachments,
         likeCount: likeCount ?? this.likeCount,
         commentCount: commentCount ?? this.commentCount,
-        shareCount: shareCount ?? this.shareCount);
+        shareCount: shareCount ?? this.shareCount,
+        viewCount: viewCount ?? this.viewCount);
   }
 
   Post.fromJson(Map<String, dynamic> json)
@@ -146,7 +156,8 @@ class Post extends Model {
         attachments = json['attachments'],
         likeCount = (json['likeCount'] as num)?.toInt(),
         commentCount = (json['commentCount'] as num)?.toInt(),
-        shareCount = (json['shareCount'] as num)?.toInt();
+        shareCount = (json['shareCount'] as num)?.toInt(),
+        viewCount = (json['viewCount'] as num)?.toInt();
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -156,7 +167,8 @@ class Post extends Model {
         'attachments': attachments,
         'likeCount': likeCount,
         'commentCount': commentCount,
-        'shareCount': shareCount
+        'shareCount': shareCount,
+        'viewCount': viewCount
       };
 
   static final QueryField ID = QueryField(fieldName: "post.id");
@@ -173,6 +185,7 @@ class Post extends Model {
   static final QueryField LIKECOUNT = QueryField(fieldName: "likeCount");
   static final QueryField COMMENTCOUNT = QueryField(fieldName: "commentCount");
   static final QueryField SHARECOUNT = QueryField(fieldName: "shareCount");
+  static final QueryField VIEWCOUNT = QueryField(fieldName: "viewCount");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Post";
@@ -223,6 +236,11 @@ class Post extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: Post.SHARECOUNT,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.int)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: Post.VIEWCOUNT,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.int)));
   });
