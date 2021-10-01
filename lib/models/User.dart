@@ -145,7 +145,7 @@ class User extends Model {
         birth = json['birth'] != null
             ? TemporalDate.fromString(json['birth'])
             : null,
-        gender = (json['gender'] as num)?.toInt(),
+        gender = json['gender'],
         city = json['city'],
         profession = json['profession'],
         username = json['username'];
