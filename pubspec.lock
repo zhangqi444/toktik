@@ -303,6 +303,8 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.15.0"
+    source: hosted
+    version: "7.2.0"
   http:
     dependency: transitive
     description:
