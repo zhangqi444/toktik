@@ -60,6 +60,8 @@ flutter:
   assets:
     - assets/video/
     - assets/images/
+    - assets/images/splash/breeze_logo.png
+    - assets/images/splash/breeze_text.png
   fonts:
     - family:  TikTokIcons
       fonts:
