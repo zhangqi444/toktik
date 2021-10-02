@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
 import 'package:toktik/controller/user_controller.dart';
@@ -292,20 +293,30 @@ class Api{
   }
 
   ///获取热门作品列表
-  static Future<FeedListResponse> getHotFeedList(int cursor,int count) async{
+  static Future<FeedListResponse> getHotFeedList(int cursor,int limit) async{
     try {
-      List<Post> posts = await Amplify.DataStore.query(Post.classType);
+      String graphQLDocument =
+      '''query ListPosts(\$limit: Int) {
+            listPosts(limit: \$limit) {
+              items {
+                id attachments music { id } text 
+                user { id nickname username portrait}
+              }
+            }
+      }''';
+      var response = await Amplify.API.query(
+          request: GraphQLRequest<String>(document: graphQLDocument, variables: {
+            'limit': limit
+          })).response;
+      List posts = jsonDecode(response.data)['listPosts']['items']..shuffle();
 
-      Future<Map<String, dynamic>> convert(Post post) async{
-        var result = post.toJson();
-        result['content'] = {
-          'attachments': jsonDecode(post.attachments)['data'],
-          'music': post.music != null ? post.music.toJson() : null,
-          'text': post.text,
+      Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
+        post['content'] = {
+          'attachments': jsonDecode(post['attachments'])['data'],
+          'music': post['music'] != null ? post['music'] : null,
+          'text': post['text'],
         };
-        List<User> userList = await Amplify.DataStore.query(User.classType, where: User.ID.eq(post.user.id));
-        result['user'] = userList[0].toJson();
-        return result;
+        return post;
       }
 
       var parsed = await Future.wait(posts.map((post) async => await convert(post)));
