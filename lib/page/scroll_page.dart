@@ -86,6 +86,7 @@ class _ScrollPageState extends State<ScrollPage> {
           },
         ),
         ),
+        // TODO: remove drawer function for now.
         // Obx(()=>DrawerController(
         //     key: drawerKey,
         //     alignment: DrawerAlignment.end,
