@@ -81,11 +81,15 @@ class _VideoWidgetState extends State<VideoWidget> {
           return Stack(
             children: [
               LikeGestureWidget(
-                scale: 1.0,
                 onSingleTap: () {
                   _playOrPause();
                 },
-                child: _getVideoPlayer(),
+                child: Stack(
+                  children: [
+                    _getVideoPlayer(),
+                    _playing == true? Container() : _getPauseButton(),
+                  ],
+                ),
               ),
 
               // TODO: disable video right widget for now
@@ -133,55 +137,54 @@ class _VideoWidgetState extends State<VideoWidget> {
     });
   }
 
-
   _getVideoPlayer() {
     double scale = 1;
     double videoLayoutWidth;
     double videoLayoutHeight;
-    if(_videoPlayerController.value.isInitialized){
+    double videoWidth = _videoPlayerController.value.size.width;
+    double videoHeight = _videoPlayerController.value.size.height;
+    double screenW = screenWidth(context);
+    double screenH = screenHeight(context);
+    bool isLandScape = videoWidth > videoHeight;
 
-      double videoWidth = _videoPlayerController.value.size.width;
-      double videoHeight = _videoPlayerController.value.size.height;
-      double screenW = screenWidth(context);
-      double screenH = screenHeight(context);
-
-      double rateWidthHeightContent = screenW / widget.contentHeight;
-      double rateWidthContentVideo = screenW / videoWidth;
-      double heightVideoByRate = videoHeight * rateWidthContentVideo;
-      print('视频宽:${videoWidth} 视频高:${videoHeight}');
-      print('视频宽高比:${videoWidth/videoHeight}');
-      print('屏幕宽:${screenW} 高：${screenH}');
-      print('内容高度:${widget.contentHeight}');
-      print('内容宽高比例:$rateWidthHeightContent');
-      print('比例:$rateWidthContentVideo');
-      print('比例换算视频高度:$heightVideoByRate');
-      if(widget.contentHeight > heightVideoByRate ){
-        double rateHeightContentVideo = widget.contentHeight / videoHeight;
-        videoLayoutHeight = heightVideoByRate;
-        videoLayoutWidth = screenW;
-        if(videoWidth < videoHeight) {
-          scale = widget.contentHeight / videoLayoutHeight;
-        } else {
-          scale = screenW / videoLayoutWidth;
-        }
-        print('width:$videoLayoutWidth height:$videoLayoutHeight scale:$scale rate:$rateHeightContentVideo');
+    double rateWidthHeightContent = screenW / widget.contentHeight;
+    double rateWidthContentVideo = screenW / videoWidth;
+    double heightVideoByRate = videoHeight * rateWidthContentVideo;
+    print('视频宽:${videoWidth} 视频高:${videoHeight}');
+    print('视频宽高比:${videoWidth/videoHeight}');
+    print('屏幕宽:${screenW} 高：${screenH}');
+    print('内容高度:${widget.contentHeight}');
+    print('内容宽高比例:$rateWidthHeightContent');
+    print('比例:$rateWidthContentVideo');
+    print('比例换算视频高度:$heightVideoByRate');
+    if(widget.contentHeight > heightVideoByRate ){
+      double rateHeightContentVideo = widget.contentHeight / videoHeight;
+      videoLayoutHeight = heightVideoByRate;
+      videoLayoutWidth = screenW;
+      if(!isLandScape) {
+        scale = widget.contentHeight / videoLayoutHeight;
+      } else {
+        scale = screenW / videoLayoutWidth;
       }
-
+      print('width:$videoLayoutWidth height:$videoLayoutHeight scale:$scale rate:$rateHeightContentVideo');
     }
+
+    var player = Transform.scale(
+      scale: scale,
+      alignment: Alignment.topCenter,
+      child: Container(
+          width: videoLayoutWidth,
+          height: videoLayoutHeight ,
+          child: VideoPlayer(_videoPlayerController)),
+    );
+
     return  Stack(
-        children: [
+      children: [
+        !isLandScape ? player :
           Center(
-            child: Transform.scale(
-              scale: scale,
-              alignment: Alignment.topCenter,
-              child: Container(
-                  width: videoLayoutWidth,
-                  height: videoLayoutHeight ,
-                  child: VideoPlayer(_videoPlayerController)),
-            )
-          ),
-          _playing == true? Container() : _getPauseButton(),
-        ],
+            child: player
+          )
+      ],
     );
   }
 
