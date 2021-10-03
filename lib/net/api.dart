@@ -309,7 +309,7 @@ class Api{
             'limit': limit
           })).response;
       List posts = jsonDecode(response.data)['listPosts']['items']..shuffle();
-
+      posts = posts.where((f) => f['attachments'] != null).toList();
       Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
         post['content'] = {
           'attachments': jsonDecode(post['attachments'])['data'],

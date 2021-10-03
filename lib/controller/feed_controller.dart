@@ -10,7 +10,7 @@ class FeedController extends GetxController{
   //热门推荐
   final hotFeedList = <FeedListList>[].obs;
   int cursor = 0;
-  int count = 10;
+  int count = 200;
 
   //好友列表
   final friendFeedList = <FeedListList>[].obs;
