@@ -39,12 +39,13 @@ class _VideoWidgetState extends State<VideoWidget> {
   PostController _postController = Get.put(PostController());
   bool _playing = false;
   Stopwatch _durationSW = new Stopwatch();
+  Future<void> _initializeVideoPlayerFuture;
 
   @override
   void initState() {
     super.initState();
     _videoPlayerController = VideoPlayerController.network(widget.video.content.attachments[0].url);
-    _videoPlayerController.initialize();
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
     _videoPlayerController.setLooping(true);
     _playOrPause();
 
@@ -72,73 +73,51 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    double scale = 1;
-    double videoLayoutWidth;
-    double videoLayoutHeight;
-    // TODO: not scaling the video based on screen size for now
-    // if(_videoPlayerController.value.isInitialized){
-    //
-    //   double rateWidthHeightContent = screenWidth(context) / widget.contentHeight;
-    //   double rateWidthContentVideo = screenWidth(context) / _videoPlayerController.value.size.width;
-    //   double heightVideoByRate = _videoPlayerController.value.size.height * rateWidthContentVideo;
-    //   print('视频宽:${_videoPlayerController.value.size.width} 视频高:${_videoPlayerController.value.size.height}');
-    //   print('视频宽高比:${_videoPlayerController.value.size.width/_videoPlayerController.value.size.height}');
-    //   print('屏幕宽:${screenWidth(context)}  高：${screenHeight(context)}');
-    //   print('内容高度:${widget.contentHeight}');
-    //   print('内容宽高比例:$rateWidthHeightContent');
-    //   print('比例:$rateWidthContentVideo');
-    //   print('比例换算视频高度:$heightVideoByRate');
-    //   if(widget.contentHeight > heightVideoByRate ){
-    //     double rateHeightContentVideo = widget.contentHeight /  _videoPlayerController.value.size.height;
-    //     videoLayoutHeight = heightVideoByRate;
-    //     videoLayoutWidth = screenWidth(context);
-    //     scale = widget.contentHeight / videoLayoutHeight;
-    //     print('width:$videoLayoutWidth height:$videoLayoutHeight scale:$scale rate:$rateHeightContentVideo');
-    //   }
-    // }
-
-
     return Scaffold(
       backgroundColor: ColorRes.color_1,
-      body: Stack(
-        children: [
-          LikeGestureWidget(
-            onSingleTap: () {
-              _playOrPause();
-            },
-            child: _getVideoPlayer(videoLayoutWidth,videoLayoutHeight,scale),
-          ),
+      body: FutureBuilder(
+        future: _initializeVideoPlayerFuture,
+        builder: (context, snapshot) {
+          return Stack(
+            children: [
+              LikeGestureWidget(
+                scale: 1.0,
+                onSingleTap: () {
+                  _playOrPause();
+                },
+                child: _getVideoPlayer(),
+              ),
 
-          // TODO: disable video right widget for now
-          // Positioned(
-          //     right: 10,
-          //     bottom: 110,
-          //     child: VideoRightBarWidget(
-          //       video: widget.video,
-          //       showFocusButton: widget.showFocusButton,
-          //       onClickComment: (){
-          //         showBottomComment();
-          //       },
-          //       onClickShare: (){
-          //         showBottomShare();
-          //       },
-          //       onClickHeader: (){
-          //         widget.onClickHeader?.call();
-          //       },
-          //     )),
-          Positioned(
-              right: 2,
-              bottom: 20,
-              child: VinylDisk(video: widget.video,)),
-          Positioned(
-            left: 12,
-            bottom: 20,
-            child: VideoBottomBarWidget(video: widget.video,),
-          )
-
-
-        ],
-      ),
+              // TODO: disable video right widget for now
+              // Positioned(
+              //     right: 10,
+              //     bottom: 110,
+              //     child: VideoRightBarWidget(
+              //       video: widget.video,
+              //       showFocusButton: widget.showFocusButton,
+              //       onClickComment: (){
+              //         showBottomComment();
+              //       },
+              //       onClickShare: (){
+              //         showBottomShare();
+              //       },
+              //       onClickHeader: (){
+              //         widget.onClickHeader?.call();
+              //       },
+              //     )),
+              Positioned(
+                  right: 2,
+                  bottom: 20,
+                  child: VinylDisk(video: widget.video,)),
+              Positioned(
+                left: 12,
+                bottom: 20,
+                child: VideoBottomBarWidget(video: widget.video,),
+              )
+            ],
+          );
+        }
+      )
     );
   }
 
@@ -155,18 +134,53 @@ class _VideoWidgetState extends State<VideoWidget> {
   }
 
 
-  _getVideoPlayer(double videoLayoutWidth,double videoLayoutHeight,double scale) {
+  _getVideoPlayer() {
+    double scale = 1;
+    double videoLayoutWidth;
+    double videoLayoutHeight;
+    if(_videoPlayerController.value.isInitialized){
+
+      double videoWidth = _videoPlayerController.value.size.width;
+      double videoHeight = _videoPlayerController.value.size.height;
+      double screenW = screenWidth(context);
+      double screenH = screenHeight(context);
+
+      double rateWidthHeightContent = screenW / widget.contentHeight;
+      double rateWidthContentVideo = screenW / videoWidth;
+      double heightVideoByRate = videoHeight * rateWidthContentVideo;
+      print('视频宽:${videoWidth} 视频高:${videoHeight}');
+      print('视频宽高比:${videoWidth/videoHeight}');
+      print('屏幕宽:${screenW} 高：${screenH}');
+      print('内容高度:${widget.contentHeight}');
+      print('内容宽高比例:$rateWidthHeightContent');
+      print('比例:$rateWidthContentVideo');
+      print('比例换算视频高度:$heightVideoByRate');
+      if(widget.contentHeight > heightVideoByRate ){
+        double rateHeightContentVideo = widget.contentHeight / videoHeight;
+        videoLayoutHeight = heightVideoByRate;
+        videoLayoutWidth = screenW;
+        if(videoWidth < videoHeight) {
+          scale = widget.contentHeight / videoLayoutHeight;
+        } else {
+          scale = screenW / videoLayoutWidth;
+        }
+        print('width:$videoLayoutWidth height:$videoLayoutHeight scale:$scale rate:$rateHeightContentVideo');
+      }
+
+    }
     return  Stack(
         children: [
-          Transform.scale(
-            scale: scale,
-            alignment: Alignment.topCenter,
-            child: Container(
-                width: videoLayoutWidth,
-                height: videoLayoutHeight ,
-                child: VideoPlayer(_videoPlayerController)),
+          Center(
+            child: Transform.scale(
+              scale: scale,
+              alignment: Alignment.topCenter,
+              child: Container(
+                  width: videoLayoutWidth,
+                  height: videoLayoutHeight ,
+                  child: VideoPlayer(_videoPlayerController)),
+            )
           ),
-        _playing == true? Container() : _getPauseButton(),
+          _playing == true? Container() : _getPauseButton(),
         ],
     );
   }
