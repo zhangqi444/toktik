@@ -11,7 +11,7 @@ Future<void> main() async {
     debugShowCheckedModeBanner: false,
     defaultTransition: Transition.rightToLeft,
     getPages: RouterManager.routes,
-    initialRoute: Routers.scroll,
+    initialRoute: Routers.splash,
     builder: EasyLoading.init(),
   ));
 }

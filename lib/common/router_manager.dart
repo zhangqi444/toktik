@@ -1,6 +1,7 @@
 import 'package:toktik/page/feed_publish_page.dart';
 // import 'package:toktik/page/friend_page.dart';
 import 'package:toktik/page/home_page.dart';
+import 'package:toktik/page/splash_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
 // import 'package:toktik/page/home_tab_focus_page.dart';
 import 'package:toktik/page/home_tab_recommend_page.dart';
@@ -27,6 +28,7 @@ import 'package:get/get.dart';
 class RouterManager{
   static final routes = [
     // GetPage(name: Routers.test, page: () => TestPage()),
+    GetPage(name: Routers.splash, page: () => SplashPage()),
     GetPage(name: Routers.scroll, page: () => ScrollPage()),
     GetPage(name: Routers.main, page: () => MainPage()),
     GetPage(name: Routers.user, page: () => UserPage()),
@@ -54,6 +56,7 @@ class RouterManager{
 }
 ///路由名称
 class Routers{
+  static final String splash = '/splash';
   static final String test = '/test';
   static final String scroll = '/scroll';
   static final String main = '/main';
