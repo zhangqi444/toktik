@@ -326,25 +326,37 @@ class Api{
     }
   }
 
+  static Future<dynamic> _mutation(document, variables, key) async {
+    var operation = Amplify.API.mutate(
+        request: GraphQLRequest<String>(document: document, variables: variables)
+    );
+    var result = await operation.response;
+    return result != null ? jsonDecode(result.data)[key] : null;
+  }
+
   static Future<ViewResponse> viewPost(String postId, String userId) async{
     try {
-      View newView = View(post: Post(id: postId), user: User(id: userId));
-      await Amplify.DataStore.save(newView);
+      var view = await _mutation(
+          '''mutation CreateView(\$input: CreateViewInput!) {
+            createView(input: \$input) { id }
+          }''',
+          {
+            'input': { 'viewPostId': postId, 'viewUserId': userId },
+          },
+          'createView'
+      );
 
-      String graphQLDocument =
-        '''mutation UpdatePostEx(\$input: UpdatePostInput!, \$add: AddPostInput!) {
-            updatePostEx(input: \$input, add: \$add) {
-            id
-            }
-      }''';
-
-      var operation = Amplify.API.mutate(
-          request: GraphQLRequest<String>(document: graphQLDocument, variables: {
+      await _mutation(
+          '''mutation UpdatePostEx(\$input: UpdatePostInput!, \$add: AddPostInput!) {
+            updatePostEx(input: \$input, add: \$add) { id }
+          }''',
+          {
             'input': { 'id': postId },
             'add': { 'viewCount': 1 },
-          }));
-      var post = await operation.response;
-      return ViewResponse().fromJson(newView.toJson());
+          },
+          "updatePostEx"
+      );
+      return ViewResponse().fromJson(view);
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
