@@ -13,36 +13,25 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   Timer _timer;
-  int count = 3;
 
-  startTime() async {
-    //设置启动图生效时间
-    var _duration = new Duration(seconds: 1);
-    new Timer(_duration, () {
-      // 空等1秒之后再计时
-      _timer = new Timer.periodic(const Duration(milliseconds: 1000), (v) {
-        count--;
-        if (count == 0) {
-          navigationPage();
-        } else {
-          setState(() {});
-        }
-      });
-      return _timer;
-    });
-  }
-
-  void navigationPage() {
+  @override
+  void dispose() {
+    super.dispose();
     _timer.cancel();
-    Get.toNamed('/scroll');
   }
 
   @override
   void initState() {
     super.initState();
-    startTime();
+    _timer = Timer(Duration(seconds: 2), () {
+      navigationPage();
+    });
   }
 
+  void navigationPage() {
+    _timer.cancel();
+    Get.offAndToNamed(Routers.scroll);
+  }
 
   @override
   Widget build(context) {
