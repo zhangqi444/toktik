@@ -31,104 +31,6 @@
       "Type": "Custom::EmptyResource",
       "Condition": "AlwaysFalse"
     },
-    "MutationUpsertLikeFunctionResource": {
-      "Type": "AWS::AppSync::FunctionConfiguration",
-      "Properties": {
-        "ApiId": {
-          "Ref": "AppSyncApiId"
-        },
-        "Name": "mutationUpsertLikeFunction",
-        "DataSourceName": "LikeTable",
-        "FunctionVersion": "2018-05-29",
-        "RequestMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.mutationUpsertLikeFunction.req.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        },
-        "ResponseMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.mutationUpsertLikeFunction.res.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        }
-      }
-    },
-    "UpdatePostExResource": {
-      "Type": "AWS::AppSync::FunctionConfiguration",
-      "Properties": {
-        "ApiId": {
-          "Ref": "AppSyncApiId"
-        },
-        "Name": "updatePostEx",
-        "DataSourceName": "PostTable",
-        "FunctionVersion": "2018-05-29",
-        "RequestMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostEx.req.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        },
-        "ResponseMappingTemplateS3Location": {
-          "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostEx.res.vtl",
-            {
-              "S3DeploymentBucket": {
-                "Ref": "S3DeploymentBucket"
-              },
-              "S3DeploymentRootKey": {
-                "Ref": "S3DeploymentRootKey"
-              }
-            }
-          ]
-        }
-      }
-    },
-    "UpsertLikeDenormalizedResource": {
-      "Type": "AWS::AppSync::Resolver",
-      "Properties": {
-        "ApiId": {
-          "Ref": "AppSyncApiId"
-        },
-        "Kind": "PIPELINE",
-        "TypeName": "Mutation",
-        "FieldName": "upsertLikeDenormalized",
-        "PipelineConfig": {
-          "Functions": [
-            {
-              "Fn::GetAtt": ["MutationUpsertLikeFunctionResource", "FunctionId"]
-            },
-            {
-              "Fn::GetAtt": ["UpdatePostExResource", "FunctionId"]
-            }
-          ]
-        },
-        "RequestMappingTemplate": "{}",
-        "ResponseMappingTemplate": "$util.toJson($ctx.result)"
-      },
-      "DependsOn": ["MutationUpsertLikeFunctionResource", "UpdatePostExResource"]
-    },
     "UpdatePostExResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
@@ -140,7 +42,7 @@
         "FieldName": "updatePostEx",
         "RequestMappingTemplateS3Location": {
           "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostEx.req.vtl",
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostPowered.req.vtl",
             {
               "S3DeploymentBucket": {
                 "Ref": "S3DeploymentBucket"
@@ -153,7 +55,44 @@
         },
         "ResponseMappingTemplateS3Location": {
           "Fn::Sub": [
-            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostEx.res.vtl",
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostPowered.res.vtl",
+            {
+              "S3DeploymentBucket": {
+                "Ref": "S3DeploymentBucket"
+              },
+              "S3DeploymentRootKey": {
+                "Ref": "S3DeploymentRootKey"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "UpdatePostPoweredResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "AppSyncApiId"
+        },
+        "DataSourceName": "PostTable",
+        "TypeName": "Mutation",
+        "FieldName": "updatePostPowered",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Sub": [
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostPowered.req.vtl",
+            {
+              "S3DeploymentBucket": {
+                "Ref": "S3DeploymentBucket"
+              },
+              "S3DeploymentRootKey": {
+                "Ref": "S3DeploymentRootKey"
+              }
+            }
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Sub": [
+            "s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/Function.updatePostPowered.res.vtl",
             {
               "S3DeploymentBucket": {
                 "Ref": "S3DeploymentBucket"

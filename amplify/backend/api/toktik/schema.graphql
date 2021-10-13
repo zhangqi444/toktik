@@ -18,10 +18,15 @@ type Comment @model @auth(rules: [{allow: public}]) {
   text: String
 }
 
-type Like @model @auth(rules: [{allow: public}]) {
+type Like @model
+#  @key(fields: ["id", "likeUserId", "likePostId"])
+#  @key(name: "likesByUserAndPost", fields: ["likeUserId", "likePostId"], queryField: "likesByUserAndPost")
+  @auth(rules: [{allow: public}]) {
   id: ID!
   user: User @connection
   post: Post @connection
+  likeUserId: ID!
+  likePostId: ID!
   value: Boolean
 }
 
@@ -53,6 +58,19 @@ type User @model @auth(rules: [{allow: public}]) {
   city: String
   profession: String
   username: String
+}
+
+type PostEx {
+  id: ID!
+  text: String
+  user: User
+  music: Music
+  attachments: AWSJSON
+  likeCount: Int
+  commentCount: Int
+  shareCount: Int
+  viewCount: Int
+  isLiked: View
 }
 
 enum ModelAttributeTypes {
@@ -160,9 +178,40 @@ input ModelPostConditionInput {
   not: ModelPostConditionInput
 }
 
-type Mutation {
-  upsertLikeDenormalized(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key @aws_iam
-  upsertLike(input: UpsertLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key
-  updatePostEx(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
 }
- 
+
+input ModelPostFilterInput {
+  id: ModelIDInput
+  text: ModelStringInput
+  attachments: ModelStringInput
+  likeCount: ModelIntInput
+  commentCount: ModelIntInput
+  shareCount: ModelIntInput
+  viewCount: ModelIntInput
+  and: [ModelPostFilterInput]
+  or: [ModelPostFilterInput]
+  not: ModelPostFilterInput
+}
+
+type Mutation {
+  updatePostEx(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
+  updatePostPowered(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
+}
+
+type Query {
+  listPostExs(filter: ModelPostFilterInput, userId: ID!, limit: Int, nextToken: String): [PostEx] @function(name: "listPostExs")
+}
