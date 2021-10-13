@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "toktikf7d4ff65": {}
+      },
+      "function": {
+        "listPostExs": {
+          "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+          "s3Key": "amplify-builds/listPostExs-7a516f772f316b726533-build.zip"
+        }
       }
     }
   }

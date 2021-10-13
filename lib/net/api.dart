@@ -41,6 +41,7 @@ import '../model/comment_model.dart';
 
 class Api{
   /// ----------------------------------接口api--------------------------------------------------------
+  //
 
   ///登录
   static Future<LoginResponse> login(String username, String password) async {
@@ -175,6 +176,7 @@ class Api{
       print("Could not create user: " + e.toString() + '\n' + stacktrace.toString());
     }
   }
+  //
 
   ///获取用户资料信息(扩展)
   static Future<UserInfoExResponse> getUserInfoExByUsername(String username) async {

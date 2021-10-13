@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "storage": {
+      "View:@model(appsync)": [
+        "read"
+      ],
+      "Share:@model(appsync)": [
+        "read"
+      ],
+      "Comment:@model(appsync)": [
+        "read"
+      ],
+      "Like:@model(appsync)": [
+        "read"
+      ],
+      "Post:@model(appsync)": [
+        "read"
+      ],
+      "Music:@model(appsync)": [
+        "read"
+      ],
+      "User:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
