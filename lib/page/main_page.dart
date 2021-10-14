@@ -13,6 +13,7 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'home_page.dart';
 import 'splash_page.dart';
+import 'package:toktik/page/login_page.dart';
 
 class MainPage extends StatelessWidget {
   final MainPageScrollController _mainPageController = Get.find();
@@ -40,7 +41,8 @@ class MainPage extends StatelessWidget {
       body: IndexedStack(
         index: _mainPageController.indexBottomBarMainPage.value,
         children: [
-          HomePage(pageController: _scrollPageController),
+          // HomePage(pageController: _scrollPageController),
+          LoginPage(),
           SearchPage(),
           MessagePage(),
           UserPage(
