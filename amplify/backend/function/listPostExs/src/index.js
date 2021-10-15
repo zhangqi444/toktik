@@ -84,16 +84,16 @@ exports.handler = async (event, context) => {
 
         const { items, nextToken, startedAt } = await getPosts(args);
 
-        let posts;
-        if(requesterId) {
-            const isLikedMap = await getIsLiked(requesterId, items);
-            posts = items.map(post => {
-                return { ...post, isLiked: isLikedMap[post['id']] };
-            });
-        }
+        const isLikedMap = requesterId && await getIsLiked(requesterId, items);
+        const posts = items.map(post => {
+            const result = { ...post };
+            if(isLikedMap) result['isLiked'] = isLikedMap[post['id']];
+            result['attachments'] = JSON.parse(result['attachments']);
+            return result;
+        });
 
         return {
-            items: posts || items, nextToken, startedAt,
+            items: posts, nextToken, startedAt,
             statusCode: 200,
             headers: { "Access-Control-Allow-Origin": "*", }
         };
