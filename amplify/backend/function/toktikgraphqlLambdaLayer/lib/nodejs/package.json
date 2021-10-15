@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.23.0",
+    "graphql": "^15.6.1",
+    "graphql-tag": "^2.12.5"
+  },
+  "devDependencies": {}
+}

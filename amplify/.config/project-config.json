@@ -4,10 +4,14 @@
   ],
   "projectName": "toktik",
   "version": "3.1",
-  "frontend": "flutter",
-  "flutter": {
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "none",
     "config": {
-      "ResDir": "./lib/"
+      "SourceDir": "src",
+      "DistributionDir": "dist",
+      "BuildCommand": "npm run-script build",
+      "StartCommand": "npm run-script start"
     }
   }
 }
