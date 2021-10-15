@@ -1,4 +1,5 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/net/api.dart';
@@ -16,6 +17,8 @@ class FeedController extends GetxController{
   final friendFeedList = <FeedListList>[].obs;
   int cursorFriend = 0;
   int countFriend = 10;
+
+  UserController _userController = Get.put(UserController());
 
   ///发布单个视频
   Future<String> publishFeed(String title,String videoUrl,String coverImgUrl,int duration,int width,int height) async{
@@ -51,7 +54,7 @@ class FeedController extends GetxController{
 
   ///获取热门推荐视频列表
   Future<bool> getHotFeedList(RefreshController refreshController)async{
-    var result = await Api.getHotFeedList(cursor, count);
+    var result = await Api.getHotFeedList(cursor, count, _userController.loginUserId.value);
     if(result != null){
       hotFeedList.addAll(result.xList);
       cursor = result.cursor;

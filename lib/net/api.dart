@@ -295,22 +295,38 @@ class Api{
   }
 
   ///获取热门作品列表
-  static Future<FeedListResponse> getHotFeedList(int cursor,int limit) async{
+  static Future<FeedListResponse> getHotFeedList(int cursor,int limit, String userId) async{
     try {
-      String graphQLDocument =
-      '''query ListPosts(\$limit: Int) {
+      var response;
+      if(userId.isEmpty) {
+        response = await _query(
+          '''query ListPosts(\$limit: Int) {
             listPosts(limit: \$limit) {
+              items {
+                id attachments music { id } text 
+                user { id nickname username portrait }
+              }
+            }
+          }''',
+          { 'limit': limit },
+          'listPosts'
+        );
+      } else {
+        response = await _query(
+          '''query ListPostExs(\$limit: Int, \$userId: String) {
+            listPostExs(limit: \$limit, userId: \$userId) {
               items {
                 id attachments music { id } text 
                 user { id nickname username portrait}
               }
             }
-      }''';
-      var response = await Amplify.API.query(
-          request: GraphQLRequest<String>(document: graphQLDocument, variables: {
-            'limit': limit
-          })).response;
-      List posts = jsonDecode(response.data)['listPosts']['items']..shuffle();
+          }''',
+          { 'limit': limit, 'userId': userId },
+          'listPostExs'
+        );
+      }
+
+      List posts = response['items']..shuffle();
       posts = posts.where((f) => f['attachments'] != null).toList();
       Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
         post['content'] = {
@@ -336,6 +352,14 @@ class Api{
     return result != null ? jsonDecode(result.data)[key] : null;
   }
 
+  static Future<dynamic> _query(document, variables, key) async {
+    var operation = Amplify.API.query(
+        request: GraphQLRequest<String>(document: document, variables: variables)
+    );
+    var result = await operation.response;
+    return result != null ? jsonDecode(result.data)[key] : null;
+  }
+
   static Future<ViewResponse> viewPost(String postId, String userId) async{
     try {
       var view = await _mutation(
@@ -349,14 +373,14 @@ class Api{
       );
 
       await _mutation(
-          '''mutation UpdatePostEx(\$input: UpdatePostInput!, \$add: AddPostInput!) {
-            updatePostEx(input: \$input, add: \$add) { id }
+          '''mutation UpdatePostPowered(\$input: UpdatePostInput!, \$add: AddPostInput!) {
+            updatePostPowered(input: \$input, add: \$add) { id }
           }''',
           {
             'input': { 'id': postId },
             'add': { 'viewCount': 1 },
           },
-          "updatePostEx"
+          "updatePostPowered"
       );
       return ViewResponse().fromJson(view);
     } catch (e, stacktrace) {
