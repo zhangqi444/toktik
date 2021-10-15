@@ -73,6 +73,12 @@ type PostEx {
   isLiked: View
 }
 
+type ModelPostExConnection @aws_api_key @aws_iam {
+  items: [PostEx]
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
 enum ModelAttributeTypes {
   binary
   binarySet
@@ -213,5 +219,5 @@ type Mutation {
 }
 
 type Query {
-  listPostExs(filter: ModelPostFilterInput, userId: ID!, limit: Int, nextToken: String): [PostEx] @function(name: "listPostExs")
+  listPostExs(filter: ModelPostFilterInput, userId: ID!, limit: Int, nextToken: String): ModelPostExConnection @function(name: "listPostExs-staging")
 }
