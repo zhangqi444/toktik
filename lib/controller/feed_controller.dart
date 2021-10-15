@@ -54,7 +54,8 @@ class FeedController extends GetxController{
 
   ///获取热门推荐视频列表
   Future<bool> getHotFeedList(RefreshController refreshController)async{
-    var result = await Api.getHotFeedList(cursor, count, _userController.loginUserId.value);
+    String userId = await _userController.getLoginUserId();
+    var result = await Api.getHotFeedList(cursor, count, userId);
     if(result != null){
       hotFeedList.addAll(result.xList);
       cursor = result.cursor;

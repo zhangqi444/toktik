@@ -313,7 +313,7 @@ class Api{
         );
       } else {
         response = await _query(
-          '''query ListPostExs(\$limit: Int, \$userId: String) {
+          '''query ListPostExs(\$limit: Int, \$userId: ID!) {
             listPostExs(limit: \$limit, userId: \$userId) {
               items {
                 id attachments music { id } text 

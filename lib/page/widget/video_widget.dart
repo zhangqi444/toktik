@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
@@ -7,7 +9,6 @@ import 'package:toktik/controller/post_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_bottom_bar_widget.dart';
-import 'package:toktik/page/widget/video_right_bar_widget.dart';
 import 'package:toktik/page/widget/video_share_widget.dart';
 import 'package:toktik/util/screen_utils.dart';
 import 'package:get/get.dart';
@@ -150,13 +151,13 @@ class _VideoWidgetState extends State<VideoWidget> {
     double rateWidthHeightContent = screenW / widget.contentHeight;
     double rateWidthContentVideo = screenW / videoWidth;
     double heightVideoByRate = videoHeight * rateWidthContentVideo;
-    print('视频宽:${videoWidth} 视频高:${videoHeight}');
-    print('视频宽高比:${videoWidth/videoHeight}');
-    print('屏幕宽:${screenW} 高：${screenH}');
-    print('内容高度:${widget.contentHeight}');
-    print('内容宽高比例:$rateWidthHeightContent');
-    print('比例:$rateWidthContentVideo');
-    print('比例换算视频高度:$heightVideoByRate');
+    debugPrint('视频宽:${videoWidth} 视频高:${videoHeight}');
+    debugPrint('视频宽高比:${videoWidth/videoHeight}');
+    debugPrint('屏幕宽:${screenW} 高：${screenH}');
+    debugPrint('内容高度:${widget.contentHeight}');
+    debugPrint('内容宽高比例:$rateWidthHeightContent');
+    debugPrint('比例:$rateWidthContentVideo');
+    debugPrint('比例换算视频高度:$heightVideoByRate');
     if(widget.contentHeight > heightVideoByRate ){
       double rateHeightContentVideo = widget.contentHeight / videoHeight;
       videoLayoutHeight = heightVideoByRate;
