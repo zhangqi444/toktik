@@ -52,20 +52,6 @@ const getPosts = async (args) => {
     if(!graphqlData.data.errors) return graphqlData.data.data.listPosts;
 }
 
-const getUsers = async (posts) => {
-    const userMap = {};
-    posts.forEach(post => { userMap[post['user']['id']] = true; });
-    const userIds = Object.keys(userMap);
-    let users = await docClient.batchGet({
-        RequestItems: {
-            [process.env.API_TOKTIK_USERTABLE_NAME]: {
-                Keys: userIds.map(userId => { return { id: userId } })
-            }
-        }}).promise();
-    users['Responses'][process.env.API_TOKTIK_USERTABLE_NAME].forEach(user => { userMap[user['id']] = user; })
-    return userMap;
-}
-
 const getIsLiked = async (requesterId, posts) => {
     const postIdMap = {};
     posts.forEach((post, index) => {
@@ -98,16 +84,16 @@ exports.handler = async (event, context) => {
 
         const { items, nextToken, startedAt } = await getPosts(args);
 
-        const userMap = await getUsers(items);
-
-        const isLikedMap = await getIsLiked(requesterId, items);
-
-        const posts = items.map(post => {
-            return { ...post, isLiked: isLikedMap[post['id']] };
-        });
+        let posts;
+        if(requesterId) {
+            const isLikedMap = await getIsLiked(requesterId, items);
+            posts = items.map(post => {
+                return { ...post, isLiked: isLikedMap[post['id']] };
+            });
+        }
 
         return {
-            items: posts, nextToken, startedAt,
+            items: posts || items, nextToken, startedAt,
             statusCode: 200,
             headers: { "Access-Control-Allow-Origin": "*", }
         };
