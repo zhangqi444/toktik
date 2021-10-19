@@ -172,7 +172,7 @@ class UserController extends GetxController{
 
   ///获取登录用户的id
   Future<String> getLoginUserId() async{
-    if(!loginUserId.value.isEmpty) return loginUserId.value;
+    if(loginUserId.value != null && loginUserId.value.isNotEmpty) return loginUserId.value;
     return await SPUtil.getString(SPKeys.userId);
   }
 

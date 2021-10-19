@@ -298,7 +298,7 @@ class Api{
   static Future<FeedListResponse> getHotFeedList(int cursor,int limit, String userId) async{
     try {
       var response;
-      if(userId.isEmpty) {
+      if(userId == null || userId.isEmpty) {
         response = await _query(
           '''query ListPosts(\$limit: Int) {
             listPosts(limit: \$limit) {
