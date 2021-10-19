@@ -41,8 +41,7 @@ class MainPage extends StatelessWidget {
       body: IndexedStack(
         index: _mainPageController.indexBottomBarMainPage.value,
         children: [
-          // HomePage(pageController: _scrollPageController),
-          LoginPage(),
+          HomePage(pageController: _scrollPageController),
           SearchPage(),
           MessagePage(),
           UserPage(

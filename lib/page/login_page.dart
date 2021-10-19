@@ -52,9 +52,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     return Scaffold(
-      // backgroundColor: ColorRes.color_1,
       appBar: AppBar(
-        // backgroundColor: ColorRes.color_1,
         backgroundColor: Colors.white,
         brightness: Brightness.light,
         title:
@@ -179,18 +177,17 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
                 ),
               )),
-          // TODO: 暂时移除注册功能
-          // Positioned(
-          //     right: 0,
-          //     child: TextButton(
-          //       onPressed: () {
-          //         Get.toNamed(Routers.register);
-          //       },
-          //       child: Text(
-          //         'Sign up',
-          //         style: TextStyle(color: Colors.black),
-          //       ),
-          //     )),
+          Positioned(
+              right: 0,
+              child: TextButton(
+                onPressed: () {
+                  Get.toNamed(Routers.register);
+                },
+                child: Text(
+                  'Sign up',
+                  style: TextStyle(color: Colors.black),
+                ),
+              )),
         ],
       ),
     );
