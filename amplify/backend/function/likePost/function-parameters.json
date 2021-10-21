@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "storage": {
+      "Like:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "Post:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

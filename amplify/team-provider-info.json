@@ -18,11 +18,15 @@
       "function": {
         "listPostExs": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/listPostExs-703278456d6571564f73-build.zip"
+          "s3Key": "amplify-builds/listPostExs-477a305270495a49696e-build.zip"
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
           "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersiona1b39945-build.zip"
+        },
+        "likePost": {
+          "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+          "s3Key": "amplify-builds/likePost-63367473414333543134-build.zip"
         }
       }
     }
