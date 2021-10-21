@@ -1,7 +1,12 @@
-type View @model @auth(rules: [{allow: public}]) {
+type View @model @auth(rules: [{allow: public}])
+  @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId")
+  @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId")
+{
   id: ID!
   post: Post @connection
   user: User @connection
+  viewUserId: ID!
+  viewPostId: ID!
 }
 
 type Share @model @auth(rules: [{allow: public}]) {
@@ -9,6 +14,8 @@ type Share @model @auth(rules: [{allow: public}]) {
   to: String
   user: User @connection
   post: Post @connection
+  shareUserId: ID!
+  sharePostId: ID!
 }
 
 type Comment @model @auth(rules: [{allow: public}]) {
@@ -16,12 +23,14 @@ type Comment @model @auth(rules: [{allow: public}]) {
   user: User @connection
   post: Post @connection
   text: String
+  commentUserId: ID!
+  commentPostId: ID!
 }
 
-type Like @model
-#  @key(fields: ["id", "likeUserId", "likePostId"])
-#  @key(name: "likesByUserAndPost", fields: ["likeUserId", "likePostId"], queryField: "likesByUserAndPost")
-  @auth(rules: [{allow: public}]) {
+type Like @model @auth(rules: [{allow: public}])
+  @key(name: "likePostId-likeUserId-index", fields: ["likePostId", "likeUserId"], queryField: "likeByPostIdUserId")
+  @key(name: "likePostId-index", fields: ["likePostId"], queryField: "likeByPostId")
+  @key(name: "likeUserId-index", fields: ["likeUserId"], queryField: "likeByUserId") {
   id: ID!
   user: User @connection
   post: Post @connection
@@ -90,6 +99,29 @@ enum ModelAttributeTypes {
   string
   stringSet
   _null
+}
+
+input ModelViewConditionInput {
+  likePostId: ModelStringInput
+  likeUserId: ModelStringInput
+  and: [ModelViewConditionInput]
+  or: [ModelViewConditionInput]
+  not: ModelViewConditionInput
+}
+
+input CreateLikeInput {
+  id: ID
+  likeUserId: ID!
+  likePostId: ID!
+  value: Boolean
+  _version: Int
+}
+
+input CreateViewInput {
+  id: ID
+  _version: Int
+  viewPostId: ID
+  viewUserId: ID
 }
 
 input UpsertLikeInput {
@@ -216,8 +248,11 @@ input ModelPostFilterInput {
 type Mutation {
   updatePostEx(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
   updatePostPowered(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
+  likePost(input: CreateLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key @aws_iam @function(name: "likePost-staging")
+  viewPost(input: CreateViewInput!, condition: ModelViewConditionInput): View @aws_api_key @aws_iam @function(name: "viewPost-staging")
 }
 
 type Query {
   listPostExs(filter: ModelPostFilterInput, userId: ID!, limit: Int, nextToken: String): ModelPostExConnection @function(name: "listPostExs-staging")
 }
+ 
