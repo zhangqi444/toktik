@@ -64,6 +64,15 @@ flutter:
     - assets/images/splash/breeze_text.png
     - assets/images/login/question.png
     - assets/images/login/nav-arrow-left.png
+    - assets/images/main_page_bottom_icon/home.png
+    - assets/images/main_page_bottom_icon/message.png
+    - assets/images/main_page_bottom_icon/live.png
+    - assets/images/main_page_bottom_icon/profile.png
+    - assets/images/main_page_bottom_icon/create.png
+    - assets/images/main_page_bottom_icon/home-active.png
+    - assets/images/main_page_bottom_icon/message-active.png
+    - assets/images/main_page_bottom_icon/live-active.png
+    - assets/images/main_page_bottom_icon/profile-active.png
   fonts:
     - family:  TikTokIcons
       fonts:
