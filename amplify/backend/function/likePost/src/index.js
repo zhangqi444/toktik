@@ -11,6 +11,7 @@ Amplify Params - DO NOT EDIT */
 const AWS = require('aws-sdk');
 const dynamoDbClient = new AWS.DynamoDB();
 const crypto = require('crypto');
+const { constants } = require('/opt/internal/index');
 
 exports.handler = async (event, context) => {
     try {
@@ -19,12 +20,17 @@ exports.handler = async (event, context) => {
         const likePostId = input['likePostId'];
         const value = input['value'];
 
+        const response = {
+            statusCode: 200,
+            headers: { "Access-Control-Allow-Origin": "*", }
+        };
+
         let existingLike = await dynamoDbClient.query({
             "TableName": process.env.API_TOKTIK_LIKETABLE_NAME,
             "ScanIndexForward": true,
             "IndexName": "likePostId-likeUserId-index",
             "KeyConditionExpression": "likeUserId = :likeUserId And likePostId = :likePostId",
-            "ProjectionExpression": "#id,#value",
+            "ProjectionExpression": "#id,#value,updatedAt,createdAt",
             "ExpressionAttributeValues": {
               ":likeUserId": { "S": likeUserId },
               ":likePostId": { "S": likePostId },
@@ -35,12 +41,18 @@ exports.handler = async (event, context) => {
             }
         }).promise();
         existingLike = existingLike && existingLike['Count'] === 1 && existingLike['Items'][0];
+        const viewId = (existingLike && existingLike.id) ? existingLike.id.S : crypto.randomUUID();
+        if(existingLike && existingLike.value.BOOL === value) {
+            return {
+                value, updatedAt: existingLike.updatedAt.S, createdAt: existingLike.createdAt.S, likePostId, likeUserId, id: viewId,
+                ...response
+            };
+        }
 
         let updateLikeParam;
         const now = new Date();
         const nowTimestamp = '' + now.getTime();
         const nowISOString = now.toISOString();
-        const viewId = (existingLike && existingLike.id) ? existingLike.id.S : crypto.randomUUID();
         if(existingLike) {
             updateLikeParam = {
                 "Update": {
@@ -75,7 +87,7 @@ exports.handler = async (event, context) => {
                     "updatedAt": { "S": nowISOString },
                     "_lastChangedAt": { "N": nowTimestamp },
                     "_version": { "N": "1" },
-                    "__typename": { "S": "Like" },
+                    "__typename": { "S": constants.GRAPHQL_MODEL_NAME.LIKE },
                 }
               }
             };
@@ -87,7 +99,7 @@ exports.handler = async (event, context) => {
                 "Key": { "id": { "S": likePostId } },
                 "UpdateExpression": " ADD likeCount :likeCount, #version :version SET #lastChangedAt = :lastChangedAt",
                 "ExpressionAttributeValues": {
-                    ":likeCount": { "N": "1" },
+                    ":likeCount": { "N": value ? '1' : '-1' },
                     ":lastChangedAt": { "N": nowTimestamp },
                     ":version": { "N": '1' }
                 },
@@ -104,8 +116,7 @@ exports.handler = async (event, context) => {
 
         return {
             value, upadtedAt: now, createdAt: now, likePostId, likeUserId, id: viewId,
-            statusCode: 200,
-            headers: { "Access-Control-Allow-Origin": "*", }
+            ...response
         };
     } catch (err) {
         console.log(err);

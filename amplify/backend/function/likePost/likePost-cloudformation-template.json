@@ -19,6 +19,10 @@
     "apitoktikGraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apitoktikGraphQLAPIIdOutput"
+    },
+    "functiontoktikgraphqlLambdaLayerArn": {
+      "Type": "String",
+      "Default": "functiontoktikgraphqlLambdaLayerArn"
     }
   },
   "Conditions": {
@@ -138,7 +142,11 @@
           ]
         },
         "Runtime": "nodejs14.x",
-        "Layers": [],
+        "Layers": [
+          {
+            "Ref": "functiontoktikgraphqlLambdaLayerArn"
+          }
+        ],
         "Timeout": 25
       }
     },
