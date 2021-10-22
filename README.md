@@ -24,3 +24,8 @@ https://github.com/aws-amplify/amplify-cli/issues/3802
 ### How to auto generate model file under `lib/generated`?
 
 Please follow https://plugins.jetbrains.com/plugin/11415-flutterjsonbeanfactory
+
+
+### How to add Lambda and Lambda Layer?
+https://docs.amplify.aws/cli/function/layers/#add-shared-code--assets
+https://docs.amplify.aws/guides/functions/appsync-operations-to-lambda-layer/q/platform/js/#generate-compatible-code-for-your-layer
