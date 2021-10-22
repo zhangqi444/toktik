@@ -22,8 +22,7 @@ class MainPageBottomBarWidget extends StatefulWidget {
   }
 }
 
-class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
-
+class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   final MainPageScrollController mainPageScrollController = Get.find();
   //用来获取BottomBar的高度
   final GlobalKey bottomBarKey = GlobalKey();
@@ -37,7 +36,8 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
     _bottomBarLayout = _getLayoutBottomBar();
     //BottomBar绘制完成时候的监听
     WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
-      double videoViewHeight = MediaQuery.of(context).size.height - bottomBarKey.currentContext.size.height;
+      double videoViewHeight = MediaQuery.of(context).size.height -
+          bottomBarKey.currentContext.size.height;
       mainPageScrollController.setVideoViewHeight(videoViewHeight);
     });
   }
@@ -47,21 +47,33 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
     return _bottomBarLayout;
   }
 
-  _getLayoutBottomBar(){
+  _getLayoutBottomBar() {
     return Container(
       key: bottomBarKey,
-      height: 50 + (Platform.isIOS ? 40 : 10) * 1.0,
-      decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
+      height: 54 + (Platform.isIOS ? 40 : 10) * 1.0,
+      decoration:
+          BoxDecoration(color: Color(0xffFFFFFF)),
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 4,
+            height: 8,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              menuButton('Home', TikTokIcons.home, 0),
-              menuButton('Search', TikTokIcons.search, 1),
+              menuButton(
+                  'Home',
+                  Image.asset("assets/images/main_page_bottom_icon/home.png"),
+                  Image.asset(
+                      "assets/images/main_page_bottom_icon/home-active.png"),
+                  0),
+              menuButton(
+                  'Live',
+                  Image.asset("assets/images/main_page_bottom_icon/live.png"),
+                  Image.asset(
+                      "assets/images/main_page_bottom_icon/live-active.png"),
+                  1),
               SizedBox(
                 width: 12.5,
               ),
@@ -69,8 +81,20 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
               SizedBox(
                 width: 12.5,
               ),
-              menuButton('Messages', TikTokIcons.messages, 2),
-              menuButton('Profile', TikTokIcons.profile, 3)
+              menuButton(
+                  'Message',
+                  Image.asset(
+                      "assets/images/main_page_bottom_icon/message.png"),
+                  Image.asset(
+                      "assets/images/main_page_bottom_icon/message-active.png"),
+                  2),
+              menuButton(
+                  'Profile',
+                  Image.asset(
+                      "assets/images/main_page_bottom_icon/profile.png"),
+                  Image.asset(
+                      "assets/images/main_page_bottom_icon/profile-active.png"),
+                  3)
             ],
           ),
           SizedBox(
@@ -87,53 +111,59 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
         Get.toNamed(Routers.shoot);
       },
       child: Container(
-        width: 45.0,
-        height: 27.0,
-        child: Obx(() => Stack(children: [
-          Container(
-              margin: EdgeInsets.only(left: 10.0),
-              width: CreateButtonWidth,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 250, 45, 108),
-                  borderRadius: BorderRadius.circular(7.0))),
-          Container(
-              margin: EdgeInsets.only(right: 10.0),
-              width: CreateButtonWidth,
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 32, 211, 234),
-                  borderRadius: BorderRadius.circular(7.0))),
-          Center(
-              child: Container(
-                height: double.infinity,
-                width: CreateButtonWidth,
-                decoration: BoxDecoration(
-                    color: mainPageScrollController.indexBottomBarMainPage == 0
-                        ? Colors.white
-                        : Colors.black,
-                    borderRadius: BorderRadius.circular(7.0)),
-                child: Icon(
-                  Icons.add,
-                  color: mainPageScrollController.indexBottomBarMainPage == 0
-                      ? Colors.black
-                      : Colors.white,
-                  size: 20.0,
-                ),
-              )),
-        ])))
-  );
+          width: 45.0,
+          height: 45.0,
+          alignment: Alignment(0, -1),
+          child:
+          Image.asset("assets/images/main_page_bottom_icon/create.png", width: 44.0, height: 35.0,)
+          // Obx(() => Stack(children: [
+          //       Container(
+          //           margin: EdgeInsets.only(left: 10.0),
+          //           width: CreateButtonWidth,
+          //           decoration: BoxDecoration(
+          //               color: Color.fromARGB(255, 250, 45, 108),
+          //               borderRadius: BorderRadius.circular(7.0))),
+          //       Container(
+          //           margin: EdgeInsets.only(right: 10.0),
+          //           width: CreateButtonWidth,
+          //           decoration: BoxDecoration(
+          //               color: Color.fromARGB(255, 32, 211, 234),
+          //               borderRadius: BorderRadius.circular(7.0))),
+          //       Center(
+          //           child: Container(
+          //         height: double.infinity,
+          //         width: CreateButtonWidth,
+          //         decoration: BoxDecoration(
+          //             color:
+          //                 mainPageScrollController.indexBottomBarMainPage == 0
+          //                     ? Colors.white
+          //                     : Colors.black,
+          //             borderRadius: BorderRadius.circular(7.0)),
+          //         child:
+          //         Icon(
+          //           Icons.add,
+          //           color: mainPageScrollController.indexBottomBarMainPage == 0
+          //               ? Colors.black
+          //               : Colors.white,
+          //           size: 20.0,
+          //         ),
+          //       )),
+          //     ]))
+      ));
 
-  Widget menuButton(String text, IconData icon, int index) {
+  Widget menuButton(String text, Image icon, Image icon_active, int index) {
     return GestureDetector(
         onTap: () {
           // TODO: disable bottom tab for now.
-          EasyLoading.showToast("This feature is coming soon.", duration: Duration(seconds: 3));
+          EasyLoading.showToast("This feature is coming soon.",
+              duration: Duration(seconds: 3));
           return;
-          if(index == 0 || index == 1){
+          if (index == 0 || index == 1) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
-          }else{
-            SPUtil.getString(SPKeys.token).then((text){
+          } else {
+            SPUtil.getString(SPKeys.token).then((text) {
               String token = text;
-              if(token != null && token.length > 0){
+              if (token != null && token.length > 0) {
                 mainPageScrollController.selectIndexBottomBarMainPage(index);
               } else {
                 Application.eventBus.fire(StopPlayEvent());
@@ -143,49 +173,53 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget>{
           }
         },
         child: Obx(() => Container(
-          height: 45,
-          width: 80,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(icon,
-                  color: mainPageScrollController.indexBottomBarMainPage == 0
-                      ? (mainPageScrollController.indexBottomBarMainPage == index ? Colors.white : Colors.white70)
-                      : (mainPageScrollController.indexBottomBarMainPage == index ? Colors.black : Colors.black54),
-                  size: NavigationIconSize),
-              SizedBox(
-                height: 7,
+              height: 45,
+              width: 80,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  mainPageScrollController.indexBottomBarMainPage == 0
+                      ? (mainPageScrollController.indexBottomBarMainPage ==
+                              index
+                          ? icon_active
+                          : icon)
+                      : (mainPageScrollController.indexBottomBarMainPage ==
+                              index
+                          ? icon
+                          : icon_active),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    text,
+                    style: TextStyle(
+                        fontWeight:
+                            mainPageScrollController.indexBottomBarMainPage ==
+                                    index
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                        color:
+                            Color(0xff2A2A2A),
+                        fontSize: 10.0),
+                  )
+                ],
               ),
-              Text(
-                text,
-                style: TextStyle(
-                    fontWeight: mainPageScrollController.indexBottomBarMainPage == index ? FontWeight.bold : FontWeight.normal,
-                    color: mainPageScrollController.indexBottomBarMainPage == 0
-                        ? (mainPageScrollController.indexBottomBarMainPage == index ? Colors.white : Colors.white70)
-                        : (mainPageScrollController.indexBottomBarMainPage == index ? Colors.black : Colors.black54),
-                    fontSize: 11.0),
-              )
-            ],
-          ),
-        )));
+            )));
   }
 
   void setSystemStatusBarStyle(int index) {
-    if(index == 3 ){
+    if (index == 3) {
       //设置状态栏的颜色和图标模式
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
       ));
-
-    }else{
+    } else {
       //设置状态栏的颜色和图标模式
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: ColorRes.color_1,
         statusBarIconBrightness: Brightness.dark,
       ));
     }
-
   }
-
 }
