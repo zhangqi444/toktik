@@ -108,6 +108,27 @@
           ]
         }
       ]
+    },
+    "viewPost": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "toktik",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "toktikgraphqlLambdaLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
   }
 }

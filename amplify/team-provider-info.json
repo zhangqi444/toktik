@@ -27,6 +27,10 @@
         "likePost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
           "s3Key": "amplify-builds/likePost-6d31304333613234347a-build.zip"
+        },
+        "viewPost": {
+          "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+          "s3Key": "amplify-builds/viewPost-6b7146732b7a7a447174-build.zip"
         }
       }
     }

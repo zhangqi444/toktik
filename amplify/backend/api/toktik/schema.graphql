@@ -1,6 +1,7 @@
 type View @model @auth(rules: [{allow: public}])
   @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId")
   @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId")
+  @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId")
 {
   id: ID!
   post: Post @connection

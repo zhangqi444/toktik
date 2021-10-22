@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "storage": {
+      "View:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "Post:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "toktikgraphqlLambdaLayer",
+      "env": "staging",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
+}
