@@ -80,7 +80,7 @@ type PostEx {
   commentCount: Int
   shareCount: Int
   viewCount: Int
-  isLiked: View
+  isLiked: Like
 }
 
 type ModelPostExConnection @aws_api_key @aws_iam {

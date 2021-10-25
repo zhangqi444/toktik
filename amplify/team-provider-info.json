@@ -30,7 +30,7 @@
         },
         "viewPost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/viewPost-6b7146732b7a7a447174-build.zip"
+          "s3Key": "amplify-builds/viewPost-61794c4f78636f4a6841-build.zip"
         }
       }
     }
