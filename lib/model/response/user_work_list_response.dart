@@ -24,7 +24,7 @@ class UserWorkListList with JsonConvert<UserWorkListList> {
 	int shareCount;
 	int viewCount;
 	bool isFollow;
-	bool isLike;
+	bool isLiked;
 }
 
 class UserWorkListListContent with JsonConvert<UserWorkListListContent> {

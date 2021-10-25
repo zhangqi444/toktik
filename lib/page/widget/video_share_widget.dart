@@ -64,7 +64,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
     'assets/images/share_action_fav.webp',
     'assets/images/share_action_hepai.webp',
     'assets/images/share_action_bizhi.webp',
-    'assets/images/share_action_dislike.webp',
+    'assets/images/share_action_disLiked.webp',
     'assets/images/share_action_copy_url.webp',
     'assets/images/share_action_code.webp',
     'assets/images/share_action_tohot.webp',

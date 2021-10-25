@@ -24,7 +24,7 @@ class FeedListList with JsonConvert<FeedListList> {
 	int shareCount;
 	int viewCount;
 	bool isFollow;
-	bool isLike;
+	bool isLiked;
 }
 
 class FeedListListContent with JsonConvert<FeedListListContent> {

@@ -88,8 +88,8 @@ userWorkListListFromJson(UserWorkListList data, Map<String, dynamic> json) {
 	if (json['isFollow'] != null) {
 		data.isFollow = json['isFollow'];
 	}
-	if (json['isLike'] != null) {
-		data.isLike = json['isLike'];
+	if (json['isLiked'] != null) {
+		data.isLiked = json['isLiked'];
 	}
 	return data;
 }
@@ -110,7 +110,7 @@ Map<String, dynamic> userWorkListListToJson(UserWorkListList entity) {
 	data['shareCount'] = entity.shareCount;
 	data['viewCount'] = entity.viewCount;
 	data['isFollow'] = entity.isFollow;
-	data['isLike'] = entity.isLike;
+	data['isLiked'] = entity.isLiked;
 	return data;
 }
 
