@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
+import 'package:toktik/model/response/like_response.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:like_button/like_button.dart';
 
 class VideoRightBarWidget extends StatefulWidget {
 
   final Function onClickComment;
+  final Function onClickLike;
   final Function onClickShare;
   final Function onClickHeader;
   bool showFocusButton;
   FeedListList video;
-  VideoRightBarWidget({Key key,this.onClickComment,this.onClickShare,this.showFocusButton,this.onClickHeader,this.video}) : super(key: key);
+  VideoRightBarWidget({
+    Key key,this.onClickComment,this.onClickShare,this.showFocusButton,
+    this.onClickHeader,this.onClickLike,this.video}) : super(key: key);
 
   @override
   _VideoRightBarWidgetState createState() {
@@ -96,11 +100,13 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         LikeButton(
+            isLiked: widget.video.isLiked,
             size: 40,
             circleColor:CircleColor(start: ColorRes.color_3,end: ColorRes.color_3),
             likeBuilder: (isLiked){
               return isLiked == true?Image.asset('assets/images/red_heart.webp'):Image.asset('assets/images/red_heart.webp',color: Colors.white,);
             },
+            onTap: (bool isLiked) async { await widget.onClickLike?.call(!isLiked); },
             bubblesColor:const BubblesColor(dotPrimaryColor: ColorRes.color_3,dotSecondaryColor: ColorRes.color_3,dotThirdColor: ColorRes.color_3,dotLastColor: ColorRes.color_3,)
         ),
         SizedBox(height: 2,),

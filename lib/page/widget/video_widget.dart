@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/common/events.dart';
+import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/common/sp_keys.dart';
+import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/post_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
@@ -13,6 +16,7 @@ import 'package:toktik/page/widget/video_right_bar_widget.dart';
 import 'package:toktik/page/widget/video_share_widget.dart';
 import 'package:toktik/util/screen_utils.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/sp_util.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../res/colors.dart';
@@ -39,6 +43,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   VideoPlayerController _videoPlayerController;
   MainPageScrollController mainController = Get.find();
   PostController _postController = Get.put(PostController());
+  FeedController _feedController = Get.put(FeedController());
   bool _playing = false;
   Stopwatch _durationSW = new Stopwatch();
   Future<void> _initializeVideoPlayerFuture;
@@ -102,6 +107,23 @@ class _VideoWidgetState extends State<VideoWidget> {
                     showFocusButton: widget.showFocusButton,
                     onClickComment: (){
                       showBottomComment();
+                    },
+                    onClickLike: (isLiked) async {
+                      var token = await SPUtil.getString(SPKeys.token);
+                      if(token == null) {
+                        // TODO: add the correct logic to stop the video during login
+                        // _videoPlayerController.pause();
+                        Get.toNamed(Routers.login);
+                        return null;
+                      }
+                      var result = await _postController.likePost(widget.video.id, isLiked);
+                      if(result != null) {
+                        int likeCount = widget.video.likeCount += result.value ? 1 : -1;
+                        var newVideoJson = widget.video.toJson();
+                        newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
+                        var newVideo = new FeedListList().fromJson(newVideoJson);
+                        _feedController.updateFeedListList(widget.video.id, newVideo);
+                      }
                     },
                     onClickShare: (){
                       showBottomShare();

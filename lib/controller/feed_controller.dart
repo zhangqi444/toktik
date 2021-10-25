@@ -9,7 +9,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class FeedController extends GetxController{
 
   //热门推荐
-  final hotFeedList = <FeedListList>[].obs;
+  final hotFeedList = <String>[].obs;
+  final feedListListMap = <String, FeedListList>{}.obs;
   int cursor = 0;
   int count = 200;
 
@@ -53,11 +54,14 @@ class FeedController extends GetxController{
   }
 
   ///获取热门推荐视频列表
-  Future<bool> getHotFeedList(RefreshController refreshController)async{
+  Future<bool> loadHotFeedList(RefreshController refreshController)async{
     String userId = await _userController.getLoginUserId();
     var result = await Api.getHotFeedList(cursor, count, userId);
     if(result != null){
-      hotFeedList.addAll(result.xList);
+      hotFeedList.addAll(result.xList.map((e) => e.id));
+      result.xList.forEach((element) {
+        feedListListMap[element.id] = element;
+      });
       cursor = result.cursor;
       refreshController.loadComplete();
       return true;
@@ -66,11 +70,16 @@ class FeedController extends GetxController{
     }
 
   }
+  
+  void updateFeedListList(String id, FeedListList feedListList) {
+    feedListListMap[id] = feedListList;
+  }
 
   void refreshHotFeedList(RefreshController refreshController)async{
     cursor = 0;
     hotFeedList.clear();
-    await getHotFeedList(refreshController);
+    feedListListMap.clear();
+    await loadHotFeedList(refreshController);
     refreshController.refreshCompleted();
   }
 

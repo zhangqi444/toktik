@@ -15,6 +15,7 @@ import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/model/response/follow_response.dart';
+import 'package:toktik/model/response/like_response.dart';
 import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/model/response/logout_response.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
@@ -317,7 +318,7 @@ class Api{
           '''query ListPostExs(\$limit: Int, \$userId: ID!) {
             listPostExs(limit: \$limit, userId: \$userId) {
               items {
-                id attachments music { id } text likeCount isLiked
+                id attachments music { id } text likeCount isLiked { value }
                 user { id nickname username portrait }
               }
             }
@@ -335,6 +336,8 @@ class Api{
           'music': post['music'] != null ? post['music'] : null,
           'text': post['text'],
         };
+        post['likeCount'] = post['likeCount'] != null ? post['likeCount'] : 0;
+        post['isLiked'] = post['isLiked'] != null && post['isLiked']['value'] != null ? post['isLiked']['value'] : false;
         return post;
       }
 
@@ -352,12 +355,12 @@ class Api{
       );
       var result = await operation.response;
       if(result == null || result.data == null || result.errors.length > 0) {
-        debugPrint("Could not query server:" + result.toString() + "\n" + document);
+        debugPrint("Could not query server:" + result.errors.toString() + "\n" + document);
         return null;
       }
       return jsonDecode(result.data)[key];
     } catch (e, stacktrace) {
-      print("Could not query server: " + document + '\n' + stacktrace.toString());
+      print("Could not query server: " + document + '\n' + e.message + '\n' + stacktrace.toString());
     }
   }
 
@@ -369,12 +372,12 @@ class Api{
       );
       var result = await operation.response;
       if(result == null || result.data == null || result.errors.length > 0) {
-        debugPrint("Could not query server:" + result.toString() + "\n" + document);
+        debugPrint("Could not query server:" + result.errors.toString() + "\n" + document);
         return null;
       }
       return jsonDecode(result.data)[key];
     } catch (e, stacktrace) {
-      print("Could not query server: " + document + '\n' + stacktrace.toString());
+      debugPrint("Could not query server: " + document + '\n' + e.message + '\n' + stacktrace.toString());
     }
   }
 
@@ -399,10 +402,10 @@ class Api{
     try {
       var result = await _mutation(
           '''mutation LikePost(\$input: CreateLikeInput!) {
-            LikePost(input: \$input) { id, value }
+            likePost(input: \$input) { id, value }
           }''',
           {
-            'input': { 'likePostId': postId, 'likeUserId': userId, value: 'value' },
+            'input': { 'likePostId': postId, 'likeUserId': userId, 'value': value },
           },
           'likePost'
       );

@@ -60,7 +60,7 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
       body: SmartRefresher(
         controller: _refreshController,
         onRefresh: (){_feedController.refreshHotFeedList(_refreshController);},
-        onLoading: (){_feedController.getHotFeedList(_refreshController);},
+        onLoading: (){_feedController.loadHotFeedList(_refreshController);},
         child: _getVideoList(context),
       )
     );
@@ -68,7 +68,9 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
 
   _getVideoList(BuildContext context) {
     return Obx((){
-      List<FeedListList> videoList = _feedController.hotFeedList;
+      List<FeedListList> videoList = _feedController.hotFeedList.value.map(
+           (element) => _feedController.feedListListMap.value[element]
+      ).toList();
       if(null == videoList || videoList.length == 0){
         return Container(color: ColorRes.color_1);
       } else {

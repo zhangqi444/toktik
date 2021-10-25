@@ -12,8 +12,8 @@ class PostController extends GetxController{
     await Api.viewPost(postId, userId);
   }
 
-  Future<LikeResponse> likePost(String postId, bool isLiked) async {
+  Future<LikeResponse> likePost(String postId, bool value) async {
     String userId = await userController.getLoginUserId();
-    return await Api.likePost(postId, userId, isLiked);
+    return await Api.likePost(postId, userId, value);
   }
 }
