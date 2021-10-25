@@ -9,6 +9,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
@@ -303,7 +304,7 @@ class Api{
           '''query ListPosts(\$limit: Int) {
             listPosts(limit: \$limit) {
               items {
-                id attachments music { id } text 
+                id attachments music { id } text likeCount
                 user { id nickname username portrait }
               }
             }
@@ -316,8 +317,8 @@ class Api{
           '''query ListPostExs(\$limit: Int, \$userId: ID!) {
             listPostExs(limit: \$limit, userId: \$userId) {
               items {
-                id attachments music { id } text 
-                user { id nickname username portrait}
+                id attachments music { id } text likeCount isLiked
+                user { id nickname username portrait }
               }
             }
           }''',
@@ -340,53 +341,76 @@ class Api{
       var parsed = await Future.wait(posts.map((post) async => await convert(post)));
       return FeedListResponse().fromJson({'list': parsed.toList()});
     } catch (e, stacktrace) {
-      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      print("Fail to get post lists: " + stacktrace.toString());
     }
   }
 
   static Future<dynamic> _mutation(document, variables, key) async {
-    var operation = Amplify.API.mutate(
-        request: GraphQLRequest<String>(document: document, variables: variables)
-    );
-    var result = await operation.response;
-    return result != null ? jsonDecode(result.data)[key] : null;
+    try {
+      var operation = Amplify.API.mutate(
+          request: GraphQLRequest<String>(document: document, variables: variables)
+      );
+      var result = await operation.response;
+      if(result == null || result.data == null || result.errors.length > 0) {
+        debugPrint("Could not query server:" + result.toString() + "\n" + document);
+        return null;
+      }
+      return jsonDecode(result.data)[key];
+    } catch (e, stacktrace) {
+      print("Could not query server: " + document + '\n' + stacktrace.toString());
+    }
   }
 
   static Future<dynamic> _query(document, variables, key) async {
-    var operation = Amplify.API.query(
-        request: GraphQLRequest<String>(document: document, variables: variables)
-    );
-    var result = await operation.response;
-    return result != null ? jsonDecode(result.data)[key] : null;
+    try {
+      var operation = Amplify.API.query(
+          request: GraphQLRequest<String>(
+              document: document, variables: variables)
+      );
+      var result = await operation.response;
+      if(result == null || result.data == null || result.errors.length > 0) {
+        debugPrint("Could not query server:" + result.toString() + "\n" + document);
+        return null;
+      }
+      return jsonDecode(result.data)[key];
+    } catch (e, stacktrace) {
+      print("Could not query server: " + document + '\n' + stacktrace.toString());
+    }
   }
 
   static Future<ViewResponse> viewPost(String postId, String userId) async{
     try {
       var view = await _mutation(
-          '''mutation CreateView(\$input: CreateViewInput!) {
-            createView(input: \$input) { id }
+          '''mutation ViewPost(\$input: CreateViewInput!) {
+            viewPost(input: \$input) { id }
           }''',
           {
             'input': { 'viewPostId': postId, 'viewUserId': userId },
           },
-          'createView'
-      );
-
-      await _mutation(
-          '''mutation UpdatePostPowered(\$input: UpdatePostInput!, \$add: AddPostInput!) {
-            updatePostPowered(input: \$input, add: \$add) { id }
-          }''',
-          {
-            'input': { 'id': postId },
-            'add': { 'viewCount': 1 },
-          },
-          "updatePostPowered"
+          'viewPost'
       );
       return ViewResponse().fromJson(view);
     } catch (e, stacktrace) {
-      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      print("Fail to view post: " + stacktrace.toString());
     }
   }
+
+  // static Future<LikeResponse> likePost(String postId, String userId) async{
+  //   try {
+  //     var result = await _mutation(
+  //         '''mutation LikePost(\$input: CreateLikeInput!) {
+  //           LikePost(input: \$input) { id }
+  //         }''',
+  //         {
+  //           'input': { 'likePostId': postId, 'likeUserId': userId },
+  //         },
+  //         'likePost'
+  //     );
+  //     return LikeResponse().fromJson(result);
+  //   } catch (e, stacktrace) {
+  //     print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+  //   }
+  // }
 
   ///获取好友作品列表
   static Future<FeedListResponse> getFriendFeedList(int cursor,int count) async{

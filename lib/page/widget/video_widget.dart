@@ -9,6 +9,7 @@ import 'package:toktik/controller/post_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_bottom_bar_widget.dart';
+import 'package:toktik/page/widget/video_right_bar_widget.dart';
 import 'package:toktik/page/widget/video_share_widget.dart';
 import 'package:toktik/util/screen_utils.dart';
 import 'package:get/get.dart';
@@ -93,23 +94,22 @@ class _VideoWidgetState extends State<VideoWidget> {
                 ),
               ),
 
-              // TODO: disable video right widget for now
-              // Positioned(
-              //     right: 10,
-              //     bottom: 110,
-              //     child: VideoRightBarWidget(
-              //       video: widget.video,
-              //       showFocusButton: widget.showFocusButton,
-              //       onClickComment: (){
-              //         showBottomComment();
-              //       },
-              //       onClickShare: (){
-              //         showBottomShare();
-              //       },
-              //       onClickHeader: (){
-              //         widget.onClickHeader?.call();
-              //       },
-              //     )),
+              Positioned(
+                  right: 10,
+                  bottom: 110,
+                  child: VideoRightBarWidget(
+                    video: widget.video,
+                    showFocusButton: widget.showFocusButton,
+                    onClickComment: (){
+                      showBottomComment();
+                    },
+                    onClickShare: (){
+                      showBottomShare();
+                    },
+                    onClickHeader: (){
+                      widget.onClickHeader?.call();
+                    },
+                  )),
               Positioned(
                   right: 2,
                   bottom: 20,

@@ -35,13 +35,14 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
         ),
       child: Column(
         children: [
-          _getHeader(),
-          SizedBox(height: 25,),
+          // TODO: disable video right widget for now
+          // _getHeader(),
+          // SizedBox(height: 25,),
           _getLikeButton(),
           SizedBox(height: 20,),
-          _getCommentButton(),
-          SizedBox(height: 20,),
-          _getShareButton(),
+          // _getCommentButton(),
+          // SizedBox(height: 20,),
+          // _getShareButton(),
         ],
       ),
     );
@@ -97,8 +98,8 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
         LikeButton(
             size: 40,
             circleColor:CircleColor(start: ColorRes.color_3,end: ColorRes.color_3),
-            likeBuilder: (isLike){
-              return isLike == true?Image.asset('assets/images/red_heart.webp'):Image.asset('assets/images/red_heart.webp',color: Colors.white,);
+            likeBuilder: (isLiked){
+              return isLiked == true?Image.asset('assets/images/red_heart.webp'):Image.asset('assets/images/red_heart.webp',color: Colors.white,);
             },
             bubblesColor:const BubblesColor(dotPrimaryColor: ColorRes.color_3,dotSecondaryColor: ColorRes.color_3,dotThirdColor: ColorRes.color_3,dotLastColor: ColorRes.color_3,)
         ),
