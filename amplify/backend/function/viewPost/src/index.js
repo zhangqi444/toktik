@@ -23,7 +23,7 @@ exports.handler = async (event, context) => {
         const input = event['arguments']['input'];
         const postIdKey = `${modelNameLowerCase}PostId`;
         const userIdKey = `${modelNameLowerCase}UserId`;
-        const userId = input[userIdKey];
+        const userId = input[userIdKey] || 'null';
         const postId = input[postIdKey];
 
         const response = {
