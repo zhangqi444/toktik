@@ -13,3 +13,7 @@ class Events {
   static final String VALUE = 'VALUE';
   static final String TIME = 'TIME';
 }
+
+class EventValues {
+  static final String NO_OP = 'NO_OP';
+}

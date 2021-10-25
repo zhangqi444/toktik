@@ -114,6 +114,9 @@ class _VideoWidgetState extends State<VideoWidget> {
                         // TODO: add the correct logic to stop the video during login
                         // _videoPlayerController.pause();
                         Get.toNamed(Routers.login);
+                        mainController.recordEvent(
+                            EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
+                            { Events.VALUE: EventValues.NO_OP });
                         return null;
                       }
                       var result = await _postController.likePost(widget.video.id, isLiked);
@@ -124,6 +127,9 @@ class _VideoWidgetState extends State<VideoWidget> {
                         var newVideo = new FeedListList().fromJson(newVideoJson);
                         _feedController.updateFeedListList(widget.video.id, newVideo);
                       }
+                      mainController.recordEvent(
+                          EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
+                          {Events.VALUE: isLiked});
                     },
                     onClickShare: (){
                       showBottomShare();
