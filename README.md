@@ -23,6 +23,9 @@ https://github.com/aws-amplify/amplify-cli/issues/3802
 
 ### How to auto generate model file under `lib/generated`?
 
+> right click on package -> `New`->`Dart bean clas file from JSON`
+> If you change the fields in the class, just press the shortcut alt + j to regenerate the tojson and fromjson methods. 
+
 Please follow https://plugins.jetbrains.com/plugin/11415-flutterjsonbeanfactory
 
 
