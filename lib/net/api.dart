@@ -395,22 +395,22 @@ class Api{
     }
   }
 
-  // static Future<LikeResponse> likePost(String postId, String userId) async{
-  //   try {
-  //     var result = await _mutation(
-  //         '''mutation LikePost(\$input: CreateLikeInput!) {
-  //           LikePost(input: \$input) { id }
-  //         }''',
-  //         {
-  //           'input': { 'likePostId': postId, 'likeUserId': userId },
-  //         },
-  //         'likePost'
-  //     );
-  //     return LikeResponse().fromJson(result);
-  //   } catch (e, stacktrace) {
-  //     print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
-  //   }
-  // }
+  static Future<LikeResponse> likePost(String postId, String userId, bool value) async{
+    try {
+      var result = await _mutation(
+          '''mutation LikePost(\$input: CreateLikeInput!) {
+            LikePost(input: \$input) { id, value }
+          }''',
+          {
+            'input': { 'likePostId': postId, 'likeUserId': userId, value: 'value' },
+          },
+          'likePost'
+      );
+      return LikeResponse().fromJson(result);
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
 
   ///获取好友作品列表
   static Future<FeedListResponse> getFriendFeedList(int cursor,int count) async{
