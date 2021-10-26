@@ -47,10 +47,12 @@ class _VideoWidgetState extends State<VideoWidget> {
   bool _playing = false;
   Stopwatch _durationSW = new Stopwatch();
   Future<void> _initializeVideoPlayerFuture;
+  ValueNotifier<bool> _likeEnabled;
 
   @override
   void initState() {
     super.initState();
+    _likeEnabled = ValueNotifier<bool>(true);
     _videoPlayerController = VideoPlayerController.network(widget.video.content.attachments[0].url);
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
     _videoPlayerController.setLooping(true);
@@ -102,42 +104,49 @@ class _VideoWidgetState extends State<VideoWidget> {
               Positioned(
                   right: 10,
                   bottom: 110,
-                  child: VideoRightBarWidget(
-                    video: widget.video,
-                    showFocusButton: widget.showFocusButton,
-                    onClickComment: (){
-                      showBottomComment();
-                    },
-                    onClickLike: (isLiked) async {
-                      var token = await SPUtil.getString(SPKeys.token);
-                      if(token == null) {
-                        // TODO: add the correct logic to stop the video during login
-                        // _videoPlayerController.pause();
-                        Get.toNamed(Routers.login);
-                        mainController.recordEvent(
-                            EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
-                            { Events.VALUE: EventValues.NO_OP });
-                        return null;
-                      }
-                      var result = await _postController.likePost(widget.video.id, isLiked);
-                      if(result != null) {
-                        int likeCount = widget.video.likeCount += result.value ? 1 : -1;
-                        var newVideoJson = widget.video.toJson();
-                        newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
-                        var newVideo = new FeedListList().fromJson(newVideoJson);
-                        _feedController.updateFeedListList(widget.video.id, newVideo);
-                      }
-                      mainController.recordEvent(
-                          EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
-                          {Events.VALUE: isLiked});
-                    },
-                    onClickShare: (){
-                      showBottomShare();
-                    },
-                    onClickHeader: (){
-                      widget.onClickHeader?.call();
-                    },
-                  )),
+                  child: ValueListenableBuilder(
+                      valueListenable: _likeEnabled,
+                      builder: (context, isEnabled, child) => VideoRightBarWidget(
+                        video: widget.video,
+                        showFocusButton: widget.showFocusButton,
+                        onClickComment: (){
+                          showBottomComment();
+                        },
+                        onClickLike: (isLiked) async {
+                          if(!_likeEnabled.value) return;
+                          _likeEnabled = ValueNotifier<bool>(false);
+                          var token = await SPUtil.getString(SPKeys.token);
+                          if(token == null) {
+                            // TODO: add the correct logic to stop the video during login
+                            // _videoPlayerController.pause();
+                            Get.toNamed(Routers.login);
+                            mainController.recordEvent(
+                                EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
+                                { Events.VALUE: EventValues.NO_OP });
+                            _likeEnabled = ValueNotifier<bool>(true);
+                            return null;
+                          }
+                          var result = await _postController.likePost(widget.video.id, isLiked);
+                          if(result != null) {
+                            int likeCount = widget.video.likeCount += result.value ? 1 : -1;
+                            var newVideoJson = widget.video.toJson();
+                            newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
+                            var newVideo = new FeedListList().fromJson(newVideoJson);
+                            _feedController.updateFeedListList(widget.video.id, newVideo);
+                          }
+                          mainController.recordEvent(
+                              EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
+                              {Events.VALUE: isLiked});
+                          _likeEnabled = ValueNotifier<bool>(true);
+                        },
+                        onClickShare: (){
+                          showBottomShare();
+                        },
+                        onClickHeader: (){
+                          widget.onClickHeader?.call();
+                        },
+                      )),
+              ),
               Positioned(
                   right: 2,
                   bottom: 20,
