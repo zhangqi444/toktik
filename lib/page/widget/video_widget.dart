@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -48,6 +49,8 @@ class _VideoWidgetState extends State<VideoWidget> {
   Stopwatch _durationSW = new Stopwatch();
   Future<void> _initializeVideoPlayerFuture;
   ValueNotifier<bool> _likeEnabled;
+  Duration _debounceDuration = Duration(milliseconds: 200);
+  Timer _debounceTimer;
 
   @override
   void initState() {
@@ -67,7 +70,6 @@ class _VideoWidgetState extends State<VideoWidget> {
         {Events.VALUE: 1});
     _durationSW.start();
     _postController.viewPost(widget.video.id);
-
   }
 
   @override
@@ -75,6 +77,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     super.dispose();
     _videoPlayerController.dispose();
     _durationSW.stop();
+    if(_debounceTimer != null) _debounceTimer.cancel();
     mainController.recordEvent(
         EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
         {Events.TIME: _durationSW.elapsedMilliseconds});
@@ -109,42 +112,10 @@ class _VideoWidgetState extends State<VideoWidget> {
                       builder: (context, isEnabled, child) => VideoRightBarWidget(
                         video: widget.video,
                         showFocusButton: widget.showFocusButton,
-                        onClickComment: (){
-                          showBottomComment();
-                        },
-                        onClickLike: (isLiked) async {
-                          if(!_likeEnabled.value) return;
-                          _likeEnabled = ValueNotifier<bool>(false);
-                          var token = await SPUtil.getString(SPKeys.token);
-                          if(token == null) {
-                            // TODO: add the correct logic to stop the video during login
-                            // _videoPlayerController.pause();
-                            Get.toNamed(Routers.login);
-                            mainController.recordEvent(
-                                EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
-                                { Events.VALUE: EventValues.NO_OP });
-                            _likeEnabled = ValueNotifier<bool>(true);
-                            return null;
-                          }
-                          var result = await _postController.likePost(widget.video.id, isLiked);
-                          if(result != null) {
-                            int likeCount = widget.video.likeCount += result.value ? 1 : -1;
-                            var newVideoJson = widget.video.toJson();
-                            newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
-                            var newVideo = new FeedListList().fromJson(newVideoJson);
-                            _feedController.updateFeedListList(widget.video.id, newVideo);
-                          }
-                          mainController.recordEvent(
-                              EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
-                              {Events.VALUE: isLiked});
-                          _likeEnabled = ValueNotifier<bool>(true);
-                        },
-                        onClickShare: (){
-                          showBottomShare();
-                        },
-                        onClickHeader: (){
-                          widget.onClickHeader?.call();
-                        },
+                        onClickComment: () => showBottomComment(),
+                        onClickLike: (isLiked) async => _likePost(isLiked),
+                        onClickShare: () => showBottomShare(),
+                        onClickHeader: () => widget.onClickHeader?.call(),
                       )),
               ),
               Positioned(
@@ -237,6 +208,34 @@ class _VideoWidgetState extends State<VideoWidget> {
             )
         )
     );
+  }
+
+  void _likePost(isLiked) async {
+    if(!_likeEnabled.value) return;
+    _likeEnabled = ValueNotifier<bool>(false);
+    var eventValue;
+    var token = await SPUtil.getString(SPKeys.token);
+    if(token == null) {
+      // TODO: add the correct logic to stop the video during login
+      // _videoPlayerController.pause();
+      Get.toNamed(Routers.login);
+      eventValue = EventValues.NO_OP;
+    } else {
+      var result = await _postController.likePost(widget.video.id, isLiked);
+      if(result != null) {
+        int likeCount = widget.video.likeCount += result.value ? 1 : -1;
+        var newVideoJson = widget.video.toJson();
+        newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
+        var newVideo = new FeedListList().fromJson(newVideoJson);
+        _feedController.updateFeedListList(widget.video.id, newVideo);
+      }
+      eventValue = isLiked;
+    }
+
+    mainController.recordEvent(
+        EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
+        { Events.VALUE: eventValue });
+    _debounceTimer = Timer(_debounceDuration, () => _likeEnabled.value = true);
   }
 
   //展示评论
