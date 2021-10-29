@@ -107,6 +107,9 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
 
   Widget get customCreateIcon => GestureDetector(
       onTap: () {
+        EasyLoading.showToast("This feature is coming soon.",
+            duration: Duration(seconds: 3));
+        return;
         Application.eventBus.fire(StopPlayEvent());
         Get.toNamed(Routers.shoot);
       },
