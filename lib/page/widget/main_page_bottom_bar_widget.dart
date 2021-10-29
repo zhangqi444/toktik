@@ -107,6 +107,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
 
   Widget get customCreateIcon => GestureDetector(
       onTap: () {
+        // TODO: disable publish page
         EasyLoading.showToast("This feature is coming soon.",
             duration: Duration(seconds: 3));
         return;
