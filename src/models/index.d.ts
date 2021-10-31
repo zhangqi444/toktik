@@ -30,7 +30,7 @@ export declare class PostEx {
   readonly commentCount?: number;
   readonly shareCount?: number;
   readonly viewCount?: number;
-  readonly isLiked?: View;
+  readonly isLiked?: Like;
   constructor(init: ModelInit<PostEx>);
 }
 
@@ -42,7 +42,7 @@ type MusicMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-type ViewMetaData = {
+type LikeMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
@@ -50,7 +50,7 @@ type PostMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
-type LikeMetaData = {
+type ViewMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
@@ -88,14 +88,15 @@ export declare class Music {
   static copyOf(source: Music, mutator: (draft: MutableModel<Music, MusicMetaData>) => MutableModel<Music, MusicMetaData> | void): Music;
 }
 
-export declare class View {
+export declare class Like {
   readonly id: string;
-  readonly post?: Post;
   readonly user?: User;
+  readonly post?: Post;
+  readonly value?: boolean;
   readonly createdAt?: string;
   readonly updatedAt?: string;
-  constructor(init: ModelInit<View, ViewMetaData>);
-  static copyOf(source: View, mutator: (draft: MutableModel<View, ViewMetaData>) => MutableModel<View, ViewMetaData> | void): View;
+  constructor(init: ModelInit<Like, LikeMetaData>);
+  static copyOf(source: Like, mutator: (draft: MutableModel<Like, LikeMetaData>) => MutableModel<Like, LikeMetaData> | void): Like;
 }
 
 export declare class Post {
@@ -114,15 +115,14 @@ export declare class Post {
   static copyOf(source: Post, mutator: (draft: MutableModel<Post, PostMetaData>) => MutableModel<Post, PostMetaData> | void): Post;
 }
 
-export declare class Like {
+export declare class View {
   readonly id: string;
-  readonly user?: User;
   readonly post?: Post;
-  readonly value?: boolean;
+  readonly user?: User;
   readonly createdAt?: string;
   readonly updatedAt?: string;
-  constructor(init: ModelInit<Like, LikeMetaData>);
-  static copyOf(source: Like, mutator: (draft: MutableModel<Like, LikeMetaData>) => MutableModel<Like, LikeMetaData> | void): Like;
+  constructor(init: ModelInit<View, ViewMetaData>);
+  static copyOf(source: View, mutator: (draft: MutableModel<View, ViewMetaData>) => MutableModel<View, ViewMetaData> | void): View;
 }
 
 export declare class Share {

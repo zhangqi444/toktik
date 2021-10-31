@@ -15,14 +15,14 @@ const ModelAttributeTypes = {
   "NULL": "_null"
 };
 
-const { User, Music, View, Post, Like, Share, Comment, ModelPostExConnection, PostEx } = initSchema(schema);
+const { User, Music, Like, Post, View, Share, Comment, ModelPostExConnection, PostEx } = initSchema(schema);
 
 export {
   User,
   Music,
-  View,
-  Post,
   Like,
+  Post,
+  View,
   Share,
   Comment,
   ModelAttributeTypes,
