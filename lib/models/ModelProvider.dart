@@ -35,7 +35,7 @@ export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "629da41dee6ed9166b7f3755b59e9d7c";
+  String version = "f46541b219feddae4a2aba1c78d3a0b5";
   @override
   List<ModelSchema> modelSchemas = [
     Comment.schema,
