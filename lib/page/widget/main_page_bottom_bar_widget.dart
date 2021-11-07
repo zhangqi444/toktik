@@ -52,7 +52,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
       key: bottomBarKey,
       height: 54 + (Platform.isIOS ? 40 : 10) * 1.0,
       decoration:
-          BoxDecoration(color: Color(0xffFFFFFF)),
+        BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
       child: Column(
         children: <Widget>[
           SizedBox(
@@ -203,7 +203,9 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                         color:
-                            Color(0xff2A2A2A),
+                            mainPageScrollController.indexBottomBarMainPage ==
+                                index ? Color(
+                                0xffffffff) : Color(0xff8b8b8b),
                         fontSize: 10.0),
                   )
                 ],
