@@ -60,8 +60,7 @@ flutter:
   assets:
     - assets/video/
     - assets/images/
-    - assets/images/splash/breeze_logo.png
-    - assets/images/splash/breeze_text.png
+    - assets/images/splash/splash.png
     - assets/images/login/question.png
     - assets/images/login/nav-arrow-left.png
     - assets/images/main_page_bottom_icon/home.png
