@@ -120,6 +120,39 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
           alignment: Alignment(0, -1),
           child:
           Image.asset("assets/images/main_page_bottom_icon/create.png", width: 44.0, height: 35.0,)
+          // Obx(() => Stack(children: [
+          //       Container(
+          //           margin: EdgeInsets.only(left: 10.0),
+          //           width: CreateButtonWidth,
+          //           decoration: BoxDecoration(
+          //               color: Color.fromARGB(255, 250, 45, 108),
+          //               borderRadius: BorderRadius.circular(7.0))),
+          //       Container(
+          //           margin: EdgeInsets.only(right: 10.0),
+          //           width: CreateButtonWidth,
+          //           decoration: BoxDecoration(
+          //               color: Color.fromARGB(255, 32, 211, 234),
+          //               borderRadius: BorderRadius.circular(7.0))),
+          //       Center(
+          //           child: Container(
+          //         height: double.infinity,
+          //         width: CreateButtonWidth,
+          //         decoration: BoxDecoration(
+          //             color:
+          //                 mainPageScrollController.indexBottomBarMainPage == 0
+          //                     ? Colors.white
+          //                     : Colors.black,
+          //             borderRadius: BorderRadius.circular(7.0)),
+          //         child:
+          //         Icon(
+          //           Icons.add,
+          //           color: mainPageScrollController.indexBottomBarMainPage == 0
+          //               ? Colors.black
+          //               : Colors.white,
+          //           size: 20.0,
+          //         ),
+          //       )),
+          //     ]))
       ));
 
   Widget menuButton(String text, Image icon, Image icon_active, int index) {
