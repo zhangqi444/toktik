@@ -67,7 +67,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     
     mainController.recordEvent(
         EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
-        {Events.VALUE: 1});
+        {Events.VALUE: 1, Events.ID: widget.video.id});
     _durationSW.start();
     _postController.viewPost(widget.video.id);
   }
@@ -218,23 +218,24 @@ class _VideoWidgetState extends State<VideoWidget> {
     if(token == null) {
       // TODO: add the correct logic to stop the video during login
       // _videoPlayerController.pause();
-      Get.toNamed(Routers.login);
-      eventValue = EventValues.NO_OP;
-    } else {
-      var result = await _postController.likePost(widget.video.id, isLiked);
-      if(result != null) {
-        int likeCount = widget.video.likeCount += result.value ? 1 : -1;
-        var newVideoJson = widget.video.toJson();
-        newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
-        var newVideo = new FeedListList().fromJson(newVideoJson);
-        _feedController.updateFeedListList(widget.video.id, newVideo);
-      }
-      eventValue = isLiked;
+      // Get.toNamed(Routers.login);
+      // return;
     }
+
+    // TODO: allow the not signed customer to like post
+    var result = await _postController.likePost(widget.video.id, isLiked);
+    if(result != null && result.value != null) {
+      int likeCount = widget.video.likeCount + (result.value ? 1 : -1);
+      var newVideoJson = widget.video.toJson();
+      newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount < 0 ? 0 : likeCount });
+      var newVideo = new FeedListList().fromJson(newVideoJson);
+      _feedController.updateFeedListList(widget.video.id, newVideo);
+    }
+    eventValue = isLiked;
 
     mainController.recordEvent(
         EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
-        { Events.VALUE: eventValue });
+        { Events.VALUE: eventValue, Events.ID: widget.video.id });
     _debounceTimer = Timer(_debounceDuration, () => _likeEnabled.value = true);
   }
 
