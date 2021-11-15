@@ -174,8 +174,8 @@ export const schema = {
                 }
             ]
         },
-        "View": {
-            "name": "View",
+        "Like": {
+            "name": "Like",
             "fields": {
                 "id": {
                     "name": "id",
@@ -183,19 +183,6 @@ export const schema = {
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
-                },
-                "post": {
-                    "name": "post",
-                    "isArray": false,
-                    "type": {
-                        "model": "Post"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "viewPostId"
-                    }
                 },
                 "user": {
                     "name": "user",
@@ -207,8 +194,28 @@ export const schema = {
                     "attributes": [],
                     "association": {
                         "connectionType": "BELONGS_TO",
-                        "targetName": "viewUserId"
+                        "targetName": "likeUserId"
                     }
+                },
+                "post": {
+                    "name": "post",
+                    "isArray": false,
+                    "type": {
+                        "model": "Post"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "likePostId"
+                    }
+                },
+                "value": {
+                    "name": "value",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -228,11 +235,42 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Views",
+            "pluralName": "Likes",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "likePostId-likeUserId-index",
+                        "fields": [
+                            "likePostId",
+                            "likeUserId"
+                        ],
+                        "queryField": "likeByPostIdUserId"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "likePostId-index",
+                        "fields": [
+                            "likePostId"
+                        ],
+                        "queryField": "likeByPostId"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "likeUserId-index",
+                        "fields": [
+                            "likeUserId"
+                        ],
+                        "queryField": "likeByUserId"
+                    }
                 },
                 {
                     "type": "auth",
@@ -372,8 +410,8 @@ export const schema = {
                 }
             ]
         },
-        "Like": {
-            "name": "Like",
+        "View": {
+            "name": "View",
             "fields": {
                 "id": {
                     "name": "id",
@@ -381,19 +419,6 @@ export const schema = {
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
-                },
-                "user": {
-                    "name": "user",
-                    "isArray": false,
-                    "type": {
-                        "model": "User"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "BELONGS_TO",
-                        "targetName": "likeUserId"
-                    }
                 },
                 "post": {
                     "name": "post",
@@ -405,15 +430,21 @@ export const schema = {
                     "attributes": [],
                     "association": {
                         "connectionType": "BELONGS_TO",
-                        "targetName": "likePostId"
+                        "targetName": "viewPostId"
                     }
                 },
-                "value": {
-                    "name": "value",
+                "user": {
+                    "name": "user",
                     "isArray": false,
-                    "type": "Boolean",
+                    "type": {
+                        "model": "User"
+                    },
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetName": "viewUserId"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -433,11 +464,42 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Likes",
+            "pluralName": "Views",
             "attributes": [
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "viewPostId-index",
+                        "fields": [
+                            "viewPostId"
+                        ],
+                        "queryField": "viewPostId"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "viewUserId-index",
+                        "fields": [
+                            "viewUserId"
+                        ],
+                        "queryField": "viewUserId"
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "viewPostId-viewUserId-index",
+                        "fields": [
+                            "viewPostId",
+                            "viewUserId"
+                        ],
+                        "queryField": "viewByPostIdUserId"
+                    }
                 },
                 {
                     "type": "auth",
@@ -749,7 +811,7 @@ export const schema = {
                     "name": "isLiked",
                     "isArray": false,
                     "type": {
-                        "model": "View"
+                        "model": "Like"
                     },
                     "isRequired": false,
                     "attributes": []
@@ -757,5 +819,5 @@ export const schema = {
             }
         }
     },
-    "version": "9c7ff2bfe842d51ef8e1a4ad75dfa70e"
+    "version": "4dc0cf9cb0dbd9c76859e20585ad74de"
 };

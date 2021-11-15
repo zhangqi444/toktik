@@ -4,4 +4,6 @@ class SPKeys{
   static const token = 'token';
   static const username = 'username';
   static const userId = 'user_id';
+
+  static const POSTS = 'posts';
 }

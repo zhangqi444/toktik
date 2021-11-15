@@ -54,19 +54,19 @@
       "function": {
         "listPostExs": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/listPostExs-477a305270495a49696e-build.zip"
+          "s3Key": "amplify-builds/listPostExs-46303734317462563638-build.zip"
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion9767a527-build.zip"
+          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion5c54f2a9-build.zip"
         },
         "likePost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/likePost-6d31304333613234347a-build.zip"
+          "s3Key": "amplify-builds/likePost-72486c2b5a5a6759656e-build.zip"
         },
         "viewPost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/viewPost-61794c4f78636f4a6841-build.zip"
+          "s3Key": "amplify-builds/viewPost-5a2b645067326e312b39-build.zip"
         }
       }
     }

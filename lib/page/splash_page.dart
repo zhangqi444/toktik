@@ -18,7 +18,6 @@ import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import '../models/ModelProvider.dart';
 import '../amplifyconfiguration.dart';
 
-
 class SplashPage extends StatefulWidget {
   @override
   _SplashPageState createState() {

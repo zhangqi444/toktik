@@ -12,6 +12,7 @@ extension ParseToString on EventType {
 class Events {
   static final String VALUE = 'VALUE';
   static final String TIME = 'TIME';
+  static final String ID = 'ID';
 }
 
 class EventValues {
