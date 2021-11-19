@@ -10,6 +10,7 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
@@ -38,6 +39,7 @@ import 'package:toktik/models/ModelProvider.dart';
 import 'package:toktik/net/http/http_manager.dart';
 import 'package:toktik/net/http/http_method.dart';
 import 'package:toktik/net/http_constant.dart';
+import 'package:toktik/util/sp_util.dart';
 
 import '../model/comment_model.dart';
 
@@ -300,7 +302,12 @@ class Api{
   static Future<FeedListResponse> getHotFeedList(int cursor,int limit, String userId) async{
     try {
       var response;
+      var localPosts;
       if(userId == null || userId.isEmpty) {
+        localPosts = await SPUtil.getString(SPKeys.POSTS);
+        if(localPosts != null) {
+          localPosts = jsonDecode(localPosts);
+        }
         response = await _query(
           '''query ListPosts(\$limit: Int) {
             listPosts(limit: \$limit) {
@@ -337,7 +344,15 @@ class Api{
           'text': post['text'],
         };
         post['likeCount'] = post['likeCount'] != null ? post['likeCount'] : 0;
-        post['isLiked'] = post['isLiked'] != null && post['isLiked']['value'] != null ? post['isLiked']['value'] : false;
+
+        if(post['isLiked'] != null && post['isLiked']['value'] != null) {
+          post['isLiked'] = post['isLiked']['value'];
+        } else {
+          // TODO: remove if the sign in status is required for like
+          if(localPosts != null && localPosts[post['id']] != null) {
+            post['isLiked'] = localPosts[post['id']]['isLiked']['value'] || false;
+          }
+        }
         return post;
       }
 
@@ -400,15 +415,31 @@ class Api{
 
   static Future<LikeResponse> likePost(String postId, String userId, bool value) async{
     try {
-      var result = await _mutation(
-          '''mutation LikePost(\$input: CreateLikeInput!) {
-            likePost(input: \$input) { id, value }
-          }''',
-          {
-            'input': { 'likePostId': postId, 'likeUserId': userId, 'value': value },
-          },
-          'likePost'
-      );
+      var result;
+      if(userId != null) {
+        result = await _mutation(
+            '''mutation LikePost(\$input: CreateLikeInput!) {
+              likePost(input: \$input) { id, value }
+            }''',
+            {
+              'input': {
+                'likePostId': postId,
+                'likeUserId': userId,
+                'value': value
+              },
+            },
+            'likePost'
+        );
+      } else {
+        // TODO: remove if the sign in status is required for like
+        var localPosts = await SPUtil.getString(SPKeys.POSTS);
+        localPosts = localPosts != null ? jsonDecode(localPosts) : {};
+        if(localPosts == null) localPosts = {};
+        localPosts[postId] = {"value": value};
+        SPUtil.set(SPKeys.POSTS, localPosts);
+        result = localPosts[postId];
+      }
+
       return LikeResponse().fromJson(result);
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());

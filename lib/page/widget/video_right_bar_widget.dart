@@ -110,7 +110,8 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
             bubblesColor:const BubblesColor(dotPrimaryColor: ColorRes.color_3,dotSecondaryColor: ColorRes.color_3,dotThirdColor: ColorRes.color_3,dotLastColor: ColorRes.color_3,)
         ),
         SizedBox(height: 2,),
-        Text('$likeCount',style: TextStyle(color: Colors.white),)
+        // TODO: don't show the like count for now, till we only support signed-in customer to like
+        // Text('$likeCount',style: TextStyle(color: Colors.white),)
       ],
     );
   }
