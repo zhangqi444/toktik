@@ -50,7 +50,7 @@ PODS:
     - AWSCore (~> 2.26.1)
     - AWSPinpoint (~> 2.26.1)
     - AWSPluginsCore (= 1.15.5)
-  - AppSyncRealTimeClient (1.5.0):
+  - AppSyncRealTimeClient (1.6.0):
     - Starscream (~> 3.1.1)
   - AWSAuthCore (2.26.3):
     - AWSCore (= 2.26.3)
@@ -177,7 +177,7 @@ SPEC CHECKSUMS:
   amplify_datastore: 1d0addd7741cc1b6ee7314f4f44a0755326ef231
   amplify_flutter: 372e5d0210d6de0cbf7be025dbd20cc21831ab24
   AmplifyPlugins: 829c1ef5ed5d05e35d9cad3a9f0a9565913da411
-  AppSyncRealTimeClient: 2b4482b1770a3e5cf64f9714a6d198550017b5a2
+  AppSyncRealTimeClient: 8b5ec94085b8ee9bb6fb9d9d76a157beb538ec6f
   AWSAuthCore: ce2089f8af1680aa433f6302b028ac786632cc5b
   AWSCognitoIdentityProvider: a7e5caaade68cc93a92e3a888db30053dc167ee0
   AWSCognitoIdentityProviderASF: ddcd5b1d919dccc15422b040ba4f99f5fbe85d9f
