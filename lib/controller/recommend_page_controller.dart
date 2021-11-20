@@ -11,6 +11,6 @@ class RecommendPageController extends GetxController{
 
   ///获取推荐视频列表
   void _getRecommendVideoList(){
-    videoList.addAll(Api.getRecommendVideoList());
+    // videoList.addAll(Api.getRecommendVideoList());
   }
 }
