@@ -95,7 +95,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
   }
   //获取点赞按钮
   _getLikeButton() {
-    int likeCount = widget.video.likeCount;
+    int likeCount = widget.video.likeCount < 0 ? 0 : widget.video.likeCount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -106,12 +106,11 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
             likeBuilder: (isLiked){
               return isLiked == true?Image.asset('assets/images/red_heart.webp'):Image.asset('assets/images/red_heart.webp',color: Colors.white,);
             },
-            onTap: (bool isLiked) async { await widget.onClickLike?.call(!isLiked); },
             bubblesColor:const BubblesColor(dotPrimaryColor: ColorRes.color_3,dotSecondaryColor: ColorRes.color_3,dotThirdColor: ColorRes.color_3,dotLastColor: ColorRes.color_3,)
+            onTap: (bool isLiked) async { await widget.onClickLike?.call(); },
         ),
         SizedBox(height: 2,),
-        // TODO: don't show the like count for now, till we only support signed-in customer to like
-        // Text('$likeCount',style: TextStyle(color: Colors.white),)
+        Text('$likeCount',style: TextStyle(color: Colors.white),)
       ],
     );
   }

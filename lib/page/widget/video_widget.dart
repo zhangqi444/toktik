@@ -96,6 +96,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 onSingleTap: () {
                   _playOrPause();
                 },
+                onAddFavorite: () async => _likePost(),
                 child: Stack(
                   children: [
                     _getVideoPlayer(),
@@ -113,7 +114,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                         video: widget.video,
                         showFocusButton: widget.showFocusButton,
                         onClickComment: () => showBottomComment(),
-                        onClickLike: (isLiked) async => _likePost(isLiked),
+                        onClickLike: () async => _likePost(),
                         onClickShare: () => showBottomShare(),
                         onClickHeader: () => widget.onClickHeader?.call(),
                       )),
@@ -210,8 +211,9 @@ class _VideoWidgetState extends State<VideoWidget> {
     );
   }
 
-  void _likePost(isLiked) async {
+  void _likePost() async {
     if(!_likeEnabled.value) return;
+    var isLiked = !widget.video.isLiked;
     _likeEnabled = ValueNotifier<bool>(false);
     var eventValue;
     var token = await SPUtil.getString(SPKeys.token);
@@ -227,7 +229,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     if(result != null && result.value != null) {
       int likeCount = widget.video.likeCount + (result.value ? 1 : -1);
       var newVideoJson = widget.video.toJson();
-      newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount < 0 ? 0 : likeCount });
+      newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
       var newVideo = new FeedListList().fromJson(newVideoJson);
       _feedController.updateFeedListList(widget.video.id, newVideo);
     }

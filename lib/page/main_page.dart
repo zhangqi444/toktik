@@ -12,8 +12,6 @@ import 'package:toktik/page/widget/main_page_bottom_bar_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'home_page.dart';
-import 'splash_page.dart';
-import 'package:toktik/page/login_page.dart';
 
 class MainPage extends StatelessWidget {
   final MainPageScrollController _mainPageController = Get.find();
