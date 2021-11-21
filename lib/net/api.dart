@@ -349,8 +349,9 @@ class Api{
           post['isLiked'] = post['isLiked']['value'];
         } else {
           // TODO: remove if the sign in status is required for like
-          if(localPosts != null && localPosts[post['id']] != null) {
-            post['isLiked'] = localPosts[post['id']]['isLiked']['value'] || false;
+          post['isLiked'] = false;
+          if(localPosts != null && localPosts[post['id']] != null && localPosts[post['id']]['isLiked']['value'] != null) {
+            post['isLiked'] = localPosts[post['id']]['isLiked']['value'];
           }
         }
         return post;
@@ -435,9 +436,9 @@ class Api{
         var localPosts = await SPUtil.getString(SPKeys.POSTS);
         localPosts = localPosts != null ? jsonDecode(localPosts) : {};
         if(localPosts == null) localPosts = {};
-        localPosts[postId] = {"value": value};
-        SPUtil.set(SPKeys.POSTS, localPosts);
-        result = localPosts[postId];
+        localPosts[postId] = { "isLiked": {"value": value} };
+        SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
+        result = localPosts[postId]["isLiked"];
       }
 
       return LikeResponse().fromJson(result);
@@ -459,81 +460,81 @@ class Api{
 
   /// ----------------------------------本地数据--------------------------------------------------------
 
-  //获取推荐页面的视频列表
-  static List<VideoModel> getRecommendVideoList(){
-    List<VideoModel> list = [];
-    for(int i = 0;i < 6;i ++){
-      VideoModel videoModel = VideoModel();
-      videoModel.title = videoTitleList[i];
-      videoModel.author = authorList[i];
-      videoModel.authorHeaderUrl = authorHeaderUrlList[i];
-      videoModel.videoUrl = videoUrlList[i];
-      videoModel.favorite = false;
-      videoModel.like = false;
-      videoModel.likeNumber = '266${i}w';
-      videoModel.commentList = commentList;
-      videoModel.shareNumber = '18${i}w';
-      videoModel.videoMusicImage = videoMusicImageList[i];
-      videoModel.videoMusicName = videoMusicNameList[i];
-      list.add(videoModel);
-    }
-    return list;
-  }
-
-  //获取朋友页面的视频列表
-  static List<VideoModel> getFriendVideoList(){
-    List<VideoModel> list = [];
-    for(int i = 0;i < 6;i ++){
-      VideoModel videoModel = VideoModel();
-      videoModel.title = videoTitleList[i];
-      videoModel.author = authorList[i];
-      videoModel.authorHeaderUrl = authorHeaderUrlList[i];
-      videoModel.videoUrl = videoUrlList[i];
-      videoModel.favorite = false;
-      videoModel.like = false;
-      videoModel.likeNumber = '266${i}w';
-      videoModel.commentList = commentList;
-      videoModel.shareNumber = '18${i}w';
-      videoModel.videoMusicImage = videoMusicImageList[i];
-      videoModel.videoMusicName = videoMusicNameList[i];
-      list.add(videoModel);
-    }
-    return list;
-  }
-
-  //获取关注页面的视频列表
-  static List<VideoModel> getFocusVideoList(){
-    List<VideoModel> list = [];
-    for(int i = 0;i < 6;i ++){
-      VideoModel videoModel = VideoModel();
-      videoModel.title = videoTitleList[i];
-      videoModel.author = authorList[i];
-      videoModel.authorHeaderUrl = authorHeaderUrlList[i];
-      videoModel.videoUrl = videoUrlList[i];
-      videoModel.favorite = false;
-      videoModel.like = false;
-      videoModel.likeNumber = '266${i}w';
-      videoModel.commentList = commentList;
-      videoModel.shareNumber = '18${i}w';
-      videoModel.videoMusicImage = videoMusicImageList[i];
-      videoModel.videoMusicName = videoMusicNameList[i];
-      list.add(videoModel);
-    }
-    return list;
-  }
-
-  //获取城市页面的视频列表
-  static List<CityItemModel> getCityVideoList(){
-    List<CityItemModel> list = [];
-    for(int i = 0;i < 6;i ++){
-      CityItemModel cityItemModel = CityItemModel();
-      cityItemModel.user = userModelList[i];
-      cityItemModel.imgCoverUrl = gifList[i];
-      cityItemModel.distance = '0.8${i}km';
-      list.add(cityItemModel);
-    }
-    return list;
-  }
+  // //获取推荐页面的视频列表
+  // static List<VideoModel> getRecommendVideoList(){
+  //   List<VideoModel> list = [];
+  //   for(int i = 0;i < 6;i ++){
+  //     VideoModel videoModel = VideoModel();
+  //     videoModel.title = videoTitleList[i];
+  //     videoModel.author = authorList[i];
+  //     videoModel.authorHeaderUrl = authorHeaderUrlList[i];
+  //     videoModel.videoUrl = videoUrlList[i];
+  //     videoModel.favorite = false;
+  //     videoModel.like = false;
+  //     videoModel.likeNumber = '266${i}w';
+  //     videoModel.commentList = commentList;
+  //     videoModel.shareNumber = '18${i}w';
+  //     videoModel.videoMusicImage = videoMusicImageList[i];
+  //     videoModel.videoMusicName = videoMusicNameList[i];
+  //     list.add(videoModel);
+  //   }
+  //   return list;
+  // }
+  //
+  // //获取朋友页面的视频列表
+  // static List<VideoModel> getFriendVideoList(){
+  //   List<VideoModel> list = [];
+  //   for(int i = 0;i < 6;i ++){
+  //     VideoModel videoModel = VideoModel();
+  //     videoModel.title = videoTitleList[i];
+  //     videoModel.author = authorList[i];
+  //     videoModel.authorHeaderUrl = authorHeaderUrlList[i];
+  //     videoModel.videoUrl = videoUrlList[i];
+  //     videoModel.favorite = false;
+  //     videoModel.like = false;
+  //     videoModel.likeNumber = '266${i}w';
+  //     videoModel.commentList = commentList;
+  //     videoModel.shareNumber = '18${i}w';
+  //     videoModel.videoMusicImage = videoMusicImageList[i];
+  //     videoModel.videoMusicName = videoMusicNameList[i];
+  //     list.add(videoModel);
+  //   }
+  //   return list;
+  // }
+  //
+  // //获取关注页面的视频列表
+  // static List<VideoModel> getFocusVideoList(){
+  //   List<VideoModel> list = [];
+  //   for(int i = 0;i < 6;i ++){
+  //     VideoModel videoModel = VideoModel();
+  //     videoModel.title = videoTitleList[i];
+  //     videoModel.author = authorList[i];
+  //     videoModel.authorHeaderUrl = authorHeaderUrlList[i];
+  //     videoModel.videoUrl = videoUrlList[i];
+  //     videoModel.favorite = false;
+  //     videoModel.like = false;
+  //     videoModel.likeNumber = '266${i}w';
+  //     videoModel.commentList = commentList;
+  //     videoModel.shareNumber = '18${i}w';
+  //     videoModel.videoMusicImage = videoMusicImageList[i];
+  //     videoModel.videoMusicName = videoMusicNameList[i];
+  //     list.add(videoModel);
+  //   }
+  //   return list;
+  // }
+  //
+  // //获取城市页面的视频列表
+  // static List<CityItemModel> getCityVideoList(){
+  //   List<CityItemModel> list = [];
+  //   for(int i = 0;i < 6;i ++){
+  //     CityItemModel cityItemModel = CityItemModel();
+  //     cityItemModel.user = userModelList[i];
+  //     cityItemModel.imgCoverUrl = gifList[i];
+  //     cityItemModel.distance = '0.8${i}km';
+  //     list.add(cityItemModel);
+  //   }
+  //   return list;
+  // }
 
 
 
