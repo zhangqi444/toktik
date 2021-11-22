@@ -60,3 +60,9 @@ Error launching application on iPhone 13.
 Delete the `Podfile.lock`, then run `pod instal` under `/ios` folder.
 
 https://docs.amplify.aws/cli/teams/overview/
+
+### How to switch amplify backend?
+
+`amplify env checkout prod`
+
+https://docs.amplify.aws/cli/teams/overview/
