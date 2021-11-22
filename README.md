@@ -48,3 +48,15 @@ Please follow https://plugins.jetbrains.com/plugin/11415-flutterjsonbeanfactory
 ### How to add Lambda and Lambda Layer?
 https://docs.amplify.aws/cli/function/layers/#add-shared-code--assets
 https://docs.amplify.aws/guides/functions/appsync-operations-to-lambda-layer/q/platform/js/#generate-compatible-code-for-your-layer
+
+### How to handle cocopod conflict error?
+```Error: CocoaPods's specs repository is too out-of-date to satisfy dependencies.
+To update the CocoaPods specs, run:
+pod repo update
+
+Error running pod install
+Error launching application on iPhone 13.
+```
+Delete the `Podfile.lock`, then run `pod instal` under `/ios` folder.
+
+https://docs.amplify.aws/cli/teams/overview/
