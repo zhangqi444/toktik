@@ -42,6 +42,7 @@ dependencies:
   # loading
   flutter_easyloading: ^3.0.0
   shared_preferences: ^2.0.5
+  flutter_verification_box: ^1.0.4
 
 dev_dependencies:
   flutter_test:
