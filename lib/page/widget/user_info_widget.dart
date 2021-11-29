@@ -46,7 +46,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
         _getBackgroundColor(),
         Column(
           children: [
-            //头像、关注
+            //头像、用户名、关注
             _getHeaderLayout(),
             //用户信息
             _getUserInfoLayout(),
@@ -62,26 +62,26 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
     return Positioned(
         top: 0,
         child: Container(
-          color: ColorRes.color_2,
-          width: MediaQuery.of(context).size.width,
-          height: _widgetHeight,
+          color: ColorRes.light_background_color,
+          // color: ColorRes.color_2,
+          // width: MediaQuery.of(context).size.width,
+          // height: _widgetHeight,
         )
     );
   }
   //头像等
   _getHeaderLayout() {
-    return Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Obx((){
           UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
           return Container(
-            width: 80,
-            height: 80,
-            margin: EdgeInsets.only(left: 16),
+            width: 88,
+            height: 88,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                border: Border.fromBorderSide(BorderSide(color: ColorRes.color_2,width: 2)),
                 image: DecorationImage(
                     image: (userEx == null || userEx.portrait == null || userEx.portrait.isEmpty)
                       ? AssetImage('assets/images/person_holder.png')
@@ -91,9 +91,9 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
             ),
           );
         }),
-         Expanded(
-           child: _userController.isLoginUser.value?_getLoginUser():_getCommonUser(),
-         ),
+         // Expanded(
+         //   child: _userController.isLoginUser.value?_getLoginUser():_getCommonUser(),
+         // ),
       ],
     );
   }
@@ -142,23 +142,24 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
       return Container(
         margin: EdgeInsets.only(left: 12,right: 12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 10,),
+            SizedBox(height: 12,),
             Text(user == null ? '' : user.username,
-              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 22),),
-            SizedBox(height: 5,),
-            Text('ID：${widget.id}',
-              style: TextStyle(color: ColorRes.color_1,fontSize: 12),
-            ),
-            SizedBox(height: 10,),
-            Divider(color: Colors.black.withAlpha(100),height: 0.05,),
-            SizedBox(height: 10,),
-            Text(user == null ? '' : user.bio,
-              style: TextStyle(color: Colors.black,fontSize: 14),),
-            SizedBox(height: 5,),
-            _getSexCity(),
-            SizedBox(height: 10,),
+              style: TextStyle(color: ColorRes.text_color, fontSize: 16),),
+            SizedBox(height: 24,),
+            // SizedBox(height: 5,),
+            // Text('ID：${widget.id}',
+            //   style: TextStyle(color: ColorRes.color_1,fontSize: 12),
+            // ),
+            // SizedBox(height: 10,),
+            // Divider(color: Colors.black.withAlpha(100),height: 0.05,),
+            // SizedBox(height: 10,),
+            // Text(user == null ? '' : user.bio,
+            //   style: TextStyle(color: Colors.black,fontSize: 14),),
+            // SizedBox(height: 5,),
+            // _getSexCity(),
+            // SizedBox(height: 10,),
             _getNumberLayout(),
             SizedBox(height: 10,),
           ],
@@ -177,14 +178,14 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
             color: ColorRes.color_2.withAlpha(50),
             borderRadius: BorderRadius.circular(2),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _getImgGender(context),
-              SizedBox(width: 2,),
-              _getAge(context)
-            ],
-          ),
+          // child: Row(
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     _getImgGender(context),
+          //     SizedBox(width: 2,),
+          //     _getAge(context)
+          //   ],
+          // ),
         ),
         //城市
         Container(
@@ -207,24 +208,38 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
     return Obx(() {
       var response = _userController.userInfoExResponse.value;
       return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children:[
-          Text(response == null ? '' : response.likeCount.toString(),
-            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
-          SizedBox(width: 2,),
-          Text('Likes',
-            style: TextStyle(color: ColorRes.color_1,fontSize: 13)),
-          SizedBox(width: 15,),
-          Text(response == null ? '' : response.followingCount.toString(),
-            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
-          SizedBox(width: 2,),
-          Text('Following',
-            style: TextStyle(color: ColorRes.color_1,fontSize: 13)),
-          SizedBox(width: 15,),
-          Text(response == null ?'':response.followerCount.toString(),
-            style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
-          SizedBox(width: 2,),
-          Text('Followers',
-            style: TextStyle(color: ColorRes.color_1,fontSize: 13)),
+          Column(
+            children: [
+              Text(response == null ? '' : response.followingCount.toString(),
+                  style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
+              SizedBox(width: 2,),
+              Text('Following',
+                  style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
+            ],
+          ),
+          SizedBox(width: 32,),
+          Column(
+            children: [
+              Text(response == null ?'':response.followerCount.toString(),
+                  style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
+              SizedBox(width: 2,),
+              Text('Followers',
+                  style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
+            ],
+          ),
+          SizedBox(width: 32,),
+          Column(
+            children: [
+              Text(response == null ? '' : response.likeCount.toString(),
+                  style: TextStyle(color: ColorRes.text_color,fontWeight: FontWeight.bold,fontSize: 16)),
+              SizedBox(width: 2,),
+              Text('Likes',
+                  style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
+              SizedBox(width: 15,),
+            ],
+          ),
         ]);
     });
   }
