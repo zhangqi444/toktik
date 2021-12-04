@@ -18,6 +18,8 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/sp_util.dart';
 
+const TAB_SIZE = 1;
+
 class UserPage extends StatefulWidget {
   PageController _scrollPageController;
   bool _isLoginUser;
@@ -48,7 +50,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: TAB_SIZE, vsync: this);
     _scrollController.addListener(() {
       double position =_scrollController.offset;
       bool showTitle = _userPageController.showTitle.value;
@@ -122,14 +124,14 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   _getSliverAppBar(){
     return  SliverAppBar(
       brightness:Brightness.light,
-      backgroundColor:ColorRes.color_2,
+      backgroundColor:ColorRes.light_background_color,
       pinned: true,
-      expandedHeight: 100,
+      expandedHeight: 50,
       leading: widget._isLoginUser?null:IconButton(
         onPressed: (){
           widget._scrollPageController.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
         },
-        icon: Icon(Icons.arrow_back_ios_rounded,color: Colors.white,),
+        icon: Icon(Icons.arrow_back_ios_rounded,color: ColorRes.light_icon_color,),
       ),
       actions: [
         IconButton(
@@ -140,7 +142,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
               _showMore();
             }
           },
-          icon: Icon( widget._isLoginUser?Icons.menu:Icons.more_horiz_rounded,color: Colors.white,),
+          icon: Icon( widget._isLoginUser?Icons.menu:Icons.more_horiz_rounded,color: ColorRes.light_icon_color,),
         ),
       ],
       elevation: 0,
@@ -180,22 +182,40 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
           preferredSize: Size.fromHeight(48),
           child: Container(
             color: ColorRes.color_2,
-            child: TabBar(
-              controller: _tabController,
-              indicatorColor: ColorRes.color_4,
-              labelStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black),
-              unselectedLabelStyle:TextStyle(fontSize: 15,color: Colors.grey),
-              tabs: <Widget>[
-                Tab(
-                  child: Obx(()=>Text('Video ${_userController.userWorkList.length}', style: TextStyle(color: Colors.black)),),
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                TabBar(
+                  controller: _tabController,
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(width: 2.0, color: ColorRes.tab_bottom_border_color),
+                    insets: EdgeInsets.symmetric(horizontal: 174.0, vertical: 5),
+                  ),
+                  labelStyle: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.black),
+                  unselectedLabelStyle:TextStyle(fontSize: 15,color: Colors.grey),
+                  tabs: <Widget>[
+                    new Container(
+                      height: 50,
+                      width: 80,
+                      child: Tab(
+                        child: Icon(Icons.grid_view, color: Colors.black),
+                      ),
+                    ),
+                    // Tab(
+                    //   child: Icon(Icons.favorite_border, color: Colors.black),
+                    // ),
+                  ],
+                  // onTap: (index){
+                  //   _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                  // },
                 ),
-                Tab(
-                  child: Text('Like 6', style: TextStyle(color: Colors.black)),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: ColorRes.divider_color, width: 1),
+                      )),
                 ),
               ],
-              onTap: (index){
-                _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.linear);
-              },
             ),
           ),
         ),
