@@ -66,7 +66,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     });
     
     mainController.recordEvent(
-        EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
+        EventType.HOME_TAB_RECOMMEND_PAGE_LOADED.toShortString(),
         {Events.VALUE: 1, Events.ID: widget.video.id});
     _durationSW.start();
     _postController.viewPost(widget.video.id);
@@ -80,7 +80,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     if(_debounceTimer != null) _debounceTimer.cancel();
     mainController.recordEvent(
         EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
-        {Events.TIME: _durationSW.elapsedMilliseconds});
+        { Events.DWELL: _durationSW.elapsedMilliseconds, Events.ID: widget.video.id });
   }
 
   @override

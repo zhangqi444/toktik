@@ -1,5 +1,6 @@
 enum EventType {
   HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO,
+  HOME_TAB_RECOMMEND_PAGE_LOADED,
   HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO,
 }
 
@@ -12,6 +13,7 @@ extension ParseToString on EventType {
 class Events {
   static final String VALUE = 'VALUE';
   static final String TIME = 'TIME';
+  static final String DWELL = 'DWELL';
   static final String ID = 'ID';
 }
 
