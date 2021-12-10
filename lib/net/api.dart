@@ -335,7 +335,8 @@ class Api{
         );
       }
 
-      List posts = response['items']..shuffle();
+      var rng = new Random(DateTime.now().millisecondsSinceEpoch);
+      List posts = response['items']..shuffle(rng);
       posts = posts.where((f) => f['attachments'] != null).toList();
       Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
         post['content'] = {
