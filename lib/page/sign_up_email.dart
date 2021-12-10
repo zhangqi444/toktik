@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/page/sign_up_verify.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
@@ -114,7 +115,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       child: RaisedButton(
         onPressed: () {
           if (null != account && account.length > 0) {
-            // loginController.login(account, pwd);
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpVerifyPage(account)));
           } else {
             EasyLoading.showToast('Check your info and try again.');
           }
