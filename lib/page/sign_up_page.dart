@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/controller/user_controller.dart';
-import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
 class SignUpPage extends StatefulWidget {
