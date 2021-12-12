@@ -81,10 +81,11 @@ class _ScrollPageState extends State<ScrollPage> {
           physics: mainPageScrollController.scrollPageViewScrollPage.value ? new ClampingScrollPhysics() : new NeverScrollableScrollPhysics(),
           children: [
             MainPage(pageController:_pageController),
-            Scaffold(
-                backgroundColor: Colors.white,
-                body: UserPage(pageController: _pageController, isLoginUser: false, id: mainPageScrollController.userIdCurrent.value)
-            )
+            // TODO: disable left swipe to show user page 
+            // Scaffold(
+            //     backgroundColor: Colors.white,
+            //     body: UserPage(pageController: _pageController, isLoginUser: false, id: mainPageScrollController.userIdCurrent.value)
+            // )
           ],
           onPageChanged: (index){
           },

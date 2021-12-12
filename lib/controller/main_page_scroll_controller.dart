@@ -10,8 +10,7 @@ class MainPageScrollController extends GetxController{
   var indexBottomBarMainPage = 0.obs;
 
   //ScrollPage是否可以滑动
-  // TODO: 暂时封闭滑动展示个人信息 待个人信息可展示时再打开
-  var scrollPageViewScrollPage = false.obs;
+  var scrollPageViewScrollPage = true.obs;
 
   //视频播放页的高度
   var videoViewHeight = 0.0.obs;

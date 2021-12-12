@@ -59,42 +59,32 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
             height: 8,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(width: 3.5),
               menuButton(
                   'Home',
                   Image.asset("assets/images/main_page_bottom_icon/home.png"),
-                  Image.asset(
-                      "assets/images/main_page_bottom_icon/home-active.png"),
-                  0),
+                  Image.asset("assets/images/main_page_bottom_icon/home-active.png"), 0),
+              SizedBox(width: 1),
               menuButton(
                   'Live',
                   Image.asset("assets/images/main_page_bottom_icon/live.png"),
-                  Image.asset(
-                      "assets/images/main_page_bottom_icon/live-active.png"),
-                  1),
-              SizedBox(
-                width: 12.5,
-              ),
+                  Image.asset("assets/images/main_page_bottom_icon/live-active.png"), 1),
+              SizedBox(width: 3.5),
               customCreateIcon,
-              SizedBox(
-                width: 12.5,
-              ),
+              SizedBox(width: 3.5),
               menuButton(
                   'Message',
-                  Image.asset(
-                      "assets/images/main_page_bottom_icon/message.png"),
-                  Image.asset(
-                      "assets/images/main_page_bottom_icon/message-active.png"),
-                  2),
+                  Image.asset("assets/images/main_page_bottom_icon/message.png"),
+                  Image.asset("assets/images/main_page_bottom_icon/message-active.png"), 2),
+              SizedBox(width: 1),
               menuButton(
                   'Profile',
-                  Image.asset(
-                      "assets/images/main_page_bottom_icon/profile.png"),
-                  Image.asset(
-                      "assets/images/main_page_bottom_icon/profile-active.png"),
-                  3)
+                  Image.asset("assets/images/main_page_bottom_icon/profile.png"),
+                  Image.asset("assets/images/main_page_bottom_icon/profile-active.png"), 3),
+              SizedBox(width: 3.5),
             ],
           ),
           SizedBox(
@@ -178,7 +168,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
         },
         child: Obx(() => Container(
               height: 45,
-              width: 80,
+              width: 45,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
