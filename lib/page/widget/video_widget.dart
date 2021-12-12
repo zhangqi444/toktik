@@ -155,7 +155,12 @@ class _VideoWidgetState extends State<VideoWidget> {
     double videoHeight = _videoPlayerController.value.size.height;
     double screenW = screenWidth(context);
     double screenH = screenHeight(context);
-    bool isLandScape = videoWidth > videoHeight;
+
+    // If isLandScape is true, we will scale the video based on width.
+    // Otherwise, we will scale it based on height.
+    // Please notice that, we treat portrait video as landscape as well
+    // if its width/height ratio is greater than 3/4.
+    bool isLandScape = (videoWidth / videoHeight) > (3 / 4);
 
     double rateWidthHeightContent = screenW / widget.contentHeight;
     double rateWidthContentVideo = screenW / videoWidth;
