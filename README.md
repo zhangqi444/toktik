@@ -66,3 +66,7 @@ https://docs.amplify.aws/cli/teams/overview/
 `amplify env checkout prod`
 
 https://docs.amplify.aws/cli/teams/overview/
+
+### How to build ios and apk?
+`flutter clean && flutter build apk`
+`flutter clean && flutter build ios`
