@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Auto
   }
 
   _getContent() {
-    double contentHeight = MediaQuery.of(context).size.height - 40 - MediaQueryData.fromWindow(window).padding.top;
+    double contentHeight = MediaQuery.of(context).size.height - MediaQueryData.fromWindow(window).padding.top;
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width,
