@@ -43,7 +43,7 @@ dependencies:
   flutter_easyloading: ^3.0.0
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.2
-  flutter_verification_box: ^1.0.4
+  pin_code_fields: ^7.3.0
 
 dev_dependencies:
   flutter_test:

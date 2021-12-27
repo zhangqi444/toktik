@@ -71,7 +71,7 @@ class UserController extends GetxController{
 
     if(response != null && response.status == AuthStatus.USER_NOT_FOUND.toShortString()) {
       SPUtil.set(SPKeys.username, response.username);
-      Get.toNamed(Routers.register);
+      Get.toNamed(Routers.signUp);
       return;
     }
 
@@ -91,7 +91,7 @@ class UserController extends GetxController{
           EasyLoading.showToast('The username or email is existing already, please try again.');
         } else if(response.status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
           loginUserSignUpPassword.value = pwd;
-          Get.toNamed(Routers.registerVerify);
+          Get.toNamed(Routers.signUpVerify);
         } else {
           EasyLoading.showToast('Failed to send verification code, please try again.');
         }

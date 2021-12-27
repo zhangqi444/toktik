@@ -1,7 +1,8 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_verification_box/verification_box.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'dart:async';
 
 /// 墨水瓶（`InkWell`）可用时使用的字体样式。
@@ -17,10 +18,9 @@ final TextStyle _unavailableStyle = TextStyle(
 );
 
 class SignUpVerifyPage extends StatefulWidget {
-  SignUpVerifyPage(String Username) {
-    this.Username = Username;
+  SignUpVerifyPage() {
   }
-  String Username;
+  String username;
 
   /// 倒计时的秒数，默认60秒。
   int countdown = 60;
@@ -33,7 +33,7 @@ class SignUpVerifyPage extends StatefulWidget {
 
   @override
   _SignUpVerifyPageState createState() {
-    return _SignUpVerifyPageState(this.Username);
+    return _SignUpVerifyPageState(this.username);
   }
 }
 
@@ -141,8 +141,37 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
             SizedBox(
               height: 10,
             ),
-            VerificationBox(
-              type: VerificationBoxItemType.underline,
+            PinCodeTextField(
+              length: 6,
+              obscureText: false,
+              animationType: AnimationType.fade,
+              pinTheme: PinTheme(
+                shape: PinCodeFieldShape.box,
+                borderRadius: BorderRadius.circular(5),
+                fieldHeight: 50,
+                fieldWidth: 40,
+                activeFillColor: Colors.white,
+              ),
+              animationDuration: Duration(milliseconds: 300),
+              backgroundColor: Colors.blue.shade50,
+              enableActiveFill: true,
+              // errorAnimationController: errorController,
+              // controller: textEditingController,
+              onCompleted: (v) {
+                print("Completed");
+              },
+              onChanged: (value) {
+                print(value);
+                setState(() {
+                  // currentText = value;
+                });
+              },
+              beforeTextPaste: (text) {
+                print("Allowing to paste $text");
+                //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                return true;
+              },
             ),
             SizedBox(
               height: 19,

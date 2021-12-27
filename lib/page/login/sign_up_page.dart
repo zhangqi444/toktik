@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:get/get.dart';
 
@@ -71,6 +73,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   RawMaterialButton(
+                                    onPressed: () {
+                                      Get.toNamed(Routers.signUpEmail);
+                                    },
                                     child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
@@ -91,58 +96,64 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 300,
                         ),
                         Expanded(
-                                child:
-                                    RichText(
-                                      textAlign: TextAlign.center,
-                                      maxLines: 3,
-                                      text: TextSpan(
+                          child:
+                              RichText(
+                                textAlign: TextAlign.center,
+                                maxLines: 3,
+                                text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: 'By signing, you agree to our ',
+                                          style: TextStyle(color: Color(0xff888888))),
+                                      TextSpan(
+                                          text: 'Terms of Service ',
                                           style: TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text: 'By signing, you agree to our ',
-                                                style: TextStyle(color: Color(0xff888888))),
-                                            TextSpan(
-                                                text: 'Terms of Service ',
-                                                style: TextStyle(
-                                                    color: Color(0xff2A2A2A),
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text:
-                                                'and acknowledge that you have read our ',
-                                                style: TextStyle(color: Color(0xff888888))),
-                                            TextSpan(
-                                                text: 'Privacy Policy ',
-                                                style: TextStyle(
-                                                    color: Color(0xff2A2A2A),
-                                                    fontWeight: FontWeight.bold)),
-                                            TextSpan(
-                                                text:
-                                                'to learn how we collect, use, and share your data.',
-                                                style: TextStyle(color: Color(0xff888888))),
-                                          ]),
-                                    )),
+                                              color: Color(0xff2A2A2A),
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text:
+                                          'and acknowledge that you have read our ',
+                                          style: TextStyle(color: Color(0xff888888))),
+                                      TextSpan(
+                                          text: 'Privacy Policy ',
+                                          style: TextStyle(
+                                              color: Color(0xff2A2A2A),
+                                              fontWeight: FontWeight.bold)),
+                                      TextSpan(
+                                          text:
+                                          'to learn how we collect, use, and share your data.',
+                                          style: TextStyle(color: Color(0xff888888))),
+                                    ]),
+                              )),
                       ],
                     ),
                   ),
 
                   Positioned(
                       bottom: 60.0,
-                      child: Row(children: [
-                        Text(
-                          "Already have an account?",
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 15,
-                              color: Color(0xff2A2A2A)),
-                        ),
-                        Text(" Log in",
-                            style: TextStyle(
+                      child: RichText(
+                          text: TextSpan(children: [
+                            TextSpan(
+                              text: "Already have an account?",
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 15,
+                                color: Color(0xff2A2A2A)),
+                            ),
+                            TextSpan(
+                              text: " Log in",
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Get.back();
+                                },
+                              style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 fontSize: 15,
                                 color: Color(0xff39CBE3)))
-                      ]))
+                          ])))
                 ])));
   }
 

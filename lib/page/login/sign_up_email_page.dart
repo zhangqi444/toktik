@@ -5,19 +5,19 @@ import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+class SignUpEmailPage extends StatefulWidget {
+  SignUpEmailPage({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() {
-    return _LoginPageState();
+  _SignUpEmailPageState createState() {
+    return _SignUpEmailPageState();
   }
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextField accountField, pwdField;
-  String account, pwd;
-  UserController loginController = Get.put(UserController());
+class _SignUpEmailPageState extends State<SignUpEmailPage> {
+  TextField accountField;
+  String account;
+  // UserController loginController = Get.put(UserController());
 
   @override
   void initState() {
@@ -34,20 +34,10 @@ class _LoginPageState extends State<LoginPage> {
     accountField = TextField(
       cursorColor: ColorRes.color_1,
       cursorWidth: 2,
-      decoration: InputDecoration(border: InputBorder.none, hintText: 'Email'),
+      decoration:
+          InputDecoration(border: InputBorder.none, hintText: 'Email address'),
       onChanged: (text) {
         account = text;
-      },
-    );
-
-    pwdField = TextField(
-      cursorColor: ColorRes.color_1,
-      cursorWidth: 2,
-      obscureText: true,
-      decoration:
-          InputDecoration(border: InputBorder.none, hintText: 'Password'),
-      onChanged: (text) {
-        pwd = text;
       },
     );
 
@@ -55,8 +45,8 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         brightness: Brightness.light,
-        title:
-            Text("Log in", style: TextStyle(color: Colors.black, fontSize: 16)),
+        title: Text("Sign up",
+            style: TextStyle(color: Colors.black, fontSize: 16)),
         elevation: 0,
         centerTitle: true,
         actions: <Widget>[
@@ -71,14 +61,14 @@ class _LoginPageState extends State<LoginPage> {
             Get.back();
           },
           child: Image.asset('assets/images/login/nav-arrow-left.png',
-            color: Color(0xff2A2A2A), width: 24, height: 24),
+              color: Color(0xff2A2A2A), width: 24, height: 24),
         ),
       ),
-      body: _layoutLogin(context),
+      body: _layoutSignUp(context),
     );
   }
 
-  _layoutLogin(BuildContext context) {
+  _layoutSignUp(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -92,15 +82,11 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 10,
             ),
-            _getPwdTextField(),
-            SizedBox(
-              height: 10,
-            ),
             _getBottomLayout(context),
             SizedBox(
               height: 20,
             ),
-            _getLogin(context),
+            _getSignUp(context),
           ],
         ),
       ),
@@ -120,37 +106,21 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _getPwdTextField() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.only(left: 30, right: 30),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: pwdField,
-    );
-  }
-
-  _getLogin(BuildContext context) {
+  _getSignUp(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 30, right: 30),
       height: 50,
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: () {
-          if (null != account &&
-              account.length > 0 &&
-              null != pwd &&
-              pwd.length > 0) {
-            loginController.login(account, pwd);
+          if (null != account && account.length > 0) {
+            Get.toNamed(Routers.signUpVerify);
           } else {
             EasyLoading.showToast('Check your info and try again.');
           }
         },
         child: Text(
-          'Log in',
+          'Sign Up',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         color: ColorRes.color_3,
@@ -161,35 +131,19 @@ class _LoginPageState extends State<LoginPage> {
 
   _getBottomLayout(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(left: 25, right: 30),
-      height: 40,
-      child: Stack(
-        children: [
-          Positioned(
-              left: 0,
-              child: TextButton(
-                onPressed: () {
-                  EasyLoading.showToast('功能待开发');
-                },
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
-                ),
-              )),
-          Positioned(
-              right: 0,
-              child: TextButton(
-                onPressed: () {
-                  Get.toNamed(Routers.register);
-                },
-                child: Text(
-                  'Sign up',
-                  style: TextStyle(color: Colors.black),
-                ),
-              )),
-        ],
-      ),
-    );
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.only(left: 25, right: 30),
+        height: 40,
+        child: Column(
+          children: [
+            Expanded(
+              child: Text(
+                "By continuing, you agree to Breeze's Terms of Service and confirm that you have read Breeze's Privacy Policy.",
+                style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
+                maxLines: 2,
+              ),
+            )
+          ],
+        ));
   }
 }

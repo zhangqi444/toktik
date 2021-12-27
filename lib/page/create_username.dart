@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/user_controller.dart';
-import 'package:toktik/page/sign_up_verify.dart';
+import 'package:toktik/page/login/sign_up_verify_page.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
