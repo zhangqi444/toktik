@@ -249,11 +249,11 @@ input ModelPostFilterInput {
 type Mutation {
   updatePostEx(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
   updatePostPowered(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
-  likePost(input: CreateLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key @aws_iam @function(name: "likePost-staging")
-  viewPost(input: CreateViewInput!, condition: ModelViewConditionInput): View @aws_api_key @aws_iam @function(name: "viewPost-staging")
+  likePost(input: CreateLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key @aws_iam @function(name: "likePost-${env}")
+  viewPost(input: CreateViewInput!, condition: ModelViewConditionInput): View @aws_api_key @aws_iam @function(name: "viewPost-${env}")
 }
 
 type Query {
-  listPostExs(filter: ModelPostFilterInput, userId: ID!, limit: Int, nextToken: String): ModelPostExConnection @function(name: "listPostExs-staging")
+  listPostExs(filter: ModelPostFilterInput, userId: ID!, limit: Int, nextToken: String): ModelPostExConnection @function(name: "listPostExs-${env}")
 }
  
