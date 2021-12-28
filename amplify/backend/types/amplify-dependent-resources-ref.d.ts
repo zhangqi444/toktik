@@ -1,4 +1,10 @@
 export type AmplifyDependentResourcesAttributes = {
+    "api": {
+        "toktik": {
+            "GraphQLAPIIdOutput": "string",
+            "GraphQLAPIEndpointOutput": "string"
+        }
+    },
     "auth": {
         "toktikf7d4ff65": {
             "IdentityPoolId": "string",

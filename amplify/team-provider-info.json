@@ -22,7 +22,7 @@
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersionc1185f3a-build.zip"
+          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion56a21cb8-build.zip"
         },
         "likePost": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
