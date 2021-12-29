@@ -65,7 +65,14 @@ https://docs.amplify.aws/cli/teams/overview/
 
 `amplify env checkout prod`
 
+If the backend is not successfully switched, but without seeing any error. Please follow below steps,
+
+1. delete `#current-cloud-backend` folder.
+2. run `amplify init`, and you may see error message here.
+3. run `amplify pull --appId d1mt6rg0ztrl8w --envName YOUR_ENV`
+
 https://docs.amplify.aws/cli/teams/overview/
+https://docs.aws.amazon.com/amplify/latest/userguide/team-workflows-with-amplify-cli-backend-environments.html
 
 ### How to build ios and apk?
 `flutter clean && flutter build apk`
