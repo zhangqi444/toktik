@@ -242,6 +242,8 @@ class Api{
     });
 
     Amplify.Analytics.recordEvent(event: event);
+    // TODO: flush the event for every recording, as current the data is very sparse.
+    Amplify.Analytics.flushEvents();
   }
 
   ///更新用户资料信息
