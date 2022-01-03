@@ -77,3 +77,21 @@ https://docs.aws.amazon.com/amplify/latest/userguide/team-workflows-with-amplify
 ### How to build ios and apk?
 `flutter clean && flutter build apk`
 `flutter clean && flutter build ios`
+
+
+### How to update auth for a specific service?
+Here is an example for Pinpoint Analytics.
+```
+    "PinpointAnalytics": {
+        "Default": {
+            "AppId": "c4924c6194264abc941704cf721dcf07",
+            "Region": "us-west-2",
+            "AuthMode": "API_KEY", // update the default auth method to API_KEY based
+            "ApiKey": "da2-gtckkpdfdfc5ze2wcd6mbkjjoa",
+            "ClientDatabasePrefix": "toktik_API_KEY"
+        }
+    },
+```
+
+### How to set up S3 service logging?
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-s3-access-logs-to-identify-requests.html#querying-s3-access-logs-for-requests
