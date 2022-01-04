@@ -40,7 +40,8 @@ type Like @model @auth(rules: [{allow: public}])
   value: Boolean
 }
 
-type Post @model @auth(rules: [{allow: public}]) {
+type Post @model @auth(rules: [{allow: public}])
+  @key(name: "postUserId-index", fields: ["postUserId"], queryField: "postByUserId") {
   id: ID!
   text: String
   user: User @connection
@@ -49,6 +50,7 @@ type Post @model @auth(rules: [{allow: public}]) {
   likeCount: Int
   commentCount: Int
   shareCount: Int
+  postUserId: ID
   viewCount: Int
 }
 
@@ -212,6 +214,7 @@ input ModelPostConditionInput {
   likeCount: ModelIntInput
   commentCount: ModelIntInput
   shareCount: ModelIntInput
+  postUserId: ModelStringInput
   and: [ModelPostConditionInput]
   or: [ModelPostConditionInput]
   not: ModelPostConditionInput
@@ -240,6 +243,7 @@ input ModelPostFilterInput {
   likeCount: ModelIntInput
   commentCount: ModelIntInput
   shareCount: ModelIntInput
+  postUserId: ModelStringInput
   viewCount: ModelIntInput
   and: [ModelPostFilterInput]
   or: [ModelPostFilterInput]
