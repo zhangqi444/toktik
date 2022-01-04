@@ -11,7 +11,7 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:toktik/common/sp_keys.dart';
-import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
