@@ -49,7 +49,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   }
 
   _getLayoutBottomBar() {
-    return Container(
+    return Obx(() => Container(
       key: bottomBarKey,
       height: 54 + (Platform.isIOS ? 40 : 10) * 1.0,
       decoration:
@@ -71,19 +71,25 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
               SizedBox(width: 1),
               menuButton(
                   'Live',
-                  Image.asset("assets/images/main_page_bottom_icon/live.png"),
+                  mainPageScrollController.indexBottomBarMainPage == 0
+                      ? Image.asset("assets/images/main_page_bottom_icon/live-dark.png")
+                      : Image.asset("assets/images/main_page_bottom_icon/live.png"),
                   Image.asset("assets/images/main_page_bottom_icon/live-active.png"), 1),
               SizedBox(width: 3.5),
               customCreateIcon,
               SizedBox(width: 3.5),
               menuButton(
                   'Message',
-                  Image.asset("assets/images/main_page_bottom_icon/message.png"),
+                  mainPageScrollController.indexBottomBarMainPage == 0
+                      ? Image.asset("assets/images/main_page_bottom_icon/message-dark.png")
+                      : Image.asset("assets/images/main_page_bottom_icon/message.png"),
                   Image.asset("assets/images/main_page_bottom_icon/message-active.png"), 2),
               SizedBox(width: 1),
               menuButton(
                   'Profile',
-                  Image.asset("assets/images/main_page_bottom_icon/profile.png"),
+                  mainPageScrollController.indexBottomBarMainPage == 0
+                      ? Image.asset("assets/images/main_page_bottom_icon/profile-dark.png")
+                      : Image.asset("assets/images/main_page_bottom_icon/profile.png"),
                   Image.asset("assets/images/main_page_bottom_icon/profile-active.png"), 3),
               SizedBox(width: 3.5),
             ],
@@ -93,7 +99,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
           )
         ],
       ),
-    );
+    ));
   }
 
   Widget get customCreateIcon => GestureDetector(
@@ -164,21 +170,15 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
             }
           }
         },
-        child: Obx(() => Container(
+        child: Container(
               height: 45,
               width: 45,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  mainPageScrollController.indexBottomBarMainPage == 0
-                      ? (mainPageScrollController.indexBottomBarMainPage ==
-                              index
-                          ? icon_active
-                          : icon)
-                      : (mainPageScrollController.indexBottomBarMainPage ==
-                              index
-                          ? icon
-                          : icon_active),
+                  mainPageScrollController.indexBottomBarMainPage == index
+                      ? icon_active
+                      : icon,
                   SizedBox(
                     height: 4,
                   ),
@@ -191,14 +191,17 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                         color:
-                            mainPageScrollController.indexBottomBarMainPage ==
-                                index ? Color(
-                                0xffffffff) : Color(0xff8b8b8b),
+                            mainPageScrollController.indexBottomBarMainPage == 0
+                                ? (mainPageScrollController.indexBottomBarMainPage == index
+                                        ? Color(0xffffffff) : Color(0xff8b8b8b))
+                                : (mainPageScrollController.indexBottomBarMainPage == index
+                                        ? Color(0xff2A2A2A) : Color(0xff2A2A2A)),
                         fontSize: 10.0),
                   )
                 ],
               ),
-            )));
+            )
+    );
   }
 
   void setSystemStatusBarStyle(int index) {
