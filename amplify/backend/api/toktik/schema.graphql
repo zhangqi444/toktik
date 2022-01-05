@@ -1,8 +1,4 @@
-type View @model @auth(rules: [{allow: public}])
-  @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId")
-  @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId")
-  @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId")
-{
+type View @model @auth(rules: [{allow: public}]) @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId") @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId") @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId") {
   id: ID!
   post: Post @connection
   user: User @connection
@@ -28,10 +24,7 @@ type Comment @model @auth(rules: [{allow: public}]) {
   commentPostId: ID!
 }
 
-type Like @model @auth(rules: [{allow: public}])
-  @key(name: "likePostId-likeUserId-index", fields: ["likePostId", "likeUserId"], queryField: "likeByPostIdUserId")
-  @key(name: "likePostId-index", fields: ["likePostId"], queryField: "likeByPostId")
-  @key(name: "likeUserId-index", fields: ["likeUserId"], queryField: "likeByUserId") {
+type Like @model @auth(rules: [{allow: public}]) @key(name: "likePostId-likeUserId-index", fields: ["likePostId", "likeUserId"], queryField: "likeByPostIdUserId") @key(name: "likePostId-index", fields: ["likePostId"], queryField: "likeByPostId") @key(name: "likeUserId-index", fields: ["likeUserId"], queryField: "likeByUserId") {
   id: ID!
   user: User @connection
   post: Post @connection
@@ -40,8 +33,7 @@ type Like @model @auth(rules: [{allow: public}])
   value: Boolean
 }
 
-type Post @model @auth(rules: [{allow: public}])
-  @key(name: "postUserId-index", fields: ["postUserId"], queryField: "postByUserId") {
+type Post @model @auth(rules: [{allow: public}]) @key(name: "postUserId-index", fields: ["postUserId"], queryField: "postByUserId") {
   id: ID!
   text: String
   user: User @connection
@@ -70,6 +62,9 @@ type User @model @auth(rules: [{allow: public}]) {
   city: String
   profession: String
   username: String
+  email: String
+  phoneNumber: String
+  authStatus: String
 }
 
 type PostEx {
