@@ -99,6 +99,15 @@ class Api{
     }
   }
 
+  static Future<LoginResponse> getCurrentUser() async {
+    try {
+      var result = await Amplify.Auth.getCurrentUser();
+      return result != null ? LoginResponse().fromJson({}) : null;
+    } on AuthException catch (e, stacktrack) {
+      print("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
+    }
+  }
+
   static Future<RegisterResponse> resendSignUpCode(String username) async{
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
