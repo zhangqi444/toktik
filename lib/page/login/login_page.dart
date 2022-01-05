@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
               left: 0,
               child: TextButton(
                 onPressed: () {
-                  EasyLoading.showToast('功能待开发');
+                  EasyLoading.showToast('The feature is coming soone.');
                 },
                 child: Text(
                   'Forgot password?',
@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
               right: 0,
               child: TextButton(
                 onPressed: () {
-                  Get.toNamed(Routers.signUp);
+                  Get.toNamed(Routers.createUsername);
                 },
                 child: Text(
                   'Sign up',

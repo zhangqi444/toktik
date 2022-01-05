@@ -1,6 +1,7 @@
 import 'package:toktik/page/feed_publish_page.dart';
 // import 'package:toktik/page/friend_page.dart';
 import 'package:toktik/page/home_page.dart';
+import 'package:toktik/page/login/create_username_page.dart';
 import 'package:toktik/page/login/sign_up_email_page.dart';
 import 'package:toktik/page/splash_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
@@ -45,6 +46,7 @@ class RouterManager{
     // GetPage(name: Routers.tikTokCode, page: () => MyTikTokCodePage()),
     // GetPage(name: Routers.living, page: () => LivingPage()),
     GetPage(name: Routers.login, page: () => LoginPage(),transition: Transition.downToUp,),
+    GetPage(name: Routers.createUsername, page: () => CreateUsernamePage()),
     GetPage(name: Routers.signUp, page: () => SignUpPage()),
     GetPage(name: Routers.signUpEmail, page: () => SignUpEmailPage()),
     GetPage(name: Routers.signUpVerify, page: () => SignUpVerifyPage()),
@@ -76,6 +78,7 @@ class Routers{
   static final String tikTokCode = '/tikTokCode';
   static final String living = '/living';
   static final String login = '/login';
+  static final String createUsername = '/createUsername';
   static final String signUp = '/signUp';
   static final String signUpEmail = '/signUpEmail';
   static final String signUpVerify = '/signUpVerify';

@@ -2,25 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/page/login/sign_up_verify_page.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/string_util.dart';
 
-class CreateUserName extends StatefulWidget {
-  CreateUserName({Key key}) : super(key: key);
+class CreateUsernamePage extends StatefulWidget {
+  CreateUsernamePage({Key key}) : super(key: key);
 
   @override
-  _CreateUserNameState createState() {
-    return _CreateUserNameState();
+  _CreateUsernamePageState createState() {
+    return _CreateUsernamePageState();
   }
 }
 
-class _CreateUserNameState extends State<CreateUserName> {
+class _CreateUsernamePageState extends State<CreateUsernamePage> {
   TextField accountField;
   String account;
   bool buttonEnable = false;
-  // UserController loginController = Get.put(UserController());
+  String errorMessage = "";
+  UserController userController = Get.put(UserController());
+  SelfController loginController = Get.put(SelfController());
 
   @override
   void initState() {
@@ -41,7 +45,7 @@ class _CreateUserNameState extends State<CreateUserName> {
           InputDecoration(border: InputBorder.none, hintText: 'Username'),
       onChanged: (text) {
         account = text;
-        if(account != null && account.length >0)
+        if(account != null && account.length > 8)
           {
             setState(() {
               buttonEnable = true;
@@ -106,9 +110,9 @@ class _CreateUserNameState extends State<CreateUserName> {
               height: 38,
             ),
             _getAccountTextField(),
-            SizedBox(
-              height: 29,
-            ),
+            !isStringNullOrEmpty(errorMessage)
+                ? _getErrorMessage()
+                : SizedBox(height: 29),
             _getSignUp(context)
           ],
         ),
@@ -131,6 +135,28 @@ class _CreateUserNameState extends State<CreateUserName> {
     );
   }
 
+  _getErrorMessage() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 40,
+            child: Text(
+              errorMessage,
+              style: TextStyle(
+                  color: Color(0xffff0000),
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal),
+              maxLines: 2,
+            ),
+          ),
+          SizedBox(height: 29),
+        ]
+    );
+  }
+
   _getAccountTextField() {
     return Container(
       height: 50,
@@ -148,15 +174,22 @@ class _CreateUserNameState extends State<CreateUserName> {
       height: 42,
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
-        onPressed: () {
-          if (null != account && account.length > 0) {
-            buttonEnable = true;
+        onPressed: () async {
+          String userId = await userController.loadUserInfoExByUsername(account);
+          if(!isStringNullOrEmpty(userId)) {
+            setState(() {
+              errorMessage = "The username is not valid or already existing, please try another one.";
+            });
           } else {
-            EasyLoading.showToast('Invalid Username');
+            setState(() {
+              errorMessage = "";
+            });
+            loginController.loginUserUsername.value = account;
+            Get.toNamed(Routers.signUpEmail);
           }
         },
         child: Text(
-          'Sign Up',
+          'Next',
           style: buttonEnable
               ? TextStyle(color: Color(0xffFFFFFF), fontSize: 14)
               : TextStyle(color: Color(0xffAAAAAA), fontSize: 14),
