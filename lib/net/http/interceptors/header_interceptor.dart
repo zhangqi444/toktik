@@ -11,11 +11,11 @@ class HeaderInterceptor implements Interceptor{
   @override
   Future onRequest(RequestOptions options, RequestInterceptorHandler i) async{
     int userUid = -1;
-    await SPUtil.getString(SPKeys.userId).then((uid){
+    await SPUtil.getString(SPKeys.selfUserInfoId).then((uid){
       userUid = uid;
     });
     String token = '';
-    await SPUtil.getString(SPKeys.token).then((text){
+    await SPUtil.getString(SPKeys.selfUserInfoToken).then((text){
       token = text;
     });
 

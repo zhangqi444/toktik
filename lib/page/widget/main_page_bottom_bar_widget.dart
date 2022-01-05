@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/common/router_manager.dart';
-import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/res/colors.dart';
-import 'package:toktik/util/sp_util.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/string_util.dart';
 import 'package:toktik/util/tik_tok_icons_icons.dart';
 
 ///首页底部导航
@@ -24,6 +24,7 @@ class MainPageBottomBarWidget extends StatefulWidget {
 
 class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   final MainPageScrollController mainPageScrollController = Get.find();
+  final SelfController _selfController = Get.put(SelfController());
   //用来获取BottomBar的高度
   final GlobalKey bottomBarKey = GlobalKey();
   Widget _bottomBarLayout;
@@ -149,21 +150,18 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
     return GestureDetector(
         onTap: () {
           // TODO: disable bottom tab for now.
-          EasyLoading.showToast("This feature is coming soon.",
-              duration: Duration(seconds: 3));
-          return;
+          // EasyLoading.showToast("This feature is coming soon.",
+          //     duration: Duration(seconds: 3));
+          // return;
           if (index == 0 || index == 1) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
           } else {
-            SPUtil.getString(SPKeys.token).then((text) {
-              String token = text;
-              if (token != null && token.length > 0) {
-                mainPageScrollController.selectIndexBottomBarMainPage(index);
-              } else {
-                Application.eventBus.fire(StopPlayEvent());
-                Get.toNamed(Routers.login);
-              }
-            });
+            if(!isStringNullOrEmpty(_selfController.loginUserId.value)) {
+              mainPageScrollController.selectIndexBottomBarMainPage(index);
+            } else {
+              Application.eventBus.fire(StopPlayEvent());
+              Get.toNamed(Routers.login);
+            }
           }
         },
         child: Obx(() => Container(

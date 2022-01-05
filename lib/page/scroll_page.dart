@@ -31,7 +31,6 @@ class ScrollPage extends StatefulWidget {
 
 class _ScrollPageState extends State<ScrollPage> {
   final MainPageScrollController mainPageScrollController = Get.put(MainPageScrollController());
-  UserPageController _userPageController = Get.put(UserPageController());
   PageController _pageController = PageController(initialPage: 0, keepPage: true);
   GlobalKey<DrawerControllerState> drawerKey = GlobalKey();
 

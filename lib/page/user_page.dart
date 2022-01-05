@@ -3,12 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toktik/common/application.dart';
-import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_page_controller.dart';
 import 'package:toktik/event/amplify_configured_event.dart';
-import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/model/user_model.dart';
 import 'package:toktik/page/widget/user_info_widget.dart';
 import 'package:toktik/page/widget/user_item_grid_widget.dart';
@@ -16,7 +15,7 @@ import 'package:toktik/page/widget/user_more_bottom_sheet.dart';
 import 'package:toktik/page/widget/user_work_list_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
-import 'package:toktik/util/sp_util.dart';
+import 'package:toktik/util/string_util.dart';
 
 const TAB_SIZE = 1;
 
@@ -38,11 +37,12 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   MainPageScrollController _mainController = Get.find();
-  UserPageController _userPageController = Get.find();
+  UserPageController _userPageController = Get.put(UserPageController());
   TabController _tabController;
   PageController _pageController = PageController(keepPage: true);
   ScrollController _scrollController = ScrollController();
   UserController _userController = Get.put(UserController());
+  SelfController _selfController = Get.put(SelfController());
 
   var amplifyConfiguredListner;
 
@@ -71,16 +71,9 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
 
   void initData() async {
     var id = widget.id;
-    if(widget._isLoginUser) {
-      id = _userController.loginUserId.value;
-      widget.id = id;
-    }
-    UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
-    if(id != null && (userEx == null || userEx.id != _userController.loginUserId)) {
-      await _userController.getUserInfoEx(id);
-      // TODO: disbale before we have the api reday.
-      // _userController.getUserWorkList(id);
-    }
+    await _userController.loadUserInfoExById(id);
+    // TODO: disbale before we have the api reday.
+    // _userController.getUserWorkList(id);
   }
 
   @override
@@ -106,6 +99,11 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     } else {
       initData();
     }
+
+    if(isStringNullOrEmpty(widget.id)) {
+      return Scaffold();
+    }
+
     return Scaffold(
       backgroundColor: ColorRes.color_2,
       body: CustomScrollView(
@@ -150,7 +148,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: [StretchMode.zoomBackground],
         collapseMode: CollapseMode.parallax,
-        title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userInfoExResponse.value.user.username:'')),
+        title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userExMap[widget.id].user.username:'')),
         centerTitle:true,
         background: Image.asset(
           'assets/images/bg_3.jpg',

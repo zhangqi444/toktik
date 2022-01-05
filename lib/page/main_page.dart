@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
-import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/net/api.dart';
 import 'package:toktik/page/home_page.dart';
 import 'package:toktik/page/message_page.dart';
@@ -16,7 +16,7 @@ import 'home_page.dart';
 class MainPage extends StatelessWidget {
   final MainPageScrollController _mainPageController = Get.find();
   PageController _scrollPageController;
-  UserController _userController = Get.put(UserController());
+  SelfController _selfController = Get.put(SelfController());
 
   MainPage({PageController pageController}){
     this._scrollPageController = pageController;
@@ -24,7 +24,6 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _userController.loadLoginUserId();
     WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
       //设置状态栏的颜色和图标模式
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

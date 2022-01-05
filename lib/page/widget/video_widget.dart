@@ -10,6 +10,7 @@ import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/post_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_bottom_bar_widget.dart';
@@ -18,6 +19,7 @@ import 'package:toktik/page/widget/video_share_widget.dart';
 import 'package:toktik/util/screen_utils.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/sp_util.dart';
+import 'package:toktik/util/string_util.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../res/colors.dart';
@@ -45,6 +47,7 @@ class _VideoWidgetState extends State<VideoWidget> {
   MainPageScrollController mainController = Get.find();
   PostController _postController = Get.put(PostController());
   FeedController _feedController = Get.put(FeedController());
+  final SelfController _selfController = Get.put(SelfController());
   bool _playing = false;
   Stopwatch _durationSW = new Stopwatch();
   Future<void> _initializeVideoPlayerFuture;
@@ -221,8 +224,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     var isLiked = !widget.video.isLiked;
     _likeEnabled = ValueNotifier<bool>(false);
     var eventValue;
-    var token = await SPUtil.getString(SPKeys.token);
-    if(token == null) {
+    if(_selfController.loginUserId == null || isStringNullOrEmpty(_selfController.loginUserId.value)) {
       // TODO: add the correct logic to stop the video during login
       // _videoPlayerController.pause();
       // Get.toNamed(Routers.login);

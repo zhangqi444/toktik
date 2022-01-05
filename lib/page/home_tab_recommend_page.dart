@@ -4,6 +4,7 @@ import 'package:toktik/common/application.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/recommend_page_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/event/amplify_configured_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_widget.dart';
@@ -28,6 +29,7 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
   MainPageScrollController _mainController = Get.find();
   PageController _pageController = PageController(initialPage: 0, keepPage: true);
   FeedController _feedController = Get.put(FeedController());
+  SelfController _selfController = Get.put(SelfController());
   RefreshController _refreshController = RefreshController(initialRefresh: false);
   var amplifyConfiguredListner;
 
@@ -36,11 +38,16 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
     super.initState();
     if(!Amplify.isConfigured) {
       amplifyConfiguredListner = Application.eventBus.on<AmplifyConfiguredEvent>().listen((event) {
-        _feedController.refreshHotFeedList(_refreshController);
+        init();
       });
     } else {
-      _feedController.refreshHotFeedList(_refreshController);
+      init();
     }
+  }
+
+  Future<void> init() async {
+    await _selfController.load();
+    _feedController.refreshHotFeedList(_refreshController);
   }
 
   @override
