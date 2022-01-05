@@ -1,7 +1,9 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
-import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/controller/main_page_scroll_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +19,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextField accountField, pwdField;
   String account, pwd;
-  UserController loginController = Get.put(UserController());
+  SelfController loginController = Get.put(SelfController());
+  final MainPageScrollController mainPageController = Get.find();
 
   @override
   void initState() {
@@ -34,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     accountField = TextField(
       cursorColor: ColorRes.color_1,
       cursorWidth: 2,
-      decoration: InputDecoration(border: InputBorder.none, hintText: 'Email'),
+      decoration: InputDecoration(border: InputBorder.none, hintText: 'Email, phone or user name'),
       onChanged: (text) {
         account = text;
       },
@@ -139,12 +142,23 @@ class _LoginPageState extends State<LoginPage> {
       height: 50,
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
-        onPressed: () {
+        onPressed: () async {
           if (null != account &&
               account.length > 0 &&
               null != pwd &&
               pwd.length > 0) {
-            loginController.login(account, pwd);
+
+            if(EmailValidator.validate(account)) {
+              loginController.loginUserEmail.value = account;
+            } else {
+              loginController.loginUserUsername.value = account;
+            }
+            loginController.loginUserPassword.value = pwd;
+
+            await loginController.login();
+
+            Get.offAllNamed(Routers.scroll);
+            mainPageController.selectIndexBottomBarMainPage(0);
           } else {
             EasyLoading.showToast('Check your info and try again.');
           }

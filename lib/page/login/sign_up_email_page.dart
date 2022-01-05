@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
-import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
+import 'package:email_validator/email_validator.dart';
 
 class SignUpEmailPage extends StatefulWidget {
   SignUpEmailPage({Key key}) : super(key: key);
@@ -16,8 +17,8 @@ class SignUpEmailPage extends StatefulWidget {
 
 class _SignUpEmailPageState extends State<SignUpEmailPage> {
   TextField accountField;
-  String account;
-  // UserController loginController = Get.put(UserController());
+  String email;
+  SelfController loginController = Get.put(SelfController());
 
   @override
   void initState() {
@@ -31,16 +32,6 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
 
   @override
   Widget build(BuildContext context) {
-    accountField = TextField(
-      cursorColor: ColorRes.color_1,
-      cursorWidth: 2,
-      decoration:
-          InputDecoration(border: InputBorder.none, hintText: 'Email address'),
-      onChanged: (text) {
-        account = text;
-      },
-    );
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -102,7 +93,16 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
           color: Colors.white,
           border:
               Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: accountField,
+      child: TextFormField(
+        cursorColor: ColorRes.color_1,
+        cursorWidth: 2,
+        decoration: InputDecoration(border: InputBorder.none, hintText: 'Email address'),
+        onChanged: (text) {
+          email = text;
+          loginController.loginUserEmail.value = email;
+        },
+        validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email address.",
+      ),
     );
   }
 
@@ -113,7 +113,9 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: () {
-          if (null != account && account.length > 0) {
+          if (EmailValidator.validate(email)) {
+            loginController.loginUserEmail.value = email;
+            loginController.registerByEmail();
             Get.toNamed(Routers.signUpVerify);
           } else {
             EasyLoading.showToast('Check your info and try again.');

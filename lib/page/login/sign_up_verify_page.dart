@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'dart:async';
 
+import 'package:toktik/controller/self_controller.dart';
+
 /// 墨水瓶（`InkWell`）可用时使用的字体样式。
 final TextStyle _availableStyle = TextStyle(
   fontSize: 13.0,
@@ -39,10 +41,15 @@ class SignUpVerifyPage extends StatefulWidget {
 
 class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
   _SignUpVerifyPageState(String _Username) {
-    this.Username = _Username;
+    this.username = _Username;
   }
-  String Username;
+  String username;
   TextField accountField;
+  String verificationCode;
+
+  SelfController loginController = Get.put(SelfController());
+  TextEditingController textEditingController = TextEditingController();
+  StreamController<ErrorAnimationType> errorController;
 
   /// 倒计时的计时器。
   Timer _timer;
@@ -86,10 +93,12 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
   void initState() {
     super.initState();
     _seconds = widget.countdown;
+    errorController = StreamController<ErrorAnimationType>();
   }
 
   @override
   void dispose() {
+    errorController.close();
     super.dispose();
   }
 
@@ -135,13 +144,14 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
             ),
             _getTitleText(),
             Text(
-              "Your code was sent to $Username",
+              "Your code was sent to $username",
               style: TextStyle(color: Color(0xff888888), fontSize: 12),
             ),
             SizedBox(
               height: 10,
             ),
             PinCodeTextField(
+              appContext: context,
               length: 6,
               obscureText: false,
               animationType: AnimationType.fade,
@@ -155,15 +165,15 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
               animationDuration: Duration(milliseconds: 300),
               backgroundColor: Colors.blue.shade50,
               enableActiveFill: true,
-              // errorAnimationController: errorController,
-              // controller: textEditingController,
+              errorAnimationController: errorController,
+              controller: textEditingController,
+              keyboardType: TextInputType.number,
               onCompleted: (v) {
-                print("Completed");
+                loginController.registerVerify(verificationCode);
               },
               onChanged: (value) {
-                print(value);
                 setState(() {
-                  // currentText = value;
+                  verificationCode = value;
                 });
               },
               beforeTextPaste: (text) {
