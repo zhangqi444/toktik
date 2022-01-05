@@ -95,3 +95,6 @@ Here is an example for Pinpoint Analytics.
 
 ### How to set up S3 service logging?
 https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-s3-access-logs-to-identify-requests.html#querying-s3-access-logs-for-requests
+
+### How to override Amplify config?
+https://aws.amazon.com/blogs/mobile/override-amplify-generated-backend-resources-using-cdk/
