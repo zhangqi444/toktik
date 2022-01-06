@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
-import 'package:toktik/page/login/sign_up_verify_page.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
@@ -50,7 +48,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
           InputDecoration(border: InputBorder.none, hintText: 'Username'),
       onChanged: (text) {
         account = text;
-        if(account != null && account.length > 8)
+        if(account != null && account.length >= 8)
           {
             setState(() {
               buttonEnable = true;
@@ -157,7 +155,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
       height: 42,
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
-        onPressed: () async {
+        onPressed: !buttonEnable ? () {} : () async {
           String userId = await userController.loadUserInfoExByUsername(account);
           if(!isStringNullOrEmpty(userId)) {
             setState(() {
@@ -168,7 +166,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
               errorMessage = "";
             });
             loginController.loginUserUsername.value = account;
-            Get.toNamed(Routers.signUpEmail);
+            Get.toNamed(Routers.createPassword);
           }
         },
         child: Text(
