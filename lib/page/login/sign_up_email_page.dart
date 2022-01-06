@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/enum/auth_status.dart';
+import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:email_validator/email_validator.dart';
@@ -74,7 +75,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
           children: [
             _getAccountTextField(),
             !isStringNullOrEmpty(errorMessage)
-                ? _getErrorMessage()
+                ? LoginErrorMessageWidget(text: errorMessage)
                 : SizedBox(height: 10),
             _getBottomLayout(context),
             SizedBox(
@@ -109,29 +110,6 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
         },
         validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email address.",
       ),
-    );
-  }
-
-  _getErrorMessage() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.only(left: 25, right: 30),
-            height: 40,
-            child: Text(
-              errorMessage,
-              style: TextStyle(
-                  color: Color(0xffff0000),
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal),
-              maxLines: 2,
-            ),
-          ),
-          SizedBox(height: 10),
-        ]
     );
   }
 

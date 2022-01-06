@@ -5,6 +5,7 @@ import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/page/login/sign_up_verify_page.dart';
+import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
@@ -115,7 +116,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             ),
             _getAccountTextField(),
             !isStringNullOrEmpty(errorMessage)
-                ? _getErrorMessage()
+                ? LoginErrorMessageWidget(text: errorMessage)
                 : SizedBox(height: 29),
             _getSignUp(context)
           ],
@@ -136,28 +137,6 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             fontWeight: FontWeight.bold),
         maxLines: 2,
       ),
-    );
-  }
-
-  _getErrorMessage() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 40,
-            child: Text(
-              errorMessage,
-              style: TextStyle(
-                  color: Color(0xffff0000),
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal),
-              maxLines: 2,
-            ),
-          ),
-          SizedBox(height: 29),
-        ]
     );
   }
 
