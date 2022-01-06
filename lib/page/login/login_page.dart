@@ -4,8 +4,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/enum/auth_status.dart';
+import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
+import 'package:toktik/page/login/widget/login_subtitle_text_widget.dart';
+import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/string_util.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -17,14 +22,30 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String title, subtitle;
+  bool isForSignedUpAccount = false;
   TextField accountField, pwdField;
   String account, pwd;
   SelfController loginController = Get.put(SelfController());
   final MainPageScrollController mainPageController = Get.find();
+  dynamic argumentData = Get.arguments;
 
   @override
   void initState() {
     super.initState();
+
+    if(argumentData != null) {
+      if(!isStringNullOrEmpty(argumentData['authStatus'])
+          && argumentData['authStatus'] == AuthStatus.ALIAS_EXISTS.toShortString()) {
+        title = "You've signed up already.";
+        subtitle = "Enter your password to log in to your account.";
+        isForSignedUpAccount = true;
+      }
+
+      if(!isStringNullOrEmpty(argumentData['email'])) {
+        account = argumentData['email'];
+      }
+    }
   }
 
   @override
@@ -37,6 +58,8 @@ class _LoginPageState extends State<LoginPage> {
     accountField = TextField(
       cursorColor: ColorRes.color_1,
       cursorWidth: 2,
+      readOnly: isForSignedUpAccount,
+      controller: TextEditingController()..text = isForSignedUpAccount ? loginController.loginUserEmail.value : null,
       decoration: InputDecoration(border: InputBorder.none, hintText: 'Email, phone or user name'),
       onChanged: (text) {
         account = text;
@@ -55,28 +78,7 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        title:
-            Text("Log in", style: TextStyle(color: Colors.black, fontSize: 16)),
-        elevation: 0,
-        centerTitle: true,
-        actions: <Widget>[
-          new IconButton(
-            icon: Image.asset('assets/images/login/question.png',
-                color: Color(0xff888888), width: 22, height: 22),
-            onPressed: () {},
-          )
-        ],
-        leading: TextButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Image.asset('assets/images/login/nav-arrow-left.png',
-            color: Color(0xff2A2A2A), width: 24, height: 24),
-        ),
-      ),
+      appBar: LoginAppBarWidget(title: "Log in"),
       body: _layoutLogin(context),
     );
   }
@@ -87,10 +89,10 @@ class _LoginPageState extends State<LoginPage> {
         color: Colors.white,
       ),
       child: Container(
-        height: 300,
-        margin: EdgeInsets.only(top: 91),
+        // margin: EdgeInsets.only(top: 91),
         child: Column(
           children: [
+            isForSignedUpAccount ? _getTitle() : Container(),
             _getAccountTextField(),
             SizedBox(
               height: 10,
@@ -106,6 +108,20 @@ class _LoginPageState extends State<LoginPage> {
             _getLogin(context),
           ],
         ),
+      ),
+    );
+  }
+
+  _getTitle() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(left: 30, right: 30),
+      height: 80,
+      child: Column(
+        children: [
+          LoginTitleTextWidget(text: title),
+          LoginSubtitleTextWidget(text: subtitle),
+        ],
       ),
     );
   }
