@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:toktik/util/string_util.dart';
 
 class SignUpEmailPage extends StatefulWidget {
   SignUpEmailPage({Key key}) : super(key: key);
@@ -18,6 +20,7 @@ class SignUpEmailPage extends StatefulWidget {
 class _SignUpEmailPageState extends State<SignUpEmailPage> {
   TextField accountField;
   String email;
+  String errorMessage;
   SelfController loginController = Get.put(SelfController());
 
   @override
@@ -70,9 +73,9 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
         child: Column(
           children: [
             _getAccountTextField(),
-            SizedBox(
-              height: 10,
-            ),
+            !isStringNullOrEmpty(errorMessage)
+                ? _getErrorMessage()
+                : SizedBox(height: 10),
             _getBottomLayout(context),
             SizedBox(
               height: 20,
@@ -100,9 +103,35 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
         onChanged: (text) {
           email = text;
           loginController.loginUserEmail.value = email;
+          setState(() {
+            errorMessage = '';
+          });
         },
         validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email address.",
       ),
+    );
+  }
+
+  _getErrorMessage() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            margin: EdgeInsets.only(left: 25, right: 30),
+            height: 40,
+            child: Text(
+              errorMessage,
+              style: TextStyle(
+                  color: Color(0xffff0000),
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal),
+              maxLines: 2,
+            ),
+          ),
+          SizedBox(height: 10),
+        ]
     );
   }
 
@@ -112,14 +141,33 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       height: 50,
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
-        onPressed: () {
-          if (EmailValidator.validate(email)) {
-            loginController.loginUserEmail.value = email;
-            loginController.registerByEmail();
+        onPressed: () async {
+          setState(() { errorMessage = ''; });
+          if (!EmailValidator.validate(email)) {
+            setState(() {
+              errorMessage = 'The email address is invalid, please check and try again.';
+            });
+            return;
+          }
+          loginController.loginUserEmail.value = email;
+          String status = await loginController.registerByEmail();
+          if(status == AuthStatus.SIGN_UP_DONE.toShortString()) {
+            Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
+            return;
+          }
+
+          if(status == AuthStatus.USERNAME_EXISTS.toShortString()) {
+            Get.offAndToNamed(
+                Routers.signUpVerify,
+                arguments: { errorMessage: 'The username is not valid or already existing, please try another one.'});
+          } else if(status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
             Get.toNamed(Routers.signUpVerify);
           } else {
-            EasyLoading.showToast('Check your info and try again.');
+            setState(() {
+              errorMessage = 'Failed to send verification code, please try again.';
+            });
           }
+
         },
         child: Text(
           'Sign Up',

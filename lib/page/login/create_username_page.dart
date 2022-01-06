@@ -19,6 +19,7 @@ class CreateUsernamePage extends StatefulWidget {
 }
 
 class _CreateUsernamePageState extends State<CreateUsernamePage> {
+  dynamic argumentData = Get.arguments;
   TextField accountField;
   String account;
   bool buttonEnable = false;
@@ -29,6 +30,9 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
   @override
   void initState() {
     super.initState();
+    if(argumentData != null) {
+      errorMessage = argumentData['errorMessage'];
+    }
   }
 
   @override

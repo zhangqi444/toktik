@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:toktik/common/router_manager.dart';
 import 'dart:async';
 
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/enum/auth_status.dart';
 
 /// 墨水瓶（`InkWell`）可用时使用的字体样式。
 final TextStyle _availableStyle = TextStyle(
@@ -134,7 +136,6 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
         color: Colors.white,
       ),
       child: Container(
-        height: 600,
         margin: EdgeInsets.only(left: 30, right: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,8 +169,16 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
               errorAnimationController: errorController,
               controller: textEditingController,
               keyboardType: TextInputType.number,
-              onCompleted: (v) {
-                loginController.registerVerify(verificationCode);
+              onCompleted: (v) async {
+                String status = await loginController.registerVerify(verificationCode);
+                if(status == AuthStatus.ALIAS_EXISTS.toShortString()) {
+                  Get.offAndToNamed(Routers.login,
+                      arguments: {
+                        "authStatus": status,
+                        "email": loginController.loginUserEmail.value
+                      }
+                  );
+                }
               },
               onChanged: (value) {
                 setState(() {
