@@ -151,6 +151,7 @@ class Api{
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else {
         print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
       }
     }
     return result.length == 0 ? null : RegisterResponse().fromJson(result);
@@ -173,6 +174,9 @@ class Api{
       if(e is NotAuthorizedException) {
         result["isSignUpComplete"] = true;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
+      } else if(e is AliasExistsException) {
+        result["isSignUpComplete"] = false;
+        result["status"] = AuthStatus.ALIAS_EXISTS.toShortString();
       } else {
         print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
       }
@@ -180,9 +184,9 @@ class Api{
     return RegisterResponse().fromJson(result);
   }
 
-  static Future<UserInfoExResponse> createUser(String username) async {
+  static Future<UserInfoExResponse> createUser({String username, String email, String phoneNumber}) async {
     try {
-      User user = User(username: username);
+      User user = User(username: username, email: email, phoneNumber: phoneNumber);
       await Amplify.DataStore.save(user);
       return _parseUsers([user], {username: username});
     } catch (e, stacktrace) {

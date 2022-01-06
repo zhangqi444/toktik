@@ -44,7 +44,11 @@ class SelfController extends GetxController{
       String userId = await userController.loadUserInfoExByUsername(loginUserUsername.value);
       UserInfoExResponse userInfoExResponse = userController.userExMap[userId];
       if(userInfoExResponse == null || userInfoExResponse.user == null) {
-        userId = await userController.createUser(loginUserUsername.value);
+        userId = await userController.createUser(
+          username: loginUserUsername.value,
+          email: loginUserEmail.value,
+          phoneNumber: loginUserPhoneNumber.value
+        );
         userInfoExResponse = userController.userExMap[userId];
       }
 
@@ -60,43 +64,30 @@ class SelfController extends GetxController{
   }
 
   ///注册
-  void registerByEmail() async{
-    // if the username is not provided, email prefix will be used as the default username
-    if(loginUserUsername.value == "") {
-      loginUserUsername.value = loginUserEmail.value.split("@")[0];
-    };
+  Future<String> registerByEmail() async {
     var response = await Api.registerByEmail(
         loginUserEmail.value,
         loginUserUsername.value,
         loginUserPassword.value,
         loginUserPassword.value);
     if(response != null) {
-      isSignUpComplete.value = response.isSignUpComplete;
-      if(isSignUpComplete.value == false) {
-        if(response.status == AuthStatus.USERNAME_EXISTS.toShortString()) {
-          EasyLoading.showToast('The username or email is existing already, please try again.');
-        } else if(response.status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
-          Get.toNamed(Routers.signUpVerify);
-        } else {
-          EasyLoading.showToast('Failed to send verification code, please try again.');
-        }
-      } else {
-        if(response.status == AuthStatus.SIGN_UP_DONE.toShortString()) {
-          await login();
-        }
-      } // reset the tmp password
+      return response.status;
     }
   }
 
-  void registerVerify(String verificationCode) async {
+  Future<String> registerVerify(String verificationCode) async {
     var response = await Api.confirmSignUp(loginUserUsername.value, verificationCode, null);
-    if(response != null && response.isSignUpComplete && response.status == AuthStatus.SIGN_UP_DONE.toShortString())  {
-      await login();
-    } else {
+    if(response == null && response.isSignUpComplete == null) {
       EasyLoading.showToast('Failed to verify the email, please try again.');
+      return null;
     }
-  }
 
+    if(response.isSignUpComplete && response.status == AuthStatus.SIGN_UP_DONE.toShortString())  {
+      await login();
+    }
+    return response.status;
+
+  }
 
   bool isLoginUserById(String id) {
     return loginUserId != null && !isStringNullOrEmpty(loginUserId.value) && loginUserId.value == id;

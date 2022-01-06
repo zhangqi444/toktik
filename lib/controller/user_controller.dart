@@ -23,8 +23,8 @@ class UserController extends GetxController{
   //--------用户作品列表-------------
 
 
-  Future<String> createUser(String username) async {
-    var response = await Api.createUser(username);
+  Future<String> createUser({String username, String email, String phoneNumber}) async {
+    var response = await Api.createUser(username: username, email: email, phoneNumber: phoneNumber);
     if(response != null && response.user != null) {
       userExMap[response.user.id] = response;
       return response.user.id;
