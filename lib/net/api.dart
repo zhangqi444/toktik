@@ -117,6 +117,11 @@ class Api{
         result["status"] = AuthStatus.CONFIRM_SIGN_UP_STEP;
       }
     } on AuthException catch (e, stacktrack) {
+      if(e is UserNotFoundException) {
+        result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
+      } else {
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
+      }
       print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
     }
     return RegisterResponse().fromJson(result);

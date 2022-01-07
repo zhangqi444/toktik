@@ -22,32 +22,24 @@ final TextStyle _unavailableStyle = TextStyle(
 );
 
 class SignUpVerifyPage extends StatefulWidget {
-  SignUpVerifyPage() {
-  }
-  String username;
-
   /// 倒计时的秒数，默认60秒。
   int countdown = 60;
-
-  /// 用户点击时的回调函数。
-  Function onTapCallback;
 
   /// 是否可以获取验证码，默认为`false`。
   bool available = true;
 
+  SignUpVerifyPage();
+
   @override
   _SignUpVerifyPageState createState() {
-    return _SignUpVerifyPageState(this.username);
+    return _SignUpVerifyPageState();
   }
 }
 
 class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
-  _SignUpVerifyPageState(String _Username) {
-    this.username = _Username;
-  }
-  String username;
-  TextField accountField;
+  dynamic argumentData = Get.arguments;
   String verificationCode;
+  String destination = "";
 
   SelfController loginController = Get.put(SelfController());
   TextEditingController textEditingController = TextEditingController();
@@ -96,6 +88,12 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
     super.initState();
     _seconds = widget.countdown;
     errorController = StreamController<ErrorAnimationType>();
+
+    if(argumentData != null) {
+      setState(() {
+        destination = argumentData['destination'];
+      });
+    }
   }
 
   @override
@@ -145,7 +143,7 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
             ),
             _getTitleText(),
             Text(
-              "Your code was sent to $username",
+              "Your code was sent to ${destination}",
               style: TextStyle(color: Color(0xff888888), fontSize: 12),
             ),
             SizedBox(
@@ -202,14 +200,17 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
                       style: inkWellStyle,
                     ),
                     onTap: (_seconds == widget.countdown)
-                        ? () {
+                        ? () async {
                             _startTimer();
                             inkWellStyle = _unavailableStyle;
                             _verifyStr = 'resend code $_seconds' + 's';
                             setState(() {});
-                            widget.onTapCallback();
+                            String status = await loginController.resendSignUpCode();
+                            if(status == null) {
+                              // TODO: add erroe message and reset the timer status
+                            }
                           }
-                        : null,
+                        : () {},
                   )
                 : InkWell(
                     child: Text(

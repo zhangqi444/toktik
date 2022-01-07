@@ -75,6 +75,13 @@ class SelfController extends GetxController{
     }
   }
 
+  Future<String> resendSignUpCode() async {
+    var response = await Api.resendSignUpCode(loginUserEmail.value);
+    if(response != null) {
+      return response.status;
+    }
+  }
+
   Future<String> registerVerify(String verificationCode) async {
     var response = await Api.confirmSignUp(loginUserUsername.value, verificationCode, null);
     if(response == null && response.isSignUpComplete == null) {
