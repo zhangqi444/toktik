@@ -26,13 +26,15 @@ class _LoginTextFieldWidgetState extends State<LoginTextFieldWidget> {
           color: Colors.white,
           border:
           Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: TextField(
+      child: TextFormField(
         cursorColor: ColorRes.color_1,
         cursorWidth: 2,
         obscureText: widget.obscureText,
-        decoration:
-        InputDecoration(border: InputBorder.none, hintText: widget.hintText),
-        onChanged: (text) { widget.onChanged(text); },
+        initialValue: widget.initText,
+        decoration: InputDecoration(border: InputBorder.none, hintText: widget.hintText),
+        onChanged: (text) {
+          widget.onChanged(text);
+        },
       ),
     );
   }
