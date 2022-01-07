@@ -74,7 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 children: [
                                   RawMaterialButton(
                                     onPressed: () {
-                                      Get.toNamed(Routers.signUpEmail);
+                                      Get.toNamed(Routers.createUsername);
                                     },
                                     child: Row(
                                         mainAxisSize: MainAxisSize.min,

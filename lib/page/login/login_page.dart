@@ -211,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
               right: 0,
               child: TextButton(
                 onPressed: () {
-                  Get.toNamed(Routers.createUsername);
+                  Get.toNamed(Routers.signUp);
                 },
                 child: Text(
                   'Sign up',
