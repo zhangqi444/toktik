@@ -4,6 +4,7 @@ import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
+import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
@@ -19,7 +20,7 @@ class CreateUsernamePage extends StatefulWidget {
 
 class _CreateUsernamePageState extends State<CreateUsernamePage> {
   dynamic argumentData = Get.arguments;
-  TextField accountField;
+  String initText;
   String account;
   bool buttonEnable = false;
   String errorMessage = "";
@@ -32,6 +33,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
     if(argumentData != null) {
       setState(() {
         errorMessage = argumentData['errorMessage'];
+        initText = loginController.loginUserUsername.value;
         account = loginController.loginUserUsername.value;
       });
     }
@@ -44,27 +46,6 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
 
   @override
   Widget build(BuildContext context) {
-    accountField = TextField(
-      cursorColor: ColorRes.color_1,
-      cursorWidth: 2,
-      decoration:
-          InputDecoration(border: InputBorder.none, hintText: 'Username'),
-      onChanged: (text) {
-        account = text;
-        if(account != null && account.length >= 8)
-          {
-            setState(() {
-              buttonEnable = true;
-            });
-          }
-        else
-          {
-            setState(() {
-              buttonEnable = false;
-            });
-          }
-      },
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -115,7 +96,12 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             SizedBox(
               height: 38,
             ),
-            _getAccountTextField(),
+            LoginTextFieldWidget(hintText: "Username", initText: initText, onChanged: (text) {
+              account = text;
+              setState(() {
+                buttonEnable = account != null && account.length >= 8;
+              });
+            }),
             !isStringNullOrEmpty(errorMessage)
                 ? LoginErrorMessageWidget(text: errorMessage)
                 : SizedBox(height: 29),
@@ -138,18 +124,6 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             fontWeight: FontWeight.bold),
         maxLines: 2,
       ),
-    );
-  }
-
-  _getAccountTextField() {
-    return Container(
-      height: 50,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: accountField,
     );
   }
 
