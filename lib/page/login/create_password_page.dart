@@ -62,19 +62,17 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
             ),
             LoginTextFieldWidget(hintText: "Password", obscureText: true, onChanged: (text) {
               password = text;
-              if(password != null && password.length >= 8) {
-                setState(() { buttonEnabled = true; });
-              } else {
-                setState(() { buttonEnabled = false; });
-              }
+              setState(() {
+                buttonEnabled = password != null && password.length >= 8;
+              });
             }),
             !isStringNullOrEmpty(errorMessage)
                 ? LoginErrorMessageWidget(text: errorMessage)
                 : SizedBox(height: 29),
             LoginPrimaryButtonWidget(
-                text: "Next",
-                buttonEnabled: buttonEnabled,
-                onPressed: () async {
+              text: "Next",
+              buttonEnabled: buttonEnabled,
+              onPressed: () async {
                 loginController.loginUserPassword.value = password;
                 Get.toNamed(Routers.signUpEmail);
               })

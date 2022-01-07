@@ -30,7 +30,10 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
   void initState() {
     super.initState();
     if(argumentData != null) {
-      errorMessage = argumentData['errorMessage'];
+      setState(() {
+        errorMessage = argumentData['errorMessage'];
+        account = loginController.loginUserUsername.value;
+      });
     }
   }
 
