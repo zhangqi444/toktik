@@ -135,11 +135,11 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
           }
 
           if(status == AuthStatus.USERNAME_EXISTS.toShortString()) {
-            Get.offNamed(Routers.createUsername,
+            Get.until(ModalRoute.withName(Routers.signUp));
+            Get.toNamed(Routers.createUsername,
                 arguments: { "errorMessage": 'The username is not valid or already existing, please try another one.'});
-            Get.until(ModalRoute.withName(Routers.createUsername));
           } else if(status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
-            Get.toNamed(Routers.signUpVerify);
+            Get.toNamed(Routers.signUpVerify, arguments: { "destination": email });
           } else {
             setState(() {
               errorMessage = 'Failed to send verification code, please try again.';
