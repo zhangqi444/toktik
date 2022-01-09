@@ -8,6 +8,7 @@ import 'dart:async';
 
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/enum/auth_status.dart';
+import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 
 /// 墨水瓶（`InkWell`）可用时使用的字体样式。
 final TextStyle _availableStyle = TextStyle(
@@ -21,25 +22,28 @@ final TextStyle _unavailableStyle = TextStyle(
   color: const Color(0xFFB3B3B3),
 );
 
-class SignUpVerifyPage extends StatefulWidget {
+class VerificationCodePage extends StatefulWidget {
   /// 倒计时的秒数，默认60秒。
   int countdown = 60;
 
   /// 是否可以获取验证码，默认为`false`。
   bool available = true;
 
-  SignUpVerifyPage();
+  VerificationCodePage();
 
   @override
-  _SignUpVerifyPageState createState() {
-    return _SignUpVerifyPageState();
+  _VerificationCodePageState createState() {
+    return _VerificationCodePageState();
   }
 }
 
-class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
+class _VerificationCodePageState extends State<VerificationCodePage> {
   dynamic argumentData = Get.arguments;
   String verificationCode;
   String destination = "";
+  String title = "Sign up";
+  String username = "";
+  bool isResetPassword = false;
 
   SelfController loginController = Get.put(SelfController());
   TextEditingController textEditingController = TextEditingController();
@@ -92,6 +96,13 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
     if(argumentData != null) {
       setState(() {
         destination = argumentData['destination'];
+        if(argumentData['isResetPassword']) {
+          title = "Reset";
+          isResetPassword = true;
+        }
+        if(argumentData['username'] != null) {
+          username = argumentData['username'];
+        }
       });
     }
   }
@@ -105,25 +116,7 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        elevation: 0,
-        actions: <Widget>[
-          new IconButton(
-            icon: Image.asset('assets/images/login/question.png',
-                color: Color(0xff888888), width: 22, height: 22),
-            onPressed: () {},
-          )
-        ],
-        leading: TextButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Image.asset('assets/images/login/nav-arrow-left.png',
-              color: Color(0xff2A2A2A), width: 24, height: 24),
-        ),
-      ),
+      appBar: LoginAppBarWidget(title: title),
       body: _layoutSignUp(context),
     );
   }
@@ -143,7 +136,7 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
             ),
             _getTitleText(),
             Text(
-              "Your code was sent to ${destination}",
+              "Your code was sent to ${destination}.",
               style: TextStyle(color: Color(0xff888888), fontSize: 12),
             ),
             SizedBox(
@@ -168,7 +161,12 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
               controller: textEditingController,
               keyboardType: TextInputType.number,
               onCompleted: (v) async {
-                String status = await loginController.registerVerify(verificationCode);
+                String status;
+                if(!isResetPassword) {
+                  status = await loginController.registerVerify(verificationCode);
+                } else {
+                  status = await loginController.confirmResetPassword(verificationCode);
+                }
                 if(status == AuthStatus.ALIAS_EXISTS.toShortString()) {
                   Get.offAndToNamed(Routers.login,
                       arguments: {
@@ -205,7 +203,12 @@ class _SignUpVerifyPageState extends State<SignUpVerifyPage> {
                             inkWellStyle = _unavailableStyle;
                             _verifyStr = 'resend code $_seconds' + 's';
                             setState(() {});
-                            String status = await loginController.resendSignUpCode();
+                            String status;
+                            if(!isResetPassword) {
+                              status = await loginController.resendSignUpCode();
+                            } else {
+                              status = await loginController.resetPassword(username);
+                            }
                             if(status == null) {
                               // TODO: add erroe message and reset the timer status
                             }

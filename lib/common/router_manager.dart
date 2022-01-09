@@ -3,7 +3,9 @@ import 'package:toktik/page/feed_publish_page.dart';
 import 'package:toktik/page/home_page.dart';
 import 'package:toktik/page/login/create_password_page.dart';
 import 'package:toktik/page/login/create_username_page.dart';
+import 'package:toktik/page/login/reset_password_page.dart';
 import 'package:toktik/page/login/sign_up_email_page.dart';
+import 'package:toktik/page/login/verification_code_page.dart';
 import 'package:toktik/page/splash_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
 // import 'package:toktik/page/home_tab_focus_page.dart';
@@ -14,7 +16,6 @@ import 'package:toktik/page/main_page.dart';
 import 'package:toktik/page/message_page.dart';
 // import 'package:toktik/page/modify_info_page.dart';
 import 'package:toktik/page/login/sign_up_page.dart';
-import 'package:toktik/page/login/sign_up_verify_page.dart';
 // import 'package:toktik/page/scan_page.dart';
 import 'package:toktik/page/scroll_page.dart';
 import 'package:toktik/page/search_page.dart';
@@ -49,9 +50,10 @@ class RouterManager{
     GetPage(name: Routers.login, page: () => LoginPage(),transition: Transition.downToUp,),
     GetPage(name: Routers.createUsername, page: () => CreateUsernamePage()),
     GetPage(name: Routers.createPassword, page: () => CreatePasswordPage()),
+    GetPage(name: Routers.resetPassword, page: () => ResetPasswordPage()),
     GetPage(name: Routers.signUp, page: () => SignUpPage()),
     GetPage(name: Routers.signUpEmail, page: () => SignUpEmailPage()),
-    GetPage(name: Routers.signUpVerify, page: () => SignUpVerifyPage()),
+    GetPage(name: Routers.verificationCode, page: () => VerificationCodePage()),
     // GetPage(name: Routers.setting, page: () => SettingPage()),
     // GetPage(name: Routers.editUserInfo, page: () => UserInfoEditPage()),
     // GetPage(name: Routers.modifyUserInfo, page: () => ModifyInfoPage()),
@@ -82,9 +84,10 @@ class Routers{
   static final String login = '/login';
   static final String createUsername = '/createUsername';
   static final String createPassword = '/createPassword';
+  static final String resetPassword = '/resetPassword';
   static final String signUp = '/signUp';
   static final String signUpEmail = '/signUpEmail';
-  static final String signUpVerify = '/signUpVerify';
+  static final String verificationCode = '/verificationCode';
   static final String setting = '/setting';
   static final String editUserInfo = '/editUserInfo';
   static final String modifyUserInfo = '/modifyUserInfo';
