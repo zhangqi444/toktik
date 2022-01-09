@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
               left: 0,
               child: TextButton(
                 onPressed: () {
-                  EasyLoading.showToast('The feature is coming soone.');
+                  Get.toNamed(Routers.resetPassword);
                 },
                 child: Text(
                   'Forgot password?',

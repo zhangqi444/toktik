@@ -21,6 +21,9 @@ class CreateUsernamePage extends StatefulWidget {
 class _CreateUsernamePageState extends State<CreateUsernamePage> {
   dynamic argumentData = Get.arguments;
   String initText;
+  String appBarTitle = "Sign up";
+  String title = "Create username";
+  String subTitle = "Please notice, you can not change this later.";
   String account;
   bool buttonEnable = false;
   String errorMessage = "";
@@ -51,7 +54,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         brightness: Brightness.light,
-        title: Text("Sign up",
+        title: Text(appBarTitle,
             style: TextStyle(color: Colors.black, fontSize: 16)),
         elevation: 0,
         centerTitle: true,
@@ -90,7 +93,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             ),
             _getTitleText(),
             Text(
-              "You can always change this later",
+              subTitle,
               style: TextStyle(color: Color(0xff888888), fontSize: 14),
             ),
             SizedBox(
@@ -117,7 +120,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
       width: MediaQuery.of(context).size.width,
       height: 40,
       child: Text(
-        "Create username",
+        title,
         style: TextStyle(
             color: Color(0xff2A2A2A),
             fontSize: 20,

@@ -20,13 +20,24 @@ class CreatePasswordPage extends StatefulWidget {
 
 class _CreatePasswordPageState extends State<CreatePasswordPage> {
   String password;
+  bool isResetPassword = false;
   bool buttonEnabled = false;
   String errorMessage = "";
+  String title = "Create password";
+  String appBarTitle = "Sign up";
   SelfController loginController = Get.put(SelfController());
+  dynamic argumentData = Get.arguments;
 
   @override
   void initState() {
     super.initState();
+    if(argumentData != null) {
+      if(argumentData['isResetPassword']) {
+        isResetPassword = true;
+        title = "Reset password";
+        appBarTitle = "Reset";
+      }
+    }
   }
 
   @override
@@ -37,7 +48,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LoginAppBarWidget(title: "Sign up"),
+      appBar: LoginAppBarWidget(title: appBarTitle),
       body: _layoutSignUp(context),
     );
   }
@@ -56,7 +67,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
             SizedBox(
               height: 20,
             ),
-            LoginTitleTextWidget(text: "Create password"),
+            LoginTitleTextWidget(text: title),
             SizedBox(
               height: 38,
             ),
@@ -74,7 +85,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
               buttonEnabled: buttonEnabled,
               onPressed: () async {
                 loginController.loginUserPassword.value = password;
-                Get.toNamed(Routers.signUpEmail);
+                Get.toNamed(Routers.createUsername, arguments: { "isResetPassword": isResetPassword });
               })
           ],
         ),

@@ -20,6 +20,7 @@ class SignUpEmailPage extends StatefulWidget {
 
 class _SignUpEmailPageState extends State<SignUpEmailPage> {
   TextField accountField;
+  String appBarTitle = "Sign up";
   String email;
   String errorMessage;
   SelfController loginController = Get.put(SelfController());
@@ -40,7 +41,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         brightness: Brightness.light,
-        title: Text("Sign up",
+        title: Text(appBarTitle,
             style: TextStyle(color: Colors.black, fontSize: 16)),
         elevation: 0,
         centerTitle: true,
@@ -139,7 +140,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
             Get.toNamed(Routers.createUsername,
                 arguments: { "errorMessage": 'The username is not valid or already existing, please try another one.'});
           } else if(status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
-            Get.toNamed(Routers.signUpVerify, arguments: { "destination": email });
+            Get.toNamed(Routers.verificationCode, arguments: { "destination": email });
           } else {
             setState(() {
               errorMessage = 'Failed to send verification code, please try again.';
