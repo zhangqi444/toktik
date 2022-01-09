@@ -23,8 +23,9 @@ class SelfController extends GetxController{
   var loginUserUsername = "".obs;//登录用户的username
   var loginUserEmail = "".obs;//登录用户的username
   var loginUserPhoneNumber = "".obs;//登录用户的username
+  var loginUserConfirmationCode = "".obs;
   var isSignUpComplete = true.obs;
-  var loginUserPassword = "111111zq".obs;
+  var loginUserPassword = "".obs;
 
   ///登录
   void login() async {
@@ -77,6 +78,22 @@ class SelfController extends GetxController{
 
   Future<String> resendSignUpCode() async {
     var response = await Api.resendSignUpCode(loginUserEmail.value);
+    if(response != null) {
+      return response.status;
+    }
+  }
+
+  Future<String> resetPassword(String username) async {
+    var response = await Api.resetPassword(username);
+    if(response != null) {
+      return response.status;
+    }
+  }
+
+  Future<String> confirmResetPassword(verificationCode) async {
+    var response = await Api.confirmResetPassword(
+        loginUserEmail.value, loginUserPassword.value, verificationCode
+    );
     if(response != null) {
       return response.status;
     }

@@ -189,6 +189,60 @@ class Api{
     return RegisterResponse().fromJson(result);
   }
 
+  static Future<RegisterResponse> resetPassword(
+      String username, {ResetPasswordOptions options}) async {
+    Map<String, dynamic> result = HashMap();
+    result['username'] = username;
+    try {
+      ResetPasswordResult res = await Amplify.Auth.resetPassword(
+          username: username,
+          options: options
+      );
+      if(res != null) {
+        result["isPasswordReset"] = res.isPasswordReset;
+        result["status"] = res.nextStep.updateStep;
+      }
+    } on AuthException catch (e, stacktrack) {
+      result["isPasswordReset"] = false;
+      if(e is UserNotFoundException) {
+        result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
+      } else if(e is InvalidParameterException) {
+        result["status"] = AuthStatus.INVALID_PASSWORD.toShortString();
+      } else {
+        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
+      }
+    }
+    return result.length == 0 ? null : RegisterResponse().fromJson(result);
+  }
+
+  static Future<RegisterResponse> confirmResetPassword(
+      String username, String newPassword, String confirmationCode,
+      {ConfirmResetPasswordOptions options}) async {
+    Map<String, dynamic> result = HashMap();
+    try {
+      UpdatePasswordResult res = await Amplify.Auth.confirmResetPassword(
+          username: username, newPassword: newPassword, confirmationCode: confirmationCode, options: options);
+      if(res != null) {
+        result["isPasswordReset"] = true;
+        result["status"] = AuthStatus.RESET_PASSWORD_DONE.toShortString();
+      } else {
+        result = null;
+      }
+    } on AuthException catch (e, stacktrack) {
+      if(e is NotAuthorizedException) {
+        result["isPasswordReset"] = true;
+        result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
+      } else if(e is AliasExistsException) {
+        result["isPasswordReset"] = false;
+        result["status"] = AuthStatus.ALIAS_EXISTS.toShortString();
+      } else {
+        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+      }
+    }
+    return RegisterResponse().fromJson(result);
+  }
+
   static Future<UserInfoExResponse> createUser({String username, String email, String phoneNumber}) async {
     try {
       User user = User(username: username, email: email, phoneNumber: phoneNumber);
