@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/enum/auth_status.dart';
@@ -100,7 +101,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     "account": account
                   });
                 } else {
-                  setState(() { errorMessage = "Sorry, we have faced unknown error. Please try again."; });
+                  setState(() { errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE; });
                 }
               }
             )
