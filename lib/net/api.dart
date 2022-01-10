@@ -74,7 +74,10 @@ class Api{
         result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
       } else if(e is NotAuthorizedException) {
         result["status"] = AuthStatus.NOT_AUTHORIZED.toShortString();
+      } else if(e is InvalidStateException) {
+        result["status"] = AuthStatus.INVALID_STATE.toShortString();
       } else {
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
         print("Fail to sign in: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
@@ -294,6 +297,12 @@ class Api{
       result['user'] = userJson;
       if(result['user']['username'] == null) {
         result['user']['username'] = params['username'];
+      }
+      if(result['user']['email'] == null) {
+        result['user']['email'] = params['email'];
+      }
+      if(result['user']['phoneNumber'] == null) {
+        result['user']['phoneNumber'] = params['phoneNumber'];
       }
       if(result['user']['id'] == null) {
         result['user']['id'] = params['id'];
