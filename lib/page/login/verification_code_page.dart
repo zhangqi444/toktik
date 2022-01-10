@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
+import 'package:toktik/util/string_util.dart';
 
 /// 墨水瓶（`InkWell`）可用时使用的字体样式。
 final TextStyle _availableStyle = TextStyle(
@@ -42,8 +43,10 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
   String verificationCode;
   String destination = "";
   String title = "Sign up";
-  String username = "";
+  String account = "";
+  String password = "";
   bool isResetPassword = false;
+  String errorMessage = "";
 
   SelfController loginController = Get.put(SelfController());
   TextEditingController textEditingController = TextEditingController();
@@ -100,9 +103,8 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
           title = "Reset";
           isResetPassword = true;
         }
-        if(argumentData['username'] != null) {
-          username = argumentData['username'];
-        }
+        account = argumentData['account'];
+        password = argumentData['password'];
       });
     }
   }
@@ -164,16 +166,31 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                 String status;
                 if(!isResetPassword) {
                   status = await loginController.registerVerify(verificationCode);
+                  if(status == AuthStatus.ALIAS_EXISTS.toShortString()) {
+                    Get.offAndToNamed(Routers.login,
+                        arguments: {
+                          "authStatus": status,
+                          "email": loginController.loginUserEmail.value
+                        }
+                    );
+                  }
                 } else {
-                  status = await loginController.confirmResetPassword(verificationCode);
-                }
-                if(status == AuthStatus.ALIAS_EXISTS.toShortString()) {
-                  Get.offAndToNamed(Routers.login,
-                      arguments: {
-                        "authStatus": status,
-                        "email": loginController.loginUserEmail.value
-                      }
-                  );
+                  if(isStringNullOrEmpty(account) || isStringNullOrEmpty(password)) {
+                    return;
+                  }
+                  status = await loginController.confirmResetPassword(account, password, verificationCode);
+                  if(status == AuthStatus.RESET_PASSWORD_DONE.toShortString()) {
+                    Get.offAndToNamed(Routers.login,
+                        arguments: {
+                          "authStatus": status,
+                          "email": loginController.loginUserEmail.value
+                        }
+                    );
+                  } else if(status == AuthStatus.CODE_MISMATCH.toShortString()) {
+                    // TODO: add error message
+                  } else {
+                    // TODO: add error message
+                  }
                 }
               },
               onChanged: (value) {
@@ -207,7 +224,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                             if(!isResetPassword) {
                               status = await loginController.resendSignUpCode();
                             } else {
-                              status = await loginController.resetPassword(username);
+                              status = await loginController.resetPassword(account);
                             }
                             if(status == null) {
                               // TODO: add erroe message and reset the timer status

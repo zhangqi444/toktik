@@ -20,6 +20,7 @@ class CreatePasswordPage extends StatefulWidget {
 
 class _CreatePasswordPageState extends State<CreatePasswordPage> {
   String password;
+  String username;
   bool isResetPassword = false;
   bool buttonEnabled = false;
   String errorMessage = "";
@@ -34,6 +35,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
     if(argumentData != null) {
       if(argumentData['isResetPassword']) {
         isResetPassword = true;
+        username = argumentData['username'];
         title = "Reset password";
         appBarTitle = "Reset";
       }
@@ -85,7 +87,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
               buttonEnabled: buttonEnabled,
               onPressed: () async {
                 loginController.loginUserPassword.value = password;
-                Get.toNamed(Routers.createUsername, arguments: { "isResetPassword": isResetPassword });
+                Get.toNamed(Routers.resetPassword, arguments: { "isResetPassword": isResetPassword });
               })
           ],
         ),

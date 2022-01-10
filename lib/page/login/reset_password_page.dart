@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
@@ -89,13 +90,18 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             LoginPrimaryButtonWidget(
               text: "Next",
               buttonEnabled: buttonEnabled,
-              onPressed: !buttonEnabled ? () {} : () {
-                loginController.resetPassword(account);
-                Get.toNamed(Routers.verificationCode, arguments: {
-                  "isResetPassword": true,
-                  "destination": "your email or phone",
-                  "username": account
-                });
+              onPressed: !buttonEnabled ? () {} : () async {
+                String status = await loginController.resetPassword(account);
+
+                if(status == AuthStatus.USER_NOT_FOUND.toShortString()) {
+                  setState(() { errorMessage = "The user isn't registered yet."; });
+                } else if(status == AuthStatus.CONFIRM_RESET_PASSWORD_WITH_CODE.toShortString()) {
+                  Get.toNamed(Routers.resetPasswordPassword, arguments: {
+                    "account": account
+                  });
+                } else {
+                  setState(() { errorMessage = "Sorry, we have faced unknown error. Please try again."; });
+                }
               }
             )
           ],

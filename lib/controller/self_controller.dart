@@ -90,10 +90,8 @@ class SelfController extends GetxController{
     }
   }
 
-  Future<String> confirmResetPassword(verificationCode) async {
-    var response = await Api.confirmResetPassword(
-        loginUserEmail.value, loginUserPassword.value, verificationCode
-    );
+  Future<String> confirmResetPassword(account, password, verificationCode) async {
+    var response = await Api.confirmResetPassword(account, password, verificationCode);
     if(response != null) {
       return response.status;
     }
