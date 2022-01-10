@@ -269,6 +269,15 @@ class Api{
     }
   }
 
+  static Future<UserInfoExResponse> getUserInfoExByEmail(String email) async {
+    try {
+      List<User> users = await Amplify.DataStore.query(User.classType, where: User.EMAIL.eq(email));
+      return _parseUsers(users, {email: email});
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
+
   static Future<UserInfoExResponse> getUserInfoEx(String id) async{
     try {
       List<User> users = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
