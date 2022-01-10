@@ -128,8 +128,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
             });
             return;
           }
-          loginController.loginUserEmail.value = email;
-          String status = await loginController.registerByEmail();
+          String status = await loginController.registerByEmail(email, email, email, email);
           if(status == AuthStatus.SIGN_UP_DONE.toShortString()) {
             Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
             return;
