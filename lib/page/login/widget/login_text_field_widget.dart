@@ -7,7 +7,8 @@ class LoginTextFieldWidget extends StatefulWidget {
   Function onChanged;
   String hintText;
   bool obscureText;
-  LoginTextFieldWidget({this.text, this.initText, this.onChanged, this.hintText, this.obscureText = false});
+  bool readOnly;
+  LoginTextFieldWidget({this.text, this.initText, this.onChanged, this.hintText, this.obscureText = false, this.readOnly = false});
 
   @override
   _LoginTextFieldWidgetState createState() {
@@ -31,6 +32,7 @@ class _LoginTextFieldWidgetState extends State<LoginTextFieldWidget> {
         cursorWidth: 2,
         obscureText: widget.obscureText,
         initialValue: widget.initText,
+        readOnly: widget.readOnly,
         decoration: InputDecoration(border: InputBorder.none, hintText: widget.hintText),
         onChanged: (text) {
           widget.onChanged(text);
