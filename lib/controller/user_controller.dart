@@ -66,6 +66,14 @@ class UserController extends GetxController{
     }
   }
 
+  Future<String> loadUserInfoExByEmail(String email) async{
+    var response = await Api.getUserInfoExByEmail(email);
+    if(response != null) {
+      userExMap[response.user.id] = response;
+      return response.user.id;
+    }
+  }
+
   ///获取用户作品列表
   void getUserWorkList(String id)async{
     var result = await Api.getUserFeedList(id, cursor, count);
