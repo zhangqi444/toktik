@@ -28,56 +28,53 @@ class SelfController extends GetxController{
   var loginUserPassword = "".obs;
 
   ///登录
-  void login() async {
-    var response = await Api.login(
-        isStringNullOrEmpty(loginUserUsername.value)
-            ? loginUserEmail.value
-            : loginUserUsername.value,
-        loginUserPassword.value
-    );
+  Future<String> login(account, password, isAccountEmail) async {
+    var response = await Api.login(account, password);
 
-    if(response != null && response.status == AuthStatus.USER_NOT_FOUND.toShortString()) {
-      EasyLoading.showToast('Sorry, we cannot find the user. Please Check your information and try again.');
-      return;
-    }
+    if(response == null) return AuthStatus.UNKNOWN.toShortString();
 
-    if(response != null && response.isSignedIn) {
-      String userId = await userController.loadUserInfoExByUsername(loginUserUsername.value);
+    String status = response.status;
+
+    if(response.isSignedIn) {
+      String userId;
+      if(isAccountEmail) {
+        userId = await userController.loadUserInfoExByEmail(account);
+      } else {
+        userId = await userController.loadUserInfoExByUsername(account);
+      }
+
       UserInfoExResponse userInfoExResponse = userController.userExMap[userId];
       if(userInfoExResponse == null || userInfoExResponse.user == null) {
         userId = await userController.createUser(
-          username: loginUserUsername.value,
-          email: loginUserEmail.value,
+          username: !isAccountEmail ? account : "",
+          email: isAccountEmail ? account : "",
           phoneNumber: loginUserPhoneNumber.value
         );
         userInfoExResponse = userController.userExMap[userId];
       }
 
       await setLoginUserAuthInfo(
-        email: loginUserEmail.value,
-        username: loginUserUsername.value,
+        email: userInfoExResponse.user.email,
+        username: userInfoExResponse.user.username,
         userId: userInfoExResponse.user.id,
         token: response.token,
         persistent: true
       );
-      return;
     }
+
+    return status;
   }
 
   ///注册
-  Future<String> registerByEmail() async {
-    var response = await Api.registerByEmail(
-        loginUserEmail.value,
-        loginUserUsername.value,
-        loginUserPassword.value,
-        loginUserPassword.value);
+  Future<String> registerByEmail(email, username, password, confirmPassword) async {
+    var response = await Api.registerByEmail(email, username, password, confirmPassword);
     if(response != null) {
       return response.status;
     }
   }
 
-  Future<String> resendSignUpCode() async {
-    var response = await Api.resendSignUpCode(loginUserEmail.value);
+  Future<String> resendSignUpCode(email) async {
+    var response = await Api.resendSignUpCode(email);
     if(response != null) {
       return response.status;
     }
@@ -97,18 +94,12 @@ class SelfController extends GetxController{
     }
   }
 
-  Future<String> registerVerify(String verificationCode) async {
-    var response = await Api.confirmSignUp(loginUserUsername.value, verificationCode, null);
+  Future<String> registerVerify(String username, String verificationCode) async {
+    var response = await Api.confirmSignUp(username, verificationCode, null);
     if(response == null && response.isSignUpComplete == null) {
-      EasyLoading.showToast('Failed to verify the email, please try again.');
-      return null;
-    }
-
-    if(response.isSignUpComplete && response.status == AuthStatus.SIGN_UP_DONE.toShortString())  {
-      await login();
+      return AuthStatus.UNKNOWN.toShortString();
     }
     return response.status;
-
   }
 
   bool isLoginUserById(String id) {

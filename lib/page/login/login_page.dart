@@ -2,11 +2,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/page/login/widget/login_subtitle_text_widget.dart';
+import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
@@ -24,8 +26,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String title, subtitle;
   bool isForSignedUpAccount = false;
-  TextField accountField, pwdField;
+  TextField pwdField;
   String account, pwd;
+  String errorMessage = "";
   SelfController loginController = Get.put(SelfController());
   final MainPageScrollController mainPageController = Get.find();
   dynamic argumentData = Get.arguments;
@@ -42,8 +45,8 @@ class _LoginPageState extends State<LoginPage> {
         isForSignedUpAccount = true;
       }
 
-      if(!isStringNullOrEmpty(argumentData['email'])) {
-        account = argumentData['email'];
+      if(!isStringNullOrEmpty(argumentData['account'])) {
+        account = argumentData['account'];
       }
     }
   }
@@ -55,16 +58,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    accountField = TextField(
-      cursorColor: ColorRes.color_1,
-      cursorWidth: 2,
-      readOnly: isForSignedUpAccount,
-      controller: TextEditingController()..text = isForSignedUpAccount ? loginController.loginUserEmail.value : null,
-      decoration: InputDecoration(border: InputBorder.none, hintText: 'Email, phone or user name'),
-      onChanged: (text) {
-        account = text;
-      },
-    );
 
     pwdField = TextField(
       cursorColor: ColorRes.color_1,
@@ -93,7 +86,11 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           children: [
             isForSignedUpAccount ? _getTitle() : Container(),
-            _getAccountTextField(),
+            LoginTextFieldWidget(
+                readOnly: isForSignedUpAccount, initText: account,
+                hintText: 'Email, phone or user name',
+                onChanged: (text) { account = text; }
+            ),
             SizedBox(
               height: 10,
             ),
@@ -126,19 +123,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _getAccountTextField() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.only(left: 30, right: 30),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: accountField,
-    );
-  }
-
   _getPwdTextField() {
     return Container(
       height: 50,
@@ -159,24 +143,19 @@ class _LoginPageState extends State<LoginPage> {
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: () async {
-          if (null != account &&
-              account.length > 0 &&
-              null != pwd &&
-              pwd.length > 0) {
+          if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
+            String status = await loginController.login(account, pwd, EmailValidator.validate(account));
 
-            if(EmailValidator.validate(account)) {
-              loginController.loginUserEmail.value = account;
+            if(status == AuthStatus.USER_NOT_FOUND.toShortString()) {
+              setState(() { errorMessage = 'Sorry, we cannot find the user. Please Check your information and try again.'; });
+            } else if(status == AuthStatus.SIGN_IN_DONE.toShortString()) {
+              Get.offAllNamed(Routers.scroll);
+              mainPageController.selectIndexBottomBarMainPage(0);
             } else {
-              loginController.loginUserUsername.value = account;
+              setState(() { errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE; });
             }
-            loginController.loginUserPassword.value = pwd;
-
-            await loginController.login();
-
-            Get.offAllNamed(Routers.scroll);
-            mainPageController.selectIndexBottomBarMainPage(0);
           } else {
-            EasyLoading.showToast('Check your info and try again.');
+            setState(() { errorMessage = 'Check your info and try again.'; });
           }
         },
         child: Text(

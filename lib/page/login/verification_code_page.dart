@@ -165,14 +165,17 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
               onCompleted: (v) async {
                 String status;
                 if(!isResetPassword) {
-                  status = await loginController.registerVerify(verificationCode);
-                  if(status == AuthStatus.ALIAS_EXISTS.toShortString()) {
+                  status = await loginController.registerVerify(account, verificationCode);
+                  if(status == AuthStatus.ALIAS_EXISTS.toShortString()
+                    || status == AuthStatus.SIGN_UP_DONE.toShortString()) {
                     Get.offAndToNamed(Routers.login,
                         arguments: {
                           "authStatus": status,
-                          "email": loginController.loginUserEmail.value
+                          "account": account
                         }
                     );
+                  }  else {
+                    // TODO: add error message
                   }
                 } else {
                   if(isStringNullOrEmpty(account) || isStringNullOrEmpty(password)) {
@@ -183,7 +186,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                     Get.offAndToNamed(Routers.login,
                         arguments: {
                           "authStatus": status,
-                          "email": loginController.loginUserEmail.value
+                          "account": account
                         }
                     );
                   } else if(status == AuthStatus.CODE_MISMATCH.toShortString()) {
@@ -222,7 +225,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                             setState(() {});
                             String status;
                             if(!isResetPassword) {
-                              status = await loginController.resendSignUpCode();
+                              status = await loginController.resendSignUpCode(account);
                             } else {
                               status = await loginController.resetPassword(account);
                             }
