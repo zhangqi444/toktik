@@ -18,6 +18,8 @@ class UserInfoExUser with JsonConvert<UserInfoExUser> {
 	int gender = 2;
 	String city = "";
 	String profession = "";
+	String email = "";
+	String phoneNumber = "";
 	@JSONField(name: "create_time")
 	int createTime;
 }

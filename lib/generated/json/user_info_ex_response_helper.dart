@@ -51,6 +51,12 @@ userInfoExUserFromJson(UserInfoExUser data, Map<String, dynamic> json) {
 	if (json['birth'] != null) {
 		data.birth = json['birth'].toString();
 	}
+	if (json['email'] != null) {
+		data.birth = json['email'].toString();
+	}
+	if (json['phoneNumber'] != null) {
+		data.birth = json['phoneNumber'].toString();
+	}
 	if (json['gender'] != null) {
 		data.gender = json['gender'] is String
 				? int.tryParse(json['gender'])
@@ -79,6 +85,8 @@ Map<String, dynamic> userInfoExUserToJson(UserInfoExUser entity) {
 	data['birth'] = entity.birth;
 	data['gender'] = entity.gender;
 	data['city'] = entity.city;
+	data['email'] = entity.email;
+	data['phoneNumber'] = entity.phoneNumber;
 	data['profession'] = entity.profession;
 	data['create_time'] = entity.createTime;
 	return data;
