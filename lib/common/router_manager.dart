@@ -4,6 +4,7 @@ import 'package:toktik/page/home_page.dart';
 import 'package:toktik/page/login/create_password_page.dart';
 import 'package:toktik/page/login/create_username_page.dart';
 import 'package:toktik/page/login/reset_password_page.dart';
+import 'package:toktik/page/login/reset_password_password_page.dart';
 import 'package:toktik/page/login/sign_up_email_page.dart';
 import 'package:toktik/page/login/verification_code_page.dart';
 import 'package:toktik/page/splash_page.dart';
@@ -51,6 +52,7 @@ class RouterManager{
     GetPage(name: Routers.createUsername, page: () => CreateUsernamePage()),
     GetPage(name: Routers.createPassword, page: () => CreatePasswordPage()),
     GetPage(name: Routers.resetPassword, page: () => ResetPasswordPage()),
+    GetPage(name: Routers.resetPasswordPassword, page: () => ResetPasswordPasswordPage()),
     GetPage(name: Routers.signUp, page: () => SignUpPage()),
     GetPage(name: Routers.signUpEmail, page: () => SignUpEmailPage()),
     GetPage(name: Routers.verificationCode, page: () => VerificationCodePage()),
@@ -85,6 +87,7 @@ class Routers{
   static final String createUsername = '/createUsername';
   static final String createPassword = '/createPassword';
   static final String resetPassword = '/resetPassword';
+  static final String resetPasswordPassword = '/resetPasswordPassword';
   static final String signUp = '/signUp';
   static final String signUpEmail = '/signUpEmail';
   static final String verificationCode = '/verificationCode';
