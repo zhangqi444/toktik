@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
@@ -45,12 +43,7 @@ class SelfController extends GetxController{
 
       UserInfoExResponse userInfoExResponse = userController.userExMap[userId];
       if(userInfoExResponse == null || userInfoExResponse.user == null) {
-        userId = await userController.createUser(
-          username: !isAccountEmail ? account : "",
-          email: isAccountEmail ? account : "",
-          phoneNumber: loginUserPhoneNumber.value
-        );
-        userInfoExResponse = userController.userExMap[userId];
+        return AuthStatus.USER_PROFILE_NOT_FOUND.toString();
       }
 
       await setLoginUserAuthInfo(
@@ -94,10 +87,21 @@ class SelfController extends GetxController{
     }
   }
 
-  Future<String> registerVerify(String username, String verificationCode) async {
+  Future<String> registerVerify(String username, String email, String verificationCode) async {
     var response = await Api.confirmSignUp(username, verificationCode, null);
     if(response == null && response.isSignUpComplete == null) {
       return AuthStatus.UNKNOWN.toShortString();
+    }
+
+    if(response.isSignUpComplete && response.status == AuthStatus.SIGN_UP_DONE.toShortString()) {
+      String userId = await userController.createUser(
+        username: username,
+        email: email,
+        phoneNumber: loginUserPhoneNumber.value
+      );
+      if(userId == null) {
+        return AuthStatus.CREATE_USER_PROFILE_FAILED.toShortString();
+      }
     }
     return response.status;
   }

@@ -45,6 +45,8 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
   String title = "Sign up";
   String account = "";
   String password = "";
+  String username = "";
+  String email = "";
   bool isResetPassword = false;
   String errorMessage = "";
 
@@ -99,12 +101,14 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
     if(argumentData != null) {
       setState(() {
         destination = argumentData['destination'];
-        if(argumentData['isResetPassword']) {
+        if(argumentData['isResetPassword'] != null) {
           title = "Reset";
           isResetPassword = true;
         }
         account = argumentData['account'];
+        username = argumentData['username'];
         password = argumentData['password'];
+        email = argumentData['email'];
       });
     }
   }
@@ -164,20 +168,15 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
               keyboardType: TextInputType.number,
               onCompleted: (v) async {
                 String status;
-                if(!isResetPassword) {
-                  status = await loginController.registerVerify(account, verificationCode);
+                if(!isResetPassword) { // handle register
+                  status = await loginController.registerVerify(username, email, verificationCode);
                   if(status == AuthStatus.ALIAS_EXISTS.toShortString()
                     || status == AuthStatus.SIGN_UP_DONE.toShortString()) {
-                    Get.offAndToNamed(Routers.login,
-                        arguments: {
-                          "authStatus": status,
-                          "account": account
-                        }
-                    );
+                    Get.offAndToNamed(Routers.login, arguments: { "account": username });
                   }  else {
                     // TODO: add error message
                   }
-                } else {
+                } else { // handle password reset
                   if(isStringNullOrEmpty(account) || isStringNullOrEmpty(password)) {
                     return;
                   }

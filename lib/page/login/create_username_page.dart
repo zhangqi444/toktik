@@ -24,7 +24,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
   String appBarTitle = "Sign up";
   String title = "Create username";
   String subTitle = "Please notice, you can not change this later.";
-  String account;
+  String username;
   bool buttonEnable = false;
   String errorMessage = "";
   UserController userController = Get.put(UserController());
@@ -36,8 +36,8 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
     if(argumentData != null) {
       setState(() {
         errorMessage = argumentData['errorMessage'];
-        initText = loginController.loginUserUsername.value;
-        account = loginController.loginUserUsername.value;
+        initText = argumentData['username'];
+        username = argumentData['username'];
       });
     }
   }
@@ -100,9 +100,9 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
               height: 38,
             ),
             LoginTextFieldWidget(hintText: "Username", initText: initText, onChanged: (text) {
-              account = text;
+              username = text;
               setState(() {
-                buttonEnable = account != null && account.length >= 8;
+                buttonEnable = username != null && username.length >= 8;
               });
             }),
             !isStringNullOrEmpty(errorMessage)
@@ -136,7 +136,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: !buttonEnable ? () {} : () async {
-          String userId = await userController.loadUserInfoExByUsername(account);
+          String userId = await userController.loadUserInfoExByUsername(username);
           if(!isStringNullOrEmpty(userId)) {
             setState(() {
               errorMessage = "The username is not valid or already existing, please try another one.";
@@ -145,8 +145,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             setState(() {
               errorMessage = "";
             });
-            loginController.loginUserUsername.value = account;
-            Get.toNamed(Routers.createPassword);
+            Get.toNamed(Routers.createPassword, arguments: { "username": username });
           }
         },
         child: Text(

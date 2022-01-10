@@ -22,12 +22,19 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
   TextField accountField;
   String appBarTitle = "Sign up";
   String email;
+  String username;
+  String password;
   String errorMessage;
   SelfController loginController = Get.put(SelfController());
+  dynamic argumentData = Get.arguments;
 
   @override
   void initState() {
     super.initState();
+    if(argumentData != null) {
+      username = argumentData['username'];
+      password = argumentData['password'];
+    }
   }
 
   @override
@@ -128,18 +135,20 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
             });
             return;
           }
-          String status = await loginController.registerByEmail(email, email, email, email);
+
+          String status = await loginController.registerByEmail(email, username, password, password);
           if(status == AuthStatus.SIGN_UP_DONE.toShortString()) {
             Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
-            return;
-          }
-
-          if(status == AuthStatus.USERNAME_EXISTS.toShortString()) {
+          } else if(status == AuthStatus.USERNAME_EXISTS.toShortString()) {
             Get.until(ModalRoute.withName(Routers.signUp));
-            Get.toNamed(Routers.createUsername,
-                arguments: { "errorMessage": 'The username is not valid or already existing, please try another one.'});
+            Get.toNamed(Routers.createUsername, arguments: {
+              "errorMessage": 'The username is not valid or already existing, please try another one.',
+              "username": username
+            });
           } else if(status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
-            Get.toNamed(Routers.verificationCode, arguments: { "destination": email });
+            Get.toNamed(Routers.verificationCode, arguments: {
+              "destination": email, "username": username, "password": password, "email": email,
+            });
           } else {
             setState(() {
               errorMessage = 'Failed to send verification code, please try again.';
