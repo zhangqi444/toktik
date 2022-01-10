@@ -182,7 +182,11 @@ class Api{
       } else if(e is AliasExistsException) {
         result["isSignUpComplete"] = false;
         result["status"] = AuthStatus.ALIAS_EXISTS.toShortString();
-      } else {
+      } if(e is CodeMismatchException) {
+        result["isSignUpComplete"] = false;
+        result["status"] = AuthStatus.CODE_MISMATCH.toShortString();
+      }
+      else {
         print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
@@ -207,9 +211,9 @@ class Api{
       if(e is UserNotFoundException) {
         result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
       } else if(e is InvalidParameterException) {
-        result["status"] = AuthStatus.INVALID_PASSWORD.toShortString();
+        result["status"] = AuthStatus.INVALID_PARAMETER.toShortString();
       } else {
-        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+        print("Fail to reset password: " + e.toString() + '\n' + stacktrack.toString());
         result["status"] = AuthStatus.UNKNOWN.toShortString();
       }
     }
@@ -230,14 +234,15 @@ class Api{
         result = null;
       }
     } on AuthException catch (e, stacktrack) {
-      if(e is NotAuthorizedException) {
-        result["isPasswordReset"] = true;
-        result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
-      } else if(e is AliasExistsException) {
+      if(e is InvalidParameterException) {
         result["isPasswordReset"] = false;
-        result["status"] = AuthStatus.ALIAS_EXISTS.toShortString();
+        result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
+      } else if(e is CodeMismatchException) {
+        result["isPasswordReset"] = false;
+        result["status"] = AuthStatus.CODE_MISMATCH.toShortString();
       } else {
-        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
+        print("Fail to confirm reset password: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
     return RegisterResponse().fromJson(result);
