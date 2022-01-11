@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/enum/auth_navigation_argument.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
@@ -32,7 +33,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
   void initState() {
     super.initState();
     if(argumentData != null) {
-        username = argumentData['username'];
+        username = argumentData[AuthNavigationArgument.USERNAME];
     }
   }
 
@@ -80,7 +81,8 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
               text: "Next",
               buttonEnabled: buttonEnabled,
               onPressed: () async {
-                Get.toNamed(Routers.signUpEmail, arguments: { "username": username, "password": password });
+                Get.toNamed(Routers.signUpEmail, arguments: {
+                  AuthNavigationArgument.USERNAME: username, AuthNavigationArgument.PASSWORD: password });
               })
           ],
         ),

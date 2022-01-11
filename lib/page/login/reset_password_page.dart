@@ -3,6 +3,7 @@ import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/enum/auth_navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
@@ -39,9 +40,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.initState();
     if(argumentData != null) {
       setState(() {
-        errorMessage = argumentData['errorMessage'];
-        initText = loginController.loginUserUsername.value;
-        account = loginController.loginUserUsername.value;
+        errorMessage = argumentData[AuthNavigationArgument.ERROR_MESSAGE];
       });
     }
   }
@@ -98,7 +97,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   setState(() { errorMessage = "The user isn't registered yet."; });
                 } else if(status == AuthStatus.CONFIRM_RESET_PASSWORD_WITH_CODE.toShortString()) {
                   Get.toNamed(Routers.resetPasswordPassword, arguments: {
-                    "account": account
+                    AuthNavigationArgument.ACCOUNT: account
                   });
                 } else {
                   setState(() { errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE; });

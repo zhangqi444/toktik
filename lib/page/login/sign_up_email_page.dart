@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/enum/auth_navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/res/colors.dart';
@@ -32,8 +33,8 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
   void initState() {
     super.initState();
     if(argumentData != null) {
-      username = argumentData['username'];
-      password = argumentData['password'];
+      username = argumentData[AuthNavigationArgument.USERNAME];
+      password = argumentData[AuthNavigationArgument.PASSWORD];
     }
   }
 
@@ -111,7 +112,6 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
         decoration: InputDecoration(border: InputBorder.none, hintText: 'Email address'),
         onChanged: (text) {
           email = text;
-          loginController.loginUserEmail.value = email;
           setState(() {
             errorMessage = '';
           });
@@ -142,12 +142,15 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
           } else if(status == AuthStatus.USERNAME_EXISTS.toShortString()) {
             Get.until(ModalRoute.withName(Routers.signUp));
             Get.toNamed(Routers.createUsername, arguments: {
-              "errorMessage": 'The username is not valid or already existing, please try another one.',
-              "username": username
+              AuthNavigationArgument.ERROR_MESSAGE: 'The username is not valid or already existing, please try another one.',
+              AuthNavigationArgument.USERNAME: username
             });
           } else if(status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
             Get.toNamed(Routers.verificationCode, arguments: {
-              "destination": email, "username": username, "password": password, "email": email,
+              AuthNavigationArgument.DESTINATION: email,
+              AuthNavigationArgument.USERNAME: username,
+              AuthNavigationArgument.PASSWORD: password,
+              AuthNavigationArgument.EMAIL: email,
             });
           } else {
             setState(() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/enum/auth_navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
@@ -38,8 +39,8 @@ class _ResetPasswordPasswordPageState extends State<ResetPasswordPasswordPage> {
     super.initState();
     if(argumentData != null) {
       setState(() {
-        errorMessage = argumentData['errorMessage'];
-        account = argumentData['account'];
+        errorMessage = argumentData[AuthNavigationArgument.ERROR_MESSAGE];
+        account = argumentData[AuthNavigationArgument.ACCOUNT];
       });
     }
   }
@@ -91,10 +92,10 @@ class _ResetPasswordPasswordPageState extends State<ResetPasswordPasswordPage> {
               buttonEnabled: buttonEnabled,
               onPressed: !buttonEnabled ? () {} : () async {
                 Get.toNamed(Routers.verificationCode, arguments: {
-                  "isResetPassword": true,
-                  "destination": "your email or phone",
-                  "account": account,
-                  "password": password
+                  AuthNavigationArgument.IS_RESET_PASSWORD: true,
+                  AuthNavigationArgument.DESTINATION: "your email or phone",
+                  AuthNavigationArgument.ACCOUNT: account,
+                  AuthNavigationArgument.PASSWORD: password
                 });
               }
             )

@@ -7,6 +7,7 @@ import 'package:toktik/common/router_manager.dart';
 import 'dart:async';
 
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/enum/auth_navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/util/string_util.dart';
@@ -100,15 +101,15 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
 
     if(argumentData != null) {
       setState(() {
-        destination = argumentData['destination'];
-        if(argumentData['isResetPassword'] != null) {
+        destination = argumentData[AuthNavigationArgument.DESTINATION];
+        if(argumentData[AuthNavigationArgument.IS_RESET_PASSWORD] != null) {
           title = "Reset";
           isResetPassword = true;
         }
-        account = argumentData['account'];
-        username = argumentData['username'];
-        password = argumentData['password'];
-        email = argumentData['email'];
+        account = argumentData[AuthNavigationArgument.ACCOUNT];
+        username = argumentData[AuthNavigationArgument.USERNAME];
+        password = argumentData[AuthNavigationArgument.PASSWORD];
+        email = argumentData[AuthNavigationArgument.EMAIL];
       });
     }
   }
@@ -172,7 +173,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                   status = await loginController.registerVerify(username, email, verificationCode);
                   if(status == AuthStatus.ALIAS_EXISTS.toShortString()
                     || status == AuthStatus.SIGN_UP_DONE.toShortString()) {
-                    Get.offAndToNamed(Routers.login, arguments: { "account": username });
+                    Get.offAndToNamed(Routers.login, arguments: { AuthNavigationArgument.ACCOUNT: username });
                   }  else {
                     // TODO: add error message
                   }
@@ -184,8 +185,8 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                   if(status == AuthStatus.RESET_PASSWORD_DONE.toShortString()) {
                     Get.offAndToNamed(Routers.login,
                         arguments: {
-                          "authStatus": status,
-                          "account": account
+                          AuthNavigationArgument.AUTH_STATUS: status,
+                          AuthNavigationArgument.ACCOUNT: account
                         }
                     );
                   } else if(status == AuthStatus.CODE_MISMATCH.toShortString()) {
