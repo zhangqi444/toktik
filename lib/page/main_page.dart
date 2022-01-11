@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
-import 'package:toktik/net/api.dart';
 import 'package:toktik/page/home_page.dart';
 import 'package:toktik/page/message_page.dart';
 import 'package:toktik/page/search_page.dart';
@@ -11,6 +9,7 @@ import 'package:toktik/page/user_page.dart';
 import 'package:toktik/page/widget/main_page_bottom_bar_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/string_util.dart';
 import 'home_page.dart';
 
 class MainPage extends StatelessWidget {
@@ -41,11 +40,13 @@ class MainPage extends StatelessWidget {
           HomePage(pageController: _scrollPageController),
           SearchPage(),
           MessagePage(),
-          UserPage(
-            pageController: _scrollPageController,
-            isLoginUser: true,
-            userModel: loginUserModel
-          ),
+          isStringNullOrEmpty(_selfController.loginUserId.value)
+            ? Scaffold()
+            : UserPage(
+              pageController: _scrollPageController,
+              isLoginUser: true,
+              id: _selfController.loginUserId.value,
+            ),
         ],
       ),
       //底部导航

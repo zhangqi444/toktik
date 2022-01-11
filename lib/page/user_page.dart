@@ -8,7 +8,6 @@ import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_page_controller.dart';
 import 'package:toktik/event/amplify_configured_event.dart';
-import 'package:toktik/model/user_model.dart';
 import 'package:toktik/page/widget/user_info_widget.dart';
 import 'package:toktik/page/widget/user_item_grid_widget.dart';
 import 'package:toktik/page/widget/user_more_bottom_sheet.dart';
@@ -23,7 +22,7 @@ class UserPage extends StatefulWidget {
   PageController _scrollPageController;
   bool _isLoginUser;
   String id;
-  UserPage({PageController pageController, bool isLoginUser, UserModel userModel, String id}){
+  UserPage({PageController pageController, bool isLoginUser, String id}){
     this._scrollPageController = pageController;
     this._isLoginUser = isLoginUser;
     this.id = id;
@@ -67,9 +66,11 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         statusBarIconBrightness: Brightness.light,
       ));
     });
+
+    initData();
   }
 
-  void initData() async {
+  Future<void> initData() async {
     var id = widget.id;
     await _userController.loadUserInfoExById(id);
     // TODO: disbale before we have the api reday.
@@ -89,34 +90,22 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // This is necessary to be in build as this page is used for main page as well.
-    // To the profile tab switching, this page will not be recreated, so the data
-    // needs to be refreshed in build().
-    if(!Amplify.isConfigured) {
-      amplifyConfiguredListner = Application.eventBus.on<AmplifyConfiguredEvent>().listen((event) {
-        initData();
-      });
-    } else {
-      initData();
-    }
-
-    if(isStringNullOrEmpty(widget.id)) {
-      return Scaffold();
-    }
-
-    return Scaffold(
-      backgroundColor: ColorRes.color_2,
-      body: CustomScrollView(
-        controller: _scrollController,
-        physics: BouncingScrollPhysics(),
-        slivers: [
-          _getSliverAppBar(),
-          _getSliverUserInfo(),
-          _getTabBarLayout(),
-          _getTabViewLayout(),
-        ],
-      ),
-    );
+    return
+      isStringNullOrEmpty(widget.id) || _userController.userExMap[widget.id] == null
+      ? Scaffold()
+      : Scaffold(
+        backgroundColor: ColorRes.color_2,
+        body: CustomScrollView(
+          controller: _scrollController,
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            _getSliverAppBar(),
+            _getSliverUserInfo(),
+            _getTabBarLayout(),
+            _getTabViewLayout(),
+          ],
+        )
+      );
   }
 
   _getSliverAppBar(){

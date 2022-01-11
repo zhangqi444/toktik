@@ -36,13 +36,7 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
   @override
   void initState() {
     super.initState();
-    if(!Amplify.isConfigured) {
-      amplifyConfiguredListner = Application.eventBus.on<AmplifyConfiguredEvent>().listen((event) {
-        init();
-      });
-    } else {
-      init();
-    }
+    init();
   }
 
   Future<void> init() async {
