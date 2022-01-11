@@ -121,7 +121,7 @@ class SelfController extends GetxController{
       loginUserEmail.value = selfUserInfo[SPKeys.selfUserInfoEmail];
       loginUserPhoneNumber.value = selfUserInfo[SPKeys.selfUserInfoPhoneNumber];
 
-      if (loginUserId.value != null) {
+      if (!isStringNullOrEmpty(loginUserId.value)) {
         return;
       }
     }

@@ -6,6 +6,7 @@ import 'package:toktik/model/response/user_info_response.dart';
 import 'package:toktik/model/response/user_work_list_response.dart';
 import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/string_util.dart';
 
 class UserController extends GetxController{
 
@@ -49,11 +50,11 @@ class UserController extends GetxController{
   //
   ///获取用户资料信息(扩展)
   void loadUserInfoExById(String id) async{
-    if(userExMap[id] == null) {
-      var response = await Api.getUserInfoEx(id);
-      if(response != null) {
-        userExMap[response.user.id] = response;
-      }
+    if(isStringNullOrEmpty(id)) return;
+
+    var response = await Api.getUserInfoEx(id);
+    if(response != null) {
+      userExMap[response.user.id] = response;
     }
   }
 
