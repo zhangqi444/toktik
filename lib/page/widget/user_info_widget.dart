@@ -39,11 +39,15 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Obx(() {
-      UserInfoExUser userEx;
-      if (_userController.userExMap[widget.id] != null) {
-        userEx = _userController.userExMap[widget.id].user;
+    return Obx(() {
+      var userEx = _userController.userExMap[widget.id] != null
+          ? _userController.userExMap[widget.id].user
+          : null;
+
+      if (userEx == null) {
+        return Container();
       }
+
       return Stack(
         children: [
           //背景颜色
@@ -51,9 +55,9 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           Column(
             children: [
               //头像、用户名、关注
-              _getHeaderLayout(userEx),
+              _getHeaderLayout(),
               //用户信息
-              _getUserInfoLayout(userEx),
+              _getUserInfoLayout(),
             ],
           ),
         ],
@@ -75,12 +79,13 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
     );
   }
   //头像等
-  _getHeaderLayout(userEx) {
+  _getHeaderLayout() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Obx(() {
+          var userEx = _userController.userExMap[widget.id].user;
           return Container(
             width: 88,
             height: 88,
@@ -140,15 +145,16 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
     );
   }
 
-  _getUserInfoLayout(user) {
+  _getUserInfoLayout() {
     return Obx(() {
+      var userEx = _userController.userExMap[widget.id].user;
       return Container(
         margin: EdgeInsets.only(left: 12,right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 12,),
-            Text(user == null ? '' : user.username,
+            Text(userEx == null ? '' : userEx.username,
               style: TextStyle(color: ColorRes.text_color, fontSize: 16),),
             SizedBox(height: 24,),
             // SizedBox(height: 5,),
