@@ -8,6 +8,7 @@ import 'package:toktik/common/application.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
@@ -25,6 +26,7 @@ class MainPageBottomBarWidget extends StatefulWidget {
 class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   final MainPageScrollController mainPageScrollController = Get.find();
   final SelfController _selfController = Get.put(SelfController());
+  final UserController userController = Get.find();
   //用来获取BottomBar的高度
   final GlobalKey bottomBarKey = GlobalKey();
   Widget _bottomBarLayout;
@@ -162,7 +164,8 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
           if (index == 0 || index == 1) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
           } else {
-            if(!isStringNullOrEmpty(_selfController.loginUserId.value)) {
+            var loginUserInfo = userController.userExMap[_selfController.loginUserId.value];
+            if(loginUserInfo != null) {
               mainPageScrollController.selectIndexBottomBarMainPage(index);
             } else {
               Application.eventBus.fire(StopPlayEvent());
