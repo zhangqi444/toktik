@@ -94,10 +94,17 @@ class Api{
   }
 
   static Future<LogoutResponse> logout() async {
+    Map<String, dynamic> result = HashMap();
     try {
-      var result = await Amplify.Auth.signOut();
-      return result != null ? LogoutResponse().fromJson({}) : null;
+      SignOutResult res = await Amplify.Auth.signOut();
+      if(res == null) {
+        result['status'] = AuthStatus.UNKNOWN.toShortString();
+      } else {
+        result['status'] = AuthStatus.SIGN_OUT_DONE.toShortString();;
+        return LogoutResponse().fromJson(result);
+      }
     } on AuthException catch (e, stacktrack) {
+      result['status'] = AuthStatus.UNKNOWN.toShortString();
       print("Fail to sign out: " + e.toString() + '\n' + stacktrack.toString());
     }
   }
@@ -265,8 +272,18 @@ class Api{
   ///获取用户资料信息(扩展)
   static Future<UserInfoExResponse> getUserInfoExByUsername(String username) async {
     try {
-      List<User> users = await Amplify.DataStore.query(User.classType, where: User.USERNAME.eq(username));
-      return _parseUsers(users, {username: username});
+      var response = await _query(
+          '''query ListUsers(\$limit: Int) {
+            listUsers(limit: \$limit) {
+              items {
+                id username email phoneNumber portrait nickname gender bio city birth
+              }
+            }
+          }''',
+          { 'limit': 1 },
+          'listUsers'
+      );
+      return _parseUsers(response['items'], {username: username});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
@@ -290,22 +307,26 @@ class Api{
     }
   }
 
-  static UserInfoExResponse _parseUsers(List<User> users, Map<String, dynamic> params) {
-    Map<String, dynamic> convert(User user) {
+  static UserInfoExResponse _parseUsers(List<dynamic> users, Map<String, dynamic> overrides) {
+    Map<String, dynamic> convert(user) {
       Map<String, dynamic> result = {};
-      var userJson = user.toJson();
+      var userJson = user;
+      if (user is User) {
+        userJson = user.toJson();
+      }
+
       result['user'] = userJson;
       if(result['user']['username'] == null) {
-        result['user']['username'] = params['username'];
+        result['user']['username'] = overrides['username'];
       }
       if(result['user']['email'] == null) {
-        result['user']['email'] = params['email'];
+        result['user']['email'] = overrides['email'];
       }
       if(result['user']['phoneNumber'] == null) {
-        result['user']['phoneNumber'] = params['phoneNumber'];
+        result['user']['phoneNumber'] = overrides['phoneNumber'];
       }
       if(result['user']['id'] == null) {
-        result['user']['id'] = params['id'];
+        result['user']['id'] = overrides['id'];
       }
       // TODO: generate counts from server side
       var rng = new Random();
@@ -433,7 +454,7 @@ class Api{
       }
 
       var rng = new Random(DateTime.now().millisecondsSinceEpoch);
-      List posts = response['items']..shuffle(rng);
+      List posts = (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
       posts = posts.where((f) => f['attachments'] != null).toList();
       Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
         post['content'] = {
