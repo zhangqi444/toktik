@@ -25,6 +25,18 @@ class SelfController extends GetxController{
   var isSignUpComplete = true.obs;
   var loginUserPassword = "".obs;
 
+  void init() {
+    isLoginUser = true.obs;//是否是登录用户
+    loginUserId = ''.obs;//登录用户的user id
+    loginUserToken = ''.obs;//登录用户的user id
+    loginUserUsername = "".obs;//登录用户的username
+    loginUserEmail = "".obs;//登录用户的username
+    loginUserPhoneNumber = "".obs;//登录用户的username
+    loginUserConfirmationCode = "".obs;
+    isSignUpComplete = true.obs;
+    loginUserPassword = "".obs;
+  }
+
   ///登录
   Future<String> login(account, password, isAccountEmail) async {
     var response = await Api.login(account, password);
@@ -43,7 +55,7 @@ class SelfController extends GetxController{
 
       UserInfoExResponse userInfoExResponse = userController.userExMap[userId];
       if(userInfoExResponse == null || userInfoExResponse.user == null) {
-        return AuthStatus.USER_PROFILE_NOT_FOUND.toString();
+        return AuthStatus.USER_PROFILE_NOT_FOUND.toShortString();
       }
 
       await setLoginUserAuthInfo(
@@ -56,6 +68,16 @@ class SelfController extends GetxController{
     }
 
     return status;
+  }
+
+  Future<String> logout() async {
+    var response = await Api.logout();
+    if(response != null) {
+      await SPUtil.remove(SPKeys.selfUserInfo);
+      init();
+      mainPageController.indexBottomBarMainPage.value = 0;
+      return response.status;
+    }
   }
 
   ///注册
@@ -112,6 +134,7 @@ class SelfController extends GetxController{
 
   ///获取登录用户的id
   Future<void> load() async {
+    init();
     var selfUserInfo = await SPUtil.getString(SPKeys.selfUserInfo);
     if(!isStringNullOrEmpty(selfUserInfo)) {
       selfUserInfo = json.decode(selfUserInfo);
