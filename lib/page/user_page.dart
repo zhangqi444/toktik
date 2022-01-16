@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toktik/common/application.dart';
+import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
@@ -124,7 +125,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         IconButton(
           onPressed: (){
             if( widget._isLoginUser){
-              _userPageController.toggleRightMenu();
+              Get.toNamed(Routers.setting);
             }else{
               _showMore();
             }

@@ -7,6 +7,7 @@ import 'package:toktik/page/login/reset_password_page.dart';
 import 'package:toktik/page/login/reset_password_password_page.dart';
 import 'package:toktik/page/login/sign_up_email_page.dart';
 import 'package:toktik/page/login/verification_code_page.dart';
+import 'package:toktik/page/setting_page.dart';
 import 'package:toktik/page/splash_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
 // import 'package:toktik/page/home_tab_focus_page.dart';
@@ -20,7 +21,6 @@ import 'package:toktik/page/login/sign_up_page.dart';
 // import 'package:toktik/page/scan_page.dart';
 import 'package:toktik/page/scroll_page.dart';
 import 'package:toktik/page/search_page.dart';
-// import 'package:toktik/page/setting_page.dart';
 import 'package:toktik/page/shoot_page.dart';
 // import 'package:toktik/page/test.dart';
 // import 'package:toktik/page/user_info_edit_page.dart';
@@ -28,6 +28,7 @@ import 'package:toktik/page/user_page.dart';
 // import 'package:toktik/page/video_list_page.dart';
 // import 'package:toktik/page/my_tiktok_code_page.dart';
 import 'package:get/get.dart';
+import 'package:toktik/page/web_view_page.dart';
 
 ///路由管理者
 class RouterManager{
@@ -56,10 +57,11 @@ class RouterManager{
     GetPage(name: Routers.signUp, page: () => SignUpPage()),
     GetPage(name: Routers.signUpEmail, page: () => SignUpEmailPage()),
     GetPage(name: Routers.verificationCode, page: () => VerificationCodePage()),
-    // GetPage(name: Routers.setting, page: () => SettingPage()),
+    GetPage(name: Routers.setting, page: () => SettingPage()),
     // GetPage(name: Routers.editUserInfo, page: () => UserInfoEditPage()),
     // GetPage(name: Routers.modifyUserInfo, page: () => ModifyInfoPage()),
     GetPage(name: Routers.feedPublish, page: () => FeedPublishPage()),
+    GetPage(name: Routers.webView, page: () => WebViewPage()),
   ];
 
 
@@ -95,4 +97,5 @@ class Routers{
   static final String editUserInfo = '/editUserInfo';
   static final String modifyUserInfo = '/modifyUserInfo';
   static final String feedPublish = '/feedPublish';
+  static final String webView = '/webView';
 }
