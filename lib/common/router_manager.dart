@@ -28,7 +28,7 @@ import 'package:toktik/page/user_page.dart';
 // import 'package:toktik/page/video_list_page.dart';
 // import 'package:toktik/page/my_tiktok_code_page.dart';
 import 'package:get/get.dart';
-import 'package:toktik/page/widget/web_view_page.dart';
+import 'package:toktik/page/web_view_page.dart';
 
 ///路由管理者
 class RouterManager{
