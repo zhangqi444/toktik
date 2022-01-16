@@ -3,19 +3,19 @@ import 'package:get/get.dart';
 import 'package:toktik/page/widget/app_bar_widget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewPage extends StatefulWidget {
+class WebViewWidget extends StatefulWidget {
   final url;
-  WebViewPage({this.url});
+  WebViewWidget({this.url});
   @override
-  createState() => _WebViewPageState(this.url);
+  createState() => _WebViewWidgetState(this.url);
 }
 
-class _WebViewPageState extends State<WebViewPage> {
+class _WebViewWidgetState extends State<WebViewWidget> {
   var _url;
   final _key = UniqueKey();
   dynamic argumentData = Get.arguments;
 
-  _WebViewPageState(this._url);
+  _WebViewWidgetState(this._url);
 
   @override
   void initState() {
