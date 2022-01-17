@@ -33,20 +33,23 @@ class _LoginPageState extends State<LoginPage> {
   SelfController loginController = Get.put(SelfController());
   final MainPageScrollController mainPageController = Get.find();
   dynamic argumentData = Get.arguments;
+  bool isButtonActived = false;
 
   @override
   void initState() {
     super.initState();
 
-    if(argumentData != null) {
-      if(!isStringNullOrEmpty(argumentData[AuthNavigationArgument.AUTH_STATUS])
-          && argumentData[AuthNavigationArgument.AUTH_STATUS] == AuthStatus.ALIAS_EXISTS.toShortString()) {
+    if (argumentData != null) {
+      if (!isStringNullOrEmpty(
+              argumentData[AuthNavigationArgument.AUTH_STATUS]) &&
+          argumentData[AuthNavigationArgument.AUTH_STATUS] ==
+              AuthStatus.ALIAS_EXISTS.toShortString()) {
         title = "You've signed up already.";
         subtitle = "Enter your password to log in to your account.";
         isForSignedUpAccount = true;
       }
 
-      if(!isStringNullOrEmpty(argumentData[AuthNavigationArgument.ACCOUNT])) {
+      if (!isStringNullOrEmpty(argumentData[AuthNavigationArgument.ACCOUNT])) {
         account = argumentData[AuthNavigationArgument.ACCOUNT];
       }
     }
@@ -59,7 +62,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     pwdField = TextField(
       cursorColor: ColorRes.color_1,
       cursorWidth: 2,
@@ -68,6 +70,16 @@ class _LoginPageState extends State<LoginPage> {
           InputDecoration(border: InputBorder.none, hintText: 'Password'),
       onChanged: (text) {
         pwd = text;
+
+        if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
+          setState(() {
+            isButtonActived = true;
+          });
+        } else {
+          setState(() {
+            isButtonActived = false;
+          });
+        }
       },
     );
 
@@ -88,10 +100,22 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             isForSignedUpAccount ? _getTitle() : Container(),
             LoginTextFieldWidget(
-                readOnly: isForSignedUpAccount, initText: account,
+                readOnly: isForSignedUpAccount,
+                initText: account,
                 hintText: 'Email, phone or user name',
-                onChanged: (text) { account = text; }
-            ),
+                onChanged: (text) {
+                  account = text;
+                  if (!isStringNullOrEmpty(account) &&
+                      !isStringNullOrEmpty(pwd)) {
+                    setState(() {
+                      isButtonActived = true;
+                    });
+                  } else {
+                    setState(() {
+                      isButtonActived = false;
+                    });
+                  }
+                }),
             SizedBox(
               height: 10,
             ),
@@ -147,23 +171,32 @@ class _LoginPageState extends State<LoginPage> {
           if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
             String? status = await loginController.login(account, pwd, EmailValidator.validate(account!));
 
-            if(status == AuthStatus.USER_NOT_FOUND.toShortString()) {
-              setState(() { errorMessage = 'Sorry, we cannot find the user. Please Check your information and try again.'; });
-            } else if(status == AuthStatus.SIGN_IN_DONE.toShortString()) {
+            if (status == AuthStatus.USER_NOT_FOUND.toShortString()) {
+              setState(() {
+                errorMessage =
+                    'Sorry, we cannot find the user. Please Check your information and try again.';
+              });
+            } else if (status == AuthStatus.SIGN_IN_DONE.toShortString()) {
               Get.offAllNamed(Routers.scroll);
               mainPageController.selectIndexBottomBarMainPage(0);
             } else {
-              setState(() { errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE; });
+              setState(() {
+                errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE;
+              });
             }
           } else {
-            setState(() { errorMessage = 'Check your info and try again.'; });
+            setState(() {
+              errorMessage = 'Check your info and try again.';
+            });
           }
         },
         child: Text(
           'Log in',
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(
+              color: isButtonActived ? Colors.white : Color(0xffAAAAAA),
+              fontSize: 20),
         ),
-        color: ColorRes.color_3,
+        color: isButtonActived ? Color(0xff39CBE3) : Color(0xffEEEEEE),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       ),
     );

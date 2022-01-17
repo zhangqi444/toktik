@@ -22,6 +22,7 @@ class _LoginTextFieldWidgetState extends State<LoginTextFieldWidget> {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
+      margin: EdgeInsets.only(left: 30, right: 30, top: 34),
       alignment: Alignment.center,
       decoration: BoxDecoration(
           color: Colors.white,
