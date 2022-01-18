@@ -1,3 +1,15 @@
+type Report @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  reason: String
+  description: String
+  status: String
+  user: User @connection
+  post: Post @connection
+  reporter: User @connection
+  type: String
+  result: String
+}
+
 type View @model @auth(rules: [{allow: public}]) @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId") @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId") @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId") {
   id: ID!
   post: Post @connection

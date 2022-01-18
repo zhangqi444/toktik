@@ -22,6 +22,6 @@
       }
     },
     "apiName": "toktik",
-    "gqlSchemaPath": "/tmp/amplify-9f7790a2-5881-411a-b341-4081df2e86b5/amplify/backend/api/toktik/schema.graphql"
+    "gqlSchemaPath": "/tmp/amplify-58473fcb-5780-467a-8815-a4bcd3c9f8da/amplify/backend/api/toktik/schema.graphql"
   }
 }
