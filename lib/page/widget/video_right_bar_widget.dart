@@ -46,7 +46,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
           SizedBox(height: 20,),
           // _getCommentButton(),
           // SizedBox(height: 20,),
-          // _getShareButton(),
+          _getShareButton(),
         ],
       ),
     );

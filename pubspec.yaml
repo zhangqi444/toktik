@@ -44,8 +44,9 @@ dependencies:
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.2
   pin_code_fields: ^7.3.0
-  email_validator: '^1.0.0'
+  email_validator: ^1.0.0
   webview_flutter: ^3.0.0
+  share_plus: ^3.0.4
 
 dev_dependencies:
   flutter_test:

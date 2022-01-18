@@ -274,7 +274,7 @@ class _VideoWidgetState extends State<VideoWidget> {
         ),),
         backgroundColor: ColorRes.color_1,
         builder: (context){
-          return VideoShareWidget();
+          return VideoShareWidget(video: widget.video);
         });
   }
 
