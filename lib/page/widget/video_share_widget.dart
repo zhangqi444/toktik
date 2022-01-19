@@ -51,7 +51,15 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   List<Map<String, dynamic>> actions = [
       {
         "text": 'Report',
-        "img": 'assets/images/share_action_jubao.webp'
+        "img": 'assets/images/share_action_jubao.webp',
+        "onPressed": (video) {
+          // TO customize the bottomsheet with sharing target, we need to rely on this,
+          // https://www.youtube.com/watch?v=bWehAFTFc9o
+          // https://pub.dev/packages/url_launcher
+
+          if(video == null || video.content == null || video.user == null) return;
+          Share.share("${video.content.attachments[0].url}", subject: "Check out ${video.user.username}'s video on Breeze.");
+        }
       },
     // '保存本地',
     // '收藏',
