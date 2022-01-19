@@ -27,21 +27,21 @@ import 'package:flutter/foundation.dart';
 @immutable
 class View extends Model {
   static const classType = const _ViewModelType();
-  final String id;
-  final Post post;
-  final User user;
+  final String? id;
+  final Post? post;
+  final User? user;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
-  const View._internal({@required this.id, this.post, this.user});
+  const View._internal({required this.id, this.post, this.user});
 
-  factory View({String id, Post post, User user}) {
+  factory View({String? id, Post? post, User? user}) {
     return View._internal(
         id: id == null ? UUID.getUUID() : id, post: post, user: user);
   }
@@ -75,7 +75,7 @@ class View extends Model {
     return buffer.toString();
   }
 
-  View copyWith({String id, Post post, User user}) {
+  View copyWith({String? id, Post? post, User? user}) {
     return View(
         id: id ?? this.id, post: post ?? this.post, user: user ?? this.user);
   }

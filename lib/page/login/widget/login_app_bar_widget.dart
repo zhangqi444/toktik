@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginAppBarWidget extends StatefulWidget implements PreferredSizeWidget {
-  String title;
-  LoginAppBarWidget({Key key, this.title}) : preferredSize = Size.fromHeight(kToolbarHeight), super(key: key);
+  String? title;
+  LoginAppBarWidget({Key? key, this.title}) : preferredSize = Size.fromHeight(kToolbarHeight), super(key: key);
 
   @override
   _LoginAppBarWidgetState createState() {
@@ -21,7 +21,7 @@ class _LoginAppBarWidgetState extends State<LoginAppBarWidget> {
     return AppBar(
       backgroundColor: Colors.white,
       brightness: Brightness.light,
-      title: Text(widget.title, style: TextStyle(color: Color(0xff2A2A2A), fontSize: 16, fontWeight: FontWeight.bold)),
+      title: Text(widget.title!, style: TextStyle(color: Color(0xff2A2A2A), fontSize: 16, fontWeight: FontWeight.bold)),
       elevation: 0,
       centerTitle: true,
       actions: <Widget>[

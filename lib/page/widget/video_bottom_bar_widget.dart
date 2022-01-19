@@ -4,7 +4,7 @@ import 'package:toktik/util/constants.dart';
 import 'package:marquee/marquee.dart';
 
 class VideoBottomBarWidget extends StatefulWidget {
-  FeedListList video;
+  FeedListList? video;
   VideoBottomBarWidget({this.video});
 
 
@@ -26,9 +26,9 @@ class _VideoBottomBarWidgetState extends State<VideoBottomBarWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('@${widget.video.user.username}',style: _getTextStyle(),),
+          Text('@${widget.video!.user!.username}',style: _getTextStyle(),),
           SizedBox(height: 8,),
-          Text('${widget.video.content.text}',style: _getTextStyle(),),
+          Text('${widget.video!.content!.text}',style: _getTextStyle(),),
           SizedBox(height: 10,),
           Row(
             children: [
@@ -38,7 +38,7 @@ class _VideoBottomBarWidgetState extends State<VideoBottomBarWidget> {
                 width: 200,
                 height: 25,
                 child: Marquee(
-                  text: 'original sound - ${widget.video.user.username}  ',
+                  text: 'original sound - ${widget.video!.user!.username}  ',
                   style: TextStyle(fontSize: 15,color: Colors.white),),
               )
             ],

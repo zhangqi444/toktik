@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoginErrorMessageWidget extends StatefulWidget {
-  String text;
+  String? text;
   LoginErrorMessageWidget({this.text});
 
   @override
@@ -22,7 +22,7 @@ class _LoginErrorMessageWidgetState extends State<LoginErrorMessageWidget> {
             width: MediaQuery.of(context).size.width,
             height: 40,
             child: Text(
-              widget.text,
+              widget.text!,
               style: TextStyle(
                   color: Color(0xffff0000),
                   fontSize: 14,

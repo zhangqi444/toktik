@@ -10,7 +10,7 @@ import 'package:toktik/util/screen_utils.dart';
 
 /// Rotating vinyl disk with notes go out from its bottom
 class VinylDisk extends StatefulWidget {
-  FeedListList video;
+  FeedListList? video;
 
   VinylDisk({this.video});
 
@@ -19,31 +19,31 @@ class VinylDisk extends StatefulWidget {
 }
 
 class _VinylDiskState extends State<VinylDisk> with TickerProviderStateMixin {
-  AnimationController _noteOpacityController;
-  Animation<double> _noteOpacityAnimation;
-  AnimationController _noteAndDiskController;
-  Animation<double> _noteAndDiskAnimation;
-  AnimationController _noteRotationController;
-  Animation<double> _noteRotationAnimation;
-  Tween<double> _noteRotationTween;
+  late AnimationController _noteOpacityController;
+  late Animation<double> _noteOpacityAnimation;
+  late AnimationController _noteAndDiskController;
+  late Animation<double> _noteAndDiskAnimation;
+  late AnimationController _noteRotationController;
+  late Animation<double> _noteRotationAnimation;
+  late Tween<double> _noteRotationTween;
   final Random _random = Random();
-  Path _path;
+  late Path _path;
 
   int _pathIndex = 0;
   final int _pathsQuantity = 4;
 
   final _vinylGradient = LinearGradient(
       colors: [
-        Colors.grey[800],
-        Colors.grey[900],
-        Colors.grey[900],
-        Colors.grey[800],
+        Colors.grey[800]!,
+        Colors.grey[900]!,
+        Colors.grey[900]!,
+        Colors.grey[800]!,
       ],
       begin: Alignment.bottomCenter,
       end: Alignment.topLeft,
       stops: [0.2, 0.6, 0.8, 1.0]);
 
-  _drawPath({int quantity, int divider}) {
+  _drawPath({required int quantity, int? divider}) {
     final xOffset = screenAwareWidth(15.0, context);
     final yOffset = screenAwareHeight(15.0, context);
     var size = Size(
@@ -62,7 +62,7 @@ class _VinylDiskState extends State<VinylDisk> with TickerProviderStateMixin {
           size.height,
           size.width / 5,
           size.height / 2,
-          i <= divider ? i * xOffset : 0,
+          i <= divider! ? i * xOffset : 0,
           i <= divider ? 0 : (i - divider) * yOffset);
       path.addPath(subPath, Offset.zero);
     }
@@ -76,7 +76,7 @@ class _VinylDiskState extends State<VinylDisk> with TickerProviderStateMixin {
     var pathMetrics = _path.computeMetrics();
     var pathMetric = pathMetrics.elementAt(_pathIndex);
     value = pathMetric.length * value;
-    var pos = pathMetric.getTangentForOffset(value);
+    var pos = pathMetric.getTangentForOffset(value)!;
     return pos.position;
   }
 
@@ -173,7 +173,7 @@ class _VinylDiskState extends State<VinylDisk> with TickerProviderStateMixin {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
-                  image: DecorationImage(image: NetworkImage(widget.video.user.portrait),fit: BoxFit.cover),
+                  image: DecorationImage(image: NetworkImage(widget.video!.user!.portrait!),fit: BoxFit.cover),
                 ),
               ),),
             ),
@@ -203,7 +203,7 @@ class _VinylDiskState extends State<VinylDisk> with TickerProviderStateMixin {
 /// Simple custom painter
 class PathPainter extends CustomPainter {
   /// Path to draw on the canvas
-  Path path;
+  Path? path;
 
   /// Takes path created in [_VinylDiskState]
   PathPainter({this.path});
@@ -215,7 +215,7 @@ class PathPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..color = Colors.red;
 
-    canvas.drawPath(path, paint);
+    canvas.drawPath(path!, paint);
   }
 
   @override

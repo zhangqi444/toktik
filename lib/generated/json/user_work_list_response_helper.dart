@@ -22,7 +22,7 @@ userWorkListResponseFromJson(UserWorkListResponse data, Map<String, dynamic> jso
 
 Map<String, dynamic> userWorkListResponseToJson(UserWorkListResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	data['list'] =  entity.xList?.map((v) => v.toJson())?.toList();
+	data['list'] =  entity.xList?.map((v) => v!.toJson())?.toList();
 	data['cursor'] = entity.cursor;
 	data['count'] = entity.count;
 	data['hasMore'] = entity.hasMore;
@@ -136,9 +136,9 @@ userWorkListListContentFromJson(UserWorkListListContent data, Map<String, dynami
 Map<String, dynamic> userWorkListListContentToJson(UserWorkListListContent entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['text'] = entity.text;
-	data['tag'] =  entity.tag?.map((v) => v.toJson())?.toList();
-	data['at'] =  entity.at?.map((v) => v.toJson())?.toList();
-	data['attachments'] =  entity.attachments?.map((v) => v.toJson())?.toList();
+	data['tag'] =  entity.tag?.map((v) => v!.toJson())?.toList();
+	data['at'] =  entity.at?.map((v) => v!.toJson())?.toList();
+	data['attachments'] =  entity.attachments?.map((v) => v!.toJson())?.toList();
 	data['music'] = entity.music?.toJson();
 	return data;
 }

@@ -27,22 +27,22 @@ import 'package:flutter/foundation.dart';
 @immutable
 class Share extends Model {
   static const classType = const _ShareModelType();
-  final String id;
-  final String to;
-  final User user;
-  final Post post;
+  final String? id;
+  final String? to;
+  final User? user;
+  final Post? post;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
-  const Share._internal({@required this.id, this.to, this.user, this.post});
+  const Share._internal({required this.id, this.to, this.user, this.post});
 
-  factory Share({String id, String to, User user, Post post}) {
+  factory Share({String? id, String? to, User? user, Post? post}) {
     return Share._internal(
         id: id == null ? UUID.getUUID() : id, to: to, user: user, post: post);
   }
@@ -78,7 +78,7 @@ class Share extends Model {
     return buffer.toString();
   }
 
-  Share copyWith({String id, String to, User user, Post post}) {
+  Share copyWith({String? id, String? to, User? user, Post? post}) {
     return Share(
         id: id ?? this.id,
         to: to ?? this.to,

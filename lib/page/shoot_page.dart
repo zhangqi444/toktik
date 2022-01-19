@@ -15,15 +15,15 @@ class ShootPage extends StatefulWidget {
 }
 
 class _ShootPageState extends State<ShootPage> {
-  CameraController _cameraController;
-  List<CameraDescription> _cameras;
+  CameraController? _cameraController;
+  List<CameraDescription>? _cameras;
 
   @override
   void initState() {
     super.initState();
 
 
-    WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
+    WidgetsBinding.instance!.addPostFrameCallback((_bottomBarLayout) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
@@ -35,11 +35,11 @@ class _ShootPageState extends State<ShootPage> {
 
   Future<void> _initCamera() async {
     _cameras = await availableCameras();
-    if(_cameras == null || _cameras.length == 0) {
+    if(_cameras == null || _cameras!.length == 0) {
       return;
     }
-    _cameraController = CameraController(_cameras[0], ResolutionPreset.max);
-    _cameraController.initialize().then((value) {
+    _cameraController = CameraController(_cameras![0], ResolutionPreset.max);
+    _cameraController!.initialize().then((value) {
       if (!mounted) return;
       setState(() {});
     });
@@ -48,13 +48,13 @@ class _ShootPageState extends State<ShootPage> {
   @override
   void dispose() {
     super.dispose();
-    _cameraController.dispose();
+    _cameraController!.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    if(null == _cameraController || !_cameraController.value.isInitialized){
+    if(null == _cameraController || !_cameraController!.value.isInitialized){
       return Center(
         child: SizedBox(
           width: 50,
@@ -89,14 +89,14 @@ class _ShootPageState extends State<ShootPage> {
   _getCameraPreview() {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    double cameraWidth = _cameraController.value.previewSize.width;
-    double cameraHeight = _cameraController.value.previewSize.height;
+    double cameraWidth = _cameraController!.value.previewSize!.width;
+    double cameraHeight = _cameraController!.value.previewSize!.height;
     double scale = height / cameraHeight;
     return Transform.scale(
         // TODO: don't apply scale for now
         scale: 1.0,
         alignment: Alignment.topCenter,
-        child:  CameraPreview(_cameraController),
+        child:  CameraPreview(_cameraController!),
     );
   }
 }

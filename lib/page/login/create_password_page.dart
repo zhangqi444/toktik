@@ -11,7 +11,7 @@ import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/util/string_util.dart';
 
 class CreatePasswordPage extends StatefulWidget {
-  CreatePasswordPage({Key key}) : super(key: key);
+  CreatePasswordPage({Key? key}) : super(key: key);
 
   @override
   _CreatePasswordPageState createState() {
@@ -20,8 +20,8 @@ class CreatePasswordPage extends StatefulWidget {
 }
 
 class _CreatePasswordPageState extends State<CreatePasswordPage> {
-  String password;
-  String username;
+  String? password;
+  String? username;
   bool buttonEnabled = false;
   String errorMessage = "";
   String title = "Create password";
@@ -71,7 +71,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
             LoginTextFieldWidget(hintText: "Password", obscureText: true, onChanged: (text) {
               password = text;
               setState(() {
-                buttonEnabled = password != null && password.length >= 8;
+                buttonEnabled = password != null && password!.length >= 8;
               });
             }),
             !isStringNullOrEmpty(errorMessage)

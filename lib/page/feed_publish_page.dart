@@ -12,7 +12,7 @@ import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 ///发布视频页面
 class FeedPublishPage extends StatefulWidget {
-  FeedPublishPage({Key key,}) : super(key: key);
+  FeedPublishPage({Key? key,}) : super(key: key);
 
   @override
   _FeedPublishPageState createState() {
@@ -22,10 +22,10 @@ class FeedPublishPage extends StatefulWidget {
 
 class _FeedPublishPageState extends State<FeedPublishPage> {
 
-  String videoFilePath;
-  File videoFile;
-  String coverPath;
-  AppBar _appBar;
+  String? videoFilePath;
+  late File videoFile;
+  String? coverPath;
+  AppBar? _appBar;
   TextEditingController _editingController = TextEditingController();
   UploadController _uploadController = Get.put(UploadController());
   FeedController _feedController = Get.put(FeedController());
@@ -34,7 +34,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
   void initState() {
     super.initState();
     videoFilePath = Get.parameters['videoPath'];
-    videoFile = File(videoFilePath);
+    videoFile = File(videoFilePath!);
     _getCoverImgPath();
   }
 
@@ -57,7 +57,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
 
    _getCoverImgPath() async{
      await VideoThumbnail.thumbnailFile(
-        video: videoFilePath,
+        video: videoFilePath!,
        quality: 100
     ).then((value) {
 
@@ -116,7 +116,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
                     child: Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
-                        null == coverPath?Container():Image.file(File(coverPath),fit: BoxFit.fill,),
+                        null == coverPath?Container():Image.file(File(coverPath!),fit: BoxFit.fill,),
                         Positioned(
                             bottom:0,
                             child: Container(
@@ -144,11 +144,11 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
              VideoPlayerValue videoValue = await VideoUtil.getVideoValue(videoFile);
 
              print('发布视频时长:${videoValue.duration.inSeconds}  width:${videoValue.size.width}  height:${videoValue.size.height}');
-             bool videoUpload = await _uploadController.uploadSingleFile('mp4', videoFile);
-             String videoUrl = _uploadController.uploadResponse.tokens[0].effectUrl;
+             bool? videoUpload = await _uploadController.uploadSingleFile('mp4', videoFile);
+             String? videoUrl = _uploadController.uploadResponse.tokens![0]!.effectUrl;
              print('发布视频：$videoUpload 地址:$videoUrl');
-             bool imgUpload =  await _uploadController.uploadSingleFile(CameraUtil.getImgSuffix(coverPath), File(coverPath));
-             String coverUrl = _uploadController.uploadResponse.tokens[0].effectUrl;
+             bool? imgUpload =  await _uploadController.uploadSingleFile(CameraUtil.getImgSuffix(coverPath!), File(coverPath!));
+             String? coverUrl = _uploadController.uploadResponse.tokens![0]!.effectUrl;
              print('发布封面图：$imgUpload 地址:$coverUrl');
              _feedController.publishFeed(_editingController.text,
                  videoUrl,

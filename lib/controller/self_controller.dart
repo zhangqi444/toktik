@@ -38,30 +38,30 @@ class SelfController extends GetxController{
   }
 
   ///登录
-  Future<String> login(account, password, isAccountEmail) async {
+  Future<String?> login(account, password, isAccountEmail) async {
     var response = await Api.login(account, password);
 
     if(response == null) return AuthStatus.UNKNOWN.toShortString();
 
-    String status = response.status;
+    String? status = response.status;
 
-    if(response.isSignedIn) {
-      String userId;
+    if(response.isSignedIn!) {
+      String? userId;
       if(isAccountEmail) {
         userId = await userController.loadUserInfoExByEmail(account);
       } else {
         userId = await userController.loadUserInfoExByUsername(account);
       }
 
-      UserInfoExResponse userInfoExResponse = userController.userExMap[userId];
+      UserInfoExResponse? userInfoExResponse = userController.userExMap[userId];
       if(userInfoExResponse == null || userInfoExResponse.user == null) {
         return AuthStatus.USER_PROFILE_NOT_FOUND.toShortString();
       }
 
       await setLoginUserAuthInfo(
-        email: userInfoExResponse.user.email,
-        username: userInfoExResponse.user.username,
-        userId: userInfoExResponse.user.id,
+        email: userInfoExResponse.user!.email,
+        username: userInfoExResponse.user!.username,
+        userId: userInfoExResponse.user!.id,
         token: response.token,
         persistent: true
       );
@@ -70,7 +70,7 @@ class SelfController extends GetxController{
     return status;
   }
 
-  Future<String> logout() async {
+  Future<String?> logout() async {
     var response = await Api.logout();
     if(response != null) {
       await SPUtil.remove(SPKeys.selfUserInfo);
@@ -81,42 +81,42 @@ class SelfController extends GetxController{
   }
 
   ///注册
-  Future<String> registerByEmail(email, username, password, confirmPassword) async {
+  Future<String?> registerByEmail(email, username, password, confirmPassword) async {
     var response = await Api.registerByEmail(email, username, password, confirmPassword);
     if(response != null) {
       return response.status;
     }
   }
 
-  Future<String> resendSignUpCode(email) async {
+  Future<String?> resendSignUpCode(email) async {
     var response = await Api.resendSignUpCode(email);
     if(response != null) {
       return response.status;
     }
   }
 
-  Future<String> resetPassword(String username) async {
+  Future<String?> resetPassword(String username) async {
     var response = await Api.resetPassword(username);
     if(response != null) {
       return response.status;
     }
   }
 
-  Future<String> confirmResetPassword(account, password, verificationCode) async {
+  Future<String?> confirmResetPassword(account, password, verificationCode) async {
     var response = await Api.confirmResetPassword(account, password, verificationCode);
     if(response != null) {
       return response.status;
     }
   }
 
-  Future<String> registerVerify(String username, String email, String verificationCode) async {
+  Future<String?> registerVerify(String username, String? email, String verificationCode) async {
     var response = await Api.confirmSignUp(username, verificationCode, null);
-    if(response == null && response.isSignUpComplete == null) {
+    if(response == null && response!.isSignUpComplete == null) {
       return AuthStatus.UNKNOWN.toShortString();
     }
 
-    if(response.isSignUpComplete && response.status == AuthStatus.SIGN_UP_DONE.toShortString()) {
-      String userId = await userController.createUser(
+    if(response.isSignUpComplete! && response.status == AuthStatus.SIGN_UP_DONE.toShortString()) {
+      String? userId = await userController.createUser(
         username: username,
         email: email,
         phoneNumber: loginUserPhoneNumber.value
@@ -149,16 +149,16 @@ class SelfController extends GetxController{
       }
     }
 
-    LoginResponse res = await Api.getCurrentUser();
+    LoginResponse? res = await Api.getCurrentUser();
     if(res == null || res.username == null) return;
 
-    String userId = await userController.loadUserInfoExByUsername(res.username);
+    String? userId = await userController.loadUserInfoExByUsername(res.username);
     await setLoginUserAuthInfo(username: res.username, userId: userId, token: res.token, persistent: true);
   }
 
   // TODO: migrate to a datamodel for better organized getting/putting logic
   Future<void> setLoginUserAuthInfo({
-    String email, String phoneNumber, String username, String token, String userId, persistent = false
+    String? email, String? phoneNumber, String? username, String? token, String? userId, persistent = false
   }) async {
     var authInfo = {};
 

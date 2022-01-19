@@ -5,7 +5,7 @@ import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
 
 class UserMoreBottomSheet extends StatefulWidget {
-  UserMoreBottomSheet({Key key}) : super(key: key);
+  UserMoreBottomSheet({Key? key}) : super(key: key);
 
   @override
   _UserMoreBottomSheetState createState() {
@@ -25,9 +25,9 @@ class _UserMoreBottomSheetState extends State<UserMoreBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20,),
-            Text(user.name,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+            Text(user.name!,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
             SizedBox(height: 2,),
-            Text('抖音号:'+user.douYinNumber,style: TextStyle(fontSize: 11,color: Colors.grey),),
+            Text('抖音号:'+user.douYinNumber!,style: TextStyle(fontSize: 11,color: Colors.grey),),
             SizedBox(height: 20,),
             Divider(color: Colors.grey.withAlpha(100),height: 0.05,),
             Container(

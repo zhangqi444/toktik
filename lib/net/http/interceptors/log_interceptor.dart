@@ -90,14 +90,14 @@ class LogInterceptors extends Interceptor {
   Future onError(DioError err, ErrorInterceptorHandler e) async {
     if (error) {
       if (err.type == DioErrorType.response) {
-        final uri = err.response.requestOptions.uri;
+        final uri = err.response!.requestOptions.uri;
         _printBoxed(
             header:
-                'DioError ║ Status: ${err.response.statusCode} ${err.response.statusMessage}',
+                'DioError ║ Status: ${err.response!.statusCode} ${err.response!.statusMessage}',
             text: uri.toString());
-        if (err.response != null && err.response.data != null) {
+        if (err.response != null && err.response!.data != null) {
           logPrint('╔ ${err.type.toString()}');
-          _printResponse(err.response);
+          _printResponse(err.response!);
         }
         _printLine('╚');
         logPrint('');
@@ -128,7 +128,7 @@ class LogInterceptors extends Interceptor {
     return response;
   }
 
-  void _printBoxed({String header, String text}) {
+  void _printBoxed({String? header, String? text}) {
     logPrint('');
     logPrint('╔╣ $header');
     logPrint('║  $text');
@@ -166,7 +166,7 @@ class LogInterceptors extends Interceptor {
   void _printLine([String pre = '', String suf = '╝']) =>
       logPrint('$pre${'═' * maxWidth}');
 
-  void _printKV(String key, Object v) {
+  void _printKV(String key, Object? v) {
     final pre = '╟ $key: ';
     final msg = v.toString();
 
@@ -257,14 +257,14 @@ class LogInterceptors extends Interceptor {
     return (list.length < 10 && list.toString().length < maxWidth);
   }
 
-  void _printMapAsTable(Map map, {String header}) {
+  void _printMapAsTable(Map map, {String? header}) {
     if (map == null || map.isEmpty) return;
     logPrint('╔ $header ');
     map.forEach((key, value) => _printKV(key, value));
     _printLine('╚');
   }
 
-  void _printRequestBody(Map map, {String header}) {
+  void _printRequestBody(Map? map, {String? header}) {
     if (map == null || map.isEmpty) return;
     logPrint('╔ $header ');
     _printPrettyMap(map);

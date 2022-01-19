@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/response/follow_response.dart';
@@ -17,18 +19,18 @@ class UserController extends GetxController{
   final isLoginUser = true.obs;//是否是登录用户
 
   //--------用户作品列表-------------
-  final userWorkList = <UserWorkListList>[].obs;
-  int cursor = 0;
+  final RxList<UserWorkListList?> userWorkList = <UserWorkListList>[].obs;
+  int? cursor = 0;
   int count = 10;
   bool hasMore = true;
   //--------用户作品列表-------------
 
 
-  Future<String> createUser({String username, String email, String phoneNumber}) async {
+  Future<String?> createUser({String? username, String? email, String? phoneNumber}) async {
     var response = await Api.createUser(username: username, email: email, phoneNumber: phoneNumber);
     if(response != null && response.user != null) {
-      userExMap[response.user.id] = response;
-      return response.user.id;
+      userExMap[response.user!.id] = response;
+      return response.user!.id;
     }
   }
 
@@ -49,41 +51,41 @@ class UserController extends GetxController{
   // }
   //
   ///获取用户资料信息(扩展)
-  void loadUserInfoExById(String id) async{
+  Future<void> loadUserInfoExById(String? id) async{
     if(isStringNullOrEmpty(id)) return;
 
     var response = await Api.getUserInfoEx(id);
     if(response != null) {
-      userExMap[response.user.id] = response;
+      userExMap[response.user!.id] = response;
     }
   }
 
   ///获取用户资料信息(扩展)
-  Future<String> loadUserInfoExByUsername(String username) async{
+  Future<String?> loadUserInfoExByUsername(String? username) async{
     var response = await Api.getUserInfoExByUsername(username);
     if(response != null) {
-      userExMap[response.user.id] = response;
-      return response.user.id;
+      userExMap[response.user!.id] = response;
+      return response.user!.id;
     }
   }
 
-  Future<String> loadUserInfoExByEmail(String email) async{
+  Future<String?> loadUserInfoExByEmail(String email) async{
     var response = await Api.getUserInfoExByEmail(email);
     if(response != null) {
-      userExMap[response.user.id] = response;
-      return response.user.id;
+      userExMap[response.user!.id] = response;
+      return response.user!.id;
     }
   }
 
   ///获取用户作品列表
   void getUserWorkList(String id)async{
-    var result = await Api.getUserFeedList(id, cursor, count);
-    userWorkList.value.addAll(result.xList);
+    var result = await (Api.getUserFeedList(id, cursor, count) as FutureOr<UserWorkListResponse>);
+    userWorkList.value.addAll(result.xList!);
     cursor = result.cursor;
   }
 
   ///关注
-  Future<FollowResponse> follow(int followType, String id)async{
+  Future<FollowResponse?> follow(int followType, String id)async{
     FollowRequest request = FollowRequest();
     request.actionType = followType;
     request.relationUserId = id;

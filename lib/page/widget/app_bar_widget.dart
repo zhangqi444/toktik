@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 
 class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   String title;
-  List<Widget> actions;
-  AppBarWidget({Key key, this.title = "", this.actions})
+  List<Widget>? actions;
+  AppBarWidget({Key? key, this.title = "", this.actions})
       : preferredSize = Size.fromHeight(kToolbarHeight), super(key: key);
 
   @override

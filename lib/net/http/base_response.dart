@@ -1,7 +1,7 @@
 class BaseResponse{
   dynamic data;
-  int code;
-  String message;
+  int? code;
+  String? message;
 
   BaseResponse(this.data, this.code, this.message);
 

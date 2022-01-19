@@ -27,26 +27,26 @@ import 'package:flutter/foundation.dart';
 @immutable
 class Report extends Model {
   static const classType = const _ReportModelType();
-  final String id;
-  final String reason;
-  final String description;
-  final String status;
-  final User user;
-  final Post post;
-  final User reporter;
-  final String type;
-  final String result;
+  final String? id;
+  final String? reason;
+  final String? description;
+  final String? status;
+  final User? user;
+  final Post? post;
+  final User? reporter;
+  final String? type;
+  final String? result;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
   const Report._internal(
-      {@required this.id,
+      {required this.id,
       this.reason,
       this.description,
       this.status,
@@ -57,15 +57,15 @@ class Report extends Model {
       this.result});
 
   factory Report(
-      {String id,
-      String reason,
-      String description,
-      String status,
-      User user,
-      Post post,
-      User reporter,
-      String type,
-      String result}) {
+      {String? id,
+      String? reason,
+      String? description,
+      String? status,
+      User? user,
+      Post? post,
+      User? reporter,
+      String? type,
+      String? result}) {
     return Report._internal(
         id: id == null ? UUID.getUUID() : id,
         reason: reason,
@@ -121,15 +121,15 @@ class Report extends Model {
   }
 
   Report copyWith(
-      {String id,
-      String reason,
-      String description,
-      String status,
-      User user,
-      Post post,
-      User reporter,
-      String type,
-      String result}) {
+      {String? id,
+      String? reason,
+      String? description,
+      String? status,
+      User? user,
+      Post? post,
+      User? reporter,
+      String? type,
+      String? result}) {
     return Report(
         id: id ?? this.id,
         reason: reason ?? this.reason,

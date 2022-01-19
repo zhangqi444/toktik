@@ -41,25 +41,25 @@ class VerificationCodePage extends StatefulWidget {
 
 class _VerificationCodePageState extends State<VerificationCodePage> {
   dynamic argumentData = Get.arguments;
-  String verificationCode;
-  String destination = "";
+  late String verificationCode;
+  String? destination = "";
   String title = "Sign up";
-  String account = "";
-  String password = "";
-  String username = "";
-  String email = "";
+  String? account = "";
+  String? password = "";
+  String? username = "";
+  String? email = "";
   bool isResetPassword = false;
   String errorMessage = "";
 
   SelfController loginController = Get.put(SelfController());
   TextEditingController textEditingController = TextEditingController();
-  StreamController<ErrorAnimationType> errorController;
+  StreamController<ErrorAnimationType>? errorController;
 
   /// 倒计时的计时器。
-  Timer _timer;
+  Timer? _timer;
 
   /// 当前倒计时的秒数。
-  int _seconds;
+  int _seconds = 0;
 
   /// 当前墨水瓶（`InkWell`）的字体样式。
   TextStyle inkWellStyle = _availableStyle;
@@ -116,7 +116,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
 
   @override
   void dispose() {
-    errorController.close();
+    errorController!.close();
     super.dispose();
   }
 
@@ -168,9 +168,9 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
               controller: textEditingController,
               keyboardType: TextInputType.number,
               onCompleted: (v) async {
-                String status;
+                String? status;
                 if(!isResetPassword) { // handle register
-                  status = await loginController.registerVerify(username, email, verificationCode);
+                  status = await loginController.registerVerify(username!, email, verificationCode);
                   if(status == AuthStatus.ALIAS_EXISTS.toShortString()
                     || status == AuthStatus.SIGN_UP_DONE.toShortString()) {
                     Get.offAndToNamed(Routers.login, arguments: { AuthNavigationArgument.ACCOUNT: username });
@@ -223,11 +223,11 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                             inkWellStyle = _unavailableStyle;
                             _verifyStr = 'resend code $_seconds' + 's';
                             setState(() {});
-                            String status;
+                            String? status;
                             if(!isResetPassword) {
                               status = await loginController.resendSignUpCode(account);
                             } else {
-                              status = await loginController.resetPassword(account);
+                              status = await loginController.resetPassword(account!);
                             }
                             if(status == null) {
                               // TODO: add erroe message and reset the timer status

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:toktik/res/colors.dart';
 
 class LoginTextFieldWidget extends StatefulWidget {
-  String text;
-  String initText;
-  Function onChanged;
-  String hintText;
+  String? text;
+  String? initText;
+  Function? onChanged;
+  String? hintText;
   bool obscureText;
   bool readOnly;
   LoginTextFieldWidget({this.text, this.initText, this.onChanged, this.hintText, this.obscureText = false, this.readOnly = false});
@@ -35,7 +35,7 @@ class _LoginTextFieldWidgetState extends State<LoginTextFieldWidget> {
         readOnly: widget.readOnly,
         decoration: InputDecoration(border: InputBorder.none, hintText: widget.hintText),
         onChanged: (text) {
-          widget.onChanged(text);
+          widget.onChanged!(text);
         },
       ),
     );

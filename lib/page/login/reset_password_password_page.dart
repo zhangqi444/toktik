@@ -14,7 +14,7 @@ import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/util/string_util.dart';
 
 class ResetPasswordPasswordPage extends StatefulWidget {
-  ResetPasswordPasswordPage({Key key}) : super(key: key);
+  ResetPasswordPasswordPage({Key? key}) : super(key: key);
 
   @override
   _ResetPasswordPasswordPageState createState() {
@@ -27,10 +27,10 @@ class _ResetPasswordPasswordPageState extends State<ResetPasswordPasswordPage> {
   String appBarTitle = "Reset";
   String title = "Reset password";
   String subTitle = "";
-  String account;
-  String password;
+  String? account;
+  String? password;
   bool buttonEnabled = false;
-  String errorMessage = "";
+  String? errorMessage = "";
   UserController userController = Get.put(UserController());
   SelfController loginController = Get.put(SelfController());
 
@@ -81,7 +81,7 @@ class _ResetPasswordPasswordPageState extends State<ResetPasswordPasswordPage> {
             LoginTextFieldWidget(hintText: "Enter password", obscureText: true, onChanged: (text) {
               password = text;
               setState(() {
-                buttonEnabled = password != null && password.length >= 6;
+                buttonEnabled = password != null && password!.length >= 6;
               });
             }),
             !isStringNullOrEmpty(errorMessage)

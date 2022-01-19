@@ -11,7 +11,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:toktik/util/string_util.dart';
 
 class SignUpEmailPage extends StatefulWidget {
-  SignUpEmailPage({Key key}) : super(key: key);
+  SignUpEmailPage({Key? key}) : super(key: key);
 
   @override
   _SignUpEmailPageState createState() {
@@ -20,12 +20,12 @@ class SignUpEmailPage extends StatefulWidget {
 }
 
 class _SignUpEmailPageState extends State<SignUpEmailPage> {
-  TextField accountField;
+  TextField? accountField;
   String appBarTitle = "Sign up";
-  String email;
-  String username;
-  String password;
-  String errorMessage;
+  String? email;
+  String? username;
+  String? password;
+  String? errorMessage;
   SelfController loginController = Get.put(SelfController());
   dynamic argumentData = Get.arguments;
 
@@ -116,7 +116,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
             errorMessage = '';
           });
         },
-        validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email address.",
+        validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email address.",
       ),
     );
   }
@@ -129,14 +129,14 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       child: RaisedButton(
         onPressed: () async {
           setState(() { errorMessage = ''; });
-          if (!EmailValidator.validate(email)) {
+          if (!EmailValidator.validate(email!)) {
             setState(() {
               errorMessage = 'The email address is invalid, please check and try again.';
             });
             return;
           }
 
-          String status = await loginController.registerByEmail(email, username, password, password);
+          String? status = await loginController.registerByEmail(email, username, password, password);
           if(status == AuthStatus.SIGN_UP_DONE.toShortString()) {
             Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
           } else if(status == AuthStatus.USERNAME_EXISTS.toShortString()) {

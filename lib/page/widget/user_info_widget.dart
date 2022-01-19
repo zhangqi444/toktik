@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 
 ///用户信息
 class UserInfoWidget extends StatefulWidget {
-  bool isLoginUser;
-  String id;
+  bool? isLoginUser;
+  String? id;
 
-  UserInfoWidget({bool isLoginUser, String id}){
+  UserInfoWidget({bool? isLoginUser, String? id}){
     this.isLoginUser = isLoginUser;
     this.id = id;
   }
@@ -92,9 +92,9 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 image: DecorationImage(
-                    image: (userEx == null || userEx.portrait == null || userEx.portrait.isEmpty)
+                    image: ((userEx == null || userEx.portrait == null || userEx.portrait.isEmpty)
                         ? AssetImage('assets/images/person_holder.png')
-                        : NetworkImage(userEx.portrait),
+                        : NetworkImage(userEx.portrait)) as ImageProvider<Object>,
                     fit: BoxFit.cover
                 )
             ),
@@ -263,7 +263,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           height: 10,
         );
       } else {
-        int gender = 2;
+        int? gender = 2;
         if(user != null) gender = user.gender;
         return Image.asset(gender == 2?'assets/images/male.webp':'assets/images/famale.webp',
           width: 10,

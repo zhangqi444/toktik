@@ -35,11 +35,11 @@ import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/generated/json/feed_list_response_helper.dart';
 
 class JsonConvert<T> {
-	T fromJson(Map<String, dynamic> json) {
+	T? fromJson(Map<String, dynamic>? json) {
 		return _getFromJson<T>(runtimeType, this, json);
 	}
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic>? toJson() {
 		return _getToJson<T>(runtimeType, this);
   }
 
@@ -343,134 +343,134 @@ class JsonConvert<T> {
   //list is returned by type
 	static M _getListChildType<M>(List data) {
 		if(<UserInfoExResponse>[] is M){
-			return data.map<UserInfoExResponse>((e) => UserInfoExResponse().fromJson(e)).toList() as M;
+			return data.map<UserInfoExResponse?>((e) => UserInfoExResponse().fromJson(e)).toList() as M;
 		}
 		if(<UserInfoExUser>[] is M){
-			return data.map<UserInfoExUser>((e) => UserInfoExUser().fromJson(e)).toList() as M;
+			return data.map<UserInfoExUser?>((e) => UserInfoExUser().fromJson(e)).toList() as M;
 		}
 		if(<LogoutResponse>[] is M){
-			return data.map<LogoutResponse>((e) => LogoutResponse().fromJson(e)).toList() as M;
+			return data.map<LogoutResponse?>((e) => LogoutResponse().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedResponse>[] is M){
-			return data.map<PublishFeedResponse>((e) => PublishFeedResponse().fromJson(e)).toList() as M;
+			return data.map<PublishFeedResponse?>((e) => PublishFeedResponse().fromJson(e)).toList() as M;
 		}
 		if(<LikeResponse>[] is M){
-			return data.map<LikeResponse>((e) => LikeResponse().fromJson(e)).toList() as M;
+			return data.map<LikeResponse?>((e) => LikeResponse().fromJson(e)).toList() as M;
 		}
 		if(<FollowRequest>[] is M){
-			return data.map<FollowRequest>((e) => FollowRequest().fromJson(e)).toList() as M;
+			return data.map<FollowRequest?>((e) => FollowRequest().fromJson(e)).toList() as M;
 		}
 		if(<UploadResponse>[] is M){
-			return data.map<UploadResponse>((e) => UploadResponse().fromJson(e)).toList() as M;
+			return data.map<UploadResponse?>((e) => UploadResponse().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListResponse>[] is M){
-			return data.map<UserWorkListResponse>((e) => UserWorkListResponse().fromJson(e)).toList() as M;
+			return data.map<UserWorkListResponse?>((e) => UserWorkListResponse().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListList>[] is M){
-			return data.map<UserWorkListList>((e) => UserWorkListList().fromJson(e)).toList() as M;
+			return data.map<UserWorkListList?>((e) => UserWorkListList().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListListContent>[] is M){
-			return data.map<UserWorkListListContent>((e) => UserWorkListListContent().fromJson(e)).toList() as M;
+			return data.map<UserWorkListListContent?>((e) => UserWorkListListContent().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListListContentTag>[] is M){
-			return data.map<UserWorkListListContentTag>((e) => UserWorkListListContentTag().fromJson(e)).toList() as M;
+			return data.map<UserWorkListListContentTag?>((e) => UserWorkListListContentTag().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListListContentAt>[] is M){
-			return data.map<UserWorkListListContentAt>((e) => UserWorkListListContentAt().fromJson(e)).toList() as M;
+			return data.map<UserWorkListListContentAt?>((e) => UserWorkListListContentAt().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListListContentAttachmants>[] is M){
-			return data.map<UserWorkListListContentAttachmants>((e) => UserWorkListListContentAttachmants().fromJson(e)).toList() as M;
+			return data.map<UserWorkListListContentAttachmants?>((e) => UserWorkListListContentAttachmants().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListListContentMusic>[] is M){
-			return data.map<UserWorkListListContentMusic>((e) => UserWorkListListContentMusic().fromJson(e)).toList() as M;
+			return data.map<UserWorkListListContentMusic?>((e) => UserWorkListListContentMusic().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListListLocation>[] is M){
-			return data.map<UserWorkListListLocation>((e) => UserWorkListListLocation().fromJson(e)).toList() as M;
+			return data.map<UserWorkListListLocation?>((e) => UserWorkListListLocation().fromJson(e)).toList() as M;
 		}
 		if(<UserWorkListListUser>[] is M){
-			return data.map<UserWorkListListUser>((e) => UserWorkListListUser().fromJson(e)).toList() as M;
+			return data.map<UserWorkListListUser?>((e) => UserWorkListListUser().fromJson(e)).toList() as M;
 		}
 		if(<RegisterResponse>[] is M){
-			return data.map<RegisterResponse>((e) => RegisterResponse().fromJson(e)).toList() as M;
+			return data.map<RegisterResponse?>((e) => RegisterResponse().fromJson(e)).toList() as M;
 		}
 		if(<UserInfoResponse>[] is M){
-			return data.map<UserInfoResponse>((e) => UserInfoResponse().fromJson(e)).toList() as M;
+			return data.map<UserInfoResponse?>((e) => UserInfoResponse().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedRequest>[] is M){
-			return data.map<PublishFeedRequest>((e) => PublishFeedRequest().fromJson(e)).toList() as M;
+			return data.map<PublishFeedRequest?>((e) => PublishFeedRequest().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedContent>[] is M){
-			return data.map<PublishFeedContent>((e) => PublishFeedContent().fromJson(e)).toList() as M;
+			return data.map<PublishFeedContent?>((e) => PublishFeedContent().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedContentTag>[] is M){
-			return data.map<PublishFeedContentTag>((e) => PublishFeedContentTag().fromJson(e)).toList() as M;
+			return data.map<PublishFeedContentTag?>((e) => PublishFeedContentTag().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedContentAt>[] is M){
-			return data.map<PublishFeedContentAt>((e) => PublishFeedContentAt().fromJson(e)).toList() as M;
+			return data.map<PublishFeedContentAt?>((e) => PublishFeedContentAt().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedContentAttachmants>[] is M){
-			return data.map<PublishFeedContentAttachmants>((e) => PublishFeedContentAttachmants().fromJson(e)).toList() as M;
+			return data.map<PublishFeedContentAttachmants?>((e) => PublishFeedContentAttachmants().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedContentMusic>[] is M){
-			return data.map<PublishFeedContentMusic>((e) => PublishFeedContentMusic().fromJson(e)).toList() as M;
+			return data.map<PublishFeedContentMusic?>((e) => PublishFeedContentMusic().fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedLocation>[] is M){
-			return data.map<PublishFeedLocation>((e) => PublishFeedLocation().fromJson(e)).toList() as M;
+			return data.map<PublishFeedLocation?>((e) => PublishFeedLocation().fromJson(e)).toList() as M;
 		}
 		if(<ViewResponse>[] is M){
-			return data.map<ViewResponse>((e) => ViewResponse().fromJson(e)).toList() as M;
+			return data.map<ViewResponse?>((e) => ViewResponse().fromJson(e)).toList() as M;
 		}
 		if(<UploadTokenResponse>[] is M){
-			return data.map<UploadTokenResponse>((e) => UploadTokenResponse().fromJson(e)).toList() as M;
+			return data.map<UploadTokenResponse?>((e) => UploadTokenResponse().fromJson(e)).toList() as M;
 		}
 		if(<UploadTokenToken>[] is M){
-			return data.map<UploadTokenToken>((e) => UploadTokenToken().fromJson(e)).toList() as M;
+			return data.map<UploadTokenToken?>((e) => UploadTokenToken().fromJson(e)).toList() as M;
 		}
 		if(<UploadTokenTokensHeaders>[] is M){
-			return data.map<UploadTokenTokensHeaders>((e) => UploadTokenTokensHeaders().fromJson(e)).toList() as M;
+			return data.map<UploadTokenTokensHeaders?>((e) => UploadTokenTokensHeaders().fromJson(e)).toList() as M;
 		}
 		if(<FollowResponse>[] is M){
-			return data.map<FollowResponse>((e) => FollowResponse().fromJson(e)).toList() as M;
+			return data.map<FollowResponse?>((e) => FollowResponse().fromJson(e)).toList() as M;
 		}
 		if(<LoginResponse>[] is M){
-			return data.map<LoginResponse>((e) => LoginResponse().fromJson(e)).toList() as M;
+			return data.map<LoginResponse?>((e) => LoginResponse().fromJson(e)).toList() as M;
 		}
 		if(<FeedListResponse>[] is M){
-			return data.map<FeedListResponse>((e) => FeedListResponse().fromJson(e)).toList() as M;
+			return data.map<FeedListResponse?>((e) => FeedListResponse().fromJson(e)).toList() as M;
 		}
 		if(<FeedListList>[] is M){
-			return data.map<FeedListList>((e) => FeedListList().fromJson(e)).toList() as M;
+			return data.map<FeedListList?>((e) => FeedListList().fromJson(e)).toList() as M;
 		}
 		if(<FeedListListContent>[] is M){
-			return data.map<FeedListListContent>((e) => FeedListListContent().fromJson(e)).toList() as M;
+			return data.map<FeedListListContent?>((e) => FeedListListContent().fromJson(e)).toList() as M;
 		}
 		if(<FeedListListContentTag>[] is M){
-			return data.map<FeedListListContentTag>((e) => FeedListListContentTag().fromJson(e)).toList() as M;
+			return data.map<FeedListListContentTag?>((e) => FeedListListContentTag().fromJson(e)).toList() as M;
 		}
 		if(<FeedListListContentAt>[] is M){
-			return data.map<FeedListListContentAt>((e) => FeedListListContentAt().fromJson(e)).toList() as M;
+			return data.map<FeedListListContentAt?>((e) => FeedListListContentAt().fromJson(e)).toList() as M;
 		}
 		if(<FeedListListContentAttachmants>[] is M){
-			return data.map<FeedListListContentAttachmants>((e) => FeedListListContentAttachmants().fromJson(e)).toList() as M;
+			return data.map<FeedListListContentAttachmants?>((e) => FeedListListContentAttachmants().fromJson(e)).toList() as M;
 		}
 		if(<FeedListListContentMusic>[] is M){
-			return data.map<FeedListListContentMusic>((e) => FeedListListContentMusic().fromJson(e)).toList() as M;
+			return data.map<FeedListListContentMusic?>((e) => FeedListListContentMusic().fromJson(e)).toList() as M;
 		}
 		if(<FeedListListLocation>[] is M){
-			return data.map<FeedListListLocation>((e) => FeedListListLocation().fromJson(e)).toList() as M;
+			return data.map<FeedListListLocation?>((e) => FeedListListLocation().fromJson(e)).toList() as M;
 		}
 		if(<FeedListListUser>[] is M){
-			return data.map<FeedListListUser>((e) => FeedListListUser().fromJson(e)).toList() as M;
+			return data.map<FeedListListUser?>((e) => FeedListListUser().fromJson(e)).toList() as M;
 		}
 
 		throw Exception("not found");
 	}
 
-  static M fromJsonAsT<M>(json) {
+  static M? fromJsonAsT<M>(json) {
 		if (json is List) {
 			return _getListChildType<M>(json);
 		} else {
-			return _fromJsonSingle<M>(json) as M;
+			return _fromJsonSingle<M>(json) as M?;
 		}
 	}
 }

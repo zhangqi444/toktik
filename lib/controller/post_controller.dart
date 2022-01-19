@@ -7,12 +7,12 @@ class PostController extends GetxController{
 
   SelfController selfController = Get.put(SelfController());
 
-  void viewPost(String postId) async {
+  void viewPost(String? postId) async {
     String userId = selfController.loginUserId.value;
     await Api.viewPost(postId, userId);
   }
 
-  Future<LikeResponse> likePost(String postId, bool value) async {
+  Future<LikeResponse?> likePost(String? postId, bool value) async {
     String userId = selfController.loginUserId.value;
     return await Api.likePost(postId, userId, value);
   }

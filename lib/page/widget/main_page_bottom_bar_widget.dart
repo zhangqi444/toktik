@@ -29,7 +29,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   final UserController userController = Get.find();
   //用来获取BottomBar的高度
   final GlobalKey bottomBarKey = GlobalKey();
-  Widget _bottomBarLayout;
+  late Widget _bottomBarLayout;
   static const double NavigationIconSize = 20.0;
   static const double CreateButtonWidth = 38.0;
 
@@ -38,9 +38,9 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
     super.initState();
     _bottomBarLayout = _getLayoutBottomBar();
     //BottomBar绘制完成时候的监听
-    WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
+    WidgetsBinding.instance!.addPostFrameCallback((_bottomBarLayout) {
       double videoViewHeight = MediaQuery.of(context).size.height -
-          bottomBarKey.currentContext.size.height;
+          bottomBarKey.currentContext!.size!.height;
       mainPageScrollController.setVideoViewHeight(videoViewHeight);
     });
   }

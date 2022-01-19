@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoginSubtitleTextWidget extends StatefulWidget {
-  String text;
+  String? text;
   LoginSubtitleTextWidget({this.text});
 
   @override
@@ -18,7 +18,7 @@ class _LoginSubtitleTextWidgetState extends State<LoginSubtitleTextWidget> {
       width: MediaQuery.of(context).size.width,
       height: 40,
       child: Text(
-        widget.text,
+        widget.text!,
         style: TextStyle(color: Color(0xff888888), fontSize: 12),
         maxLines: 2,
       ),

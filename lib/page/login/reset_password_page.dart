@@ -15,7 +15,7 @@ import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/util/string_util.dart';
 
 class ResetPasswordPage extends StatefulWidget {
-  ResetPasswordPage({Key key}) : super(key: key);
+  ResetPasswordPage({Key? key}) : super(key: key);
 
   @override
   _ResetPasswordPageState createState() {
@@ -25,13 +25,13 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   dynamic argumentData = Get.arguments;
-  String initText;
+  String? initText;
   String appBarTitle = "Reset";
   String title = "Reset password";
   String subTitle = "We will send you a code to reset your password.";
-  String account;
+  String? account;
   bool buttonEnabled = false;
-  String errorMessage = "";
+  String? errorMessage = "";
   UserController userController = Get.put(UserController());
   SelfController loginController = Get.put(SelfController());
 
@@ -81,7 +81,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             LoginTextFieldWidget(hintText: "Username, email or phone number", initText: initText, onChanged: (text) {
               account = text;
               setState(() {
-                buttonEnabled = account != null && account.length >= 6;
+                buttonEnabled = account != null && account!.length >= 6;
               });
             }),
             !isStringNullOrEmpty(errorMessage)
@@ -91,7 +91,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               text: "Next",
               buttonEnabled: buttonEnabled,
               onPressed: !buttonEnabled ? () {} : () async {
-                String status = await loginController.resetPassword(account);
+                String? status = await loginController.resetPassword(account!);
 
                 if(status == AuthStatus.USER_NOT_FOUND.toShortString()) {
                   setState(() { errorMessage = "The user isn't registered yet."; });

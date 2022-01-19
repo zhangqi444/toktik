@@ -9,7 +9,7 @@ uploadTokenResponseFromJson(UploadTokenResponse data, Map<String, dynamic> json)
 
 Map<String, dynamic> uploadTokenResponseToJson(UploadTokenResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	data['tokens'] =  entity.tokens?.map((v) => v.toJson())?.toList();
+	data['tokens'] =  entity.tokens?.map((v) => v!.toJson())?.toList();
 	return data;
 }
 

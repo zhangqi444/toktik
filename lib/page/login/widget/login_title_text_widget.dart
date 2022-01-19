@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LoginTitleTextWidget extends StatefulWidget {
-  String text;
+  String? text;
   LoginTitleTextWidget({this.text});
 
   @override
@@ -18,7 +18,7 @@ class _LoginTitleTextWidgetState extends State<LoginTitleTextWidget> {
       width: MediaQuery.of(context).size.width,
       height: 40,
       child: Text(
-        widget.text,
+        widget.text!,
         style: TextStyle(color: Color(0xff2A2A2A), fontSize: 19, fontWeight: FontWeight.bold),
         maxLines: 2,
       ),

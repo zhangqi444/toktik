@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 //设置页面
 class SettingPage extends StatefulWidget {
-  SettingPage({Key key}) : super(key: key);
+  SettingPage({Key? key}) : super(key: key);
 
   @override
   _SettingPageState createState() {

@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 ///视频评论部件
 class VideoCommentWidget extends StatefulWidget {
   List<CommentModel> commentList;
-  VideoCommentWidget({Key key,@required this.commentList}) : super(key: key);
+  VideoCommentWidget({Key? key,required this.commentList}) : super(key: key);
 
   @override
   _VideoCommentWidgetState createState() {

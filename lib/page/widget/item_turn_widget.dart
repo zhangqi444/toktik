@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:toktik/res/colors.dart';
 
 class ItemTurnWidget extends StatefulWidget {
-  String img;
-  String title;
+  String? img;
+  String? title;
   Color bgColor;
-  Function onClick;
+  Function? onClick;
   double itemHeight;
   double marginVertical;
   double paddingVertical;
@@ -41,7 +41,7 @@ class _ItemTurnWidgetState extends State<ItemTurnWidget> {
 
     return InkWell(
       onTap:(){
-        widget.onClick.call();
+        widget.onClick!.call();
       },
       child: Container(
         color: widget.bgColor,
@@ -54,7 +54,7 @@ class _ItemTurnWidgetState extends State<ItemTurnWidget> {
           children: [
             Positioned(
               left: 0,
-                child: widget.img != null?Image.asset(widget.img,width: 20,height: 20, color: ColorRes.light_foreground_color):Container()),
+                child: widget.img != null?Image.asset(widget.img!,width: 20,height: 20, color: ColorRes.light_foreground_color):Container()),
             Positioned(
                 left:  widget.img != null?40:0,
                 child: Text(widget.title??'',style: TextStyle(color: ColorRes.light_foreground_color,fontSize: 14),)),

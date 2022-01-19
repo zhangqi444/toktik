@@ -14,16 +14,16 @@ import 'home_page.dart';
 
 class MainPage extends StatelessWidget {
   final MainPageScrollController _mainPageController = Get.find();
-  PageController _scrollPageController;
+  PageController? _scrollPageController;
   SelfController _selfController = Get.put(SelfController());
 
-  MainPage({PageController pageController}){
+  MainPage({PageController? pageController}){
     this._scrollPageController = pageController;
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
+    WidgetsBinding.instance!.addPostFrameCallback((_bottomBarLayout) {
       //设置状态栏的颜色和图标模式
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: ColorRes.color_1,

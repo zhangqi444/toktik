@@ -4,7 +4,7 @@ import 'package:share_plus/share_plus.dart';
 
 class VideoShareWidget extends StatefulWidget {
   var video;
-  VideoShareWidget({Key key, this.video}) : super(key: key);
+  VideoShareWidget({Key? key, this.video}) : super(key: key);
 
   @override
   _VideoShareWidgetState createState() {

@@ -22,7 +22,7 @@ feedListResponseFromJson(FeedListResponse data, Map<String, dynamic> json) {
 
 Map<String, dynamic> feedListResponseToJson(FeedListResponse entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
-	data['list'] =  entity.xList?.map((v) => v.toJson())?.toList();
+	data['list'] =  entity.xList?.map((v) => v!.toJson())?.toList();
 	data['cursor'] = entity.cursor;
 	data['count'] = entity.count;
 	data['hasMore'] = entity.hasMore;
@@ -136,9 +136,9 @@ feedListListContentFromJson(FeedListListContent data, Map<String, dynamic> json)
 Map<String, dynamic> feedListListContentToJson(FeedListListContent entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['text'] = entity.text;
-	data['tag'] =  entity.tag?.map((v) => v.toJson())?.toList();
-	data['at'] =  entity.at?.map((v) => v.toJson())?.toList();
-	data['attachments'] =  entity.attachments?.map((v) => v.toJson())?.toList();
+	data['tag'] =  entity.tag?.map((v) => v!.toJson())?.toList();
+	data['at'] =  entity.at?.map((v) => v!.toJson())?.toList();
+	data['attachments'] =  entity.attachments?.map((v) => v!.toJson())?.toList();
 	data['music'] = entity.music?.toJson();
 	return data;
 }

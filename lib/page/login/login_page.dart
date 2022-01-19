@@ -16,7 +16,7 @@ import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+  LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() {
@@ -25,10 +25,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String title, subtitle;
+  String? title, subtitle;
   bool isForSignedUpAccount = false;
-  TextField pwdField;
-  String account, pwd;
+  TextField? pwdField;
+  String? account, pwd;
   String errorMessage = "";
   SelfController loginController = Get.put(SelfController());
   final MainPageScrollController mainPageController = Get.find();
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
       child: RaisedButton(
         onPressed: () async {
           if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
-            String status = await loginController.login(account, pwd, EmailValidator.validate(account));
+            String? status = await loginController.login(account, pwd, EmailValidator.validate(account!));
 
             if(status == AuthStatus.USER_NOT_FOUND.toShortString()) {
               setState(() { errorMessage = 'Sorry, we cannot find the user. Please Check your information and try again.'; });

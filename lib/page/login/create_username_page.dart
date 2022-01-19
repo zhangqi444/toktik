@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
 
 class CreateUsernamePage extends StatefulWidget {
-  CreateUsernamePage({Key key}) : super(key: key);
+  CreateUsernamePage({Key? key}) : super(key: key);
 
   @override
   _CreateUsernamePageState createState() {
@@ -21,13 +21,13 @@ class CreateUsernamePage extends StatefulWidget {
 
 class _CreateUsernamePageState extends State<CreateUsernamePage> {
   dynamic argumentData = Get.arguments;
-  String initText;
+  String? initText;
   String appBarTitle = "Sign up";
   String title = "Create username";
   String subTitle = "Please notice, you can not change this later.";
-  String username;
+  String? username;
   bool buttonEnable = false;
-  String errorMessage = "";
+  String? errorMessage = "";
   UserController userController = Get.put(UserController());
   SelfController loginController = Get.put(SelfController());
 
@@ -103,7 +103,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             LoginTextFieldWidget(hintText: "Username", initText: initText, onChanged: (text) {
               username = text;
               setState(() {
-                buttonEnable = username != null && username.length >= 8;
+                buttonEnable = username != null && username!.length >= 8;
               });
             }),
             !isStringNullOrEmpty(errorMessage)
@@ -137,7 +137,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: !buttonEnable ? () {} : () async {
-          String userId = await userController.loadUserInfoExByUsername(username);
+          String? userId = await userController.loadUserInfoExByUsername(username);
           if(!isStringNullOrEmpty(userId)) {
             setState(() {
               errorMessage = "The username is not valid or already existing, please try another one.";

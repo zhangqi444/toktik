@@ -14,9 +14,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ///首页tab推荐
 class HomeTabRecommendPage extends StatefulWidget {
-  double contentHeight;
-  PageController pageController;
-  HomeTabRecommendPage({Key key, this.contentHeight, this.pageController}) : super(key: key);
+  double? contentHeight;
+  PageController? pageController;
+  HomeTabRecommendPage({Key? key, this.contentHeight, this.pageController}) : super(key: key);
 
   @override
   _HomeTabRecommendPageState createState() {
@@ -69,7 +69,7 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
 
   _getVideoList(BuildContext context) {
     return Obx((){
-      List<FeedListList> videoList = _feedController.hotFeedList.value.map(
+      List<FeedListList?> videoList = _feedController.hotFeedList.value.map(
            (element) => _feedController.feedListListMap.value[element]
       ).toList();
       if(null == videoList || videoList.length == 0){
@@ -85,13 +85,13 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
               showFocusButton: true,
               contentHeight: widget.contentHeight,
               onClickHeader: (){
-                _mainController.setCurrentUserOfVideo(videoList[index].user);
-                widget.pageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
+                _mainController.setCurrentUserOfVideo(videoList[index]!.user!);
+                widget.pageController!.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
               },
             );
           },
           onPageChanged: (index){
-            _mainController.setCurrentUserOfVideo(videoList[index].user);
+            _mainController.setCurrentUserOfVideo(videoList[index]!.user!);
           },
         );
       }

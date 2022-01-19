@@ -6,14 +6,14 @@ import 'package:like_button/like_button.dart';
 
 class VideoRightBarWidget extends StatefulWidget {
 
-  final Function onClickComment;
-  final Function onClickLike;
-  final Function onClickShare;
-  final Function onClickHeader;
-  bool showFocusButton;
-  FeedListList video;
+  final Function? onClickComment;
+  final Function? onClickLike;
+  final Function? onClickShare;
+  final Function? onClickHeader;
+  bool? showFocusButton;
+  FeedListList? video;
   VideoRightBarWidget({
-    Key key,this.onClickComment,this.onClickShare,this.showFocusButton,
+    Key? key,this.onClickComment,this.onClickShare,this.showFocusButton,
     this.onClickHeader,this.onClickLike,this.video}) : super(key: key);
 
   @override
@@ -53,8 +53,8 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
   }
   //头像
   _getHeader() {
-    String headerUrl = '';
-    if(widget.video != null) headerUrl = widget.video.user.portrait;
+    String? headerUrl = '';
+    if(widget.video != null) headerUrl = widget.video!.user!.portrait;
     return InkWell(
       onTap: (){
         widget.onClickHeader?.call();
@@ -71,7 +71,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
                 borderRadius: BorderRadius.circular(_widgetWidth/2),
                 border: Border.fromBorderSide(BorderSide(color: Colors.white,width: 2)),
                 image: DecorationImage(
-                  image: headerUrl == null?AssetImage('assets/images/person_holder.png'):NetworkImage(headerUrl),
+                  image: (headerUrl == null?AssetImage('assets/images/person_holder.png'):NetworkImage(headerUrl)) as ImageProvider<Object>,
                   fit: BoxFit.cover
                 )
               ),
@@ -95,12 +95,12 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
   }
   //获取点赞按钮
   _getLikeButton() {
-    int likeCount = widget.video.likeCount < 0 ? 0 : widget.video.likeCount;
+    int? likeCount = widget.video!.likeCount! < 0 ? 0 : widget.video!.likeCount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         LikeButton(
-            isLiked: widget.video.isLiked,
+            isLiked: widget.video!.isLiked,
             size: 40,
             circleColor:CircleColor(start: ColorRes.color_3,end: ColorRes.color_3),
             likeBuilder: (isLiked){
@@ -116,7 +116,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
   }
   //获取评论按钮
   _getCommentButton() {
-    int commentCount = widget.video.commentCount;
+    int? commentCount = widget.video!.commentCount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -136,7 +136,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
 
   //获取分享按钮
   _getShareButton() {
-    int shareCount = widget.video.shareCount;
+    int? shareCount = widget.video!.shareCount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

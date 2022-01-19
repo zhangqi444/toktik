@@ -39,7 +39,7 @@ class _ScrollPageState extends State<ScrollPage> {
     super.initState();
 
     Application.eventBus.on<CloseMainDrawerEvent>().listen((event) {
-      drawerKey.currentState.close();
+      drawerKey.currentState!.close();
     });
   }
 

@@ -27,26 +27,26 @@ import 'package:flutter/foundation.dart';
 @immutable
 class Post extends Model {
   static const classType = const _PostModelType();
-  final String id;
-  final String text;
-  final User user;
-  final Music music;
-  final String attachments;
-  final int likeCount;
-  final int commentCount;
-  final int shareCount;
-  final int viewCount;
+  final String? id;
+  final String? text;
+  final User? user;
+  final Music? music;
+  final String? attachments;
+  final int? likeCount;
+  final int? commentCount;
+  final int? shareCount;
+  final int? viewCount;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
   const Post._internal(
-      {@required this.id,
+      {required this.id,
       this.text,
       this.user,
       this.music,
@@ -57,15 +57,15 @@ class Post extends Model {
       this.viewCount});
 
   factory Post(
-      {String id,
-      String text,
-      User user,
-      Music music,
-      String attachments,
-      int likeCount,
-      int commentCount,
-      int shareCount,
-      int viewCount}) {
+      {String? id,
+      String? text,
+      User? user,
+      Music? music,
+      String? attachments,
+      int? likeCount,
+      int? commentCount,
+      int? shareCount,
+      int? viewCount}) {
     return Post._internal(
         id: id == null ? UUID.getUUID() : id,
         text: text,
@@ -127,15 +127,15 @@ class Post extends Model {
   }
 
   Post copyWith(
-      {String id,
-      String text,
-      User user,
-      Music music,
-      String attachments,
-      int likeCount,
-      int commentCount,
-      int shareCount,
-      int viewCount}) {
+      {String? id,
+      String? text,
+      User? user,
+      Music? music,
+      String? attachments,
+      int? likeCount,
+      int? commentCount,
+      int? shareCount,
+      int? viewCount}) {
     return Post(
         id: id ?? this.id,
         text: text ?? this.text,
@@ -158,10 +158,10 @@ class Post extends Model {
             ? Music.fromJson(new Map<String, dynamic>.from(json['music']))
             : null,
         attachments = json['attachments'],
-        likeCount = (json['likeCount'] as num)?.toInt(),
-        commentCount = (json['commentCount'] as num)?.toInt(),
-        shareCount = (json['shareCount'] as num)?.toInt(),
-        viewCount = (json['viewCount'] as num)?.toInt();
+        likeCount = (json['likeCount'] as num?)?.toInt(),
+        commentCount = (json['commentCount'] as num?)?.toInt(),
+        shareCount = (json['shareCount'] as num?)?.toInt(),
+        viewCount = (json['viewCount'] as num?)?.toInt();
 
   Map<String, dynamic> toJson() => {
         'id': id,

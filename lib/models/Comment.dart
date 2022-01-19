@@ -27,22 +27,22 @@ import 'package:flutter/foundation.dart';
 @immutable
 class Comment extends Model {
   static const classType = const _CommentModelType();
-  final String id;
-  final User user;
-  final Post post;
-  final String text;
+  final String? id;
+  final User? user;
+  final Post? post;
+  final String? text;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
-  const Comment._internal({@required this.id, this.user, this.post, this.text});
+  const Comment._internal({required this.id, this.user, this.post, this.text});
 
-  factory Comment({String id, User user, Post post, String text}) {
+  factory Comment({String? id, User? user, Post? post, String? text}) {
     return Comment._internal(
         id: id == null ? UUID.getUUID() : id,
         user: user,
@@ -81,7 +81,7 @@ class Comment extends Model {
     return buffer.toString();
   }
 
-  Comment copyWith({String id, User user, Post post, String text}) {
+  Comment copyWith({String? id, User? user, Post? post, String? text}) {
     return Comment(
         id: id ?? this.id,
         user: user ?? this.user,

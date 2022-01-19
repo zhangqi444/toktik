@@ -27,22 +27,22 @@ import 'package:flutter/foundation.dart';
 @immutable
 class Like extends Model {
   static const classType = const _LikeModelType();
-  final String id;
-  final User user;
-  final Post post;
-  final bool value;
+  final String? id;
+  final User? user;
+  final Post? post;
+  final bool? value;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
-  const Like._internal({@required this.id, this.user, this.post, this.value});
+  const Like._internal({required this.id, this.user, this.post, this.value});
 
-  factory Like({String id, User user, Post post, bool value}) {
+  factory Like({String? id, User? user, Post? post, bool? value}) {
     return Like._internal(
         id: id == null ? UUID.getUUID() : id,
         user: user,
@@ -81,7 +81,7 @@ class Like extends Model {
     return buffer.toString();
   }
 
-  Like copyWith({String id, User user, Post post, bool value}) {
+  Like copyWith({String? id, User? user, Post? post, bool? value}) {
     return Like(
         id: id ?? this.id,
         user: user ?? this.user,

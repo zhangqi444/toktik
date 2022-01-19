@@ -61,9 +61,9 @@ publishFeedContentFromJson(PublishFeedContent data, Map<String, dynamic> json) {
 Map<String, dynamic> publishFeedContentToJson(PublishFeedContent entity) {
 	final Map<String, dynamic> data = new Map<String, dynamic>();
 	data['text'] = entity.text;
-	data['tag'] =  entity.tag?.map((v) => v.toJson())?.toList();
-	data['at'] =  entity.at?.map((v) => v.toJson())?.toList();
-	data['attachments'] =  entity.attachments?.map((v) => v.toJson())?.toList();
+	data['tag'] =  entity.tag?.map((v) => v!.toJson())?.toList();
+	data['at'] =  entity.at?.map((v) => v!.toJson())?.toList();
+	data['attachments'] =  entity.attachments?.map((v) => v!.toJson())?.toList();
 	data['music'] = entity.music?.toJson();
 	return data;
 }

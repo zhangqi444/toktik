@@ -26,29 +26,29 @@ import 'package:flutter/foundation.dart';
 @immutable
 class User extends Model {
   static const classType = const _UserModelType();
-  final String id;
-  final String nickname;
-  final String portrait;
-  final String bio;
-  final TemporalDate birth;
-  final int gender;
-  final String city;
-  final String profession;
-  final String username;
-  final String email;
-  final String phoneNumber;
-  final String authStatus;
+  final String? id;
+  final String? nickname;
+  final String? portrait;
+  final String? bio;
+  final TemporalDate? birth;
+  final int? gender;
+  final String? city;
+  final String? profession;
+  final String? username;
+  final String? email;
+  final String? phoneNumber;
+  final String? authStatus;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
   const User._internal(
-      {@required this.id,
+      {required this.id,
       this.nickname,
       this.portrait,
       this.bio,
@@ -62,18 +62,18 @@ class User extends Model {
       this.authStatus});
 
   factory User(
-      {String id,
-      String nickname,
-      String portrait,
-      String bio,
-      TemporalDate birth,
-      int gender,
-      String city,
-      String profession,
-      String username,
-      String email,
-      String phoneNumber,
-      String authStatus}) {
+      {String? id,
+      String? nickname,
+      String? portrait,
+      String? bio,
+      TemporalDate? birth,
+      int? gender,
+      String? city,
+      String? profession,
+      String? username,
+      String? email,
+      String? phoneNumber,
+      String? authStatus}) {
     return User._internal(
         id: id == null ? UUID.getUUID() : id,
         nickname: nickname,
@@ -123,7 +123,7 @@ class User extends Model {
     buffer.write("nickname=" + "$nickname" + ", ");
     buffer.write("portrait=" + "$portrait" + ", ");
     buffer.write("bio=" + "$bio" + ", ");
-    buffer.write("birth=" + (birth != null ? birth.format() : "null") + ", ");
+    buffer.write("birth=" + (birth != null ? birth!.format() : "null") + ", ");
     buffer.write(
         "gender=" + (gender != null ? gender.toString() : "null") + ", ");
     buffer.write("city=" + "$city" + ", ");
@@ -138,18 +138,18 @@ class User extends Model {
   }
 
   User copyWith(
-      {String id,
-      String nickname,
-      String portrait,
-      String bio,
-      TemporalDate birth,
-      int gender,
-      String city,
-      String profession,
-      String username,
-      String email,
-      String phoneNumber,
-      String authStatus}) {
+      {String? id,
+      String? nickname,
+      String? portrait,
+      String? bio,
+      TemporalDate? birth,
+      int? gender,
+      String? city,
+      String? profession,
+      String? username,
+      String? email,
+      String? phoneNumber,
+      String? authStatus}) {
     return User(
         id: id ?? this.id,
         nickname: nickname ?? this.nickname,
@@ -173,7 +173,7 @@ class User extends Model {
         birth = json['birth'] != null
             ? TemporalDate.fromString(json['birth'])
             : null,
-        gender = (json['gender'] as num)?.toInt(),
+        gender = (json['gender'] as num?)?.toInt(),
         city = json['city'],
         profession = json['profession'],
         username = json['username'],
