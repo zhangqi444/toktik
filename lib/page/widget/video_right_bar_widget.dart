@@ -136,7 +136,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
 
   //获取分享按钮
   _getShareButton() {
-    int? shareCount = widget.video!.shareCount;
+    int? shareCount = widget.video!.shareCount ?? 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

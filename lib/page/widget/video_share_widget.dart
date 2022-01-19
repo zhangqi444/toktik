@@ -56,7 +56,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   List<Map<String, dynamic>> actions = [
       {
         "text": 'Report',
-        "img": 'assets/images/share_action_jubao.webp',
+        "img": 'assets/images/share_action_jubao.png',
         "onPressed": (video, postController) async {
           await postController.reportPost(video.id, ReportReason.OTHER);
           EasyLoading.showSuccess("Thanks for reporting.");
@@ -71,7 +71,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
     // '抖音码',
       {
         "text":'Share',
-        "img": 'assets/images/share_action_code.webp',
+        "img": 'assets/images/share_action_share.png',
         "onPressed": (video, postController) {
           // TO customize the bottomsheet with sharing target, we need to rely on this,
           // https://www.youtube.com/watch?v=bWehAFTFc9o
@@ -210,7 +210,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
                 child: Column(
                   children: [
                     CircleAvatar(
-                        backgroundColor:Colors.transparent,
+                        backgroundColor: Color(0x18181818),
                         radius: 24,
                         backgroundImage:AssetImage(actions[index]['img'])
                     ),
