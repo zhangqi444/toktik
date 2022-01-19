@@ -7,6 +7,8 @@ import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/generated/json/follow_request.g.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
 import 'package:toktik/generated/json/publish_feed_request.g.dart';
+import 'package:toktik/model/request/report_request.dart';
+import 'package:toktik/generated/json/report_request.g.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/generated/json/feed_list_response.g.dart';
 import 'package:toktik/model/response/follow_response.dart';
@@ -128,6 +130,9 @@ class JsonConvert {
 		}
 		if(type == (PublishFeedLocation).toString()){
 			return PublishFeedLocation.fromJson(json) as M;
+		}
+		if(type == (ReportRequest).toString()){
+			return ReportRequest.fromJson(json) as M;
 		}
 		if(type == (FeedListResponse).toString()){
 			return FeedListResponse.fromJson(json) as M;
@@ -259,6 +264,9 @@ class JsonConvert {
 		}
 		if(<PublishFeedLocation>[] is M){
 			return data.map<PublishFeedLocation>((Map<String, dynamic> e) => PublishFeedLocation.fromJson(e)).toList() as M;
+		}
+		if(<ReportRequest>[] is M){
+			return data.map<ReportRequest>((Map<String, dynamic> e) => ReportRequest.fromJson(e)).toList() as M;
 		}
 		if(<FeedListResponse>[] is M){
 			return data.map<FeedListResponse>((Map<String, dynamic> e) => FeedListResponse.fromJson(e)).toList() as M;

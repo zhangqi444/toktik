@@ -14,6 +14,7 @@ import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
+import 'package:toktik/model/request/report_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/model/response/follow_response.dart';
 import 'package:toktik/model/response/like_response.dart';
@@ -21,6 +22,7 @@ import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/model/response/logout_response.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
 import 'package:toktik/model/response/register_response.dart';
+import 'package:toktik/model/response/report_response.dart';
 import 'package:toktik/model/response/upload_token_response.dart';
 import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/model/response/user_info_response.dart';
@@ -362,60 +364,6 @@ class Api{
     Amplify.Analytics.flushEvents();
   }
 
-  ///更新用户资料信息
-  static Future<UserInfoResponse?> updateUserInfo(Map<String,dynamic> map) async{
-    var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['id'].toString(), cancelTokenTag: 'getUserInfo',data: map);
-    return UserInfoResponse.fromJson(result);
-  }
-
-  ///获取上传文件凭证
-  static Future<UploadTokenResponse?> getSingleUploadToken(List<String> filePathList) async{
-    Map<String,List> map = HashMap();
-    List resources = [];
-    for(int i=0;i<filePathList.length;i++){
-      Map<String,String> mapTemp = HashMap();
-      mapTemp['type'] = filePathList[i];
-      resources.add(mapTemp);
-    }
-    map['resources'] = resources;
-    var result = await HttpManager.getInstance().post(url: HttpConstant.uploadToken, cancelTokenTag: "getUploadToken",data: map);
-    return UploadTokenResponse.fromJson(result);
-  }
-
-  ///上传文件
-  static Future<bool?> uploadSingleFile(File file,UploadTokenResponse tokenResponse,String fileSuffix) async{
-    Stream<List<int>> listStream = file.openRead();
-    UploadTokenTokensHeaders headers = tokenResponse.tokens![0]!.headers!;
-    UploadTokenToken tokenToken = tokenResponse.tokens![0]!;
-    bool? success = await HttpManager.getInstance().uploadFile(
-        url: tokenToken.uploadUrl,
-        cancelTokenTag: 'uploadFile',
-        data: listStream,
-        method: HttpMethod.PUT,
-        options: Options(
-          headers: {
-            'Content-Type':headers.contentType,
-            'Date':headers.date,
-            'Authorization':headers.authorization
-          }
-        ),
-
-    );
-    return success;
-  }
-
-  ///发布feed
-  static Future<PublishFeedResponse?> publishFeed(PublishFeedRequest publishFeedRequest) async{
-    var result = await HttpManager.getInstance().post(url: HttpConstant.publishFeed, cancelTokenTag: 'publishFeed',data: publishFeedRequest.toJson());
-    return PublishFeedResponse.fromJson(result);
-  }
-
-  ///获取用户作品列表
-  static Future<UserWorkListResponse?> getUserFeedList(String id, int? cursor,int count)async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?id=$id&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
-    return UserWorkListResponse.fromJson(result);
-  }
-
   ///获取热门作品列表
   static Future<FeedListResponse?> getHotFeedList(int? cursor,int limit, String userId) async{
     try {
@@ -566,13 +514,101 @@ class Api{
     }
   }
 
+  static Future<ReportResponse?> report(ReportRequest request) async {
+    try {
+      var report = await _mutation(
+          '''mutation CreateReport(\$input: CreateReportInput!) {
+              createReport(input: \$input) { id, value }
+            }''',
+          {
+            'input': {
+              'description': request.description?? '',
+              'type': request.type?? '',
+              'reason': request.reason?? '',
+              'reportPostId': request.reportPostId?? '',
+              'reportUserId': request.reportUserId?? '',
+              'reportReporterId': request.reportReporterId?? '',
+              'status': request.status?? '',
+            },
+          },
+          'createReport'
+      );
+
+      return ReportResponse.fromJson(report);
+    } catch (e, stacktrace) {
+      print("Could not create report: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
+
+  ///发布feed
+  // @deprecated
+  static Future<PublishFeedResponse> publishFeed(PublishFeedRequest publishFeedRequest) async{
+    var result = await HttpManager.getInstance().post(url: HttpConstant.publishFeed, cancelTokenTag: 'publishFeed',data: publishFeedRequest.toJson());
+    return PublishFeedResponse.fromJson(result);
+  }
+
+  ///获取用户作品列表
+  // @deprecated
+  static Future<UserWorkListResponse> getUserFeedList(String id, int? cursor,int count)async{
+    var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?id=$id&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
+    return UserWorkListResponse.fromJson(result);
+  }
+
+
+  ///更新用户资料信息
+  // @deprecated
+  static Future<UserInfoResponse> updateUserInfo(Map<String,dynamic> map) async{
+    var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['id'].toString(), cancelTokenTag: 'getUserInfo',data: map);
+    return UserInfoResponse.fromJson(result);
+  }
+
+  ///获取上传文件凭证
+  // @deprecated
+  static Future<UploadTokenResponse> getSingleUploadToken(List<String> filePathList) async{
+    Map<String,List> map = HashMap();
+    List resources = [];
+    for(int i=0;i<filePathList.length;i++){
+      Map<String,String> mapTemp = HashMap();
+      mapTemp['type'] = filePathList[i];
+      resources.add(mapTemp);
+    }
+    map['resources'] = resources;
+    var result = await HttpManager.getInstance().post(url: HttpConstant.uploadToken, cancelTokenTag: "getUploadToken",data: map);
+    return UploadTokenResponse.fromJson(result);
+  }
+
+  ///上传文件
+  /// @deprecated
+  static Future<bool?> uploadSingleFile(File file,UploadTokenResponse tokenResponse,String fileSuffix) async{
+    Stream<List<int>> listStream = file.openRead();
+    UploadTokenTokensHeaders headers = tokenResponse.tokens![0]!.headers!;
+    UploadTokenToken tokenToken = tokenResponse.tokens![0]!;
+    bool? success = await HttpManager.getInstance().uploadFile(
+      url: tokenToken.uploadUrl,
+      cancelTokenTag: 'uploadFile',
+      data: listStream,
+      method: HttpMethod.PUT,
+      options: Options(
+          headers: {
+            'Content-Type':headers.contentType,
+            'Date':headers.date,
+            'Authorization':headers.authorization
+          }
+      ),
+
+    );
+    return success;
+  }
+
   ///获取好友作品列表
   static Future<FeedListResponse?> getFriendFeedList(int? cursor,int count) async{
+  // @deprecated
     var result = await HttpManager.getInstance().get(url: HttpConstant.friendFeedList+'?cursor=$cursor&count=$count', cancelTokenTag: 'getFriendFeedList',);
     return FeedListResponse.fromJson(result);
   }
 
   static Future<FollowResponse?> follow(FollowRequest request) async{
+  // @deprecated
     var result = await HttpManager.getInstance().post(url: HttpConstant.follow, cancelTokenTag: 'follow',data: request.toJson());
     return FollowResponse.fromJson(result);
   }

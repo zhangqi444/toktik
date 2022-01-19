@@ -203,7 +203,7 @@ packages:
       name: email_validator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.6"
+    version: "2.0.1"
   event_bus:
     dependency: "direct main"
     description:
@@ -867,7 +867,7 @@ packages:
       name: video_thumbnail
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.5+1"
+    version: "0.4.3"
   webview_flutter:
     dependency: "direct main"
     description:
