@@ -64,7 +64,7 @@ class LogInterceptors extends Interceptor {
         requestHeaders.addAll(options.headers);
       }
       requestHeaders['contentType'] = options.contentType?.toString();
-      requestHeaders['responseType'] = options.responseType?.toString();
+      requestHeaders['responseType'] = options.responseType.toString();
       requestHeaders['followRedirects'] = options.followRedirects;
       requestHeaders['connectTimeout'] = options.connectTimeout;
       requestHeaders['receiveTimeout'] = options.receiveTimeout;
@@ -149,7 +149,7 @@ class LogInterceptors extends Interceptor {
   }
 
   void _printResponseHeader(Response response) {
-    final uri = response?.requestOptions.uri;
+    final uri = response.requestOptions.uri;
     final method = response.requestOptions.method;
     _printBoxed(
         header:
@@ -158,8 +158,8 @@ class LogInterceptors extends Interceptor {
   }
 
   void _printRequestHeader(RequestOptions options) {
-    final uri = options?.uri;
-    final method = options?.method;
+    final uri = options.uri;
+    final method = options.method;
     _printBoxed(header: 'Request ║ $method ', text: uri.toString());
   }
 

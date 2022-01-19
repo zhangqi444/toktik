@@ -60,7 +60,7 @@ class _ItemTurnWidgetState extends State<ItemTurnWidget> {
                 child: Text(widget.title??'',style: TextStyle(color: ColorRes.light_foreground_color,fontSize: 14),)),
             Positioned(
                 right: 20,
-                child: Text(widget.rightTitle??'',style: TextStyle(color: ColorRes.light_foreground_color.withAlpha(90),fontSize:14 ),)),
+                child: Text(widget.rightTitle,style: TextStyle(color: ColorRes.light_foreground_color.withAlpha(90),fontSize:14 ),)),
             Positioned(
                 right: 0,
                 child: widget.showArrowRight?Icon(Icons.arrow_forward_ios_rounded,size: 12,color: ColorRes.light_foreground_color.withAlpha(90),):Container())

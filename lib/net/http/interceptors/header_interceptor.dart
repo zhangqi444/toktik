@@ -19,8 +19,8 @@ class HeaderInterceptor implements Interceptor{
       token = text;
     });
 
-    options.headers['x-bm-uid'] = userUid??'';
-    if(null != token && token.length > 0)options.headers['Authorization'] = 'Bearer ' + token??'';
+    options.headers['x-bm-uid'] = userUid;
+    if(null != token && token.length > 0)options.headers['Authorization'] = 'Bearer ' + token;
     return options;
   }
 
