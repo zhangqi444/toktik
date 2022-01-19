@@ -1,7 +1,16 @@
-import 'package:toktik/generated/json/base/json_convert_content.dart';
+import 'package:toktik/generated/json/feed_list_response.g.dart';
+
 import 'package:toktik/generated/json/base/json_field.dart';
 
-class FeedListResponse with JsonConvert<FeedListResponse> {
+@JsonSerializable()
+class FeedListResponse {
+
+	FeedListResponse();
+
+	factory FeedListResponse.fromJson(Map<String, dynamic> json) => $FeedListResponseFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListResponseToJson(this);
+
 	@JSONField(name: "list")
 	List<FeedListList?>? xList;
 	int? cursor;
@@ -9,7 +18,15 @@ class FeedListResponse with JsonConvert<FeedListResponse> {
 	bool? hasMore;
 }
 
-class FeedListList with JsonConvert<FeedListList> {
+@JsonSerializable()
+class FeedListList {
+
+	FeedListList();
+
+	factory FeedListList.fromJson(Map<String, dynamic> json) => $FeedListListFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListToJson(this);
+
 	String? id;
 	int? type;
 	FeedListListContent? content;
@@ -27,7 +44,15 @@ class FeedListList with JsonConvert<FeedListList> {
 	bool? isLiked;
 }
 
-class FeedListListContent with JsonConvert<FeedListListContent> {
+@JsonSerializable()
+class FeedListListContent {
+
+	FeedListListContent();
+
+	factory FeedListListContent.fromJson(Map<String, dynamic> json) => $FeedListListContentFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListContentToJson(this);
+
 	String? text;
 	List<FeedListListContentTag?>? tag;
 	List<FeedListListContentAt?>? at;
@@ -35,21 +60,45 @@ class FeedListListContent with JsonConvert<FeedListListContent> {
 	FeedListListContentMusic? music;
 }
 
-class FeedListListContentTag with JsonConvert<FeedListListContentTag> {
+@JsonSerializable()
+class FeedListListContentTag {
+
+	FeedListListContentTag();
+
+	factory FeedListListContentTag.fromJson(Map<String, dynamic> json) => $FeedListListContentTagFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListContentTagToJson(this);
+
 	String? id;
 	String? name;
 	int? start;
 	int? end;
 }
 
-class FeedListListContentAt with JsonConvert<FeedListListContentAt> {
+@JsonSerializable()
+class FeedListListContentAt {
+
+	FeedListListContentAt();
+
+	factory FeedListListContentAt.fromJson(Map<String, dynamic> json) => $FeedListListContentAtFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListContentAtToJson(this);
+
 	String? id;
 	String? name;
 	int? start;
 	int? end;
 }
 
-class FeedListListContentAttachmants with JsonConvert<FeedListListContentAttachmants> {
+@JsonSerializable()
+class FeedListListContentAttachmants {
+
+	FeedListListContentAttachmants();
+
+	factory FeedListListContentAttachmants.fromJson(Map<String, dynamic> json) => $FeedListListContentAttachmantsFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListContentAttachmantsToJson(this);
+
 	int? type;
 	String? url;
 	String? cover;
@@ -59,14 +108,30 @@ class FeedListListContentAttachmants with JsonConvert<FeedListListContentAttachm
 	int? height;
 }
 
-class FeedListListContentMusic with JsonConvert<FeedListListContentMusic> {
+@JsonSerializable()
+class FeedListListContentMusic {
+
+	FeedListListContentMusic();
+
+	factory FeedListListContentMusic.fromJson(Map<String, dynamic> json) => $FeedListListContentMusicFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListContentMusicToJson(this);
+
 	String? id;
 	String? name;
 	String? url;
 	String? img;
 }
 
-class FeedListListLocation with JsonConvert<FeedListListLocation> {
+@JsonSerializable()
+class FeedListListLocation {
+
+	FeedListListLocation();
+
+	factory FeedListListLocation.fromJson(Map<String, dynamic> json) => $FeedListListLocationFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListLocationToJson(this);
+
 	String? latitude;
 	String? longitude;
 	String? cityCode;
@@ -75,7 +140,15 @@ class FeedListListLocation with JsonConvert<FeedListListLocation> {
 	String? name;
 }
 
-class FeedListListUser with JsonConvert<FeedListListUser> {
+@JsonSerializable()
+class FeedListListUser {
+
+	FeedListListUser();
+
+	factory FeedListListUser.fromJson(Map<String, dynamic> json) => $FeedListListUserFromJson(json);
+
+	Map<String, dynamic> toJson() => $FeedListListUserToJson(this);
+
 	String? id;
 	String? username;
 	String? portrait;

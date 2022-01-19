@@ -81,7 +81,7 @@ class Api{
         print("Fail to sign in: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
-    return LoginResponse().fromJson(result);
+    return LoginResponse.fromJson(result);
   }
 
   static Future<String?> _fetchAuthSession() async{
@@ -101,7 +101,7 @@ class Api{
         result['status'] = AuthStatus.UNKNOWN.toShortString();
       } else {
         result['status'] = AuthStatus.SIGN_OUT_DONE.toShortString();;
-        return LogoutResponse().fromJson(result);
+        return LogoutResponse.fromJson(result);
       }
     } on AuthException catch (e, stacktrack) {
       result['status'] = AuthStatus.UNKNOWN.toShortString();
@@ -112,7 +112,7 @@ class Api{
   static Future<LoginResponse?> getCurrentUser() async {
     try {
       var result = await Amplify.Auth.getCurrentUser();
-      return result != null ? LoginResponse().fromJson({}) : null;
+      return result != null ? LoginResponse.fromJson({}) : null;
     } on AuthException catch (e, stacktrack) {
       print("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
     }
@@ -134,7 +134,7 @@ class Api{
       }
       print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
     }
-    return RegisterResponse().fromJson(result);
+    return RegisterResponse.fromJson(result);
   }
 
   ///注册
@@ -169,13 +169,13 @@ class Api{
         result["status"] = AuthStatus.UNKNOWN.toShortString();
       }
     }
-    return result.length == 0 ? null : RegisterResponse().fromJson(result);
+    return result.length == 0 ? null : RegisterResponse.fromJson(result);
   }
 
   ///注册
   static Future<RegisterResponse?> confirmSignUp(
       String username, String confirmationCode, ConfirmSignUpOptions? options) async {
-    Map<String, dynamic>? result = HashMap();
+    Map<String, dynamic> result = HashMap();
     try {
       SignUpResult res = await Amplify.Auth.confirmSignUp(
           username: username, confirmationCode: confirmationCode, options: options);
@@ -183,7 +183,7 @@ class Api{
         result["isSignUpComplete"] = res.isSignUpComplete;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else {
-        result = null;
+        result = {};
       }
     } on AuthException catch (e, stacktrack) {
       if(e is NotAuthorizedException) {
@@ -200,7 +200,7 @@ class Api{
         print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
-    return RegisterResponse().fromJson(result);
+    return RegisterResponse.fromJson(result);
   }
 
   static Future<RegisterResponse?> resetPassword(
@@ -227,7 +227,7 @@ class Api{
         result["status"] = AuthStatus.UNKNOWN.toShortString();
       }
     }
-    return result.length == 0 ? null : RegisterResponse().fromJson(result);
+    return result.length == 0 ? null : RegisterResponse.fromJson(result);
   }
 
   static Future<RegisterResponse?> confirmResetPassword(
@@ -255,7 +255,7 @@ class Api{
         print("Fail to confirm reset password: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
-    return RegisterResponse().fromJson(result);
+    return RegisterResponse.fromJson(result);
   }
 
   static Future<UserInfoExResponse?> createUser({String? username, String? email, String? phoneNumber}) async {
@@ -338,7 +338,7 @@ class Api{
     }
 
     var parsed = users.map((user) => convert(user)).toList();
-    return (parsed != null && parsed.length > 0) ? UserInfoExResponse().fromJson(parsed[0]) : null;
+    return (parsed != null && parsed.length > 0) ? UserInfoExResponse.fromJson(parsed[0]) : null;
   }
 
   static void recordEvent(String eventName, Map<String, dynamic> events) {
@@ -365,7 +365,7 @@ class Api{
   ///更新用户资料信息
   static Future<UserInfoResponse?> updateUserInfo(Map<String,dynamic> map) async{
     var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['id'].toString(), cancelTokenTag: 'getUserInfo',data: map);
-    return UserInfoResponse().fromJson(result);
+    return UserInfoResponse.fromJson(result);
   }
 
   ///获取上传文件凭证
@@ -379,7 +379,7 @@ class Api{
     }
     map['resources'] = resources;
     var result = await HttpManager.getInstance().post(url: HttpConstant.uploadToken, cancelTokenTag: "getUploadToken",data: map);
-    return UploadTokenResponse().fromJson(result);
+    return UploadTokenResponse.fromJson(result);
   }
 
   ///上传文件
@@ -407,13 +407,13 @@ class Api{
   ///发布feed
   static Future<PublishFeedResponse?> publishFeed(PublishFeedRequest publishFeedRequest) async{
     var result = await HttpManager.getInstance().post(url: HttpConstant.publishFeed, cancelTokenTag: 'publishFeed',data: publishFeedRequest.toJson());
-    return PublishFeedResponse().fromJson(result);
+    return PublishFeedResponse.fromJson(result);
   }
 
   ///获取用户作品列表
   static Future<UserWorkListResponse?> getUserFeedList(String id, int? cursor,int count)async{
     var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?id=$id&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
-    return UserWorkListResponse().fromJson(result);
+    return UserWorkListResponse.fromJson(result);
   }
 
   ///获取热门作品列表
@@ -477,7 +477,7 @@ class Api{
       }
 
       var parsed = await Future.wait(posts.map((post) async => await convert(post)));
-      return FeedListResponse().fromJson({'list': parsed.toList()});
+      return FeedListResponse.fromJson({'list': parsed.toList()});
     } catch (e, stacktrace) {
       print("Fail to get post lists: " + stacktrace.toString());
     }
@@ -527,7 +527,7 @@ class Api{
           },
           'viewPost'
       );
-      return ViewResponse().fromJson(view);
+      return ViewResponse.fromJson(view);
     } catch (e, stacktrace) {
       print("Fail to view post: " + stacktrace.toString());
     }
@@ -560,7 +560,7 @@ class Api{
         result = localPosts[postId]["isLiked"];
       }
 
-      return LikeResponse().fromJson(result);
+      return LikeResponse.fromJson(result);
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
@@ -569,12 +569,12 @@ class Api{
   ///获取好友作品列表
   static Future<FeedListResponse?> getFriendFeedList(int? cursor,int count) async{
     var result = await HttpManager.getInstance().get(url: HttpConstant.friendFeedList+'?cursor=$cursor&count=$count', cancelTokenTag: 'getFriendFeedList',);
-    return FeedListResponse().fromJson(result);
+    return FeedListResponse.fromJson(result);
   }
 
   static Future<FollowResponse?> follow(FollowRequest request) async{
     var result = await HttpManager.getInstance().post(url: HttpConstant.follow, cancelTokenTag: 'follow',data: request.toJson());
-    return FollowResponse().fromJson(result);
+    return FollowResponse.fromJson(result);
   }
 
   /// ----------------------------------本地数据--------------------------------------------------------

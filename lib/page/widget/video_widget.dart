@@ -237,7 +237,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       int likeCount = widget.video!.likeCount! + (result.value! ? 1 : -1);
       var newVideoJson = widget.video!.toJson()!;
       newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
-      var newVideo = new FeedListList().fromJson(newVideoJson);
+      var newVideo = new FeedListList.fromJson(newVideoJson);
       _feedController.updateFeedListList(widget.video!.id, newVideo);
     }
     eventValue = isLiked;

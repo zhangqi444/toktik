@@ -1,7 +1,16 @@
-import 'package:toktik/generated/json/base/json_convert_content.dart';
+import 'package:toktik/generated/json/user_info_ex_response.g.dart';
+
 import 'package:toktik/generated/json/base/json_field.dart';
 
-class UserInfoExResponse with JsonConvert<UserInfoExResponse> {
+@JsonSerializable()
+class UserInfoExResponse {
+
+	UserInfoExResponse();
+
+	factory UserInfoExResponse.fromJson(Map<String, dynamic> json) => $UserInfoExResponseFromJson(json);
+
+	Map<String, dynamic> toJson() => $UserInfoExResponseToJson(this);
+
 	UserInfoExUser? user;
 	int? followerCount = 0;
 	int? followingCount = 0;
@@ -9,7 +18,15 @@ class UserInfoExResponse with JsonConvert<UserInfoExResponse> {
 	String? relation;
 }
 
-class UserInfoExUser with JsonConvert<UserInfoExUser> {
+@JsonSerializable()
+class UserInfoExUser {
+
+	UserInfoExUser();
+
+	factory UserInfoExUser.fromJson(Map<String, dynamic> json) => $UserInfoExUserFromJson(json);
+
+	Map<String, dynamic> toJson() => $UserInfoExUserToJson(this);
+
 	String? id;
 	String? username;
 	String portrait = "";

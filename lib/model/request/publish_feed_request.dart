@@ -1,6 +1,16 @@
-import 'package:toktik/generated/json/base/json_convert_content.dart';
+import 'package:toktik/generated/json/base/json_field.dart';
+import 'package:toktik/generated/json/publish_feed_request.g.dart';
 
-class PublishFeedRequest with JsonConvert<PublishFeedRequest> {
+
+@JsonSerializable()
+class PublishFeedRequest {
+
+	PublishFeedRequest();
+
+	factory PublishFeedRequest.fromJson(Map<String, dynamic> json) => $PublishFeedRequestFromJson(json);
+
+	Map<String, dynamic> toJson() => $PublishFeedRequestToJson(this);
+
 	int? type;
 	PublishFeedContent? content;
 	PublishFeedLocation? location;
@@ -9,7 +19,15 @@ class PublishFeedRequest with JsonConvert<PublishFeedRequest> {
 	int? commentType;
 }
 
-class PublishFeedContent with JsonConvert<PublishFeedContent> {
+@JsonSerializable()
+class PublishFeedContent {
+
+	PublishFeedContent();
+
+	factory PublishFeedContent.fromJson(Map<String, dynamic> json) => $PublishFeedContentFromJson(json);
+
+	Map<String, dynamic> toJson() => $PublishFeedContentToJson(this);
+
 	String? text;
 	List<PublishFeedContentTag?>? tag;
 	List<PublishFeedContentAt?>? at;
@@ -17,21 +35,45 @@ class PublishFeedContent with JsonConvert<PublishFeedContent> {
 	PublishFeedContentMusic? music;
 }
 
-class PublishFeedContentTag with JsonConvert<PublishFeedContentTag> {
+@JsonSerializable()
+class PublishFeedContentTag {
+
+	PublishFeedContentTag();
+
+	factory PublishFeedContentTag.fromJson(Map<String, dynamic> json) => $PublishFeedContentTagFromJson(json);
+
+	Map<String, dynamic> toJson() => $PublishFeedContentTagToJson(this);
+
 	String? id;
 	String? name;
 	int? start;
 	int? end;
 }
 
-class PublishFeedContentAt with JsonConvert<PublishFeedContentAt> {
+@JsonSerializable()
+class PublishFeedContentAt {
+
+	PublishFeedContentAt();
+
+	factory PublishFeedContentAt.fromJson(Map<String, dynamic> json) => $PublishFeedContentAtFromJson(json);
+
+	Map<String, dynamic> toJson() => $PublishFeedContentAtToJson(this);
+
 	String? id;
 	String? name;
 	int? start;
 	int? end;
 }
 
-class PublishFeedContentAttachmants with JsonConvert<PublishFeedContentAttachmants> {
+@JsonSerializable()
+class PublishFeedContentAttachmants {
+
+	PublishFeedContentAttachmants();
+
+	factory PublishFeedContentAttachmants.fromJson(Map<String, dynamic> json) => $PublishFeedContentAttachmantsFromJson(json);
+
+	Map<String, dynamic> toJson() => $PublishFeedContentAttachmantsToJson(this);
+
 	int? type;
 	String? url;
 	String? cover;
@@ -41,14 +83,30 @@ class PublishFeedContentAttachmants with JsonConvert<PublishFeedContentAttachman
 	int? height;
 }
 
-class PublishFeedContentMusic with JsonConvert<PublishFeedContentMusic> {
+@JsonSerializable()
+class PublishFeedContentMusic {
+
+	PublishFeedContentMusic();
+
+	factory PublishFeedContentMusic.fromJson(Map<String, dynamic> json) => $PublishFeedContentMusicFromJson(json);
+
+	Map<String, dynamic> toJson() => $PublishFeedContentMusicToJson(this);
+
 	String? id;
 	String? name;
 	String? url;
 	String? img;
 }
 
-class PublishFeedLocation with JsonConvert<PublishFeedLocation> {
+@JsonSerializable()
+class PublishFeedLocation {
+
+	PublishFeedLocation();
+
+	factory PublishFeedLocation.fromJson(Map<String, dynamic> json) => $PublishFeedLocationFromJson(json);
+
+	Map<String, dynamic> toJson() => $PublishFeedLocationToJson(this);
+
 	String? latitude;
 	String? longitude;
 	String? cityCode;
