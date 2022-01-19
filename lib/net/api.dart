@@ -189,13 +189,13 @@ class Api{
       }
     } on AuthException catch (e, stacktrack) {
       if(e is NotAuthorizedException) {
-        result!["isSignUpComplete"] = true;
+        result["isSignUpComplete"] = true;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else if(e is AliasExistsException) {
-        result!["isSignUpComplete"] = false;
+        result["isSignUpComplete"] = false;
         result["status"] = AuthStatus.ALIAS_EXISTS.toShortString();
       } if(e is CodeMismatchException) {
-        result!["isSignUpComplete"] = false;
+        result["isSignUpComplete"] = false;
         result["status"] = AuthStatus.CODE_MISMATCH.toShortString();
       }
       else {
@@ -518,7 +518,7 @@ class Api{
     try {
       var report = await _mutation(
           '''mutation CreateReport(\$input: CreateReportInput!) {
-              createReport(input: \$input) { id, value }
+              createReport(input: \$input) { id result }
             }''',
           {
             'input': {
@@ -534,7 +534,7 @@ class Api{
           'createReport'
       );
 
-      return ReportResponse.fromJson(report);
+      return ReportResponse.fromJson(report?? {});
     } catch (e, stacktrace) {
       print("Could not create report: " + e.toString() + '\n' + stacktrace.toString());
     }

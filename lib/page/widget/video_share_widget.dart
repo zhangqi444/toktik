@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:toktik/controller/post_controller.dart';
+import 'package:toktik/enum/report.dart';
 
 class VideoShareWidget extends StatefulWidget {
   var video;
@@ -13,6 +16,8 @@ class VideoShareWidget extends StatefulWidget {
 }
 
 class _VideoShareWidgetState extends State<VideoShareWidget> {
+  PostController _postController = Get.put(PostController());
+
   //私信好友名字
   List<String> nameList = [
     '爱丽丝',
@@ -52,13 +57,9 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
       {
         "text": 'Report',
         "img": 'assets/images/share_action_jubao.webp',
-        "onPressed": (video) {
-          // TO customize the bottomsheet with sharing target, we need to rely on this,
-          // https://www.youtube.com/watch?v=bWehAFTFc9o
-          // https://pub.dev/packages/url_launcher
-
-          if(video == null || video.content == null || video.user == null) return;
-          Share.share("${video.content.attachments[0].url}", subject: "Check out ${video.user.username}'s video on Breeze.");
+        "onPressed": (video, postController) async {
+          await postController.reportPost(video.id, ReportReason.OTHER);
+          EasyLoading.showSuccess("Thanks for reporting.");
         }
       },
     // '保存本地',
@@ -71,7 +72,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
       {
         "text":'Share',
         "img": 'assets/images/share_action_code.webp',
-        "onPressed": (video) {
+        "onPressed": (video, {postController}) {
           // TO customize the bottomsheet with sharing target, we need to rely on this,
           // https://www.youtube.com/watch?v=bWehAFTFc9o
           // https://pub.dev/packages/url_launcher
@@ -205,7 +206,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.transparent,
                 ),
-                onPressed: actions[index]['onPressed'] != null ? () => actions[index]['onPressed'](widget.video) : (){},
+                onPressed: actions[index]['onPressed'] != null ? () => actions[index]['onPressed'](widget.video, _postController) : (){},
                 child: Column(
                   children: [
                     CircleAvatar(
