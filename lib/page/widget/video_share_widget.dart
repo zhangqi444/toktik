@@ -72,7 +72,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
       {
         "text":'Share',
         "img": 'assets/images/share_action_code.webp',
-        "onPressed": (video, {postController}) {
+        "onPressed": (video, postController) {
           // TO customize the bottomsheet with sharing target, we need to rely on this,
           // https://www.youtube.com/watch?v=bWehAFTFc9o
           // https://pub.dev/packages/url_launcher
