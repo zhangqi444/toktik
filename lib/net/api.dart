@@ -275,14 +275,14 @@ class Api{
   static Future<UserInfoExResponse?> getUserInfoExByUsername(String? username) async {
     try {
       var response = await _query(
-          '''query ListUsers(\$limit: Int) {
-            listUsers(limit: \$limit) {
+          '''query ListUsers(\$filter: ModelUserFilterInput) {
+            listUsers(filter: \$filter) {
               items {
                 id username email phoneNumber portrait nickname gender bio city birth
               }
             }
           }''',
-          { 'limit': 1 },
+          { 'filter': { "username": { "eq": username } } },
           'listUsers'
       );
       return _parseUsers(response['items'], {username: username});
@@ -293,8 +293,18 @@ class Api{
 
   static Future<UserInfoExResponse?> getUserInfoExByEmail(String email) async {
     try {
-      List<User> users = await Amplify.DataStore.query(User.classType, where: User.EMAIL.eq(email));
-      return _parseUsers(users, {email: email});
+      var response = await _query(
+          '''query ListUsers(\$filter: ModelUserFilterInput) {
+            listUsers(filter: \$filter) {
+              items {
+                id username email phoneNumber portrait nickname gender bio city birth
+              }
+            }
+          }''',
+          { 'filter': { "email": { "eq": email } } },
+          'listUsers'
+      );
+      return _parseUsers(response['items'], {email: email});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
