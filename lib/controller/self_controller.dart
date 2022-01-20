@@ -145,6 +145,15 @@ class SelfController extends GetxController{
       loginUserPhoneNumber.value = selfUserInfo[SPKeys.selfUserInfoPhoneNumber];
 
       if (!isStringNullOrEmpty(loginUserId.value)) {
+        UserInfoExResponse user = new UserInfoExResponse();
+        user.user = new UserInfoExUser();
+        user.user?.id = loginUserId.value;
+        user.user?.username = loginUserUsername.value;
+        user.user?.email = loginUserEmail.value;
+        user.user?.phoneNumber = loginUserPhoneNumber.value;
+        userController.userExMap[loginUserId.value] = user;
+        // try to refresh the user data async
+        userController.loadUserInfoExByUsername(loginUserUsername.value);
         return;
       }
     }
