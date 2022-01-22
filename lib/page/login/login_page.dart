@@ -14,6 +14,7 @@ import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
+import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -33,20 +34,23 @@ class _LoginPageState extends State<LoginPage> {
   SelfController loginController = Get.put(SelfController());
   final MainPageScrollController mainPageController = Get.find();
   dynamic argumentData = Get.arguments;
+  bool isButtonActived = false;
 
   @override
   void initState() {
     super.initState();
 
-    if(argumentData != null) {
-      if(!isStringNullOrEmpty(argumentData[AuthNavigationArgument.AUTH_STATUS])
-          && argumentData[AuthNavigationArgument.AUTH_STATUS] == AuthStatus.ALIAS_EXISTS.toShortString()) {
+    if (argumentData != null) {
+      if (!isStringNullOrEmpty(
+              argumentData[AuthNavigationArgument.AUTH_STATUS]) &&
+          argumentData[AuthNavigationArgument.AUTH_STATUS] ==
+              AuthStatus.ALIAS_EXISTS.toShortString()) {
         title = "You've signed up already.";
         subtitle = "Enter your password to log in to your account.";
         isForSignedUpAccount = true;
       }
 
-      if(!isStringNullOrEmpty(argumentData[AuthNavigationArgument.ACCOUNT])) {
+      if (!isStringNullOrEmpty(argumentData[AuthNavigationArgument.ACCOUNT])) {
         account = argumentData[AuthNavigationArgument.ACCOUNT];
       }
     }
@@ -59,7 +63,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     pwdField = TextField(
       cursorColor: ColorRes.color_1,
       cursorWidth: 2,
@@ -68,6 +71,16 @@ class _LoginPageState extends State<LoginPage> {
           InputDecoration(border: InputBorder.none, hintText: 'Password'),
       onChanged: (text) {
         pwd = text;
+
+        if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
+          setState(() {
+            isButtonActived = true;
+          });
+        } else {
+          setState(() {
+            isButtonActived = false;
+          });
+        }
       },
     );
 
@@ -87,10 +100,25 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           children: [
             isForSignedUpAccount ? _getTitle() : Container(),
-            LoginTextFieldWidget(
-                readOnly: isForSignedUpAccount, initText: account,
-                hintText: 'Email, phone or user name',
-                onChanged: (text) { account = text; }
+            Container(
+              margin: EdgeInsets.only(left: 30, right: 30, top: 34),
+              child: LoginTextFieldWidget(
+                  readOnly: isForSignedUpAccount,
+                  initText: account,
+                  hintText: 'Email, phone or user name',
+                  onChanged: (text) {
+                    account = text;
+                    if (!isStringNullOrEmpty(account) &&
+                        !isStringNullOrEmpty(pwd)) {
+                      setState(() {
+                        isButtonActived = true;
+                      });
+                    } else {
+                      setState(() {
+                        isButtonActived = false;
+                      });
+                    }
+                  }),
             ),
             SizedBox(
               height: 10,
@@ -142,29 +170,33 @@ class _LoginPageState extends State<LoginPage> {
       margin: EdgeInsets.only(left: 30, right: 30),
       height: 50,
       width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
+      child: LoginPrimaryButtonWidget(
+        text: 'log in',
         onPressed: () async {
           if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
-            String? status = await loginController.login(account, pwd, EmailValidator.validate(account!));
+            String? status = await loginController.login(
+                account, pwd, EmailValidator.validate(account!));
 
-            if(status == AuthStatus.USER_NOT_FOUND.toShortString()) {
-              setState(() { errorMessage = 'Sorry, we cannot find the user. Please Check your information and try again.'; });
-            } else if(status == AuthStatus.SIGN_IN_DONE.toShortString()) {
+            if (status == AuthStatus.USER_NOT_FOUND.toShortString()) {
+              setState(() {
+                errorMessage =
+                    'Sorry, we cannot find the user. Please Check your information and try again.';
+              });
+            } else if (status == AuthStatus.SIGN_IN_DONE.toShortString()) {
               Get.offAllNamed(Routers.scroll);
               mainPageController.selectIndexBottomBarMainPage(0);
             } else {
-              setState(() { errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE; });
+              setState(() {
+                errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE;
+              });
             }
           } else {
-            setState(() { errorMessage = 'Check your info and try again.'; });
+            setState(() {
+              errorMessage = 'Check your info and try again.';
+            });
           }
         },
-        child: Text(
-          'Log in',
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        color: ColorRes.color_3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        buttonEnabled: isButtonActived,
       ),
     );
   }
