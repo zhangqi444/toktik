@@ -14,6 +14,7 @@ import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
+import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -99,23 +100,26 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           children: [
             isForSignedUpAccount ? _getTitle() : Container(),
-            LoginTextFieldWidget(
-                readOnly: isForSignedUpAccount,
-                initText: account,
-                hintText: 'Email, phone or user name',
-                onChanged: (text) {
-                  account = text;
-                  if (!isStringNullOrEmpty(account) &&
-                      !isStringNullOrEmpty(pwd)) {
-                    setState(() {
-                      isButtonActived = true;
-                    });
-                  } else {
-                    setState(() {
-                      isButtonActived = false;
-                    });
-                  }
-                }),
+            Container(
+              margin: EdgeInsets.only(left: 30, right: 30, top: 34),
+              child: LoginTextFieldWidget(
+                  readOnly: isForSignedUpAccount,
+                  initText: account,
+                  hintText: 'Email, phone or user name',
+                  onChanged: (text) {
+                    account = text;
+                    if (!isStringNullOrEmpty(account) &&
+                        !isStringNullOrEmpty(pwd)) {
+                      setState(() {
+                        isButtonActived = true;
+                      });
+                    } else {
+                      setState(() {
+                        isButtonActived = false;
+                      });
+                    }
+                  }),
+            ),
             SizedBox(
               height: 10,
             ),
@@ -166,10 +170,12 @@ class _LoginPageState extends State<LoginPage> {
       margin: EdgeInsets.only(left: 30, right: 30),
       height: 50,
       width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
+      child: LoginPrimaryButtonWidget(
+        text: 'log in',
         onPressed: () async {
           if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
-            String? status = await loginController.login(account, pwd, EmailValidator.validate(account!));
+            String? status = await loginController.login(
+                account, pwd, EmailValidator.validate(account!));
 
             if (status == AuthStatus.USER_NOT_FOUND.toShortString()) {
               setState(() {
@@ -190,14 +196,7 @@ class _LoginPageState extends State<LoginPage> {
             });
           }
         },
-        child: Text(
-          'Log in',
-          style: TextStyle(
-              color: isButtonActived ? Colors.white : Color(0xffAAAAAA),
-              fontSize: 20),
-        ),
-        color: isButtonActived ? Color(0xff39CBE3) : Color(0xffEEEEEE),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        buttonEnabled: isButtonActived,
       ),
     );
   }
