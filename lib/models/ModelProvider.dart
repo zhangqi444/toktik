@@ -41,70 +41,50 @@ export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "f46541b219feddae4a2aba1c78d3a0b5";
+  String version = "be4482ca50f941cd72f9e9296249b90d";
   @override
-  List<ModelSchema> modelSchemas = [
-    Comment.schema,
-    Like.schema,
-    Music.schema,
-    Post.schema,
-    Report.schema,
-    Share.schema,
-    User.schema,
-    View.schema
-  ];
+  List<ModelSchema> modelSchemas = [Comment.schema, Like.schema, Music.schema, Post.schema, Report.schema, Share.schema, User.schema, View.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
-
+  
   ModelType getModelTypeByModelName(String modelName) {
-    switch (modelName) {
-      case "Comment":
-        {
-          return Comment.classType;
-        }
-        break;
-      case "Like":
-        {
-          return Like.classType;
-        }
-        break;
-      case "Music":
-        {
-          return Music.classType;
-        }
-        break;
-      case "Post":
-        {
-          return Post.classType;
-        }
-        break;
-      case "Report":
-        {
-          return Report.classType;
-        }
-        break;
-      case "Share":
-        {
-          return Share.classType;
-        }
-        break;
-      case "User":
-        {
-          return User.classType;
-        }
-        break;
-      case "View":
-        {
-          return View.classType;
-        }
-        break;
-      default:
-        {
-          throw Exception(
-              "Failed to find model in model provider for model name: " +
-                  modelName);
-        }
+    switch(modelName) {
+    case "Comment": {
+    return Comment.classType;
+    }
+    break;
+    case "Like": {
+    return Like.classType;
+    }
+    break;
+    case "Music": {
+    return Music.classType;
+    }
+    break;
+    case "Post": {
+    return Post.classType;
+    }
+    break;
+    case "Report": {
+    return Report.classType;
+    }
+    break;
+    case "Share": {
+    return Share.classType;
+    }
+    break;
+    case "User": {
+    return User.classType;
+    }
+    break;
+    case "View": {
+    return View.classType;
+    }
+    break;
+    default: {
+    throw Exception("Failed to find model in model provider for model name: " + modelName);
+    }
     }
   }
 }

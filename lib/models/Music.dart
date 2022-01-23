@@ -22,103 +22,122 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
+
 /** This is an auto generated class representing the Music type in your schema. */
 @immutable
 class Music extends Model {
   static const classType = const _MusicModelType();
-  final String? id;
-  final String? url;
-  final String? img;
+  final String id;
+  final String? _url;
+  final String? _img;
 
   @override
   getInstanceType() => classType;
-
+  
   @override
   String getId() {
-    return id!;
+    return id;
   }
-
-  const Music._internal({required this.id, this.url, this.img});
-
+  
+  String? get url {
+    return _url;
+  }
+  
+  String? get img {
+    return _img;
+  }
+  
+  const Music._internal({required this.id, url, img}): _url = url, _img = img;
+  
   factory Music({String? id, String? url, String? img}) {
     return Music._internal(
-        id: id == null ? UUID.getUUID() : id, url: url, img: img);
+      id: id == null ? UUID.getUUID() : id,
+      url: url,
+      img: img);
   }
-
+  
   bool equals(Object other) {
     return this == other;
   }
-
+  
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Music &&
-        id == other.id &&
-        url == other.url &&
-        img == other.img;
+      id == other.id &&
+      _url == other._url &&
+      _img == other._img;
   }
-
+  
   @override
   int get hashCode => toString().hashCode;
-
+  
   @override
   String toString() {
     var buffer = new StringBuffer();
-
+    
     buffer.write("Music {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("url=" + "$url" + ", ");
-    buffer.write("img=" + "$img");
+    buffer.write("url=" + "$_url" + ", ");
+    buffer.write("img=" + "$_img");
     buffer.write("}");
-
+    
     return buffer.toString();
   }
-
+  
   Music copyWith({String? id, String? url, String? img}) {
-    return Music(id: id ?? this.id, url: url ?? this.url, img: img ?? this.img);
+    return Music(
+      id: id ?? this.id,
+      url: url ?? this.url,
+      img: img ?? this.img);
   }
-
-  Music.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        url = json['url'],
-        img = json['img'];
-
-  Map<String, dynamic> toJson() => {'id': id, 'url': url, 'img': img};
+  
+  Music.fromJson(Map<String, dynamic> json)  
+    : id = json['id'],
+      _url = json['url'],
+      _img = json['img'];
+  
+  Map<String, dynamic> toJson() => {
+    'id': id, 'url': _url, 'img': _img
+  };
 
   static final QueryField ID = QueryField(fieldName: "music.id");
   static final QueryField URL = QueryField(fieldName: "url");
   static final QueryField IMG = QueryField(fieldName: "img");
-  static var schema =
-      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Music";
     modelSchemaDefinition.pluralName = "Music";
-
+    
     modelSchemaDefinition.authRules = [
-      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
-        ModelOperation.CREATE,
-        ModelOperation.UPDATE,
-        ModelOperation.DELETE,
-        ModelOperation.READ
-      ])
+      AuthRule(
+        authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ])
     ];
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Music.URL,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: Music.URL,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Music.IMG,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+      key: Music.IMG,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
   });
 }
 
 class _MusicModelType extends ModelType<Music> {
   const _MusicModelType();
-
+  
   @override
   Music fromJson(Map<String, dynamic> jsonData) {
     return Music.fromJson(jsonData);

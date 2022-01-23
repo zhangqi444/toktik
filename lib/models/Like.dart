@@ -23,137 +23,149 @@ import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
+
 /** This is an auto generated class representing the Like type in your schema. */
 @immutable
 class Like extends Model {
   static const classType = const _LikeModelType();
-  final String? id;
-  final User? user;
-  final Post? post;
-  final bool? value;
+  final String id;
+  final User? _user;
+  final Post? _post;
+  final bool? _value;
 
   @override
   getInstanceType() => classType;
-
+  
   @override
   String getId() {
-    return id!;
+    return id;
   }
-
-  const Like._internal({required this.id, this.user, this.post, this.value});
-
+  
+  User? get user {
+    return _user;
+  }
+  
+  Post? get post {
+    return _post;
+  }
+  
+  bool? get value {
+    return _value;
+  }
+  
+  const Like._internal({required this.id, user, post, value}): _user = user, _post = post, _value = value;
+  
   factory Like({String? id, User? user, Post? post, bool? value}) {
     return Like._internal(
-        id: id == null ? UUID.getUUID() : id,
-        user: user,
-        post: post,
-        value: value);
+      id: id == null ? UUID.getUUID() : id,
+      user: user,
+      post: post,
+      value: value);
   }
-
+  
   bool equals(Object other) {
     return this == other;
   }
-
+  
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Like &&
-        id == other.id &&
-        user == other.user &&
-        post == other.post &&
-        value == other.value;
+      id == other.id &&
+      _user == other._user &&
+      _post == other._post &&
+      _value == other._value;
   }
-
+  
   @override
   int get hashCode => toString().hashCode;
-
+  
   @override
   String toString() {
     var buffer = new StringBuffer();
-
+    
     buffer.write("Like {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("user=" + (user != null ? user.toString() : "null") + ", ");
-    buffer.write("post=" + (post != null ? post.toString() : "null") + ", ");
-    buffer.write("value=" + (value != null ? value.toString() : "null"));
+    buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
+    buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
+    buffer.write("value=" + (_value != null ? _value!.toString() : "null"));
     buffer.write("}");
-
+    
     return buffer.toString();
   }
-
+  
   Like copyWith({String? id, User? user, Post? post, bool? value}) {
     return Like(
-        id: id ?? this.id,
-        user: user ?? this.user,
-        post: post ?? this.post,
-        value: value ?? this.value);
+      id: id ?? this.id,
+      user: user ?? this.user,
+      post: post ?? this.post,
+      value: value ?? this.value);
   }
-
-  Like.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        user = json['user'] != null
-            ? User.fromJson(new Map<String, dynamic>.from(json['user']))
-            : null,
-        post = json['post'] != null
-            ? Post.fromJson(new Map<String, dynamic>.from(json['post']))
-            : null,
-        value = json['value'];
-
+  
+  Like.fromJson(Map<String, dynamic> json)  
+    : id = json['id'],
+      _user = json['user']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
+        : null,
+      _post = json['post']?['serializedData'] != null
+        ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
+        : null,
+      _value = json['value'];
+  
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'user': user?.toJson(),
-        'post': post?.toJson(),
-        'value': value
-      };
+    'id': id, 'user': _user?.toJson(), 'post': _post?.toJson(), 'value': _value
+  };
 
   static final QueryField ID = QueryField(fieldName: "like.id");
   static final QueryField USER = QueryField(
-      fieldName: "user",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (User).toString()));
+    fieldName: "user",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
   static final QueryField POST = QueryField(
-      fieldName: "post",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (Post).toString()));
+    fieldName: "post",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
   static final QueryField VALUE = QueryField(fieldName: "value");
-  static var schema =
-      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Like";
     modelSchemaDefinition.pluralName = "Likes";
-
+    
     modelSchemaDefinition.authRules = [
-      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
-        ModelOperation.CREATE,
-        ModelOperation.UPDATE,
-        ModelOperation.DELETE,
-        ModelOperation.READ
-      ])
+      AuthRule(
+        authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ])
     ];
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-        key: Like.USER,
-        isRequired: false,
-        targetName: "likeUserId",
-        ofModelName: (User).toString()));
-
+      key: Like.USER,
+      isRequired: false,
+      targetName: "likeUserId",
+      ofModelName: (User).toString()
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-        key: Like.POST,
-        isRequired: false,
-        targetName: "likePostId",
-        ofModelName: (Post).toString()));
-
+      key: Like.POST,
+      isRequired: false,
+      targetName: "likePostId",
+      ofModelName: (Post).toString()
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Like.VALUE,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.bool)));
+      key: Like.VALUE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
   });
 }
 
 class _LikeModelType extends ModelType<Like> {
   const _LikeModelType();
-
+  
   @override
   Like fromJson(Map<String, dynamic> jsonData) {
     return Like.fromJson(jsonData);
