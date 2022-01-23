@@ -5,6 +5,7 @@ const SETTING_TERMS_OF_SERVICE = "Terms of Service";
 const SETTING_COMMUNITY_GUIDELINES = "Community Guidelines";
 const SETTING_PRIVACY_POLICY = "Privacy Policy";
 const SETTING_COPYRIGHT_POLICY = "Copyright Policy";
+const SETTING_REPORT_PROBLEM = "Report a problem";
 const SETTING_LOGOUT = "Logout";
 
 const String LOGIN_UNKNOWN_ERROR_MESSAGE = "Sorry, we have faced unknown error. Please try again.";
