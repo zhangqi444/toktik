@@ -41,6 +41,23 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  _getHeader(String text) {
+    return Padding(
+        padding: EdgeInsets.only(left: 20,right: 20),
+        child: Text(text, style: TextStyle(color: ColorRes.light_background_sub_color,fontSize: 12),)
+    );
+  }
+
+  _getDivider() {
+    return Container(
+      height: 10,
+      margin: EdgeInsets.only(bottom: 15),
+      child: Divider(
+        color: ColorRes.light_foreground_color.withAlpha(80),
+      )
+    );
+  }
+
   _getBody(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -70,9 +87,7 @@ class _SettingPageState extends State<SettingPage> {
             // ItemTurnWidget(img: 'assets/images/share_app_toutiao.webp',title: '头条主页',onClick: (){EasyLoading.showToast('功能待开发');},),
             // ItemTurnWidget(img: 'assets/images/fensi.png',title: '粉丝',onClick: (){EasyLoading.showToast('功能待开发');},),
             // Divider(color: ColorRes.color_2.withAlpha(20),),
-            Padding(
-                padding: EdgeInsets.only(left: 20,right: 20),
-                child: Text('About',style: TextStyle(color: ColorRes.light_background_sub_color,fontSize: 12),)),
+            _getHeader(SETTING_HEADER_ABOUT),
             // ItemTurnWidget(img: 'assets/images/ad.png',title: '广告反馈与设置',onClick: (){EasyLoading.showToast('功能待开发');},),
             ItemTurnWidget(img: 'assets/images/user_service.png',title: SETTING_TERMS_OF_SERVICE, onClick: (){
               Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/terms"} );
@@ -89,17 +104,21 @@ class _SettingPageState extends State<SettingPage> {
             ItemTurnWidget(img: 'assets/images/setting_about.png',title: SETTING_ABOUT, onClick: () {
               Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
             }),
-            ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
-              Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/contact"} );
-            }),
             // ItemTurnWidget(img: 'assets/images/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
-            Divider(color: ColorRes.light_foreground_color.withAlpha(20),),
+
             // ItemTurnWidget(img: 'assets/images/setting_exchange.png',title: '切换账号',onClick: (){
             //
             //   // SPUtil.remove(SPKeys.userUid);
             //   // SPUtil.remove(SPKeys.token);
             //
             //   Get.offNamed(Routers.login);},),
+            _getDivider(),
+            _getHeader(SETTING_HEADER_SUPPORT),
+            ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/contact"} );
+            }),
+            _getDivider(),
+            _getHeader(SETTING_HEADER_LOGIN),
             ItemTurnWidget(img: 'assets/images/setting_logout.png',title: SETTING_LOGOUT, onClick: () async {
               await loginController.logout();
               Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
