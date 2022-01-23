@@ -63,26 +63,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    pwdField = TextField(
-      cursorColor: ColorRes.color_1,
-      cursorWidth: 2,
-      obscureText: true,
-      decoration:
-          InputDecoration(border: InputBorder.none, hintText: 'Password'),
-      onChanged: (text) {
-        pwd = text;
-
-        if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
-          setState(() {
-            isButtonActived = true;
-          });
-        } else {
-          setState(() {
-            isButtonActived = false;
-          });
-        }
-      },
-    );
 
     return Scaffold(
       appBar: LoginAppBarWidget(title: "Log in"),
@@ -123,7 +103,26 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 10,
             ),
-            _getPwdTextField(),
+            Container(
+              margin: EdgeInsets.only(left: 30, right: 30),
+              child: LoginTextFieldWidget(
+                  readOnly: isForSignedUpAccount,
+                  initText: pwd,
+                  hintText: 'Password',
+                  onChanged: (text) {
+                    pwd = text;
+                    if (!isStringNullOrEmpty(account) &&
+                        !isStringNullOrEmpty(pwd)) {
+                      setState(() {
+                        isButtonActived = true;
+                      });
+                    } else {
+                      setState(() {
+                        isButtonActived = false;
+                      });
+                    }
+                  }),
+            ),
             SizedBox(
               height: 10,
             ),
@@ -149,19 +148,6 @@ class _LoginPageState extends State<LoginPage> {
           LoginSubtitleTextWidget(text: subtitle),
         ],
       ),
-    );
-  }
-
-  _getPwdTextField() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.only(left: 30, right: 30),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: pwdField,
     );
   }
 
