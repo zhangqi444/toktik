@@ -3,28 +3,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toktik/common/application.dart';
-import 'package:toktik/common/sp_keys.dart';
+import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_page_controller.dart';
 import 'package:toktik/event/amplify_configured_event.dart';
-import 'package:toktik/model/response/user_info_ex_response.dart';
-import 'package:toktik/model/user_model.dart';
 import 'package:toktik/page/widget/user_info_widget.dart';
 import 'package:toktik/page/widget/user_item_grid_widget.dart';
 import 'package:toktik/page/widget/user_more_bottom_sheet.dart';
 import 'package:toktik/page/widget/user_work_list_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
-import 'package:toktik/util/sp_util.dart';
+import 'package:toktik/util/string_util.dart';
 
 const TAB_SIZE = 1;
 
 class UserPage extends StatefulWidget {
-  PageController _scrollPageController;
-  bool _isLoginUser;
-  String id;
-  UserPage({PageController pageController, bool isLoginUser, UserModel userModel, String id}){
+  PageController? _scrollPageController;
+  bool? _isLoginUser;
+  String? id;
+  UserPage({PageController? pageController, bool? isLoginUser, String? id}){
     this._scrollPageController = pageController;
     this._isLoginUser = isLoginUser;
     this.id = id;
@@ -38,11 +37,12 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   MainPageScrollController _mainController = Get.find();
-  UserPageController _userPageController = Get.find();
-  TabController _tabController;
+  UserPageController _userPageController = Get.put(UserPageController());
+  TabController? _tabController;
   PageController _pageController = PageController(keepPage: true);
   ScrollController _scrollController = ScrollController();
   UserController _userController = Get.put(UserController());
+  SelfController _selfController = Get.put(SelfController());
 
   var amplifyConfiguredListner;
 
@@ -61,32 +61,30 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       }
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
+    WidgetsBinding.instance!.addPostFrameCallback((_bottomBarLayout) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
       ));
     });
+
+    initData();
   }
 
   void initData() async {
-    var id = widget.id;
-    if(widget._isLoginUser) {
-      id = _userController.loginUserId.value;
-      widget.id = id;
+    String? id = widget.id;
+    if(id != null) {
+      await _userController.loadUserInfoExById(id);
     }
-    UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
-    if(id != null && (userEx == null || userEx.id != _userController.loginUserId)) {
-      await _userController.getUserInfoEx(id);
-      // TODO: disbale before we have the api reday.
-      // _userController.getUserWorkList(id);
-    }
+    return;
+    // TODO: disbale before we have the api reday.
+    // _userController.getUserWorkList(id);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _tabController.dispose();
+    _tabController!.dispose();
     _pageController.dispose();
     _scrollController.dispose();
     if(amplifyConfiguredListner != null) {
@@ -96,29 +94,22 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // This is necessary to be in build as this page is used for main page as well.
-    // To the profile tab switching, this page will not be recreated, so the data
-    // needs to be refreshed in build().
-    if(!Amplify.isConfigured) {
-      amplifyConfiguredListner = Application.eventBus.on<AmplifyConfiguredEvent>().listen((event) {
-        initData();
-      });
-    } else {
-      initData();
-    }
-    return Scaffold(
-      backgroundColor: ColorRes.color_2,
-      body: CustomScrollView(
-        controller: _scrollController,
-        physics: BouncingScrollPhysics(),
-        slivers: [
-          _getSliverAppBar(),
-          _getSliverUserInfo(),
-          _getTabBarLayout(),
-          _getTabViewLayout(),
-        ],
-      ),
-    );
+    return
+      isStringNullOrEmpty(widget.id) || _userController.userExMap[widget.id] == null
+      ? Scaffold()
+      : Scaffold(
+        backgroundColor: ColorRes.color_2,
+        body: CustomScrollView(
+          controller: _scrollController,
+          physics: BouncingScrollPhysics(),
+          slivers: [
+            _getSliverAppBar(),
+            _getSliverUserInfo(),
+            _getTabBarLayout(),
+            _getTabViewLayout(),
+          ],
+        )
+      );
   }
 
   _getSliverAppBar(){
@@ -127,22 +118,22 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       backgroundColor:ColorRes.light_background_color,
       pinned: true,
       expandedHeight: 50,
-      leading: widget._isLoginUser?null:IconButton(
+      leading: widget._isLoginUser!?null:IconButton(
         onPressed: (){
-          widget._scrollPageController.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
+          widget._scrollPageController!.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
         },
         icon: Icon(Icons.arrow_back_ios_rounded,color: ColorRes.light_icon_color,),
       ),
       actions: [
         IconButton(
           onPressed: (){
-            if( widget._isLoginUser){
-              _userPageController.toggleRightMenu();
+            if( widget._isLoginUser!){
+              Get.toNamed(Routers.setting);
             }else{
               _showMore();
             }
           },
-          icon: Icon( widget._isLoginUser?Icons.menu:Icons.more_horiz_rounded,color: ColorRes.light_icon_color,),
+          icon: Icon( widget._isLoginUser!?Icons.menu:Icons.more_horiz_rounded,color: ColorRes.light_icon_color,),
         ),
       ],
       elevation: 0,
@@ -150,7 +141,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: [StretchMode.zoomBackground],
         collapseMode: CollapseMode.parallax,
-        title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userInfoExResponse.value.user.username:'')),
+        title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userExMap[widget.id].user.username:'')),
         centerTitle:true,
         background: Image.asset(
           'assets/images/bg_3.jpg',
@@ -161,7 +152,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       onStretchTrigger:(){
         print('onStretchTrigger');
         return;
-      },
+      } as Future<void> Function()?,
     );
   }
 
@@ -243,7 +234,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
                 return index == 0?UserWorkListWidget():_getPageLayout(index);
               },
               onPageChanged: (index){
-                _tabController.animateTo(index);
+                _tabController!.animateTo(index);
               },
             ),
           ),
@@ -273,7 +264,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
             childAspectRatio: 9/16),
         itemBuilder: (BuildContext context, int index) {
           return UserItemGridWidget(
-            url: _userController.userWorkList[index].content.attachments[0].cover,
+            url: _userController.userWorkList[index]!.content!.attachments![0]!.cover,
             onTap: (){
               // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoListPage(videoList: _userModel.worksVideo,)));
             },
@@ -301,7 +292,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
 class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   final PreferredSize child;
 
-  StickyTabBarDelegate({@required this.child});
+  StickyTabBarDelegate({required this.child});
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
@@ -9,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 
 //拍摄页底部布局
 class ShootBottomWidget extends StatefulWidget {
-  ShootBottomWidget({Key key}) : super(key: key);
+  ShootBottomWidget({Key? key}) : super(key: key);
 
   @override
   _ShootBottomWidgetState createState() {
@@ -98,7 +100,7 @@ class _ShootBottomWidgetState extends State<ShootBottomWidget> {
     return TextButton(
         onPressed: () async {
           final ImagePicker picker = ImagePicker();
-          var videoFile = await picker.pickVideo(source: ImageSource.gallery);
+          var videoFile = await (picker.pickVideo(source: ImageSource.gallery) as FutureOr<XFile>);
           Get.offNamed(Routers.feedPublish,parameters: {'videoPath':videoFile.path});
         },
         child: Text('相册', style: TextStyle(
@@ -109,19 +111,19 @@ class _ShootBottomWidgetState extends State<ShootBottomWidget> {
 }
 
 class FlashButton extends StatelessWidget{
-  double size = 66;
+  double? size = 66;
   double borderWidth = 4;
 
   FlashButton({this.size});
 
   @override
   Widget build(BuildContext context) {
-    double innerSize = size - borderWidth*2 -4;
+    double innerSize = size! - borderWidth*2 -4;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(size/2),
+        borderRadius: BorderRadius.circular(size!/2),
         border: Border.fromBorderSide(BorderSide(color: Colors.white,width: borderWidth)),
       ),
       alignment: Alignment.center,

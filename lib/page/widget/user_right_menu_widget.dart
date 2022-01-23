@@ -165,12 +165,12 @@ class _UserRightMenuWidgetState extends State<UserRightMenuWidget> {
 }
 
 class UserRightMenuItemWidget extends StatelessWidget{
-  String iconUrl;
-  String title;
-  Function onTap;
-  Alignment alignment;
+  String? iconUrl;
+  String? title;
+  Function? onTap;
+  Alignment? alignment;
 
-  UserRightMenuItemWidget({String iconUrl,String title,Function onTap,Alignment alignment}){
+  UserRightMenuItemWidget({String? iconUrl,String? title,Function? onTap,Alignment? alignment}){
     this.onTap = onTap;
     this.title = title;
     this.iconUrl = iconUrl;
@@ -192,9 +192,9 @@ class UserRightMenuItemWidget extends StatelessWidget{
           color: ColorRes.color_1,
           child: Row(
             children: [
-              Image.asset(iconUrl,width: 18,height: 18,color: Colors.white,),
+              Image.asset(iconUrl!,width: 18,height: 18,color: Colors.white,),
               SizedBox(width: 10,),
-              Text(title,style: TextStyle(color: Colors.white,fontSize: 14),)
+              Text(title!,style: TextStyle(color: Colors.white,fontSize: 14),)
             ],
           ),
         ),

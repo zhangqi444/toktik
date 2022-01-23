@@ -1,8 +1,19 @@
-import 'package:toktik/generated/json/base/json_convert_content.dart';
+import 'package:toktik/generated/json/base/json_field.dart';
+import 'package:toktik/generated/json/login_response.g.dart';
 
-class LoginResponse with JsonConvert<LoginResponse> {
-	String username;
-	String token;
-	String status;
-	bool isSignedIn;
+
+@JsonSerializable()
+class LoginResponse {
+
+	LoginResponse();
+
+	factory LoginResponse.fromJson(Map<String, dynamic> json) => $LoginResponseFromJson(json);
+
+	Map<String, dynamic> toJson() => $LoginResponseToJson(this);
+
+	String? username;
+	String? token;
+	String? status;
+	bool? isSignedIn;
+
 }

@@ -1,21 +1,26 @@
 import 'package:toktik/page/feed_publish_page.dart';
 // import 'package:toktik/page/friend_page.dart';
 import 'package:toktik/page/home_page.dart';
+import 'package:toktik/page/login/create_password_page.dart';
+import 'package:toktik/page/login/create_username_page.dart';
+import 'package:toktik/page/login/reset_password_page.dart';
+import 'package:toktik/page/login/reset_password_password_page.dart';
+import 'package:toktik/page/login/sign_up_email_page.dart';
+import 'package:toktik/page/login/verification_code_page.dart';
+import 'package:toktik/page/setting_page.dart';
 import 'package:toktik/page/splash_page.dart';
 // import 'package:toktik/page/home_tab_city_page.dart';
 // import 'package:toktik/page/home_tab_focus_page.dart';
 import 'package:toktik/page/home_tab_recommend_page.dart';
 // import 'package:toktik/page/living_page.dart';
-import 'package:toktik/page/login_page.dart';
+import 'package:toktik/page/login/login_page.dart';
 import 'package:toktik/page/main_page.dart';
 import 'package:toktik/page/message_page.dart';
 // import 'package:toktik/page/modify_info_page.dart';
-import 'package:toktik/page/register_page.dart';
-import 'package:toktik/page/register_verify_page.dart';
+import 'package:toktik/page/login/sign_up_page.dart';
 // import 'package:toktik/page/scan_page.dart';
 import 'package:toktik/page/scroll_page.dart';
 import 'package:toktik/page/search_page.dart';
-// import 'package:toktik/page/setting_page.dart';
 import 'package:toktik/page/shoot_page.dart';
 // import 'package:toktik/page/test.dart';
 // import 'package:toktik/page/user_info_edit_page.dart';
@@ -23,6 +28,7 @@ import 'package:toktik/page/user_page.dart';
 // import 'package:toktik/page/video_list_page.dart';
 // import 'package:toktik/page/my_tiktok_code_page.dart';
 import 'package:get/get.dart';
+import 'package:toktik/page/web_view_page.dart';
 
 ///路由管理者
 class RouterManager{
@@ -44,12 +50,18 @@ class RouterManager{
     // GetPage(name: Routers.tikTokCode, page: () => MyTikTokCodePage()),
     // GetPage(name: Routers.living, page: () => LivingPage()),
     GetPage(name: Routers.login, page: () => LoginPage(),transition: Transition.downToUp,),
-    GetPage(name: Routers.register, page: () => RegisterPage()),
-    GetPage(name: Routers.registerVerify, page: () => RegisterVerifyPage()),
-    // GetPage(name: Routers.setting, page: () => SettingPage()),
+    GetPage(name: Routers.createUsername, page: () => CreateUsernamePage()),
+    GetPage(name: Routers.createPassword, page: () => CreatePasswordPage()),
+    GetPage(name: Routers.resetPassword, page: () => ResetPasswordPage()),
+    GetPage(name: Routers.resetPasswordPassword, page: () => ResetPasswordPasswordPage()),
+    GetPage(name: Routers.signUp, page: () => SignUpPage()),
+    GetPage(name: Routers.signUpEmail, page: () => SignUpEmailPage()),
+    GetPage(name: Routers.verificationCode, page: () => VerificationCodePage()),
+    GetPage(name: Routers.setting, page: () => SettingPage()),
     // GetPage(name: Routers.editUserInfo, page: () => UserInfoEditPage()),
     // GetPage(name: Routers.modifyUserInfo, page: () => ModifyInfoPage()),
     GetPage(name: Routers.feedPublish, page: () => FeedPublishPage()),
+    GetPage(name: Routers.webView, page: () => WebViewPage()),
   ];
 
 
@@ -74,10 +86,16 @@ class Routers{
   static final String tikTokCode = '/tikTokCode';
   static final String living = '/living';
   static final String login = '/login';
-  static final String register = '/register';
-  static final String registerVerify = '/registerVerify';
+  static final String createUsername = '/createUsername';
+  static final String createPassword = '/createPassword';
+  static final String resetPassword = '/resetPassword';
+  static final String resetPasswordPassword = '/resetPasswordPassword';
+  static final String signUp = '/signUp';
+  static final String signUpEmail = '/signUpEmail';
+  static final String verificationCode = '/verificationCode';
   static final String setting = '/setting';
   static final String editUserInfo = '/editUserInfo';
   static final String modifyUserInfo = '/modifyUserInfo';
   static final String feedPublish = '/feedPublish';
+  static final String webView = '/webView';
 }

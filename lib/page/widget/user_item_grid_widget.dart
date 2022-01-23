@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class UserItemGridWidget extends StatefulWidget {
-  String gifUrl;
-  Function onTap;
-  UserItemGridWidget({String url,Function onTap}){
+  String? gifUrl;
+  Function? onTap;
+  UserItemGridWidget({String? url,Function? onTap}){
     this.gifUrl = url;
     this.onTap = onTap;
   }
@@ -25,7 +25,7 @@ class _UserItemGridWidgetState extends State<UserItemGridWidget> {
       },
       child: Stack(
           children: [
-            Image.network(widget.gifUrl,fit: BoxFit.cover,),
+            Image.network(widget.gifUrl!,fit: BoxFit.cover,),
             Positioned(
               left: 2,
               bottom: 2,

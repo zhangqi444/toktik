@@ -1,8 +1,22 @@
-type View @model @auth(rules: [{allow: public}])
-  @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId")
-  @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId")
-  @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId")
-{
+type Report @model @auth(rules: [{allow: public}])
+  @key(name: "reportReporterId-index", fields: ["reportReporterId"], queryField: "reportReporterId")
+  @key(name: "reportUserId-index", fields: ["reportUserId"], queryField: "reportUserId")
+  @key(name: "reportPostId-index", fields: ["reportPostId"], queryField: "reportPostId"){
+  id: ID!
+  reason: String
+  description: String
+  status: String
+  user: User @connection
+  post: Post @connection
+  reporter: User @connection
+  type: String
+  result: String
+  reportReporterId: ID!
+  reportUserId: ID
+  reportPostId: ID
+}
+
+type View @model @auth(rules: [{allow: public}]) @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId") @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId") @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId") {
   id: ID!
   post: Post @connection
   user: User @connection
@@ -28,10 +42,7 @@ type Comment @model @auth(rules: [{allow: public}]) {
   commentPostId: ID!
 }
 
-type Like @model @auth(rules: [{allow: public}])
-  @key(name: "likePostId-likeUserId-index", fields: ["likePostId", "likeUserId"], queryField: "likeByPostIdUserId")
-  @key(name: "likePostId-index", fields: ["likePostId"], queryField: "likeByPostId")
-  @key(name: "likeUserId-index", fields: ["likeUserId"], queryField: "likeByUserId") {
+type Like @model @auth(rules: [{allow: public}]) @key(name: "likePostId-likeUserId-index", fields: ["likePostId", "likeUserId"], queryField: "likeByPostIdUserId") @key(name: "likePostId-index", fields: ["likePostId"], queryField: "likeByPostId") @key(name: "likeUserId-index", fields: ["likeUserId"], queryField: "likeByUserId") {
   id: ID!
   user: User @connection
   post: Post @connection
@@ -40,7 +51,7 @@ type Like @model @auth(rules: [{allow: public}])
   value: Boolean
 }
 
-type Post @model @auth(rules: [{allow: public}]) {
+type Post @model @auth(rules: [{allow: public}]) @key(name: "postUserId-index", fields: ["postUserId"], queryField: "postByUserId") {
   id: ID!
   text: String
   user: User @connection
@@ -49,6 +60,7 @@ type Post @model @auth(rules: [{allow: public}]) {
   likeCount: Int
   commentCount: Int
   shareCount: Int
+  postUserId: ID
   viewCount: Int
 }
 
@@ -68,6 +80,9 @@ type User @model @auth(rules: [{allow: public}]) {
   city: String
   profession: String
   username: String
+  email: String
+  phoneNumber: String
+  authStatus: String
 }
 
 type PostEx {
@@ -212,6 +227,7 @@ input ModelPostConditionInput {
   likeCount: ModelIntInput
   commentCount: ModelIntInput
   shareCount: ModelIntInput
+  postUserId: ModelStringInput
   and: [ModelPostConditionInput]
   or: [ModelPostConditionInput]
   not: ModelPostConditionInput
@@ -240,6 +256,7 @@ input ModelPostFilterInput {
   likeCount: ModelIntInput
   commentCount: ModelIntInput
   shareCount: ModelIntInput
+  postUserId: ModelStringInput
   viewCount: ModelIntInput
   and: [ModelPostFilterInput]
   or: [ModelPostFilterInput]

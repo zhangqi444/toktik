@@ -26,21 +26,21 @@ import 'package:flutter/foundation.dart';
 @immutable
 class Music extends Model {
   static const classType = const _MusicModelType();
-  final String id;
-  final String url;
-  final String img;
+  final String? id;
+  final String? url;
+  final String? img;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
-  const Music._internal({@required this.id, this.url, this.img});
+  const Music._internal({required this.id, this.url, this.img});
 
-  factory Music({String id, String url, String img}) {
+  factory Music({String? id, String? url, String? img}) {
     return Music._internal(
         id: id == null ? UUID.getUUID() : id, url: url, img: img);
   }
@@ -74,7 +74,7 @@ class Music extends Model {
     return buffer.toString();
   }
 
-  Music copyWith({String id, String url, String img}) {
+  Music copyWith({String? id, String? url, String? img}) {
     return Music(id: id ?? this.id, url: url ?? this.url, img: img ?? this.img);
   }
 

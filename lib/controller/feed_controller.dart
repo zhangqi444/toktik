@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
+import 'package:toktik/model/response/publish_feed_response.dart';
 import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -9,20 +12,22 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class FeedController extends GetxController{
 
   //热门推荐
-  final hotFeedList = <String>[].obs;
-  final feedListListMap = <String, FeedListList>{}.obs;
-  int cursor = 0;
-  int count = 200;
+  final RxList<String?> hotFeedList = <String>[].obs;
+  final RxMap<String?, FeedListList?> feedListListMap = <String, FeedListList>{}.obs;
+  int? cursor = 0;
+  // 100 is the largest number could support, which will be filtered by the listPostExs api.
+  // https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html#limits-expression-parameters
+  int count = 100; 
 
   //好友列表
-  final friendFeedList = <FeedListList>[].obs;
-  int cursorFriend = 0;
+  final RxList<FeedListList?> friendFeedList = <FeedListList>[].obs;
+  int? cursorFriend = 0;
   int countFriend = 10;
 
-  UserController _userController = Get.put(UserController());
+  SelfController _selfController = Get.put(SelfController());
 
   ///发布单个视频
-  Future<String> publishFeed(String title,String videoUrl,String coverImgUrl,int duration,int width,int height) async{
+  Future<String?> publishFeed(String title,String? videoUrl,String? coverImgUrl,int duration,int width,int height) async{
     PublishFeedRequest publishFeedRequest = PublishFeedRequest();
     PublishFeedContent publishFeedContent = PublishFeedContent();
     PublishFeedLocation publishFeedLocation = PublishFeedLocation();
@@ -45,7 +50,7 @@ class FeedController extends GetxController{
     attachments.add(publishFeedContentAttachmants);
     publishFeedContent.attachments = attachments;
 
-    var result = await Api.publishFeed(publishFeedRequest);
+    var result = await (Api.publishFeed(publishFeedRequest) as FutureOr<PublishFeedResponse>);
     if(null != result){
       EasyLoading.showToast('发布成功');
       Get.back();
@@ -55,12 +60,12 @@ class FeedController extends GetxController{
 
   ///获取热门推荐视频列表
   Future<bool> loadHotFeedList(RefreshController refreshController)async{
-    String userId = await _userController.getLoginUserId();
+    String userId = _selfController.loginUserId.value;
     var result = await Api.getHotFeedList(cursor, count, userId);
     if(result != null){
-      hotFeedList.addAll(result.xList.map((e) => e.id));
-      result.xList.forEach((element) {
-        feedListListMap[element.id] = element;
+      hotFeedList.addAll(result.xList!.map((e) => e!.id));
+      result.xList!.forEach((element) {
+        feedListListMap[element!.id] = element;
       });
       cursor = result.cursor;
       refreshController.loadComplete();
@@ -71,7 +76,7 @@ class FeedController extends GetxController{
 
   }
   
-  void updateFeedListList(String id, FeedListList feedListList) {
+  void updateFeedListList(String? id, FeedListList? feedListList) {
     feedListListMap[id] = feedListList;
   }
 
@@ -87,7 +92,7 @@ class FeedController extends GetxController{
   Future<bool> getFriendFeedList(RefreshController refreshController)async{
     var result = await Api.getFriendFeedList(cursorFriend, countFriend);
     if(result != null){
-      friendFeedList.addAll(result.xList);
+      friendFeedList.addAll(result.xList!);
       cursorFriend = result.cursor;
       refreshController.loadComplete();
       return true;

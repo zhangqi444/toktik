@@ -4,6 +4,7 @@ import 'package:toktik/common/application.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/recommend_page_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/event/amplify_configured_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_widget.dart';
@@ -13,9 +14,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ///首页tab推荐
 class HomeTabRecommendPage extends StatefulWidget {
-  double contentHeight;
-  PageController pageController;
-  HomeTabRecommendPage({Key key, this.contentHeight, this.pageController}) : super(key: key);
+  double? contentHeight;
+  PageController? pageController;
+  HomeTabRecommendPage({Key? key, this.contentHeight, this.pageController}) : super(key: key);
 
   @override
   _HomeTabRecommendPageState createState() {
@@ -28,19 +29,19 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
   MainPageScrollController _mainController = Get.find();
   PageController _pageController = PageController(initialPage: 0, keepPage: true);
   FeedController _feedController = Get.put(FeedController());
+  SelfController _selfController = Get.put(SelfController());
   RefreshController _refreshController = RefreshController(initialRefresh: false);
   var amplifyConfiguredListner;
 
   @override
   void initState() {
     super.initState();
-    if(!Amplify.isConfigured) {
-      amplifyConfiguredListner = Application.eventBus.on<AmplifyConfiguredEvent>().listen((event) {
-        _feedController.refreshHotFeedList(_refreshController);
-      });
-    } else {
-      _feedController.refreshHotFeedList(_refreshController);
-    }
+    init();
+  }
+
+  Future<void> init() async {
+    await _selfController.load();
+    _feedController.refreshHotFeedList(_refreshController);
   }
 
   @override
@@ -68,7 +69,7 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
 
   _getVideoList(BuildContext context) {
     return Obx((){
-      List<FeedListList> videoList = _feedController.hotFeedList.value.map(
+      List<FeedListList?> videoList = _feedController.hotFeedList.value.map(
            (element) => _feedController.feedListListMap.value[element]
       ).toList();
       if(null == videoList || videoList.length == 0){
@@ -84,13 +85,13 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
               showFocusButton: true,
               contentHeight: widget.contentHeight,
               onClickHeader: (){
-                _mainController.setCurrentUserOfVideo(videoList[index].user);
-                widget.pageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
+                _mainController.setCurrentUserOfVideo(videoList[index]!.user!);
+                widget.pageController!.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
               },
             );
           },
           onPageChanged: (index){
-            _mainController.setCurrentUserOfVideo(videoList[index].user);
+            _mainController.setCurrentUserOfVideo(videoList[index]!.user!);
           },
         );
       }

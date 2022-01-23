@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class ShootBottomBarWidget extends StatefulWidget {
-  double width;
-  double height;
-  List<String> list;
-  int initialItem = 0;
-  ValueChanged<int> onSelected;
+  double? width;
+  double? height;
+  List<String>? list;
+  int? initialItem = 0;
+  ValueChanged<int?>? onSelected;
 
   ShootBottomBarWidget(
       {this.width, this.height, this.list, this.initialItem, this.onSelected});
@@ -19,14 +19,14 @@ class ShootBottomBarWidget extends StatefulWidget {
 
 class _ShootBottomBarWidgetState
     extends State<ShootBottomBarWidget> {
-  FixedExtentScrollController _scrollController;
-  int _selectedIndex = 0;
+  FixedExtentScrollController? _scrollController;
+  int? _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _scrollController =
-        FixedExtentScrollController(initialItem: widget.initialItem);
+        FixedExtentScrollController(initialItem: widget.initialItem!);
     _selectedIndex = widget.initialItem;
   }
 
@@ -48,18 +48,18 @@ class _ShootBottomBarWidgetState
                 physics: FixedExtentScrollPhysics(),
                 diameterRatio: 100,
                 children: List.generate(
-                  widget.list.length,
+                  widget.list!.length,
                       (index) => RotatedBox(
                       quarterTurns: 1, child: _getItemLayout(index)),
                 ),
-                itemExtent: widget.height,
+                itemExtent: widget.height!,
               ),
-              onNotification: (scroll) {
+              onNotification: (dynamic scroll) {
                 if (scroll is UserScrollNotification &&
                     scroll.direction == ScrollDirection.idle) {
                   setState(() {
-                    _selectedIndex = _scrollController.selectedItem;
-                    widget.onSelected(_selectedIndex);
+                    _selectedIndex = _scrollController!.selectedItem;
+                    widget.onSelected!(_selectedIndex);
                   });
                 }
                 return true;
@@ -76,7 +76,7 @@ class _ShootBottomBarWidgetState
       width: 50,
       height: 50,
       child: Text(
-        widget.list[index],
+        widget.list![index],
         style: TextStyle(
           color: _selectedIndex == index ? Colors.white : Colors.grey,
           fontWeight: FontWeight.w500,

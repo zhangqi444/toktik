@@ -11,9 +11,10 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:toktik/common/sp_keys.dart';
-import 'package:toktik/controller/user_controller.dart';
+import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/request/publish_feed_request.dart';
+import 'package:toktik/model/request/report_request.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/model/response/follow_response.dart';
 import 'package:toktik/model/response/like_response.dart';
@@ -21,6 +22,7 @@ import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/model/response/logout_response.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
 import 'package:toktik/model/response/register_response.dart';
+import 'package:toktik/model/response/report_response.dart';
 import 'package:toktik/model/response/upload_token_response.dart';
 import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/model/response/user_info_response.dart';
@@ -48,7 +50,7 @@ class Api{
   //
 
   ///登录
-  static Future<LoginResponse> login(String username, String password) async {
+  static Future<LoginResponse?> login(String username, String password) async {
 
     await logout();
 
@@ -60,7 +62,7 @@ class Api{
         username: username,
         password: password,
       );
-      if(res != null && res.nextStep.signInStep == "DONE") {
+      if(res != null && res.nextStep!.signInStep == "DONE") {
         result['isSignedIn'] = res.isSignedIn;
         result["status"] = AuthStatus.SIGN_IN_DONE.toShortString();
         result['token'] = await _fetchAuthSession();
@@ -74,32 +76,51 @@ class Api{
         result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
       } else if(e is NotAuthorizedException) {
         result["status"] = AuthStatus.NOT_AUTHORIZED.toShortString();
+      } else if(e is InvalidStateException) {
+        result["status"] = AuthStatus.INVALID_STATE.toShortString();
       } else {
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
         print("Fail to sign in: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
-    return LoginResponse().fromJson(result);
+    return LoginResponse.fromJson(result);
   }
 
-  static Future<String> _fetchAuthSession() async{
+  static Future<String?> _fetchAuthSession() async{
     AuthSession authSession = await Amplify.Auth.fetchAuthSession(
       options: CognitoSessionOptions(getAWSCredentials: true),
     );
     if(authSession != null && (authSession as CognitoAuthSession).identityId != null) {
-      return (authSession as CognitoAuthSession).userPoolTokens.accessToken;
+      return authSession.userPoolTokens!.accessToken;
     }
   }
 
-  static Future<LogoutResponse> logout() async {
+  static Future<LogoutResponse?> logout() async {
+    Map<String, dynamic> result = HashMap();
     try {
-      var result = await Amplify.Auth.signOut();
-      return result != null ? LogoutResponse().fromJson({}) : null;
+      SignOutResult res = await Amplify.Auth.signOut();
+      if(res == null) {
+        result['status'] = AuthStatus.UNKNOWN.toShortString();
+      } else {
+        result['status'] = AuthStatus.SIGN_OUT_DONE.toShortString();;
+        return LogoutResponse.fromJson(result);
+      }
     } on AuthException catch (e, stacktrack) {
+      result['status'] = AuthStatus.UNKNOWN.toShortString();
       print("Fail to sign out: " + e.toString() + '\n' + stacktrack.toString());
     }
   }
 
-  static Future<RegisterResponse> resendSignUpCode(String username) async{
+  static Future<LoginResponse?> getCurrentUser() async {
+    try {
+      var result = await Amplify.Auth.getCurrentUser();
+      return result != null ? LoginResponse.fromJson({}) : null;
+    } on AuthException catch (e, stacktrack) {
+      print("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
+    }
+  }
+
+  static Future<RegisterResponse?> resendSignUpCode(String username) async{
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
     try {
@@ -108,13 +129,18 @@ class Api{
         result["status"] = AuthStatus.CONFIRM_SIGN_UP_STEP;
       }
     } on AuthException catch (e, stacktrack) {
+      if(e is UserNotFoundException) {
+        result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
+      } else {
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
+      }
       print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
     }
-    return RegisterResponse().fromJson(result);
+    return RegisterResponse.fromJson(result);
   }
 
   ///注册
-  static Future<RegisterResponse> registerByEmail(String email, String username, String pwd, String pwdRepeat) async{
+  static Future<RegisterResponse?> registerByEmail(String email, String username, String? pwd, String? pwdRepeat) async{
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
     try {
@@ -142,14 +168,15 @@ class Api{
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else {
         print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
       }
     }
-    return result.length == 0 ? null : RegisterResponse().fromJson(result);
+    return result.length == 0 ? null : RegisterResponse.fromJson(result);
   }
 
   ///注册
-  static Future<RegisterResponse> confirmSignUp(
-      String username, String confirmationCode, ConfirmSignUpOptions options) async {
+  static Future<RegisterResponse?> confirmSignUp(
+      String username, String confirmationCode, ConfirmSignUpOptions? options) async {
     Map<String, dynamic> result = HashMap();
     try {
       SignUpResult res = await Amplify.Auth.confirmSignUp(
@@ -158,22 +185,84 @@ class Api{
         result["isSignUpComplete"] = res.isSignUpComplete;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else {
-        result = null;
+        result = {};
       }
     } on AuthException catch (e, stacktrack) {
       if(e is NotAuthorizedException) {
         result["isSignUpComplete"] = true;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
-      } else {
+      } else if(e is AliasExistsException) {
+        result["isSignUpComplete"] = false;
+        result["status"] = AuthStatus.ALIAS_EXISTS.toShortString();
+      } if(e is CodeMismatchException) {
+        result["isSignUpComplete"] = false;
+        result["status"] = AuthStatus.CODE_MISMATCH.toShortString();
+      }
+      else {
         print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
-    return RegisterResponse().fromJson(result);
+    return RegisterResponse.fromJson(result);
   }
 
-  static Future<UserInfoExResponse> createUser(String username) async {
+  static Future<RegisterResponse?> resetPassword(
+      String username, {ResetPasswordOptions? options}) async {
+    Map<String, dynamic> result = HashMap();
+    result['username'] = username;
     try {
-      User user = User(username: username);
+      ResetPasswordResult res = await Amplify.Auth.resetPassword(
+          username: username,
+          options: options
+      );
+      if(res != null) {
+        result["isPasswordReset"] = res.isPasswordReset;
+        result["status"] = res.nextStep.updateStep;
+      }
+    } on AuthException catch (e, stacktrack) {
+      result["isPasswordReset"] = false;
+      if(e is UserNotFoundException) {
+        result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
+      } else if(e is InvalidParameterException) {
+        result["status"] = AuthStatus.INVALID_PARAMETER.toShortString();
+      } else {
+        print("Fail to reset password: " + e.toString() + '\n' + stacktrack.toString());
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
+      }
+    }
+    return result.length == 0 ? null : RegisterResponse.fromJson(result);
+  }
+
+  static Future<RegisterResponse?> confirmResetPassword(
+      String username, String newPassword, String confirmationCode,
+      {ConfirmResetPasswordOptions? options}) async {
+    Map<String, dynamic> result = HashMap();
+    try {
+      UpdatePasswordResult res = await Amplify.Auth.confirmResetPassword(
+          username: username, newPassword: newPassword, confirmationCode: confirmationCode, options: options);
+      if(res != null) {
+        result["isPasswordReset"] = true;
+        result["status"] = AuthStatus.RESET_PASSWORD_DONE.toShortString();
+      } else {
+        result = {};
+      }
+    } on AuthException catch (e, stacktrack) {
+      if(e is InvalidParameterException) {
+        result["isPasswordReset"] = false;
+        result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
+      } else if(e is CodeMismatchException) {
+        result["isPasswordReset"] = false;
+        result["status"] = AuthStatus.CODE_MISMATCH.toShortString();
+      } else {
+        result["status"] = AuthStatus.UNKNOWN.toShortString();
+        print("Fail to confirm reset password: " + e.toString() + '\n' + stacktrack.toString());
+      }
+    }
+    return RegisterResponse.fromJson(result);
+  }
+
+  static Future<UserInfoExResponse?> createUser({String? username, String? email, String? phoneNumber}) async {
+    try {
+      User user = User(username: username, email: email, phoneNumber: phoneNumber);
       await Amplify.DataStore.save(user);
       return _parseUsers([user], {username: username});
     } catch (e, stacktrace) {
@@ -183,16 +272,45 @@ class Api{
   //
 
   ///获取用户资料信息(扩展)
-  static Future<UserInfoExResponse> getUserInfoExByUsername(String username) async {
+  static Future<UserInfoExResponse?> getUserInfoExByUsername(String? username) async {
     try {
-      List<User> users = await Amplify.DataStore.query(User.classType, where: User.USERNAME.eq(username));
-      return _parseUsers(users, {username: username});
+      var response = await _query(
+          '''query ListUsers(\$filter: ModelUserFilterInput) {
+            listUsers(filter: \$filter) {
+              items {
+                id username email phoneNumber portrait nickname gender bio city birth
+              }
+            }
+          }''',
+          { 'filter': { "username": { "eq": username } } },
+          'listUsers'
+      );
+      return _parseUsers(response['items'], {username: username});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
   }
 
-  static Future<UserInfoExResponse> getUserInfoEx(String id) async{
+  static Future<UserInfoExResponse?> getUserInfoExByEmail(String email) async {
+    try {
+      var response = await _query(
+          '''query ListUsers(\$filter: ModelUserFilterInput) {
+            listUsers(filter: \$filter) {
+              items {
+                id username email phoneNumber portrait nickname gender bio city birth
+              }
+            }
+          }''',
+          { 'filter': { "email": { "eq": email } } },
+          'listUsers'
+      );
+      return _parseUsers(response['items'], {email: email});
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
+
+  static Future<UserInfoExResponse?> getUserInfoEx(String? id) async{
     try {
       List<User> users = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
       return _parseUsers(users, {id: id});
@@ -201,16 +319,26 @@ class Api{
     }
   }
 
-  static UserInfoExResponse _parseUsers(List<User> users, Map<String, dynamic> params) {
-    Map<String, dynamic> convert(User user) {
+  static UserInfoExResponse? _parseUsers(List<dynamic> users, Map<String?, dynamic> overrides) {
+    Map<String, dynamic> convert(user) {
       Map<String, dynamic> result = {};
-      var userJson = user.toJson();
+      var userJson = user;
+      if (user is User) {
+        userJson = user.toJson();
+      }
+
       result['user'] = userJson;
       if(result['user']['username'] == null) {
-        result['user']['username'] = params['username'];
+        result['user']['username'] = overrides['username'];
+      }
+      if(result['user']['email'] == null) {
+        result['user']['email'] = overrides['email'];
+      }
+      if(result['user']['phoneNumber'] == null) {
+        result['user']['phoneNumber'] = overrides['phoneNumber'];
       }
       if(result['user']['id'] == null) {
-        result['user']['id'] = params['id'];
+        result['user']['id'] = overrides['id'];
       }
       // TODO: generate counts from server side
       var rng = new Random();
@@ -222,7 +350,7 @@ class Api{
     }
 
     var parsed = users.map((user) => convert(user)).toList();
-    return (parsed != null && parsed.length > 0) ? UserInfoExResponse().fromJson(parsed[0]) : null;
+    return (parsed != null && parsed.length > 0) ? UserInfoExResponse.fromJson(parsed[0]) : null;
   }
 
   static void recordEvent(String eventName, Map<String, dynamic> events) {
@@ -246,62 +374,8 @@ class Api{
     Amplify.Analytics.flushEvents();
   }
 
-  ///更新用户资料信息
-  static Future<UserInfoResponse> updateUserInfo(Map<String,dynamic> map) async{
-    var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['id'].toString(), cancelTokenTag: 'getUserInfo',data: map);
-    return UserInfoResponse().fromJson(result);
-  }
-
-  ///获取上传文件凭证
-  static Future<UploadTokenResponse> getSingleUploadToken(List<String> filePathList) async{
-    Map<String,List> map = HashMap();
-    List resources = [];
-    for(int i=0;i<filePathList.length;i++){
-      Map<String,String> mapTemp = HashMap();
-      mapTemp['type'] = filePathList[i];
-      resources.add(mapTemp);
-    }
-    map['resources'] = resources;
-    var result = await HttpManager.getInstance().post(url: HttpConstant.uploadToken, cancelTokenTag: "getUploadToken",data: map);
-    return UploadTokenResponse().fromJson(result);
-  }
-
-  ///上传文件
-  static Future<bool> uploadSingleFile(File file,UploadTokenResponse tokenResponse,String fileSuffix) async{
-    Stream<List<int>> listStream = file.openRead();
-    UploadTokenTokensHeaders headers = tokenResponse.tokens[0].headers;
-    UploadTokenToken tokenToken = tokenResponse.tokens[0];
-    bool success = await HttpManager.getInstance().uploadFile(
-        url: tokenToken.uploadUrl,
-        cancelTokenTag: 'uploadFile',
-        data: listStream,
-        method: HttpMethod.PUT,
-        options: Options(
-          headers: {
-            'Content-Type':headers.contentType,
-            'Date':headers.date,
-            'Authorization':headers.authorization
-          }
-        ),
-
-    );
-    return success;
-  }
-
-  ///发布feed
-  static Future<PublishFeedResponse> publishFeed(PublishFeedRequest publishFeedRequest) async{
-    var result = await HttpManager.getInstance().post(url: HttpConstant.publishFeed, cancelTokenTag: 'publishFeed',data: publishFeedRequest.toJson());
-    return PublishFeedResponse().fromJson(result);
-  }
-
-  ///获取用户作品列表
-  static Future<UserWorkListResponse> getUserFeedList(String id, int cursor,int count)async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?id=$id&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
-    return UserWorkListResponse().fromJson(result);
-  }
-
   ///获取热门作品列表
-  static Future<FeedListResponse> getHotFeedList(int cursor,int limit, String userId) async{
+  static Future<FeedListResponse?> getHotFeedList(int? cursor,int limit, String userId) async{
     try {
       var response;
       var localPosts;
@@ -338,7 +412,7 @@ class Api{
       }
 
       var rng = new Random(DateTime.now().millisecondsSinceEpoch);
-      List posts = response['items']..shuffle(rng);
+      List posts = (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
       posts = posts.where((f) => f['attachments'] != null).toList();
       Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
         post['content'] = {
@@ -361,7 +435,7 @@ class Api{
       }
 
       var parsed = await Future.wait(posts.map((post) async => await convert(post)));
-      return FeedListResponse().fromJson({'list': parsed.toList()});
+      return FeedListResponse.fromJson({'list': parsed.toList()});
     } catch (e, stacktrace) {
       print("Fail to get post lists: " + stacktrace.toString());
     }
@@ -379,7 +453,7 @@ class Api{
       }
       return jsonDecode(result.data)[key];
     } catch (e, stacktrace) {
-      print("Could not query server: " + document + '\n' + e.message + '\n' + stacktrace.toString());
+      debugPrint("Could not query server: " + document + '\n' + e.toString() + '\n' + stacktrace.toString());
     }
   }
 
@@ -396,11 +470,11 @@ class Api{
       }
       return jsonDecode(result.data)[key];
     } catch (e, stacktrace) {
-      debugPrint("Could not query server: " + document + '\n' + e.message + '\n' + stacktrace.toString());
+      debugPrint("Could not query server: " + document + '\n' + e.toString() + '\n' + stacktrace.toString());
     }
   }
 
-  static Future<ViewResponse> viewPost(String postId, String userId) async{
+  static Future<ViewResponse?> viewPost(String? postId, String userId) async{
     try {
       var view = await _mutation(
           '''mutation ViewPost(\$input: CreateViewInput!) {
@@ -411,13 +485,13 @@ class Api{
           },
           'viewPost'
       );
-      return ViewResponse().fromJson(view);
+      return ViewResponse.fromJson(view);
     } catch (e, stacktrace) {
       print("Fail to view post: " + stacktrace.toString());
     }
   }
 
-  static Future<LikeResponse> likePost(String postId, String userId, bool value) async{
+  static Future<LikeResponse?> likePost(String? postId, String userId, bool value) async{
     try {
       var result;
       if(userId != null) {
@@ -444,21 +518,109 @@ class Api{
         result = localPosts[postId]["isLiked"];
       }
 
-      return LikeResponse().fromJson(result);
+      return LikeResponse.fromJson(result);
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
   }
 
-  ///获取好友作品列表
-  static Future<FeedListResponse> getFriendFeedList(int cursor,int count) async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.friendFeedList+'?cursor=$cursor&count=$count', cancelTokenTag: 'getFriendFeedList',);
-    return FeedListResponse().fromJson(result);
+  static Future<ReportResponse?> report(ReportRequest request) async {
+    try {
+      var report = await _mutation(
+          '''mutation CreateReport(\$input: CreateReportInput!) {
+              createReport(input: \$input) { id result }
+            }''',
+          {
+            'input': {
+              'description': request.description?? '',
+              'type': request.type?? '',
+              'reason': request.reason?? '',
+              'reportPostId': request.reportPostId?? '',
+              'reportUserId': request.reportUserId?? '',
+              'reportReporterId': request.reportReporterId?? '',
+              'status': request.status?? '',
+            },
+          },
+          'createReport'
+      );
+
+      return ReportResponse.fromJson(report?? {});
+    } catch (e, stacktrace) {
+      print("Could not create report: " + e.toString() + '\n' + stacktrace.toString());
+    }
   }
 
-  static Future<FollowResponse> follow(FollowRequest request) async{
+  ///发布feed
+  // @deprecated
+  static Future<PublishFeedResponse> publishFeed(PublishFeedRequest publishFeedRequest) async{
+    var result = await HttpManager.getInstance().post(url: HttpConstant.publishFeed, cancelTokenTag: 'publishFeed',data: publishFeedRequest.toJson());
+    return PublishFeedResponse.fromJson(result);
+  }
+
+  ///获取用户作品列表
+  // @deprecated
+  static Future<UserWorkListResponse> getUserFeedList(String id, int? cursor,int count)async{
+    var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?id=$id&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
+    return UserWorkListResponse.fromJson(result);
+  }
+
+
+  ///更新用户资料信息
+  // @deprecated
+  static Future<UserInfoResponse> updateUserInfo(Map<String,dynamic> map) async{
+    var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['id'].toString(), cancelTokenTag: 'getUserInfo',data: map);
+    return UserInfoResponse.fromJson(result);
+  }
+
+  ///获取上传文件凭证
+  // @deprecated
+  static Future<UploadTokenResponse> getSingleUploadToken(List<String> filePathList) async{
+    Map<String,List> map = HashMap();
+    List resources = [];
+    for(int i=0;i<filePathList.length;i++){
+      Map<String,String> mapTemp = HashMap();
+      mapTemp['type'] = filePathList[i];
+      resources.add(mapTemp);
+    }
+    map['resources'] = resources;
+    var result = await HttpManager.getInstance().post(url: HttpConstant.uploadToken, cancelTokenTag: "getUploadToken",data: map);
+    return UploadTokenResponse.fromJson(result);
+  }
+
+  ///上传文件
+  /// @deprecated
+  static Future<bool?> uploadSingleFile(File file,UploadTokenResponse tokenResponse,String fileSuffix) async{
+    Stream<List<int>> listStream = file.openRead();
+    UploadTokenTokensHeaders headers = tokenResponse.tokens![0]!.headers!;
+    UploadTokenToken tokenToken = tokenResponse.tokens![0]!;
+    bool? success = await HttpManager.getInstance().uploadFile(
+      url: tokenToken.uploadUrl,
+      cancelTokenTag: 'uploadFile',
+      data: listStream,
+      method: HttpMethod.PUT,
+      options: Options(
+          headers: {
+            'Content-Type':headers.contentType,
+            'Date':headers.date,
+            'Authorization':headers.authorization
+          }
+      ),
+
+    );
+    return success;
+  }
+
+  ///获取好友作品列表
+  static Future<FeedListResponse?> getFriendFeedList(int? cursor,int count) async{
+  // @deprecated
+    var result = await HttpManager.getInstance().get(url: HttpConstant.friendFeedList+'?cursor=$cursor&count=$count', cancelTokenTag: 'getFriendFeedList',);
+    return FeedListResponse.fromJson(result);
+  }
+
+  static Future<FollowResponse?> follow(FollowRequest request) async{
+  // @deprecated
     var result = await HttpManager.getInstance().post(url: HttpConstant.follow, cancelTokenTag: 'follow',data: request.toJson());
-    return FollowResponse().fromJson(result);
+    return FollowResponse.fromJson(result);
   }
 
   /// ----------------------------------本地数据--------------------------------------------------------

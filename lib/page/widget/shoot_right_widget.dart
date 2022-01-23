@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 ///拍摄页右边的按钮们
 class ShootRightWidget extends StatefulWidget {
-  ShootRightWidget({Key key}) : super(key: key);
+  ShootRightWidget({Key? key}) : super(key: key);
 
   @override
   _ShootRightWidgetState createState() {
@@ -45,8 +45,8 @@ class _ShootRightWidgetState extends State<ShootRightWidget> {
 }
 
 class ShootRightButton extends StatelessWidget{
-  String imgUrl;
-  String title;
+  String? imgUrl;
+  String? title;
 
   ShootRightButton({this.imgUrl,this.title});
 
@@ -58,8 +58,8 @@ class ShootRightButton extends StatelessWidget{
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(imgUrl,width: 32,height: 32,),
-          Text(title,style: TextStyle(color: Colors.white,fontSize: 10,fontWeight: FontWeight.bold),),
+          Image.asset(imgUrl!,width: 32,height: 32,),
+          Text(title!,style: TextStyle(color: Colors.white,fontSize: 10,fontWeight: FontWeight.bold),),
         ],
       ),
     );

@@ -6,7 +6,7 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
 class UserWorkListWidget extends StatefulWidget {
-  UserWorkListWidget({Key key}) : super(key: key);
+  UserWorkListWidget({Key? key}) : super(key: key);
 
   @override
   _UserWorkListWidgetState createState() {
@@ -35,7 +35,7 @@ class _UserWorkListWidgetState extends State<UserWorkListWidget> {
   }
 
   _getBody(BuildContext context) {
-    List<UserWorkListList> workList = _userController.userWorkList.value;
+    List<UserWorkListList?> workList = _userController.userWorkList.value;
     if(null == workList || workList.length == 0){
       return Container();
     }else{
@@ -57,7 +57,7 @@ class _UserWorkListWidgetState extends State<UserWorkListWidget> {
               childAspectRatio: 9/16),
           itemBuilder: (BuildContext context, int index) {
             return UserItemGridWidget(
-              url: workList[index].content.attachments[0].cover,
+              url: workList[index]!.content!.attachments![0]!.cover,
               onTap: (){
                 // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoListPage(videoList: _userModel.worksVideo,)));
               },

@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.1.3+1
 
 environment:
-  sdk: ">=2.11.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -38,12 +38,15 @@ dependencies:
   # 图片选择
   image_picker: ^0.8.2
   # 获取视频缩略图
-  video_thumbnail: ^0.2.5
+  video_thumbnail: ^0.4.3
   # loading
   flutter_easyloading: ^3.0.0
   shared_preferences: ^2.0.5
   package_info_plus: ^1.0.2
-  flutter_verification_box: ^1.0.4
+  pin_code_fields: ^7.3.0
+  email_validator: ^2.0.1
+  webview_flutter: ^3.0.0
+  share_plus: ^3.0.4
 
 dev_dependencies:
   flutter_test:
@@ -66,15 +69,7 @@ flutter:
     - assets/images/splash/breeze_text.png
     - assets/images/login/question.png
     - assets/images/login/nav-arrow-left.png
-    - assets/images/main_page_bottom_icon/home.png
-    - assets/images/main_page_bottom_icon/message.png
-    - assets/images/main_page_bottom_icon/live.png
-    - assets/images/main_page_bottom_icon/profile.png
-    - assets/images/main_page_bottom_icon/create.png
-    - assets/images/main_page_bottom_icon/home-active.png
-    - assets/images/main_page_bottom_icon/message-active.png
-    - assets/images/main_page_bottom_icon/live-active.png
-    - assets/images/main_page_bottom_icon/profile-active.png
+    - assets/images/main_page_bottom_icon/
   fonts:
     - family:  TikTokIcons
       fonts:

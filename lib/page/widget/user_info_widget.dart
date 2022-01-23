@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
-import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/res/colors.dart';
@@ -8,10 +7,10 @@ import 'package:get/get.dart';
 
 ///用户信息
 class UserInfoWidget extends StatefulWidget {
-  bool isLoginUser;
-  String id;
+  bool? isLoginUser;
+  String? id;
 
-  UserInfoWidget({bool isLoginUser, String id}){
+  UserInfoWidget({bool? isLoginUser, String? id}){
     this.isLoginUser = isLoginUser;
     this.id = id;
   }
@@ -40,20 +39,30 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        //背景颜色
-        _getBackgroundColor(),
-        Column(
-          children: [
-            //头像、用户名、关注
-            _getHeaderLayout(),
-            //用户信息
-            _getUserInfoLayout(),
-          ],
-        ),
-      ],
-    );
+    return Obx(() {
+      var userEx = _userController.userExMap[widget.id] != null
+          ? _userController.userExMap[widget.id].user
+          : null;
+
+      if (userEx == null) {
+        return Container();
+      }
+
+      return Stack(
+        children: [
+          //背景颜色
+          _getBackgroundColor(),
+          Column(
+            children: [
+              //头像、用户名、关注
+              _getHeaderLayout(),
+              //用户信息
+              _getUserInfoLayout(),
+            ],
+          ),
+        ],
+      );
+    });
   }
 
 
@@ -75,18 +84,18 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Obx((){
-          UserInfoExUser userEx = _userController.userInfoExResponse.value.user;
+        Obx(() {
+          var userEx = _userController.userExMap[widget.id].user;
           return Container(
             width: 88,
             height: 88,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 image: DecorationImage(
-                    image: (userEx == null || userEx.portrait == null || userEx.portrait.isEmpty)
-                      ? AssetImage('assets/images/person_holder.png')
-                      : NetworkImage(userEx.portrait),
-                  fit: BoxFit.cover
+                    image: ((userEx == null || userEx.portrait == null || userEx.portrait.isEmpty)
+                        ? AssetImage('assets/images/person_holder.png')
+                        : NetworkImage(userEx.portrait)) as ImageProvider<Object>,
+                    fit: BoxFit.cover
                 )
             ),
           );
@@ -138,14 +147,14 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
 
   _getUserInfoLayout() {
     return Obx(() {
-      var user = _userController.userInfoExResponse.value.user;
+      var userEx = _userController.userExMap[widget.id].user;
       return Container(
         margin: EdgeInsets.only(left: 12,right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 12,),
-            Text(user == null ? '' : user.username,
+            Text(userEx == null ? '' : userEx.username,
               style: TextStyle(color: ColorRes.text_color, fontSize: 16),),
             SizedBox(height: 24,),
             // SizedBox(height: 5,),
@@ -168,7 +177,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
     });
   }
 
-  _getSexCity() {
+  _getSexCity(user) {
     return Row(
       children: [
         //性别
@@ -195,9 +204,9 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
             color: ColorRes.color_2.withAlpha(50),
             borderRadius: BorderRadius.circular(2),
           ),
-          child:  Text(_userController.userInfoExResponse.value.user == null || _userController.userInfoExResponse.value.user.city == null
+          child:  Text(user == null || user.city == null
               ? ''
-              : _userController.userInfoExResponse.value.user.city,
+              : user.city,
             style: TextStyle(color: Colors.black,fontSize: 10),),
         ),
       ],
@@ -206,7 +215,7 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   //获赞数、关注数、粉丝
   _getNumberLayout() {
     return Obx(() {
-      var response = _userController.userInfoExResponse.value;
+      var response = _userController.userExMap[widget.id];
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children:[
@@ -247,14 +256,14 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   //获取性别图标
   _getImgGender(BuildContext context) {
     return Obx((){
-      var user = _userController.userInfoExResponse.value.user;
+      var user = _userController.userExMap[widget.id].user;
       if(user == null || user.gender == null){
         return Image.asset('assets/images/male.webp',
           width: 10,
           height: 10,
         );
       } else {
-        int gender = 2;
+        int? gender = 2;
         if(user != null) gender = user.gender;
         return Image.asset(gender == 2?'assets/images/male.webp':'assets/images/famale.webp',
           width: 10,
@@ -266,11 +275,11 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
   //获取年龄
   _getAge(BuildContext context) {
     return Obx((){
-      var user = _userController.userInfoExResponse.value.user;
+      var user = _userController.userExMap[widget.id].user;
       if(user == null || user.birth == null) {
         return Container();
       }else{
-        String birth = _userController.userInfoExResponse.value.user.birth;
+        String birth = user.birth;
         List<String> tempArr = birth.split('-');
         int age = DateTime.now().year - int.parse(tempArr[0]);
         return  Text('$age',

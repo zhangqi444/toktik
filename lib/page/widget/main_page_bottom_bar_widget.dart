@@ -6,12 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/common/router_manager.dart';
-import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/res/colors.dart';
-import 'package:toktik/util/sp_util.dart';
 import 'package:get/get.dart';
+import 'package:toktik/util/string_util.dart';
 import 'package:toktik/util/tik_tok_icons_icons.dart';
 
 ///首页底部导航
@@ -24,9 +25,11 @@ class MainPageBottomBarWidget extends StatefulWidget {
 
 class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   final MainPageScrollController mainPageScrollController = Get.find();
+  final SelfController _selfController = Get.put(SelfController());
+  final UserController userController = Get.find();
   //用来获取BottomBar的高度
   final GlobalKey bottomBarKey = GlobalKey();
-  Widget _bottomBarLayout;
+  late Widget _bottomBarLayout;
   static const double NavigationIconSize = 20.0;
   static const double CreateButtonWidth = 38.0;
 
@@ -35,9 +38,9 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
     super.initState();
     _bottomBarLayout = _getLayoutBottomBar();
     //BottomBar绘制完成时候的监听
-    WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
+    WidgetsBinding.instance!.addPostFrameCallback((_bottomBarLayout) {
       double videoViewHeight = MediaQuery.of(context).size.height -
-          bottomBarKey.currentContext.size.height;
+          bottomBarKey.currentContext!.size!.height;
       mainPageScrollController.setVideoViewHeight(videoViewHeight);
     });
   }
@@ -48,7 +51,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   }
 
   _getLayoutBottomBar() {
-    return Container(
+    return Obx(() => Container(
       key: bottomBarKey,
       height: 54 + (Platform.isIOS ? 40 : 10) * 1.0,
       decoration:
@@ -70,19 +73,25 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
               SizedBox(width: 1),
               menuButton(
                   'Live',
-                  Image.asset("assets/images/main_page_bottom_icon/live.png"),
+                  mainPageScrollController.indexBottomBarMainPage == 0
+                      ? Image.asset("assets/images/main_page_bottom_icon/live-dark.png")
+                      : Image.asset("assets/images/main_page_bottom_icon/live.png"),
                   Image.asset("assets/images/main_page_bottom_icon/live-active.png"), 1),
               SizedBox(width: 3.5),
               customCreateIcon,
               SizedBox(width: 3.5),
               menuButton(
                   'Message',
-                  Image.asset("assets/images/main_page_bottom_icon/message.png"),
+                  mainPageScrollController.indexBottomBarMainPage == 0
+                      ? Image.asset("assets/images/main_page_bottom_icon/message-dark.png")
+                      : Image.asset("assets/images/main_page_bottom_icon/message.png"),
                   Image.asset("assets/images/main_page_bottom_icon/message-active.png"), 2),
               SizedBox(width: 1),
               menuButton(
                   'Profile',
-                  Image.asset("assets/images/main_page_bottom_icon/profile.png"),
+                  mainPageScrollController.indexBottomBarMainPage == 0
+                      ? Image.asset("assets/images/main_page_bottom_icon/profile-dark.png")
+                      : Image.asset("assets/images/main_page_bottom_icon/profile.png"),
                   Image.asset("assets/images/main_page_bottom_icon/profile-active.png"), 3),
               SizedBox(width: 3.5),
             ],
@@ -92,7 +101,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
           )
         ],
       ),
-    );
+    ));
   }
 
   Widget get customCreateIcon => GestureDetector(
@@ -149,38 +158,30 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
     return GestureDetector(
         onTap: () {
           // TODO: disable bottom tab for now.
-          EasyLoading.showToast("This feature is coming soon.",
-              duration: Duration(seconds: 3));
-          return;
+          // EasyLoading.showToast("This feature is coming soon.",
+          //     duration: Duration(seconds: 3));
+          // return;
           if (index == 0 || index == 1) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
           } else {
-            SPUtil.getString(SPKeys.token).then((text) {
-              String token = text;
-              if (token != null && token.length > 0) {
-                mainPageScrollController.selectIndexBottomBarMainPage(index);
-              } else {
-                Application.eventBus.fire(StopPlayEvent());
-                Get.toNamed(Routers.login);
-              }
-            });
+            var loginUserInfo = userController.userExMap[_selfController.loginUserId.value];
+            if(loginUserInfo != null) {
+              mainPageScrollController.selectIndexBottomBarMainPage(index);
+            } else {
+              Application.eventBus.fire(StopPlayEvent());
+              Get.toNamed(Routers.login);
+            }
           }
         },
-        child: Obx(() => Container(
+        child: Container(
               height: 45,
               width: 45,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  mainPageScrollController.indexBottomBarMainPage == 0
-                      ? (mainPageScrollController.indexBottomBarMainPage ==
-                              index
-                          ? icon_active
-                          : icon)
-                      : (mainPageScrollController.indexBottomBarMainPage ==
-                              index
-                          ? icon
-                          : icon_active),
+                  mainPageScrollController.indexBottomBarMainPage == index
+                      ? icon_active
+                      : icon,
                   SizedBox(
                     height: 4,
                   ),
@@ -193,14 +194,17 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                         color:
-                            mainPageScrollController.indexBottomBarMainPage ==
-                                index ? Color(
-                                0xffffffff) : Color(0xff8b8b8b),
+                            mainPageScrollController.indexBottomBarMainPage == 0
+                                ? (mainPageScrollController.indexBottomBarMainPage == index
+                                        ? Color(0xffffffff) : Color(0xff8b8b8b))
+                                : (mainPageScrollController.indexBottomBarMainPage == index
+                                        ? Color(0xff2A2A2A) : Color(0xff2A2A2A)),
                         fontSize: 10.0),
                   )
                 ],
               ),
-            )));
+            )
+    );
   }
 
   void setSystemStatusBarStyle(int index) {

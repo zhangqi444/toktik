@@ -31,7 +31,6 @@ class ScrollPage extends StatefulWidget {
 
 class _ScrollPageState extends State<ScrollPage> {
   final MainPageScrollController mainPageScrollController = Get.put(MainPageScrollController());
-  UserPageController _userPageController = Get.put(UserPageController());
   PageController _pageController = PageController(initialPage: 0, keepPage: true);
   GlobalKey<DrawerControllerState> drawerKey = GlobalKey();
 
@@ -39,16 +38,14 @@ class _ScrollPageState extends State<ScrollPage> {
   void initState() {
     super.initState();
 
-    if(!Amplify.isConfigured) {
-      _configureAmplify();
-    }
-
     Application.eventBus.on<CloseMainDrawerEvent>().listen((event) {
-      drawerKey.currentState.close();
+      drawerKey.currentState!.close();
     });
   }
 
-  void _configureAmplify() async {
+  Future<void> _configureAmplify() async {
+
+    if(Amplify.isConfigured) return;
 
     final AmplifyDataStore _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
     final AmplifyAPI _apiPlugin = AmplifyAPI();
@@ -74,14 +71,20 @@ class _ScrollPageState extends State<ScrollPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Stack(
       children: [
         Obx(() => PageView(
           controller: _pageController,
           physics: mainPageScrollController.scrollPageViewScrollPage.value ? new ClampingScrollPhysics() : new NeverScrollableScrollPhysics(),
           children: [
-            MainPage(pageController:_pageController),
-            // TODO: disable left swipe to show user page 
+            FutureBuilder<void>(
+              future: _configureAmplify(),
+              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                return MainPage(pageController:_pageController);
+              },
+            )
+            // TODO: disable left swipe to show user page
             // Scaffold(
             //     backgroundColor: Colors.white,
             //     body: UserPage(pageController: _pageController, isLoginUser: false, id: mainPageScrollController.userIdCurrent.value)

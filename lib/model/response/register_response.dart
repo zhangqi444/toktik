@@ -1,7 +1,17 @@
-import 'package:toktik/generated/json/base/json_convert_content.dart';
+import 'package:toktik/generated/json/base/json_field.dart';
+import 'package:toktik/generated/json/register_response.g.dart';
 
-class RegisterResponse with JsonConvert<RegisterResponse> {
-	bool isSignUpComplete;
-	String username;
-	String status;
+
+@JsonSerializable()
+class RegisterResponse {
+
+	RegisterResponse();
+
+	factory RegisterResponse.fromJson(Map<String, dynamic> json) => $RegisterResponseFromJson(json);
+
+	Map<String, dynamic> toJson() => $RegisterResponseToJson(this);
+
+	bool? isSignUpComplete;
+	String? username;
+	String? status;
 }

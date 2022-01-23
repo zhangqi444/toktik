@@ -22,7 +22,7 @@
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersionf78e0729-build.zip"
+          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion23b9df62-build.zip"
         },
         "likePost": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
@@ -48,9 +48,6 @@
       "AmplifyAppId": "d1mt6rg0ztrl8w"
     },
     "categories": {
-      "auth": {
-        "toktikf7d4ff65": {}
-      },
       "function": {
         "listPostExs": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
@@ -58,7 +55,7 @@
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion5c54f2a9-build.zip"
+          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion9171fab1-build.zip"
         },
         "likePost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
@@ -68,6 +65,9 @@
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
           "s3Key": "amplify-builds/viewPost-5a2b645067326e312b39-build.zip"
         }
+      },
+      "auth": {
+        "toktikf7d4ff65": {}
       }
     }
   }

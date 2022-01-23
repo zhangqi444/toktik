@@ -7,8 +7,8 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 ///视频列表页
 class VideoListPage extends StatefulWidget {
-  List<VideoModel> videoList;
-  VideoListPage({Key key,this.videoList}) : super(key: key);
+  List<VideoModel>? videoList;
+  VideoListPage({Key? key,this.videoList}) : super(key: key);
 
   @override
   _VideoListPageState createState() {
@@ -78,7 +78,7 @@ class _VideoListPageState extends State<VideoListPage> {
           Positioned(
             right: 0,
               child: IconButton(
-                icon: Icon(Icons.search_rounded,color: Colors.white,),
+                icon: Icon(Icons.search_rounded,color: Colors.white,), onPressed: () {  },
               )
           )
         ],
@@ -96,7 +96,7 @@ class _VideoListPageState extends State<VideoListPage> {
         margin: EdgeInsets.only(top: MediaQueryData.fromWindow(window).padding.top),
           child: PageView.builder(
             controller: _pageController,
-            itemCount: widget.videoList.length,
+            itemCount: widget.videoList!.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
               return Container();

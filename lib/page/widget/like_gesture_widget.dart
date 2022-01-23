@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 /// 连击：点赞
 class LikeGestureWidget extends StatefulWidget {
   const LikeGestureWidget({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.onAddFavorite,
     this.onSingleTap,
   }) : super(key: key);
 
-  final Function onAddFavorite;
-  final Function onSingleTap;
+  final Function? onAddFavorite;
+  final Function? onSingleTap;
   final Widget child;
 
   @override
@@ -59,7 +59,7 @@ class _LikeGestureWidgetState extends State<LikeGestureWidget> {
 
   // 内部转换坐标点
   Offset _convertPosition(Offset p) {
-    RenderBox getBox = _key.currentContext.findRenderObject();
+    RenderBox getBox = _key.currentContext!.findRenderObject() as RenderBox;
     return getBox.globalToLocal(p);
   }
 
@@ -79,12 +79,12 @@ class _LikeGestureWidgetState extends State<LikeGestureWidget> {
 }
 
 class TikTokFavoriteAnimationIcon extends StatefulWidget {
-  final Offset position;
+  final Offset? position;
   final double size;
-  final Function onAnimationComplete;
+  final Function? onAnimationComplete;
 
   const TikTokFavoriteAnimationIcon({
-    Key key,
+    Key? key,
     this.onAnimationComplete,
     this.position,
     this.size: 200,
@@ -98,7 +98,7 @@ class TikTokFavoriteAnimationIcon extends StatefulWidget {
 class _TikTokFavoriteAnimationIconState
     extends State<TikTokFavoriteAnimationIcon> with TickerProviderStateMixin {
 
-  AnimationController _animationController;
+  AnimationController? _animationController;
 
   double rotate = pi / 10.0 * (2 * Random().nextDouble() - 1);
 
@@ -115,7 +115,7 @@ class _TikTokFavoriteAnimationIconState
       vsync: this,
     );
 
-    _animationController.addListener(() {
+    _animationController!.addListener(() {
       setState(() {});
     });
     startAnimation();
@@ -130,7 +130,7 @@ class _TikTokFavoriteAnimationIconState
 
   //开始动画
   startAnimation() async {
-    await _animationController.forward();
+    await _animationController!.forward();
     widget.onAnimationComplete?.call();
   }
 
@@ -140,35 +140,35 @@ class _TikTokFavoriteAnimationIconState
     return widget.position == null
         ? Container()
         : Positioned(
-            left: widget.position.dx - widget.size /2,
-            top: widget.position.dy - widget.size ,
+            left: widget.position!.dx - widget.size /2,
+            top: widget.position!.dy - widget.size ,
             child: _getBody(),
           );
   }
 
 
   //获取动画的值
-  double get value => _animationController?.value;
+  double? get value => _animationController?.value;
 
   double get opacity {
-    if (value < appearDuration) {
-      return 0.9 / appearDuration * value;
+    if (value! < appearDuration) {
+      return 0.9 / appearDuration * value!;
     }
-    if (value < dismissDuration) {
+    if (value! < dismissDuration) {
       return 0.9;
     }
-    var res = 0.9 - (value - dismissDuration) / (1 - dismissDuration);
+    var res = 0.9 - (value! - dismissDuration) / (1 - dismissDuration);
     return res < 0 ? 0 : res;
 
   }
 
   double get scale {
-    if(value <= 0.5){
-      return  0.6+value / 0.5 * 0.5;
-    }else if(value<=0.8){
-      return 1.1 * (1/1.1 + (1.1 -1)/1.1 * (value - 0.8) / 0.25);
+    if(value! <= 0.5){
+      return  0.6+value! / 0.5 * 0.5;
+    }else if(value!<=0.8){
+      return 1.1 * (1/1.1 + (1.1 -1)/1.1 * (value! - 0.8) / 0.25);
     }else {
-      return 1 + (value - 0.8)/0.2 * 0.5;
+      return 1 + (value! - 0.8)/0.2 * 0.5;
     }
   }
 

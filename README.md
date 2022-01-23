@@ -1,13 +1,18 @@
 # toktik
 
 ## Set up
-### 1. set up amplify CLI
+
+### 1. IDE Set up
+Add support for no sound null safety.
+https://stackoverflow.com/questions/64917744/cannot-run-with-sound-null-safety-because-dependencies-dont-support-null-safety
+
+### 2. set up amplify CLI
 https://docs.amplify.aws/start/getting-started/installation/q/integration/flutter/#option-2-follow-the-instructions
 
 When setting amplify,you will be asked to specify aws region,choose the following option:
 us-west-2
 
-### 2. init amplify
+### 3. init amplify
 `amplify pull --appId d1mt6rg0ztrl8w --envName staging`
 
 
@@ -62,9 +67,38 @@ Delete the `Podfile.lock`, then run `pod instal` under `/ios` folder.
 ### How to switch amplify backend?
 
 `amplify env checkout prod`
+https://docs.amplify.aws/cli/teams/overview/
+
+If the backend is not successfully switched, but without seeing any error. Please follow below steps,
+
+1. delete `#current-cloud-backend` folder.
+2. run `amplify init`, and you may see error message here.
+3. run `amplify pull --appId d1mt6rg0ztrl8w --envName YOUR_ENV`
 
 https://docs.amplify.aws/cli/teams/overview/
+https://docs.aws.amazon.com/amplify/latest/userguide/team-workflows-with-amplify-cli-backend-environments.html
 
 ### How to build ios and apk?
 `flutter clean && flutter build apk`
 `flutter clean && flutter build ios`
+
+
+### How to update auth for a specific service?
+Here is an example for Pinpoint Analytics.
+```
+    "PinpointAnalytics": {
+        "Default": {
+            "AppId": "c4924c6194264abc941704cf721dcf07",
+            "Region": "us-west-2",
+            "AuthMode": "API_KEY", // update the default auth method to API_KEY based
+            "ApiKey": "da2-gtckkpdfdfc5ze2wcd6mbkjjoa",
+            "ClientDatabasePrefix": "toktik_API_KEY"
+        }
+    },
+```
+
+### How to set up S3 service logging?
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-s3-access-logs-to-identify-requests.html#querying-s3-access-logs-for-requests
+
+### How to override Amplify config?
+https://aws.amazon.com/blogs/mobile/override-amplify-generated-backend-resources-using-cdk/

@@ -1,6 +1,16 @@
-import 'package:toktik/generated/json/base/json_convert_content.dart';
+import 'package:toktik/generated/json/base/json_field.dart';
+import 'package:toktik/generated/json/follow_request.g.dart';
 
-class FollowRequest with JsonConvert<FollowRequest> {
-	int actionType;
-	String relationUserId;
+
+@JsonSerializable()
+class FollowRequest {
+
+	FollowRequest();
+
+	factory FollowRequest.fromJson(Map<String, dynamic> json) => $FollowRequestFromJson(json);
+
+	Map<String, dynamic> toJson() => $FollowRequestToJson(this);
+
+	int? actionType;
+	String? relationUserId;
 }

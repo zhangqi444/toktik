@@ -26,26 +26,29 @@ import 'package:flutter/foundation.dart';
 @immutable
 class User extends Model {
   static const classType = const _UserModelType();
-  final String id;
-  final String nickname;
-  final String portrait;
-  final String bio;
-  final TemporalDate birth;
-  final int gender;
-  final String city;
-  final String profession;
-  final String username;
+  final String? id;
+  final String? nickname;
+  final String? portrait;
+  final String? bio;
+  final TemporalDate? birth;
+  final int? gender;
+  final String? city;
+  final String? profession;
+  final String? username;
+  final String? email;
+  final String? phoneNumber;
+  final String? authStatus;
 
   @override
   getInstanceType() => classType;
 
   @override
   String getId() {
-    return id;
+    return id!;
   }
 
   const User._internal(
-      {@required this.id,
+      {required this.id,
       this.nickname,
       this.portrait,
       this.bio,
@@ -53,18 +56,24 @@ class User extends Model {
       this.gender,
       this.city,
       this.profession,
-      this.username});
+      this.username,
+      this.email,
+      this.phoneNumber,
+      this.authStatus});
 
   factory User(
-      {String id,
-      String nickname,
-      String portrait,
-      String bio,
-      TemporalDate birth,
-      int gender,
-      String city,
-      String profession,
-      String username}) {
+      {String? id,
+      String? nickname,
+      String? portrait,
+      String? bio,
+      TemporalDate? birth,
+      int? gender,
+      String? city,
+      String? profession,
+      String? username,
+      String? email,
+      String? phoneNumber,
+      String? authStatus}) {
     return User._internal(
         id: id == null ? UUID.getUUID() : id,
         nickname: nickname,
@@ -74,7 +83,10 @@ class User extends Model {
         gender: gender,
         city: city,
         profession: profession,
-        username: username);
+        username: username,
+        email: email,
+        phoneNumber: phoneNumber,
+        authStatus: authStatus);
   }
 
   bool equals(Object other) {
@@ -93,7 +105,10 @@ class User extends Model {
         gender == other.gender &&
         city == other.city &&
         profession == other.profession &&
-        username == other.username;
+        username == other.username &&
+        email == other.email &&
+        phoneNumber == other.phoneNumber &&
+        authStatus == other.authStatus;
   }
 
   @override
@@ -108,27 +123,33 @@ class User extends Model {
     buffer.write("nickname=" + "$nickname" + ", ");
     buffer.write("portrait=" + "$portrait" + ", ");
     buffer.write("bio=" + "$bio" + ", ");
-    buffer.write("birth=" + (birth != null ? birth.format() : "null") + ", ");
+    buffer.write("birth=" + (birth != null ? birth!.format() : "null") + ", ");
     buffer.write(
         "gender=" + (gender != null ? gender.toString() : "null") + ", ");
     buffer.write("city=" + "$city" + ", ");
     buffer.write("profession=" + "$profession" + ", ");
-    buffer.write("username=" + "$username");
+    buffer.write("username=" + "$username" + ", ");
+    buffer.write("email=" + "$email" + ", ");
+    buffer.write("phoneNumber=" + "$phoneNumber" + ", ");
+    buffer.write("authStatus=" + "$authStatus");
     buffer.write("}");
 
     return buffer.toString();
   }
 
   User copyWith(
-      {String id,
-      String nickname,
-      String portrait,
-      String bio,
-      TemporalDate birth,
-      int gender,
-      String city,
-      String profession,
-      String username}) {
+      {String? id,
+      String? nickname,
+      String? portrait,
+      String? bio,
+      TemporalDate? birth,
+      int? gender,
+      String? city,
+      String? profession,
+      String? username,
+      String? email,
+      String? phoneNumber,
+      String? authStatus}) {
     return User(
         id: id ?? this.id,
         nickname: nickname ?? this.nickname,
@@ -138,7 +159,10 @@ class User extends Model {
         gender: gender ?? this.gender,
         city: city ?? this.city,
         profession: profession ?? this.profession,
-        username: username ?? this.username);
+        username: username ?? this.username,
+        email: email ?? this.email,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        authStatus: authStatus ?? this.authStatus);
   }
 
   User.fromJson(Map<String, dynamic> json)
@@ -149,10 +173,13 @@ class User extends Model {
         birth = json['birth'] != null
             ? TemporalDate.fromString(json['birth'])
             : null,
-        gender = (json['gender'] as num)?.toInt(),
+        gender = (json['gender'] as num?)?.toInt(),
         city = json['city'],
         profession = json['profession'],
-        username = json['username'];
+        username = json['username'],
+        email = json['email'],
+        phoneNumber = json['phoneNumber'],
+        authStatus = json['authStatus'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -163,7 +190,10 @@ class User extends Model {
         'gender': gender,
         'city': city,
         'profession': profession,
-        'username': username
+        'username': username,
+        'email': email,
+        'phoneNumber': phoneNumber,
+        'authStatus': authStatus
       };
 
   static final QueryField ID = QueryField(fieldName: "user.id");
@@ -175,6 +205,9 @@ class User extends Model {
   static final QueryField CITY = QueryField(fieldName: "city");
   static final QueryField PROFESSION = QueryField(fieldName: "profession");
   static final QueryField USERNAME = QueryField(fieldName: "username");
+  static final QueryField EMAIL = QueryField(fieldName: "email");
+  static final QueryField PHONENUMBER = QueryField(fieldName: "phoneNumber");
+  static final QueryField AUTHSTATUS = QueryField(fieldName: "authStatus");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
@@ -228,6 +261,21 @@ class User extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: User.USERNAME,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.EMAIL,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.PHONENUMBER,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: User.AUTHSTATUS,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });

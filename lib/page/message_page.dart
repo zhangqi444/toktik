@@ -19,7 +19,7 @@ class _MessagePageState extends State<MessagePage>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
+    WidgetsBinding.instance!.addPostFrameCallback((_bottomBarLayout) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,

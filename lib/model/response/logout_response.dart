@@ -1,4 +1,15 @@
-import 'package:toktik/generated/json/base/json_convert_content.dart';
+import 'package:toktik/generated/json/base/json_field.dart';
+import 'package:toktik/generated/json/logout_response.g.dart';
 
-class LogoutResponse with JsonConvert<LogoutResponse> {
+
+@JsonSerializable()
+class LogoutResponse {
+
+	LogoutResponse();
+
+	factory LogoutResponse.fromJson(Map<String, dynamic> json) => $LogoutResponseFromJson(json);
+
+	Map<String, dynamic> toJson() => $LogoutResponseToJson(this);
+
+  String? status;
 }

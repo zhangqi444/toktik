@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 //拍摄页顶部部件
 class ShootTopWidget extends StatefulWidget {
-  ShootTopWidget({Key key}) : super(key: key);
+  ShootTopWidget({Key? key}) : super(key: key);
 
   @override
   _ShootTopWidgetState createState() {

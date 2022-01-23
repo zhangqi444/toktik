@@ -14,8 +14,8 @@ import 'package:get/get.dart';
 
 ///首页
 class HomePage extends StatefulWidget {
-  PageController _scrollPageController;
-  HomePage({PageController pageController}){
+  PageController? _scrollPageController;
+  HomePage({PageController? pageController}){
     this._scrollPageController = pageController;
   }
 
@@ -27,10 +27,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   MainPageScrollController _mainPageScrollController = Get.find();
-  TabController _tabController;
-  PageController _pageController;
-  double _screenHeight;
-  double _screenWidth;
+  TabController? _tabController;
+  PageController? _pageController;
+  double? _screenHeight;
+  double? _screenWidth;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Auto
 
     _tabController = TabController(length: 1, vsync: this, initialIndex: 0);
     _pageController = PageController(initialPage: 0, keepPage: true);
-    WidgetsBinding.instance.addPostFrameCallback((_bottomBarLayout) {
+    WidgetsBinding.instance!.addPostFrameCallback((_bottomBarLayout) {
       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       //   statusBarColor: Colors.black,
       //   statusBarIconBrightness: Brightness.light,
@@ -50,8 +50,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Auto
   @override
   void dispose() {
     super.dispose();
-    _tabController.dispose();
-    _pageController.dispose();
+    _tabController!.dispose();
+    _pageController!.dispose();
   }
 
   @override
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Auto
         labelStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),
         controller: _tabController,
         onTap: (index){
-          _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.linear);
+          _pageController!.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.linear);
         },
       ),
     );
@@ -165,12 +165,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Auto
               )
             ],
             onPageChanged: (index) {
-              _tabController.animateTo(index);
+              _tabController!.animateTo(index);
             }),
-        onNotification: (overscroll){
+        onNotification: (dynamic overscroll){
           if (overscroll is OverscrollNotification && overscroll.overscroll != 0 && overscroll.dragDetails != null) {
             if(overscroll.overscroll > 0){
-              widget._scrollPageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
+              widget._scrollPageController!.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
             }else {
 
             }
