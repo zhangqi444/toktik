@@ -171,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
       height: 50,
       width: MediaQuery.of(context).size.width,
       child: LoginPrimaryButtonWidget(
-        text: 'log in',
+        text: 'Log in',
         onPressed: () async {
           if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
             String? status = await loginController.login(
