@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/self_controller.dart';
@@ -20,6 +21,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   SelfController loginController = Get.put(SelfController());
+  var platformInfo;
 
   @override
   void initState() {
@@ -56,6 +58,10 @@ class _SettingPageState extends State<SettingPage> {
         color: ColorRes.light_foreground_color.withAlpha(80),
       )
     );
+  }
+
+  _getVersionNumber() async {
+    platformInfo = await PackageInfo.fromPlatform();
   }
 
   _getBody(BuildContext context) {
@@ -123,6 +129,17 @@ class _SettingPageState extends State<SettingPage> {
               await loginController.logout();
               Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
             }),
+            FutureBuilder<void>(
+              future: _getVersionNumber(),
+              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                return Container(
+                    margin: EdgeInsets.only(top: 30,bottom: 30),
+                    alignment: Alignment.center,
+                    child: Text(platformInfo == null ? "" : "v${platformInfo.version}", style: TextStyle(color: ColorRes.light_background_sub_color,fontSize: 14),)
+                );
+              },
+            )
+
           ],
         ),
       ),
