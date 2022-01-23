@@ -158,9 +158,12 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
     return GestureDetector(
         onTap: () {
           // TODO: disable bottom tab for now.
-          // EasyLoading.showToast("This feature is coming soon.",
-          //     duration: Duration(seconds: 3));
-          // return;
+          if (index == 1 || index == 2) {
+            EasyLoading.showToast("This feature is coming soon.",
+                duration: Duration(seconds: 3));
+            return;
+          }
+
           if (index == 0 || index == 1) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
           } else {
