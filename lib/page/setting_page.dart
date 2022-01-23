@@ -89,7 +89,9 @@ class _SettingPageState extends State<SettingPage> {
             ItemTurnWidget(img: 'assets/images/setting_about.png',title: SETTING_ABOUT, onClick: () {
               Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
             }),
-            ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: '反馈与帮助',onClick: (){EasyLoading.showToast('功能待开发');},),
+            ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/contact"} );
+            }),
             // ItemTurnWidget(img: 'assets/images/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
             Divider(color: ColorRes.light_foreground_color.withAlpha(20),),
             // ItemTurnWidget(img: 'assets/images/setting_exchange.png',title: '切换账号',onClick: (){
