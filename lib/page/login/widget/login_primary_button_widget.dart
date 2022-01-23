@@ -24,7 +24,7 @@ class _LoginPrimaryButtonWidgetState extends State<LoginPrimaryButtonWidget> {
           await widget.onPressed!();
         },
         child: Text(
-          'Next',
+          widget.text ?? 'Next',
           style: widget.buttonEnabled!
               ? TextStyle(color: Color(0xffFFFFFF), fontSize: 14)
               : TextStyle(color: Color(0xffAAAAAA), fontSize: 14),
