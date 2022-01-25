@@ -143,10 +143,6 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         collapseMode: CollapseMode.parallax,
         title: Obx(()=> Text(_userPageController.showTitle.value?_userController.userExMap[widget.id].user.username:'')),
         centerTitle:true,
-        background: Image.asset(
-          'assets/images/bg_3.jpg',
-          fit: BoxFit.cover,
-        ),
       ),
       // stretchTriggerOffset:145,
       onStretchTrigger:(){
