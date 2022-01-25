@@ -9,6 +9,7 @@ import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
+import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
 class CreateUsernamePage extends StatefulWidget {
   CreateUsernamePage({Key? key}) : super(key: key);
@@ -135,7 +136,8 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
     return Container(
       height: 42,
       width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
+      child: LoginPrimaryButtonWidget(
+        text: 'Next',
         onPressed: !buttonEnable ? () {} : () async {
           String? userId = await userController.loadUserInfoExByUsername(username);
           if(!isStringNullOrEmpty(userId)) {
@@ -149,15 +151,9 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             Get.toNamed(Routers.createPassword, arguments: { AuthNavigationArgument.USERNAME: username });
           }
         },
-        child: Text(
-          'Next',
-          style: buttonEnable
-              ? TextStyle(color: Color(0xffFFFFFF), fontSize: 14)
-              : TextStyle(color: Color(0xffAAAAAA), fontSize: 14),
-        ),
-        color: buttonEnable ? Color(0xff39CBE3) : Color(0xffEEEEEE),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        buttonEnabled: buttonEnable,
       ),
     );
   }
 }
+
