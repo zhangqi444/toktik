@@ -56,7 +56,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   List<Map<String, dynamic>> actions = [
       {
         "text": 'Report',
-        "img": 'assets/images/share_action_jubao.png',
+        "img": 'assets/images/share_action_report.png',
         "onPressed": (video, postController) async {
           await postController.reportPost(video.id, ReportReason.OTHER);
           EasyLoading.showSuccess("Thanks for reporting.");
@@ -69,6 +69,13 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
     // '不感兴趣',
     // '复制链接',
     // '抖音码',
+      {
+        "text": 'Not interested',
+        "img": 'assets/images/share_action_not_interested.webp',
+        "onPressed": (video, postController) async {
+          await postController.notInterestedPost(video.id);
+        }
+      },
       {
         "text":'Share',
         "img": 'assets/images/share_action_share.png',

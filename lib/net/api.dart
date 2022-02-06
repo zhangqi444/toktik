@@ -20,6 +20,7 @@ import 'package:toktik/model/response/follow_response.dart';
 import 'package:toktik/model/response/like_response.dart';
 import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/model/response/logout_response.dart';
+import 'package:toktik/model/response/not_interested_response.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
 import 'package:toktik/model/response/register_response.dart';
 import 'package:toktik/model/response/report_response.dart';
@@ -519,6 +520,36 @@ class Api{
       }
 
       return LikeResponse.fromJson(result);
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
+
+  static Future<NotInterestedResponse?> notInterestedPost(String? postId, String userId) async{
+    try {
+      var result;
+      result = await _mutation(
+          '''mutation NotInterestedPost(\$input: CreateNotInterestedInput!) {
+            notInterestedPost(input: \$input) { id, value }
+          }''',
+          {
+            'input': {
+              'notInterstedPostId': postId,
+              'notInterstedUserId': userId,
+            },
+          },
+          'notInterstedPost'
+      );
+
+      // TODO: in short term, block the content from local only
+      var localPosts = await SPUtil.getString(SPKeys.POSTS);
+      localPosts = localPosts != null ? jsonDecode(localPosts) : {};
+      if(localPosts == null) localPosts = {};
+      localPosts[postId] = { "isNotIntersted": true };
+      SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
+      result = localPosts[postId]["isNotIntersted"];
+
+      return NotInterestedResponse.fromJson(result);
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
