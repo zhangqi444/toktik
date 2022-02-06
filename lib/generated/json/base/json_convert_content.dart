@@ -19,6 +19,8 @@ import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/generated/json/login_response.g.dart';
 import 'package:toktik/model/response/logout_response.dart';
 import 'package:toktik/generated/json/logout_response.g.dart';
+import 'package:toktik/model/response/not_interested_response.dart';
+import 'package:toktik/generated/json/not_interested_response.g.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
 import 'package:toktik/generated/json/publish_feed_response.g.dart';
 import 'package:toktik/model/response/register_response.dart';
@@ -173,6 +175,9 @@ class JsonConvert {
 		if(type == (LogoutResponse).toString()){
 			return LogoutResponse.fromJson(json) as M;
 		}
+		if(type == (NotInterestedResponse).toString()){
+			return NotInterestedResponse.fromJson(json) as M;
+		}
 		if(type == (PublishFeedResponse).toString()){
 			return PublishFeedResponse.fromJson(json) as M;
 		}
@@ -306,6 +311,9 @@ class JsonConvert {
 		}
 		if(<LogoutResponse>[] is M){
 			return data.map<LogoutResponse>((Map<String, dynamic> e) => LogoutResponse.fromJson(e)).toList() as M;
+		}
+		if(<NotInterestedResponse>[] is M){
+			return data.map<NotInterestedResponse>((Map<String, dynamic> e) => NotInterestedResponse.fromJson(e)).toList() as M;
 		}
 		if(<PublishFeedResponse>[] is M){
 			return data.map<PublishFeedResponse>((Map<String, dynamic> e) => PublishFeedResponse.fromJson(e)).toList() as M;
