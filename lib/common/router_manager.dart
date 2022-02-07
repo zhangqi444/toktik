@@ -1,4 +1,4 @@
-import 'package:toktik/page/feed_publish_page.dart';
+import 'package:toktik/page/feed_publish/feed_publish_page.dart';
 // import 'package:toktik/page/friend_page.dart';
 import 'package:toktik/page/home_page.dart';
 import 'package:toktik/page/login/create_password_page.dart';
@@ -31,7 +31,7 @@ import 'package:get/get.dart';
 import 'package:toktik/page/web_view_page.dart';
 
 ///路由管理者
-class RouterManager{
+class RouterManager {
   static final routes = [
     // GetPage(name: Routers.test, page: () => TestPage()),
     GetPage(name: Routers.splash, page: () => SplashPage()),
@@ -49,11 +49,17 @@ class RouterManager{
     // GetPage(name: Routers.scan, page: () => ScanPage()),
     // GetPage(name: Routers.tikTokCode, page: () => MyTikTokCodePage()),
     // GetPage(name: Routers.living, page: () => LivingPage()),
-    GetPage(name: Routers.login, page: () => LoginPage(),transition: Transition.downToUp,),
+    GetPage(
+      name: Routers.login,
+      page: () => LoginPage(),
+      transition: Transition.downToUp,
+    ),
     GetPage(name: Routers.createUsername, page: () => CreateUsernamePage()),
     GetPage(name: Routers.createPassword, page: () => CreatePasswordPage()),
     GetPage(name: Routers.resetPassword, page: () => ResetPasswordPage()),
-    GetPage(name: Routers.resetPasswordPassword, page: () => ResetPasswordPasswordPage()),
+    GetPage(
+        name: Routers.resetPasswordPassword,
+        page: () => ResetPasswordPasswordPage()),
     GetPage(name: Routers.signUp, page: () => SignUpPage()),
     GetPage(name: Routers.signUpEmail, page: () => SignUpEmailPage()),
     GetPage(name: Routers.verificationCode, page: () => VerificationCodePage()),
@@ -63,11 +69,10 @@ class RouterManager{
     GetPage(name: Routers.feedPublish, page: () => FeedPublishPage()),
     GetPage(name: Routers.webView, page: () => WebViewPage()),
   ];
-
-
 }
+
 ///路由名称
-class Routers{
+class Routers {
   static final String splash = '/splash';
   static final String test = '/test';
   static final String scroll = '/scroll';
