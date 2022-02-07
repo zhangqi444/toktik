@@ -7,7 +7,8 @@ import 'package:toktik/enum/report.dart';
 
 class VideoShareWidget extends StatefulWidget {
   var video;
-  VideoShareWidget({Key? key, this.video}) : super(key: key);
+  Function? onNotInterested;
+  VideoShareWidget({Key? key, this.video, this.onNotInterested}) : super(key: key);
 
   @override
   _VideoShareWidgetState createState() {
@@ -72,8 +73,12 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
       {
         "text": 'Not interested',
         "img": 'assets/images/share_action_not_interested.webp',
-        "onPressed": (video, postController) async {
-          await postController.notInterestedPost(video.id);
+        "onPressed": (video, postController, widget, context) async {
+          var result = await postController.notInterestedPost(video.id);
+          if(result != null) {
+            Navigator.pop(context);
+            widget.onNotInterested?.call();
+          }
         }
       },
       {
@@ -213,7 +218,9 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.transparent,
                 ),
-                onPressed: actions[index]['onPressed'] != null ? () => actions[index]['onPressed'](widget.video, _postController) : (){},
+                onPressed: actions[index]['onPressed'] != null
+                    ? () => actions[index]['onPressed'](widget.video, _postController, widget, context)
+                    : (){},
                 child: Column(
                   children: [
                     CircleAvatar(

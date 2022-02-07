@@ -529,25 +529,25 @@ class Api{
     try {
       var result;
       result = await _mutation(
-          '''mutation NotInterestedPost(\$input: CreateNotInterestedInput!) {
-            notInterestedPost(input: \$input) { id, value }
+          '''mutation CreateNotInterested(\$input: CreateNotInterestedInput!) {
+            createNotInterested(input: \$input) { id }
           }''',
           {
             'input': {
-              'notInterstedPostId': postId,
-              'notInterstedUserId': userId,
+              'notInterestedPostId': postId,
+              'notInterestedUserId': userId,
             },
           },
-          'notInterstedPost'
+          'createNotInterested'
       );
 
       // TODO: in short term, block the content from local only
       var localPosts = await SPUtil.getString(SPKeys.POSTS);
       localPosts = localPosts != null ? jsonDecode(localPosts) : {};
       if(localPosts == null) localPosts = {};
-      localPosts[postId] = { "isNotIntersted": true };
+      localPosts[postId] = { "isNotInterested": { "id": postId } };
       SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
-      result = localPosts[postId]["isNotIntersted"];
+      result = localPosts[postId]["isNotInterested"];
 
       return NotInterestedResponse.fromJson(result);
     } catch (e, stacktrace) {

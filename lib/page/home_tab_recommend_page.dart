@@ -12,6 +12,8 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../util/screen_utils.dart';
+
 ///首页tab推荐
 class HomeTabRecommendPage extends StatefulWidget {
   double? contentHeight;
@@ -88,6 +90,9 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
                 _mainController.setCurrentUserOfVideo(videoList[index]!.user!);
                 widget.pageController!.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
               },
+              onNotInterested: () {
+                _pageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
+              }
             );
           },
           onPageChanged: (index){

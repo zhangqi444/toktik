@@ -33,8 +33,16 @@ class VideoWidget extends StatefulWidget {
   bool? showFocusButton;
   double? contentHeight;
   Function? onClickHeader;
+  Function? onNotInterested;
   FeedListList? video;
-  VideoWidget({Key? key, bool? this.showFocusButton,this.contentHeight,this.onClickHeader,this.video}) : super(key: key);
+  VideoWidget({
+    Key? key,
+    bool?
+    this.showFocusButton,
+    this.contentHeight,
+    this.onClickHeader,
+    this.onNotInterested,
+    this.video,}) : super(key: key);
 
   @override
   _VideoWidgetState createState() {
@@ -274,7 +282,7 @@ class _VideoWidgetState extends State<VideoWidget> {
         ),),
         backgroundColor: ColorRes.color_1,
         builder: (context){
-          return VideoShareWidget(video: widget.video);
+          return VideoShareWidget(video: widget.video, onNotInterested: widget.onNotInterested);
         });
   }
 

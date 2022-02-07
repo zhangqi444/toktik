@@ -80,6 +80,11 @@ class FeedController extends GetxController{
     feedListListMap[id] = feedListList;
   }
 
+  void removeFeedListList(String? id) {
+    feedListListMap.remove(id);
+    hotFeedList.remove(id);
+  }
+
   void refreshHotFeedList(RefreshController refreshController)async{
     cursor = 0;
     hotFeedList.clear();
