@@ -23,17 +23,23 @@ import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_inte
 import 'Comment.dart';
 import 'Like.dart';
 import 'Music.dart';
+import 'NotInterested.dart';
 import 'Post.dart';
 import 'Report.dart';
 import 'Share.dart';
 import 'User.dart';
 import 'View.dart';
+import 'ModelPostExConnection.dart';
+import 'PostEx.dart';
 
 export 'Comment.dart';
 export 'Like.dart';
 export 'ModelAttributeTypes.dart';
+export 'ModelPostExConnection.dart';
 export 'Music.dart';
+export 'NotInterested.dart';
 export 'Post.dart';
+export 'PostEx.dart';
 export 'Report.dart';
 export 'Share.dart';
 export 'User.dart';
@@ -41,70 +47,35 @@ export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "41abd6f924caa6bf25af094b665229ed";
+  String version = "4f1a2de9ef1922ef5023269f8cdb3c3c";
   @override
-  List<ModelSchema> modelSchemas = [
-    Comment.schema,
-    Like.schema,
-    Music.schema,
-    Post.schema,
-    Report.schema,
-    Share.schema,
-    User.schema,
-    View.schema
-  ];
+  List<ModelSchema> modelSchemas = [Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, User.schema, View.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
-
+  
   ModelType getModelTypeByModelName(String modelName) {
-    switch (modelName) {
+    switch(modelName) {
       case "Comment":
-        {
-          return Comment.classType;
-        }
-        break;
+        return Comment.classType;
       case "Like":
-        {
-          return Like.classType;
-        }
-        break;
+        return Like.classType;
       case "Music":
-        {
-          return Music.classType;
-        }
-        break;
+        return Music.classType;
+      case "NotInterested":
+        return NotInterested.classType;
       case "Post":
-        {
-          return Post.classType;
-        }
-        break;
+        return Post.classType;
       case "Report":
-        {
-          return Report.classType;
-        }
-        break;
+        return Report.classType;
       case "Share":
-        {
-          return Share.classType;
-        }
-        break;
+        return Share.classType;
       case "User":
-        {
-          return User.classType;
-        }
-        break;
+        return User.classType;
       case "View":
-        {
-          return View.classType;
-        }
-        break;
+        return View.classType;
       default:
-        {
-          throw Exception(
-              "Failed to find model in model provider for model name: " +
-                  modelName);
-        }
+        throw Exception("Failed to find model in model provider for model name: " + modelName);
     }
   }
 }

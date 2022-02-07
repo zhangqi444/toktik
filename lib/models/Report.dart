@@ -23,236 +23,239 @@ import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
+
 /** This is an auto generated class representing the Report type in your schema. */
 @immutable
 class Report extends Model {
   static const classType = const _ReportModelType();
-  final String? id;
-  final String? reason;
-  final String? description;
-  final String? status;
-  final User? user;
-  final Post? post;
-  final User? reporter;
-  final String? type;
-  final String? result;
+  final String id;
+  final String? _reason;
+  final String? _description;
+  final String? _status;
+  final User? _user;
+  final Post? _post;
+  final User? _reporter;
+  final String? _type;
+  final String? _result;
 
   @override
   getInstanceType() => classType;
-
+  
   @override
   String getId() {
-    return id!;
+    return id;
   }
-
-  const Report._internal(
-      {required this.id,
-      this.reason,
-      this.description,
-      this.status,
-      this.user,
-      this.post,
-      this.reporter,
-      this.type,
-      this.result});
-
-  factory Report(
-      {String? id,
-      String? reason,
-      String? description,
-      String? status,
-      User? user,
-      Post? post,
-      User? reporter,
-      String? type,
-      String? result}) {
+  
+  String? get reason {
+    return _reason;
+  }
+  
+  String? get description {
+    return _description;
+  }
+  
+  String? get status {
+    return _status;
+  }
+  
+  User? get user {
+    return _user;
+  }
+  
+  Post? get post {
+    return _post;
+  }
+  
+  User? get reporter {
+    return _reporter;
+  }
+  
+  String? get type {
+    return _type;
+  }
+  
+  String? get result {
+    return _result;
+  }
+  
+  const Report._internal({required this.id, reason, description, status, user, post, reporter, type, result}): _reason = reason, _description = description, _status = status, _user = user, _post = post, _reporter = reporter, _type = type, _result = result;
+  
+  factory Report({String? id, String? reason, String? description, String? status, User? user, Post? post, User? reporter, String? type, String? result}) {
     return Report._internal(
-        id: id == null ? UUID.getUUID() : id,
-        reason: reason,
-        description: description,
-        status: status,
-        user: user,
-        post: post,
-        reporter: reporter,
-        type: type,
-        result: result);
+      id: id == null ? UUID.getUUID() : id,
+      reason: reason,
+      description: description,
+      status: status,
+      user: user,
+      post: post,
+      reporter: reporter,
+      type: type,
+      result: result);
   }
-
+  
   bool equals(Object other) {
     return this == other;
   }
-
+  
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Report &&
-        id == other.id &&
-        reason == other.reason &&
-        description == other.description &&
-        status == other.status &&
-        user == other.user &&
-        post == other.post &&
-        reporter == other.reporter &&
-        type == other.type &&
-        result == other.result;
+      id == other.id &&
+      _reason == other._reason &&
+      _description == other._description &&
+      _status == other._status &&
+      _user == other._user &&
+      _post == other._post &&
+      _reporter == other._reporter &&
+      _type == other._type &&
+      _result == other._result;
   }
-
+  
   @override
   int get hashCode => toString().hashCode;
-
+  
   @override
   String toString() {
     var buffer = new StringBuffer();
-
+    
     buffer.write("Report {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("reason=" + "$reason" + ", ");
-    buffer.write("description=" + "$description" + ", ");
-    buffer.write("status=" + "$status" + ", ");
-    buffer.write("user=" + (user != null ? user.toString() : "null") + ", ");
-    buffer.write("post=" + (post != null ? post.toString() : "null") + ", ");
-    buffer.write(
-        "reporter=" + (reporter != null ? reporter.toString() : "null") + ", ");
-    buffer.write("type=" + "$type" + ", ");
-    buffer.write("result=" + "$result");
+    buffer.write("reason=" + "$_reason" + ", ");
+    buffer.write("description=" + "$_description" + ", ");
+    buffer.write("status=" + "$_status" + ", ");
+    buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
+    buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
+    buffer.write("reporter=" + (_reporter != null ? _reporter!.toString() : "null") + ", ");
+    buffer.write("type=" + "$_type" + ", ");
+    buffer.write("result=" + "$_result");
     buffer.write("}");
-
+    
     return buffer.toString();
   }
-
-  Report copyWith(
-      {String? id,
-      String? reason,
-      String? description,
-      String? status,
-      User? user,
-      Post? post,
-      User? reporter,
-      String? type,
-      String? result}) {
+  
+  Report copyWith({String? id, String? reason, String? description, String? status, User? user, Post? post, User? reporter, String? type, String? result}) {
     return Report(
-        id: id ?? this.id,
-        reason: reason ?? this.reason,
-        description: description ?? this.description,
-        status: status ?? this.status,
-        user: user ?? this.user,
-        post: post ?? this.post,
-        reporter: reporter ?? this.reporter,
-        type: type ?? this.type,
-        result: result ?? this.result);
+      id: id ?? this.id,
+      reason: reason ?? this.reason,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      user: user ?? this.user,
+      post: post ?? this.post,
+      reporter: reporter ?? this.reporter,
+      type: type ?? this.type,
+      result: result ?? this.result);
   }
-
-  Report.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        reason = json['reason'],
-        description = json['description'],
-        status = json['status'],
-        user = json['user'] != null
-            ? User.fromJson(new Map<String, dynamic>.from(json['user']))
-            : null,
-        post = json['post'] != null
-            ? Post.fromJson(new Map<String, dynamic>.from(json['post']))
-            : null,
-        reporter = json['reporter'] != null
-            ? User.fromJson(new Map<String, dynamic>.from(json['reporter']))
-            : null,
-        type = json['type'],
-        result = json['result'];
-
+  
+  Report.fromJson(Map<String, dynamic> json)  
+    : id = json['id'],
+      _reason = json['reason'],
+      _description = json['description'],
+      _status = json['status'],
+      _user = json['user']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
+        : null,
+      _post = json['post']?['serializedData'] != null
+        ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
+        : null,
+      _reporter = json['reporter']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['reporter']['serializedData']))
+        : null,
+      _type = json['type'],
+      _result = json['result'];
+  
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'reason': reason,
-        'description': description,
-        'status': status,
-        'user': user?.toJson(),
-        'post': post?.toJson(),
-        'reporter': reporter?.toJson(),
-        'type': type,
-        'result': result
-      };
+    'id': id, 'reason': _reason, 'description': _description, 'status': _status, 'user': _user?.toJson(), 'post': _post?.toJson(), 'reporter': _reporter?.toJson(), 'type': _type, 'result': _result
+  };
 
   static final QueryField ID = QueryField(fieldName: "report.id");
   static final QueryField REASON = QueryField(fieldName: "reason");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static final QueryField STATUS = QueryField(fieldName: "status");
   static final QueryField USER = QueryField(
-      fieldName: "user",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (User).toString()));
+    fieldName: "user",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
   static final QueryField POST = QueryField(
-      fieldName: "post",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (Post).toString()));
+    fieldName: "post",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
   static final QueryField REPORTER = QueryField(
-      fieldName: "reporter",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (User).toString()));
+    fieldName: "reporter",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
   static final QueryField TYPE = QueryField(fieldName: "type");
   static final QueryField RESULT = QueryField(fieldName: "result");
-  static var schema =
-      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Report";
     modelSchemaDefinition.pluralName = "Reports";
-
+    
     modelSchemaDefinition.authRules = [
-      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
-        ModelOperation.CREATE,
-        ModelOperation.UPDATE,
-        ModelOperation.DELETE,
-        ModelOperation.READ
-      ])
+      AuthRule(
+        authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ])
     ];
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Report.REASON,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: Report.REASON,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Report.DESCRIPTION,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: Report.DESCRIPTION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Report.STATUS,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: Report.STATUS,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-        key: Report.USER,
-        isRequired: false,
-        targetName: "reportUserId",
-        ofModelName: (User).toString()));
-
+      key: Report.USER,
+      isRequired: false,
+      targetName: "reportUserId",
+      ofModelName: (User).toString()
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-        key: Report.POST,
-        isRequired: false,
-        targetName: "reportPostId",
-        ofModelName: (Post).toString()));
-
+      key: Report.POST,
+      isRequired: false,
+      targetName: "reportPostId",
+      ofModelName: (Post).toString()
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-        key: Report.REPORTER,
-        isRequired: false,
-        targetName: "reportReporterId",
-        ofModelName: (User).toString()));
-
+      key: Report.REPORTER,
+      isRequired: false,
+      targetName: "reportReporterId",
+      ofModelName: (User).toString()
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Report.TYPE,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: Report.TYPE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: Report.RESULT,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+      key: Report.RESULT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
   });
 }
 
 class _ReportModelType extends ModelType<Report> {
   const _ReportModelType();
-
+  
   @override
   Report fromJson(Map<String, dynamic> jsonData) {
     return Report.fromJson(jsonData);

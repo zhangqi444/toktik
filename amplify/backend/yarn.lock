@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@aws-amplify/amplify-category-custom@2.3.11":
-  version "2.3.11"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/amplify-category-custom/-/amplify-category-custom-2.3.11.tgz#9e646103d9191caf0712b1c9b1dfbb883b8e0684"
+"@aws-amplify/amplify-category-custom@2.3.14":
+  version "2.3.14"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/amplify-category-custom/-/amplify-category-custom-2.3.14.tgz#ce5b0559caaf75de486d629a2ef51b6b802129a6"
   dependencies:
-    amplify-cli-core "2.4.7"
-    amplify-prompts "1.6.2"
+    amplify-cli-core "2.4.10"
+    amplify-prompts "1.6.3"
     execa "^5.1.1"
     fs-extra "^8.1.0"
     glob "^7.2.0"
@@ -16,10 +16,10 @@
     uuid "^8.3.2"
 
 "@aws-amplify/cli-extensibility-helper@^2.0.0":
-  version "2.3.7"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/cli-extensibility-helper/-/cli-extensibility-helper-2.3.7.tgz#4c42ab36e945c5d76d0456678eaade37fd2a39a0"
+  version "2.3.10"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/cli-extensibility-helper/-/cli-extensibility-helper-2.3.10.tgz#9da3d844e843e1fba78fec00b8718a191b167c2a"
   dependencies:
-    "@aws-amplify/amplify-category-custom" "2.3.11"
+    "@aws-amplify/amplify-category-custom" "2.3.14"
     "@aws-cdk/aws-apigateway" "~1.124.0"
     "@aws-cdk/aws-appsync" "~1.124.0"
     "@aws-cdk/aws-cognito" "~1.124.0"
@@ -29,8 +29,8 @@
     "@aws-cdk/aws-lambda" "~1.124.0"
     "@aws-cdk/aws-s3" "~1.124.0"
     "@aws-cdk/core" "~1.124.0"
-    amplify-cli-core "2.4.7"
-    amplify-prompts "1.6.2"
+    amplify-cli-core "2.4.10"
+    amplify-prompts "1.6.3"
 
 "@aws-cdk/assets@1.124.0":
   version "1.124.0"
@@ -539,8 +539,8 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.9.tgz#97edc9037ea0c38585320b28964dde3b39e4660d"
 
 "@types/node@^16.9.2":
-  version "16.11.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.21.tgz#474d7589a30afcf5291f59bd49cca9ad171ffde4"
+  version "16.11.22"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.22.tgz#e704150225bfc4195f8ce68a7ac8da02b753549a"
 
 acorn-walk@^8.1.1:
   version "8.2.0"
@@ -565,13 +565,13 @@ ajv@^6.12.3:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-amplify-cli-core@2.4.7:
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/amplify-cli-core/-/amplify-cli-core-2.4.7.tgz#351afcf7f0b7b696bd0f2b321507213fef102a21"
+amplify-cli-core@2.4.10:
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/amplify-cli-core/-/amplify-cli-core-2.4.10.tgz#06109be1ac96707553c50a657b2c09c20792541b"
   dependencies:
     ajv "^6.12.3"
     amplify-cli-logger "1.1.0"
-    amplify-prompts "1.6.2"
+    amplify-prompts "1.6.3"
     chalk "^4.1.1"
     ci-info "^2.0.0"
     cloudform-types "^4.2.0"
@@ -596,9 +596,9 @@ amplify-cli-logger@1.1.0:
     winston "^3.3.3"
     winston-daily-rotate-file "^4.5.0"
 
-amplify-prompts@1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/amplify-prompts/-/amplify-prompts-1.6.2.tgz#50380ef8fd661ad1adf12a660f6d53f7504ae9bb"
+amplify-prompts@1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/amplify-prompts/-/amplify-prompts-1.6.3.tgz#547308c10b311aad8b6600c428ad756499e14c2d"
   dependencies:
     chalk "^4.1.1"
     enquirer "^2.3.6"
@@ -786,8 +786,8 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
 
 constructs@^3.3.69:
-  version "3.3.192"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-3.3.192.tgz#7f56237ac91569dfb672091221f92a4a66a6c262"
+  version "3.3.210"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-3.3.210.tgz#fed805be3484654342680e8b81ca447b2bd94a32"
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -957,11 +957,11 @@ figures@^3.0.0:
   dependencies:
     escape-string-regexp "^1.0.5"
 
-file-stream-rotator@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/file-stream-rotator/-/file-stream-rotator-0.5.7.tgz#868a2e5966f7640a17dd86eda0e4467c089f6286"
+file-stream-rotator@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/file-stream-rotator/-/file-stream-rotator-0.6.1.tgz#007019e735b262bb6c6f0197e58e5c87cb96cec3"
   dependencies:
-    moment "^2.11.2"
+    moment "^2.29.1"
 
 file-uri-to-path@2:
   version "2.0.0"
@@ -1293,12 +1293,12 @@ mimic-fn@^2.1.0:
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
 
 minimatch@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.5.tgz#4da8f1290ee0f0f8e83d60ca69f8f134068604a3"
   dependencies:
     brace-expansion "^1.1.7"
 
-moment@^2.11.2:
+moment@^2.29.1:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
 
@@ -1472,7 +1472,7 @@ readable-stream@1.1.x:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-readable-stream@^3.4.0:
+readable-stream@^3.4.0, readable-stream@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
   dependencies:
@@ -1519,6 +1519,10 @@ safe-stable-stringify@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/safe-stable-stringify/-/safe-stable-stringify-1.1.1.tgz#c8a220ab525cd94e60ebf47ddc404d610dc5d84a"
 
+safe-stable-stringify@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/safe-stable-stringify/-/safe-stable-stringify-2.3.1.tgz#ab67cbe1fe7d40603ca641c5e765cb942d04fc73"
+
 "safer-buffer@>= 2.1.2 < 3":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
@@ -1544,8 +1548,8 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
 
 signal-exit@^3.0.2, signal-exit@^3.0.3:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.6.tgz#24e630c4b0f03fea446a2bd299e62b4a6ca8d0af"
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.7.tgz#a9a1767f8af84155114eaabd73f99273c8f59ad9"
 
 simple-swizzle@^0.2.2:
   version "0.2.2"
@@ -1557,7 +1561,7 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
 
-smart-buffer@^4.1.0:
+smart-buffer@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.2.0.tgz#6e1d71fa4f18c05f7d0ff216dd16a481d0e8d9ae"
 
@@ -1570,11 +1574,11 @@ socks-proxy-agent@5, socks-proxy-agent@^5.0.0:
     socks "^2.3.3"
 
 socks@^2.3.3:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/socks/-/socks-2.6.1.tgz#989e6534a07cf337deb1b1c94aaa44296520d30e"
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/socks/-/socks-2.6.2.tgz#ec042d7960073d40d94268ff3bb727dc685f111a"
   dependencies:
     ip "^1.1.5"
-    smart-buffer "^4.1.0"
+    smart-buffer "^4.2.0"
 
 source-map@~0.6.1:
   version "0.6.1"
@@ -1656,7 +1660,7 @@ tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
 
-triple-beam@^1.2.0, triple-beam@^1.3.0:
+triple-beam@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/triple-beam/-/triple-beam-1.3.0.tgz#a595214c7298db8339eeeee083e4d10bd8cb8dd9"
 
@@ -1708,8 +1712,8 @@ typescript-json-schema@^0.51.0:
     yargs "^17.1.1"
 
 typescript@^4.2.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.4.tgz#a17d3a0263bf5c8723b9c52f43c5084edf13c2e8"
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
 
 typescript@~4.2.3:
   version "4.2.4"
@@ -1769,25 +1773,25 @@ which@^2.0.1, which@^2.0.2:
     isexe "^2.0.0"
 
 winston-daily-rotate-file@^4.5.0:
-  version "4.5.5"
-  resolved "https://registry.yarnpkg.com/winston-daily-rotate-file/-/winston-daily-rotate-file-4.5.5.tgz#cfa3a89f4eb0e4126917592b375759b772bcd972"
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/winston-daily-rotate-file/-/winston-daily-rotate-file-4.6.0.tgz#0295e5b11625e9ee670b0102a3ade3e9dd35ad73"
   dependencies:
-    file-stream-rotator "^0.5.7"
+    file-stream-rotator "^0.6.1"
     object-hash "^2.0.1"
     triple-beam "^1.3.0"
     winston-transport "^4.4.0"
 
 winston-transport@^4.4.0, winston-transport@^4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/winston-transport/-/winston-transport-4.4.2.tgz#554efe3fce229d046df006e0e3c411d240652e51"
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/winston-transport/-/winston-transport-4.5.0.tgz#6e7b0dd04d393171ed5e4e4905db265f7ab384fa"
   dependencies:
     logform "^2.3.2"
-    readable-stream "^3.4.0"
-    triple-beam "^1.2.0"
+    readable-stream "^3.6.0"
+    triple-beam "^1.3.0"
 
 winston@^3.3.3:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-3.4.0.tgz#7080f24b02a0684f8a37f9d5c6afb1ac23e95b84"
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-3.5.1.tgz#b25cc899d015836dbf8c583dec8c4c4483a0da2e"
   dependencies:
     "@dabh/diagnostics" "^2.0.2"
     async "^3.2.3"
@@ -1795,6 +1799,7 @@ winston@^3.3.3:
     logform "^2.3.2"
     one-time "^1.0.0"
     readable-stream "^3.4.0"
+    safe-stable-stringify "^2.3.1"
     stack-trace "0.0.x"
     triple-beam "^1.3.0"
     winston-transport "^4.4.2"

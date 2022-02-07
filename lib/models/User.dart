@@ -22,179 +22,174 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
+
 /** This is an auto generated class representing the User type in your schema. */
 @immutable
 class User extends Model {
   static const classType = const _UserModelType();
-  final String? id;
-  final String? nickname;
-  final String? portrait;
-  final String? bio;
-  final TemporalDate? birth;
-  final int? gender;
-  final String? city;
-  final String? profession;
-  final String? username;
-  final String? email;
-  final String? phoneNumber;
-  final String? authStatus;
+  final String id;
+  final String? _nickname;
+  final String? _portrait;
+  final String? _bio;
+  final TemporalDate? _birth;
+  final int? _gender;
+  final String? _city;
+  final String? _profession;
+  final String? _username;
+  final String? _email;
+  final String? _phoneNumber;
+  final String? _authStatus;
 
   @override
   getInstanceType() => classType;
-
+  
   @override
   String getId() {
-    return id!;
+    return id;
   }
-
-  const User._internal(
-      {required this.id,
-      this.nickname,
-      this.portrait,
-      this.bio,
-      this.birth,
-      this.gender,
-      this.city,
-      this.profession,
-      this.username,
-      this.email,
-      this.phoneNumber,
-      this.authStatus});
-
-  factory User(
-      {String? id,
-      String? nickname,
-      String? portrait,
-      String? bio,
-      TemporalDate? birth,
-      int? gender,
-      String? city,
-      String? profession,
-      String? username,
-      String? email,
-      String? phoneNumber,
-      String? authStatus}) {
+  
+  String? get nickname {
+    return _nickname;
+  }
+  
+  String? get portrait {
+    return _portrait;
+  }
+  
+  String? get bio {
+    return _bio;
+  }
+  
+  TemporalDate? get birth {
+    return _birth;
+  }
+  
+  int? get gender {
+    return _gender;
+  }
+  
+  String? get city {
+    return _city;
+  }
+  
+  String? get profession {
+    return _profession;
+  }
+  
+  String? get username {
+    return _username;
+  }
+  
+  String? get email {
+    return _email;
+  }
+  
+  String? get phoneNumber {
+    return _phoneNumber;
+  }
+  
+  String? get authStatus {
+    return _authStatus;
+  }
+  
+  const User._internal({required this.id, nickname, portrait, bio, birth, gender, city, profession, username, email, phoneNumber, authStatus}): _nickname = nickname, _portrait = portrait, _bio = bio, _birth = birth, _gender = gender, _city = city, _profession = profession, _username = username, _email = email, _phoneNumber = phoneNumber, _authStatus = authStatus;
+  
+  factory User({String? id, String? nickname, String? portrait, String? bio, TemporalDate? birth, int? gender, String? city, String? profession, String? username, String? email, String? phoneNumber, String? authStatus}) {
     return User._internal(
-        id: id == null ? UUID.getUUID() : id,
-        nickname: nickname,
-        portrait: portrait,
-        bio: bio,
-        birth: birth,
-        gender: gender,
-        city: city,
-        profession: profession,
-        username: username,
-        email: email,
-        phoneNumber: phoneNumber,
-        authStatus: authStatus);
+      id: id == null ? UUID.getUUID() : id,
+      nickname: nickname,
+      portrait: portrait,
+      bio: bio,
+      birth: birth,
+      gender: gender,
+      city: city,
+      profession: profession,
+      username: username,
+      email: email,
+      phoneNumber: phoneNumber,
+      authStatus: authStatus);
   }
-
+  
   bool equals(Object other) {
     return this == other;
   }
-
+  
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is User &&
-        id == other.id &&
-        nickname == other.nickname &&
-        portrait == other.portrait &&
-        bio == other.bio &&
-        birth == other.birth &&
-        gender == other.gender &&
-        city == other.city &&
-        profession == other.profession &&
-        username == other.username &&
-        email == other.email &&
-        phoneNumber == other.phoneNumber &&
-        authStatus == other.authStatus;
+      id == other.id &&
+      _nickname == other._nickname &&
+      _portrait == other._portrait &&
+      _bio == other._bio &&
+      _birth == other._birth &&
+      _gender == other._gender &&
+      _city == other._city &&
+      _profession == other._profession &&
+      _username == other._username &&
+      _email == other._email &&
+      _phoneNumber == other._phoneNumber &&
+      _authStatus == other._authStatus;
   }
-
+  
   @override
   int get hashCode => toString().hashCode;
-
+  
   @override
   String toString() {
     var buffer = new StringBuffer();
-
+    
     buffer.write("User {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("nickname=" + "$nickname" + ", ");
-    buffer.write("portrait=" + "$portrait" + ", ");
-    buffer.write("bio=" + "$bio" + ", ");
-    buffer.write("birth=" + (birth != null ? birth!.format() : "null") + ", ");
-    buffer.write(
-        "gender=" + (gender != null ? gender.toString() : "null") + ", ");
-    buffer.write("city=" + "$city" + ", ");
-    buffer.write("profession=" + "$profession" + ", ");
-    buffer.write("username=" + "$username" + ", ");
-    buffer.write("email=" + "$email" + ", ");
-    buffer.write("phoneNumber=" + "$phoneNumber" + ", ");
-    buffer.write("authStatus=" + "$authStatus");
+    buffer.write("nickname=" + "$_nickname" + ", ");
+    buffer.write("portrait=" + "$_portrait" + ", ");
+    buffer.write("bio=" + "$_bio" + ", ");
+    buffer.write("birth=" + (_birth != null ? _birth!.format() : "null") + ", ");
+    buffer.write("gender=" + (_gender != null ? _gender!.toString() : "null") + ", ");
+    buffer.write("city=" + "$_city" + ", ");
+    buffer.write("profession=" + "$_profession" + ", ");
+    buffer.write("username=" + "$_username" + ", ");
+    buffer.write("email=" + "$_email" + ", ");
+    buffer.write("phoneNumber=" + "$_phoneNumber" + ", ");
+    buffer.write("authStatus=" + "$_authStatus");
     buffer.write("}");
-
+    
     return buffer.toString();
   }
-
-  User copyWith(
-      {String? id,
-      String? nickname,
-      String? portrait,
-      String? bio,
-      TemporalDate? birth,
-      int? gender,
-      String? city,
-      String? profession,
-      String? username,
-      String? email,
-      String? phoneNumber,
-      String? authStatus}) {
+  
+  User copyWith({String? id, String? nickname, String? portrait, String? bio, TemporalDate? birth, int? gender, String? city, String? profession, String? username, String? email, String? phoneNumber, String? authStatus}) {
     return User(
-        id: id ?? this.id,
-        nickname: nickname ?? this.nickname,
-        portrait: portrait ?? this.portrait,
-        bio: bio ?? this.bio,
-        birth: birth ?? this.birth,
-        gender: gender ?? this.gender,
-        city: city ?? this.city,
-        profession: profession ?? this.profession,
-        username: username ?? this.username,
-        email: email ?? this.email,
-        phoneNumber: phoneNumber ?? this.phoneNumber,
-        authStatus: authStatus ?? this.authStatus);
+      id: id ?? this.id,
+      nickname: nickname ?? this.nickname,
+      portrait: portrait ?? this.portrait,
+      bio: bio ?? this.bio,
+      birth: birth ?? this.birth,
+      gender: gender ?? this.gender,
+      city: city ?? this.city,
+      profession: profession ?? this.profession,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      authStatus: authStatus ?? this.authStatus);
   }
-
-  User.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        nickname = json['nickname'],
-        portrait = json['portrait'],
-        bio = json['bio'],
-        birth = json['birth'] != null
-            ? TemporalDate.fromString(json['birth'])
-            : null,
-        gender = (json['gender'] as num?)?.toInt(),
-        city = json['city'],
-        profession = json['profession'],
-        username = json['username'],
-        email = json['email'],
-        phoneNumber = json['phoneNumber'],
-        authStatus = json['authStatus'];
-
+  
+  User.fromJson(Map<String, dynamic> json)  
+    : id = json['id'],
+      _nickname = json['nickname'],
+      _portrait = json['portrait'],
+      _bio = json['bio'],
+      _birth = json['birth'] != null ? TemporalDate.fromString(json['birth']) : null,
+      _gender = (json['gender'] as num?)?.toInt(),
+      _city = json['city'],
+      _profession = json['profession'],
+      _username = json['username'],
+      _email = json['email'],
+      _phoneNumber = json['phoneNumber'],
+      _authStatus = json['authStatus'];
+  
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'nickname': nickname,
-        'portrait': portrait,
-        'bio': bio,
-        'birth': birth?.format(),
-        'gender': gender,
-        'city': city,
-        'profession': profession,
-        'username': username,
-        'email': email,
-        'phoneNumber': phoneNumber,
-        'authStatus': authStatus
-      };
+    'id': id, 'nickname': _nickname, 'portrait': _portrait, 'bio': _bio, 'birth': _birth?.format(), 'gender': _gender, 'city': _city, 'profession': _profession, 'username': _username, 'email': _email, 'phoneNumber': _phoneNumber, 'authStatus': _authStatus
+  };
 
   static final QueryField ID = QueryField(fieldName: "user.id");
   static final QueryField NICKNAME = QueryField(fieldName: "nickname");
@@ -208,82 +203,94 @@ class User extends Model {
   static final QueryField EMAIL = QueryField(fieldName: "email");
   static final QueryField PHONENUMBER = QueryField(fieldName: "phoneNumber");
   static final QueryField AUTHSTATUS = QueryField(fieldName: "authStatus");
-  static var schema =
-      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
     modelSchemaDefinition.pluralName = "Users";
-
+    
     modelSchemaDefinition.authRules = [
-      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
-        ModelOperation.CREATE,
-        ModelOperation.UPDATE,
-        ModelOperation.DELETE,
-        ModelOperation.READ
-      ])
+      AuthRule(
+        authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ])
     ];
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.NICKNAME,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.NICKNAME,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.PORTRAIT,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.PORTRAIT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.BIO,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.BIO,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.BIRTH,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.date)));
-
+      key: User.BIRTH,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.date)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.GENDER,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.int)));
-
+      key: User.GENDER,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.CITY,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.CITY,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.PROFESSION,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.PROFESSION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.USERNAME,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.USERNAME,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.EMAIL,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.EMAIL,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.PHONENUMBER,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
+      key: User.PHONENUMBER,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: User.AUTHSTATUS,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+      key: User.AUTHSTATUS,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
   });
 }
 
 class _UserModelType extends ModelType<User> {
   const _UserModelType();
-
+  
   @override
   User fromJson(Map<String, dynamic> jsonData) {
     return User.fromJson(jsonData);
