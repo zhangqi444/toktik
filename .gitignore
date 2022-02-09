@@ -6,6 +6,7 @@ build/**/*
 .flutter-plugins
 ios/build/**/*
 
+.DS_Store
 
 .vscode/settings.json
 

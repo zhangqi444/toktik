@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/upload_controller.dart';
 import 'package:toktik/page/feed_publish/feed_draft_widget.dart';
+import 'package:toktik/page/feed_publish/feed_post_widget.dart';
 import 'package:toktik/page/feed_publish/feed_transcript_selection_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:toktik/util/camera_util.dart';
@@ -130,6 +131,8 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
             currentScreenIdx++;
           });
         });
+      case 2:
+        return FeedPostWidget();
       default:
         throw UnimplementedError();
     }
