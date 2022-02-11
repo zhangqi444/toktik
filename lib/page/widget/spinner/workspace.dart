@@ -10,6 +10,8 @@ class WorkSpace extends StatelessWidget {
       width: 300.0,
       height: 300.0,
       child: SpinKitCircle(
+        //You can find other examples here.
+        //https://github.com/jogboms/flutter_spinkit/blob/master/example/lib/showcase.dart
           color: Color(0xff00ffe0)
       ),
     );

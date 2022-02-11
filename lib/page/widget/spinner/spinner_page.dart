@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import './showcase.dart';
 import './workspace.dart';
 
 class SpinnerPage extends StatelessWidget {
