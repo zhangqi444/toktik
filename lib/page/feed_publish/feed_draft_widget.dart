@@ -3,8 +3,19 @@ import 'package:toktik/res/colors.dart';
 
 class FeedDraftWidget extends StatefulWidget {
   final Function onNext;
+  final String? podcastName;
+  final String? podcastArtistName;
+  final int? podcastLengthMillis;
+  final String? podcastDescription;
+  final String? podcastReleaseDate;
+
   FeedDraftWidget({
     required this.onNext,
+    this.podcastName,
+    this.podcastArtistName,
+    this.podcastLengthMillis,
+    this.podcastDescription,
+    this.podcastReleaseDate,
   });
 
   @override
@@ -55,14 +66,14 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "In Depth",
+                    widget.podcastName ?? "",
                     style: TextStyle(
                         fontSize: 18,
                         color: ColorRes.light_foreground_color,
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    "First Round",
+                    widget.podcastArtistName ?? "",
                     style: TextStyle(fontSize: 16, color: Color(0xff888888)),
                   )
                 ],
@@ -84,11 +95,11 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Buy or build? Focus on the core product or innovate hey hey hey',
+                      widget.podcastDescription ?? "",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 12),
                     ),
-                    Text('Dec 9, 2021',
+                    Text(_formatUTCDate(widget.podcastReleaseDate),
                         style:
                             TextStyle(fontSize: 10, color: Color(0xff888888))),
                   ],
@@ -106,7 +117,7 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                     ],
                   ),
                   child: Text(
-                    "60 min",
+                    "${this._convertMillisToMinutes(widget.podcastLengthMillis ?? 0).toString()} min",
                     style: TextStyle(fontSize: 10),
                   ),
                 ),
@@ -204,5 +215,13 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
       //   ),
       // )
     );
+  }
+
+  int _convertMillisToMinutes(int millis) => millis ~/ 1000 ~/ 60;
+
+  String _formatUTCDate(String? isoDate) {
+    if (isoDate == null) return "";
+    DateTime date = DateTime.parse(isoDate);
+    return date.toString();
   }
 }

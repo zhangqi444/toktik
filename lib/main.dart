@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void handleSharedPodcastUrl(String url) {
-    Get.toNamed("${Routers.feedPublish}?videoPath=$url");
+    Get.toNamed("${Routers.feedPublish}?podcastUrl=$url");
   }
 
   @override
