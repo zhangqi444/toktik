@@ -19,7 +19,6 @@ class _SpinnerWidgetState extends State<SpinnerWidget> {
   @override
   Widget build(BuildContext context) {
     if(!widget.show) return Container();
-    print(MediaQuery.of(context).size);
     return Align(
         alignment: Alignment(0, -0.2),
         child: Container(
