@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
@@ -14,7 +15,10 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
 
+import '../controller/not_interested_controller.dart';
+import '../controller/report_controller.dart';
 import '../enum/navigation_argument.dart';
+import '../enum/report.dart';
 
 const TAB_SIZE = 1;
 
@@ -40,6 +44,8 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   ScrollController _scrollController = ScrollController();
   UserController _userController = Get.put(UserController());
   SelfController _selfController = Get.put(SelfController());
+  ReportController _reportController = Get.put(ReportController());
+  NotInterestedController _notInterestedController = Get.put(NotInterestedController());
   dynamic argumentData = Get.arguments;
   var amplifyConfiguredListner;
 
@@ -285,8 +291,24 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
           topRight: Radius.circular(10),
         ),),
         builder: (context){
-          return UserMoreBottomSheet();
+          var user = _getUser();
+          return UserMoreBottomSheet(
+            user: user,
+            onReport: () {
+              _reportController.reportUser(user.id, ReportReason.OTHER);
+              Navigator.pop(context);
+              EasyLoading.showSuccess("Thanks for reporting.");
+            },
+            onNotInterested: () {
+              _notInterestedController.notInterestedUser(user.id);
+              Navigator.pop(context);
+            },
+          );
         });
+  }
+
+  dynamic _getUser() {
+    return _userController.userExMap[widget.id].user;
   }
 
 }

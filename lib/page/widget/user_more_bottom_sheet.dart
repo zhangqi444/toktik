@@ -5,7 +5,10 @@ import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
 
 class UserMoreBottomSheet extends StatefulWidget {
-  UserMoreBottomSheet({Key? key}) : super(key: key);
+  var user;
+  Function onNotInterested = () => {};
+  Function onReport = () => {};
+  UserMoreBottomSheet({Key? key, this.user, required this.onNotInterested, required this.onReport}) : super(key: key);
 
   @override
   _UserMoreBottomSheetState createState() {
@@ -18,59 +21,53 @@ class _UserMoreBottomSheetState extends State<UserMoreBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel user = loginUserModel;
-    return Scaffold(
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20,),
-            Text(user.name!,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-            SizedBox(height: 2,),
-            Text('抖音号:'+user.douYinNumber!,style: TextStyle(fontSize: 11,color: Colors.grey),),
-            SizedBox(height: 20,),
-            Divider(color: Colors.grey.withAlpha(100),height: 0.05,),
-            Container(
-              padding: EdgeInsets.only(top: 20,bottom: 20),
-              child:Text('分享',style: TextStyle(fontSize: 14,),)
-            ),
-            Divider(color: Colors.grey.withAlpha(100),height: 0.05,),
-            Container(
-                padding: EdgeInsets.only(top: 20,bottom: 20),
-                child:Text('发私信',style: TextStyle(fontSize: 14,),)
-            ),
-            Divider(color: Colors.grey.withAlpha(100),height: 0.05,),
-            Container(
-                padding: EdgeInsets.only(top: 20,bottom: 20),
-                child:Text('不让TA看',style: TextStyle(fontSize: 14,),)
-            ),
-            Divider(color: Colors.grey.withAlpha(100),height: 0.05,),
-            Container(
-                padding: EdgeInsets.only(top: 20,bottom: 20),
-                child:Text('举报',style: TextStyle(fontSize: 14,color: Colors.red),)
-            ),
-            Divider(color: Colors.grey.withAlpha(100),height: 0.05,),
-            Container(
-                padding: EdgeInsets.only(top: 20,bottom: 20),
-                child:Text('拉黑',style: TextStyle(fontSize: 14,color: Colors.red),)
-            ),
-           Container(
-             height: 8,
-             color: Colors.grey.withAlpha(100),
-           ),
-
-            InkWell(
-              onTap: (){
-                Get.back();
-              },
-              child: Container(
-                  padding: EdgeInsets.only(top: 20,bottom: 20),
-                  child:Text('取消',style: TextStyle(fontSize: 14,),)
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      // height: 300,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 20,),
+          Text(widget.user.username!,style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          SizedBox(height: 2,),
+          Text('ID: '+widget.user.id!, style: TextStyle(fontSize: 11, color: Colors.grey)),
+          SizedBox(height: 20,),
+          // _renderItem('分享'),
+          // _renderItem('发私信'),
+          // _renderItem('不让TA看'),
+          _renderItem('Report', () { widget.onReport(); }),
+          _renderItem('Not interested', () { widget.onNotInterested(); }),
+          Container(height: 8, color: Colors.grey.withAlpha(100)),
+          InkWell(
+            onTap: () { Get.back(); },
+            child: _renderTextBox('Cancel')
+          ),
+          SizedBox(height: 20),
+        ],
       ),
+    );
+  }
+
+  _renderTextBox(text) {
+    return Container(
+        padding: EdgeInsets.only(top: 20, bottom: 20),
+        child: Text(text, style: TextStyle(fontSize: 14, color: Colors.black))
+    );
+  }
+
+  _renderItem(text, onPressed) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.white,
+      ),
+      onPressed: onPressed,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Divider(color: Colors.grey.withAlpha(100), height: 0.05,),
+          _renderTextBox(text)
+        ]
+      )
     );
   }
 }
