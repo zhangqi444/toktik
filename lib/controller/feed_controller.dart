@@ -58,7 +58,6 @@ class FeedController extends GetxController{
     return result.id;
   }
 
-  ///获取热门推荐视频列表
   Future<bool> loadHotFeedList(RefreshController refreshController)async{
     String userId = _selfController.loginUserId.value;
     var result = await Api.getHotFeedList(cursor, count, userId);
@@ -80,9 +79,18 @@ class FeedController extends GetxController{
     feedListListMap[id] = feedListList;
   }
 
-  void removeFeedListList(String? id) {
+  void removeFeedListList(String id) {
     feedListListMap.remove(id);
     hotFeedList.remove(id);
+  }
+
+  void removeFeedListListByUser(String userId) {
+    hotFeedList.forEach((c) {
+      if(feedListListMap[c]!.user!.id == userId) {
+        feedListListMap.remove(c);
+        hotFeedList.remove(c);
+      }
+    });
   }
 
   void refreshHotFeedList(RefreshController refreshController)async{

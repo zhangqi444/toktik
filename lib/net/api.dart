@@ -46,6 +46,7 @@ import 'package:toktik/util/sp_util.dart';
 
 import '../model/comment_model.dart';
 import '../model/response/get_current_user_response.dart';
+import '../util/string_util.dart';
 
 class Api{
   /// ----------------------------------接口api--------------------------------------------------------
@@ -535,7 +536,7 @@ class Api{
     }
   }
 
-  static Future<NotInterestedResponse?> notInterestedPost(String? postId, String userId) async{
+  static Future<NotInterestedResponse?> notInterested(String userId, {String? postId="", String? targetUserId=""}) async{
     try {
       var result;
       result = await _mutation(
@@ -546,18 +547,30 @@ class Api{
             'input': {
               'notInterestedPostId': postId,
               'notInterestedUserId': userId,
+              'notInterestedTargetUserId': targetUserId,
             },
           },
           'createNotInterested'
       );
 
       // TODO: in short term, block the content from local only
-      var localPosts = await SPUtil.getString(SPKeys.POSTS);
-      localPosts = localPosts != null ? jsonDecode(localPosts) : {};
-      if(localPosts == null) localPosts = {};
-      localPosts[postId] = { "isNotInterested": { "id": postId } };
-      SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
-      result = localPosts[postId]["isNotInterested"];
+      if(!isStringNullOrEmpty(postId)) {
+        var localPosts = await SPUtil.getString(SPKeys.POSTS);
+        localPosts = localPosts != null ? jsonDecode(localPosts) : {};
+        if (localPosts == null) localPosts = {};
+        localPosts[postId] = { "isNotInterested": { "id": postId}};
+        SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
+        result = localPosts[postId]["isNotInterested"];
+      }
+
+      if(!isStringNullOrEmpty(targetUserId)) {
+        var localUsers = await SPUtil.getString(SPKeys.USERS);
+        localUsers = localUsers != null ? jsonDecode(localUsers) : {};
+        if (localUsers == null) localUsers = {};
+        localUsers[targetUserId] = { "isNotInterested": { "id": targetUserId}};
+        SPUtil.set(SPKeys.USERS, jsonEncode(localUsers));
+        result = localUsers[postId]["isNotInterested"];
+      }
 
       return NotInterestedResponse.fromJson(result);
     } catch (e, stacktrace) {
@@ -578,7 +591,7 @@ class Api{
               'reason': request.reason?? '',
               'reportPostId': request.reportPostId?? '',
               'reportUserId': request.reportUserId?? '',
-              'reportReporterId': request.reportReporterId?? '',
+              'reportTargetUserId': request.reportTargetUserId?? '',
               'status': request.status?? '',
             },
           },

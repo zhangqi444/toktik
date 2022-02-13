@@ -19,5 +19,5 @@ class ReportRequest {
 	String? result;
 	String? reportPostId;
 	String? reportUserId;
-	String? reportReporterId;
+	String? reportTargetUserId;
 }

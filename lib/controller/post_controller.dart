@@ -23,27 +23,4 @@ class PostController extends GetxController{
     String userId = selfController.loginUserId.value;
     return await Api.likePost(postId, userId, value);
   }
-
-  Future<NotInterestedResponse?> notInterestedPost(String? postId) async {
-    String userId = selfController.loginUserId.value;
-    NotInterestedResponse? result = await Api.notInterestedPost(postId, userId);
-    if(result == null) return null;
-
-    feedController.removeFeedListList(postId);
-    return result;
-  }
-
-  Future<ReportResponse?> reportPost(String postId, String reason,
-      {String? description}) async {
-
-    ReportRequest request = ReportRequest();
-    request.reportReporterId = selfController.loginUserId.value;
-    request.reportPostId = postId;
-    request.reason = reason;
-    request.type = ReportType.POST;
-    request.description = description;
-    request.status = ReportStatus.INIT;
-
-    return await Api.report(request);
-  }
 }
