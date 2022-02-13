@@ -13,6 +13,8 @@ import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/generated/json/feed_list_response.g.dart';
 import 'package:toktik/model/response/follow_response.dart';
 import 'package:toktik/generated/json/follow_response.g.dart';
+import 'package:toktik/model/response/get_current_user_response.dart';
+import 'package:toktik/generated/json/get_current_user_response.g.dart';
 import 'package:toktik/model/response/like_response.dart';
 import 'package:toktik/generated/json/like_response.g.dart';
 import 'package:toktik/model/response/login_response.dart';
@@ -166,6 +168,9 @@ class JsonConvert {
 		if(type == (FollowResponse).toString()){
 			return FollowResponse.fromJson(json) as M;
 		}
+		if(type == (GetCurrentUserResponse).toString()){
+			return GetCurrentUserResponse.fromJson(json) as M;
+		}
 		if(type == (LikeResponse).toString()){
 			return LikeResponse.fromJson(json) as M;
 		}
@@ -302,6 +307,9 @@ class JsonConvert {
 		}
 		if(<FollowResponse>[] is M){
 			return data.map<FollowResponse>((Map<String, dynamic> e) => FollowResponse.fromJson(e)).toList() as M;
+		}
+		if(<GetCurrentUserResponse>[] is M){
+			return data.map<GetCurrentUserResponse>((Map<String, dynamic> e) => GetCurrentUserResponse.fromJson(e)).toList() as M;
 		}
 		if(<LikeResponse>[] is M){
 			return data.map<LikeResponse>((Map<String, dynamic> e) => LikeResponse.fromJson(e)).toList() as M;
