@@ -1,14 +1,11 @@
-import 'package:amplify_flutter/amplify.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:toktik/common/application.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_page_controller.dart';
-import 'package:toktik/event/amplify_configured_event.dart';
+import 'package:toktik/page/widget/spinner_widget.dart';
 import 'package:toktik/page/widget/user_info_widget.dart';
 import 'package:toktik/page/widget/user_item_grid_widget.dart';
 import 'package:toktik/page/widget/user_more_bottom_sheet.dart';
@@ -17,14 +14,14 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
 
+import '../enum/navigation_argument.dart';
+
 const TAB_SIZE = 1;
 
 class UserPage extends StatefulWidget {
-  PageController? _scrollPageController;
   bool? _isLoginUser;
   String? id;
-  UserPage({PageController? pageController, bool? isLoginUser, String? id}){
-    this._scrollPageController = pageController;
+  UserPage({bool? isLoginUser, String? id}){
     this._isLoginUser = isLoginUser;
     this.id = id;
   }
@@ -43,12 +40,17 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   ScrollController _scrollController = ScrollController();
   UserController _userController = Get.put(UserController());
   SelfController _selfController = Get.put(SelfController());
-
+  dynamic argumentData = Get.arguments;
   var amplifyConfiguredListner;
 
   @override
   void initState() {
     super.initState();
+
+    if(argumentData != null) {
+      widget.id = argumentData[NavigationArgument.ID];
+      widget._isLoginUser = argumentData[NavigationArgument.IS_LOGIN_USER];
+    }
 
     _tabController = TabController(length: TAB_SIZE, vsync: this);
     _scrollController.addListener(() {
@@ -94,22 +96,26 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return
-      isStringNullOrEmpty(widget.id) || _userController.userExMap[widget.id] == null
-      ? Scaffold()
-      : Scaffold(
-        backgroundColor: ColorRes.color_2,
-        body: CustomScrollView(
-          controller: _scrollController,
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            _getSliverAppBar(),
-            _getSliverUserInfo(),
-            _getTabBarLayout(),
-            _getTabViewLayout(),
-          ],
-        )
-      );
+    return Obx(() =>
+      Stack(
+        children: [
+          Scaffold(
+            backgroundColor: ColorRes.color_2,
+            body: CustomScrollView(
+              controller: _scrollController,
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                _getSliverAppBar(),
+                _getSliverUserInfo(),
+                _getTabBarLayout(),
+                _getTabViewLayout(),
+              ],
+            )
+          ),
+          SpinnerWidget(isStringNullOrEmpty(widget.id) || _userController.userExMap[widget.id] == null),
+        ]
+      )
+    );
   }
 
   _getSliverAppBar(){
@@ -120,7 +126,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
       expandedHeight: 50,
       leading: widget._isLoginUser!?null:IconButton(
         onPressed: (){
-          widget._scrollPageController!.animateToPage(0, duration: Duration(milliseconds: 200), curve: Curves.linear);
+          Get.back();
         },
         icon: Icon(Icons.arrow_back_ios_rounded,color: ColorRes.light_icon_color,),
       ),

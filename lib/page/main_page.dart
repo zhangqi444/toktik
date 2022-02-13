@@ -43,7 +43,6 @@ class MainPage extends StatelessWidget {
           isStringNullOrEmpty(_selfController.loginUserId.value)
             ? Scaffold()
             : UserPage(
-              pageController: _scrollPageController,
               isLoginUser: true,
               id: _selfController.loginUserId.value,
             ),
