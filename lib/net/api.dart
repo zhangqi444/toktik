@@ -577,7 +577,7 @@ class Api{
         if (localUsers == null) localUsers = {};
         localUsers[targetUserId] = { "isNotInterested": { "id": targetUserId}};
         SPUtil.set(SPKeys.USERS, jsonEncode(localUsers));
-        result = localUsers[postId]["isNotInterested"];
+        result = localUsers[targetUserId]["isNotInterested"];
       }
 
       return NotInterestedResponse.fromJson(result);

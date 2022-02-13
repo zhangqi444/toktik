@@ -85,12 +85,13 @@ class FeedController extends GetxController{
   }
 
   void removeFeedListListByUser(String userId) {
-    hotFeedList.forEach((c) {
+    hotFeedList.value = hotFeedList.where((c) {
       if(feedListListMap[c]!.user!.id == userId) {
         feedListListMap.remove(c);
-        hotFeedList.remove(c);
+        return false;
       }
-    });
+      return true;
+    }).toList();
   }
 
   void refreshHotFeedList(RefreshController refreshController)async{
