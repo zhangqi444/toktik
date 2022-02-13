@@ -124,5 +124,12 @@
         }
       ]
     }
+  },
+  "predictions": {
+    "toktikTranscription": {
+      "providerPlugin": "awscloudformation",
+      "service": "Transcribe",
+      "convertType": "transcription"
+    }
   }
 }

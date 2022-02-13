@@ -1,0 +1,13 @@
+{
+    "resourceName": "toktikTranscription",
+    "convertPolicyName": "transcriptionPolicyb3da58cb",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "convertType": "transcription",
+    "language": "en-US",
+    "access": "authAndGuest"
+}

@@ -16,6 +16,7 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
+import 'package:toktik/plugins/amplify-flutter-predictions/amplify_predictions.dart';
 
 // Generated in previous step
 import '../models/ModelProvider.dart';
@@ -30,8 +31,10 @@ class ScrollPage extends StatefulWidget {
 }
 
 class _ScrollPageState extends State<ScrollPage> {
-  final MainPageScrollController mainPageScrollController = Get.put(MainPageScrollController());
-  PageController _pageController = PageController(initialPage: 0, keepPage: true);
+  final MainPageScrollController mainPageScrollController =
+      Get.put(MainPageScrollController());
+  PageController _pageController =
+      PageController(initialPage: 0, keepPage: true);
   GlobalKey<DrawerControllerState> drawerKey = GlobalKey();
 
   @override
@@ -44,19 +47,19 @@ class _ScrollPageState extends State<ScrollPage> {
   }
 
   Future<void> _configureAmplify() async {
+    if (Amplify.isConfigured) return;
 
-    if(Amplify.isConfigured) return;
-
-    final AmplifyDataStore _dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+    final AmplifyDataStore _dataStorePlugin =
+        AmplifyDataStore(modelProvider: ModelProvider.instance);
     final AmplifyAPI _apiPlugin = AmplifyAPI();
     final AmplifyAuthCognito _authPlugin = AmplifyAuthCognito();
-    final AmplifyAnalyticsPinpoint _analyticsPlugin = AmplifyAnalyticsPinpoint();
+    final AmplifyAnalyticsPinpoint _analyticsPlugin =
+        AmplifyAnalyticsPinpoint();
 
-    await Amplify.addPlugins([
-      _dataStorePlugin,
-      _apiPlugin,
-      _authPlugin,
-      _analyticsPlugin
+    await Future.wait([
+      Amplify.addPlugins(
+          [_dataStorePlugin, _apiPlugin, _authPlugin, _analyticsPlugin]),
+      AmplifyPredictions.instance.addPlugin()
     ]);
 
     // Once Plugins are added, configure Amplify
@@ -71,28 +74,29 @@ class _ScrollPageState extends State<ScrollPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Stack(
       children: [
-        Obx(() => PageView(
-          controller: _pageController,
-          physics: mainPageScrollController.scrollPageViewScrollPage.value ? new ClampingScrollPhysics() : new NeverScrollableScrollPhysics(),
-          children: [
-            FutureBuilder<void>(
-              future: _configureAmplify(),
-              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                return MainPage(pageController:_pageController);
-              },
-            )
-            // TODO: disable left swipe to show user page
-            // Scaffold(
-            //     backgroundColor: Colors.white,
-            //     body: UserPage(pageController: _pageController, isLoginUser: false, id: mainPageScrollController.userIdCurrent.value)
-            // )
-          ],
-          onPageChanged: (index){
-          },
-        ),
+        Obx(
+          () => PageView(
+            controller: _pageController,
+            physics: mainPageScrollController.scrollPageViewScrollPage.value
+                ? new ClampingScrollPhysics()
+                : new NeverScrollableScrollPhysics(),
+            children: [
+              FutureBuilder<void>(
+                future: _configureAmplify(),
+                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                  return MainPage(pageController: _pageController);
+                },
+              )
+              // TODO: disable left swipe to show user page
+              // Scaffold(
+              //     backgroundColor: Colors.white,
+              //     body: UserPage(pageController: _pageController, isLoginUser: false, id: mainPageScrollController.userIdCurrent.value)
+              // )
+            ],
+            onPageChanged: (index) {},
+          ),
         ),
         // TODO: remove drawer function for now.
         // Obx(()=>DrawerController(
@@ -108,5 +112,4 @@ class _ScrollPageState extends State<ScrollPage> {
       ],
     );
   }
-
 }

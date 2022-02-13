@@ -32,6 +32,10 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # TODO: this is for integrating Predictions category to Flutters
+  pod 'AWSPredictionsPlugin', '~> 1.15.5'
+  pod 'CoreMLPredictionsPlugin', '~> 1.15.5'
 end
 
 post_install do |installer|

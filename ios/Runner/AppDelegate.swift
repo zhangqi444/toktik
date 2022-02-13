@@ -1,5 +1,9 @@
 import UIKit
 import Flutter
+import Amplify
+import AmplifyPlugins
+import AWSPredictionsPlugin
+import amplify_core
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -24,6 +28,56 @@ import Flutter
         switch call.method {
         case "getInitialText":
             result(self.initialSharedText)
+        default:
+            result(FlutterMethodNotImplemented);
+        }
+    })
+
+    // amplify predictions
+    let amplifyPredictionsMethodChannel = FlutterMethodChannel(name: "com.amazonaws.amplify/predictions",
+                                                           binaryMessenger: controller.binaryMessenger);
+    amplifyPredictionsMethodChannel.setMethodCallHandler({
+      (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+        switch call.method {
+        case "addPlugin":
+            do {
+                try Amplify.add(plugin: AWSPredictionsPlugin())
+                result(true)
+            } catch let error{
+                if(error is PredictionsError){
+                    let predictionsError = error as! PredictionsError
+
+                    ErrorUtil.postErrorToFlutterChannel(
+                        result: result,
+                        errorCode: "PredictionsError",
+                        details: [
+                            "message" : predictionsError.errorDescription,
+                            "recoverySuggestion" : predictionsError.recoverySuggestion,
+                            "underlyingError": predictionsError.underlyingError != nil ? predictionsError.underlyingError!.localizedDescription : ""
+                        ]
+                    )
+                } else if(error is ConfigurationError) {
+                    let configError = error as! ConfigurationError
+                    
+                    var errorCode = "PredictionsError"
+                    if case .amplifyAlreadyConfigured = configError {
+                        errorCode = "AmplifyAlreadyConfiguredException"
+                    }
+                    ErrorUtil.postErrorToFlutterChannel(
+                        result: result,
+                        errorCode: errorCode,
+                        details: [
+                            "message" : configError.errorDescription,
+                            "recoverySuggestion" : configError.recoverySuggestion,
+                            "underlyingError": configError.underlyingError != nil ? configError.underlyingError!.localizedDescription : ""
+                        ]
+                    )
+                } else{
+                    print("Failed to add Amplify Predictions Plugin \(error)")
+                    result(false)
+                }
+            }
+            return
         default:
             result(FlutterMethodNotImplemented);
         }
