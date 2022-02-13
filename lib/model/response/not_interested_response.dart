@@ -17,9 +17,9 @@ class NotInterestedResponse {
   }
 
   String? id;
-  String? postId;
-  String? userId;
+  String? notInterestedostId;
+  String? notInteresteduserId;
+  String? notInterestedtargetUserId;
   String? type;
-  bool? value;
   int? createdAt;
 }

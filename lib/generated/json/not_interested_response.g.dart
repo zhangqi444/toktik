@@ -7,21 +7,21 @@ NotInterestedResponse $NotInterestedResponseFromJson(Map<String, dynamic> json) 
 	if (id != null) {
 		notInterestedResponse.id = id;
 	}
-	final String? postId = jsonConvert.convert<String>(json['postId']);
-	if (postId != null) {
-		notInterestedResponse.postId = postId;
+	final String? notInterestedostId = jsonConvert.convert<String>(json['notInterestedostId']);
+	if (notInterestedostId != null) {
+		notInterestedResponse.notInterestedostId = notInterestedostId;
 	}
-	final String? userId = jsonConvert.convert<String>(json['userId']);
-	if (userId != null) {
-		notInterestedResponse.userId = userId;
+	final String? notInteresteduserId = jsonConvert.convert<String>(json['notInteresteduserId']);
+	if (notInteresteduserId != null) {
+		notInterestedResponse.notInteresteduserId = notInteresteduserId;
+	}
+	final String? notInterestedtargetUserId = jsonConvert.convert<String>(json['notInterestedtargetUserId']);
+	if (notInterestedtargetUserId != null) {
+		notInterestedResponse.notInterestedtargetUserId = notInterestedtargetUserId;
 	}
 	final String? type = jsonConvert.convert<String>(json['type']);
 	if (type != null) {
 		notInterestedResponse.type = type;
-	}
-	final bool? value = jsonConvert.convert<bool>(json['value']);
-	if (value != null) {
-		notInterestedResponse.value = value;
 	}
 	final int? createdAt = jsonConvert.convert<int>(json['createdAt']);
 	if (createdAt != null) {
@@ -33,10 +33,10 @@ NotInterestedResponse $NotInterestedResponseFromJson(Map<String, dynamic> json) 
 Map<String, dynamic> $NotInterestedResponseToJson(NotInterestedResponse entity) {
 	final Map<String, dynamic> data = <String, dynamic>{};
 	data['id'] = entity.id;
-	data['postId'] = entity.postId;
-	data['userId'] = entity.userId;
+	data['notInterestedostId'] = entity.notInterestedostId;
+	data['notInteresteduserId'] = entity.notInteresteduserId;
+	data['notInterestedtargetUserId'] = entity.notInterestedtargetUserId;
 	data['type'] = entity.type;
-	data['value'] = entity.value;
 	data['createdAt'] = entity.createdAt;
 	return data;
 }
