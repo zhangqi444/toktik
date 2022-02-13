@@ -9,7 +9,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    defaultTransition: Transition.rightToLeft,
+    defaultTransition: Transition.rightToLeft, // https://github.com/jonataslaw/getx/issues/317
     getPages: RouterManager.routes,
     // TODO: switch to splash page whenever we have the requirement
     initialRoute: Routers.scroll,
