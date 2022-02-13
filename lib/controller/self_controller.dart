@@ -158,11 +158,11 @@ class SelfController extends GetxController{
       }
     }
 
-    LoginResponse? res = await Api.getCurrentUser();
+    var res = await Api.getCurrentUser();
     if(res == null || res.username == null) return;
 
     String? userId = await userController.loadUserInfoExByUsername(res.username);
-    await setLoginUserAuthInfo(username: res.username, userId: userId, token: res.token, persistent: true);
+    await setLoginUserAuthInfo(username: res.username, userId: userId, token: "", persistent: true);
   }
 
   // TODO: migrate to a datamodel for better organized getting/putting logic

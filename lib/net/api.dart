@@ -45,6 +45,7 @@ import 'package:toktik/net/http_constant.dart';
 import 'package:toktik/util/sp_util.dart';
 
 import '../model/comment_model.dart';
+import '../model/response/get_current_user_response.dart';
 
 class Api{
   /// ----------------------------------接口api--------------------------------------------------------
@@ -112,13 +113,19 @@ class Api{
     }
   }
 
-  static Future<LoginResponse?> getCurrentUser() async {
+  static Future<GetCurrentUserResponse?> getCurrentUser() async {
+    Map<String, dynamic> result = {};
     try {
-      var result = await Amplify.Auth.getCurrentUser();
-      return result != null ? LoginResponse.fromJson({}) : null;
+      var res = await Amplify.Auth.getCurrentUser();
+      result['userId'] = res.userId;
+      result['username'] = res.username;
     } on AuthException catch (e, stacktrack) {
-      print("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
+      if(e is SignedOutException) {
+        result["status"] = AuthStatus.SIGNED_OUT_UNEXPECTED.toShortString();
+      }
+      debugPrint("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
     }
+    return GetCurrentUserResponse.fromJson(result);
   }
 
   static Future<RegisterResponse?> resendSignUpCode(String username) async{
@@ -428,7 +435,10 @@ class Api{
         } else {
           // TODO: remove if the sign in status is required for like
           post['isLiked'] = false;
-          if(localPosts != null && localPosts[post['id']] != null && localPosts[post['id']]['isLiked']['value'] != null) {
+          if(localPosts != null
+              && localPosts[post['id']] != null
+              && localPosts[post['id']]['isLiked'] != null
+              && localPosts[post['id']]['isLiked']['value'] != null) {
             post['isLiked'] = localPosts[post['id']]['isLiked']['value'];
           }
         }
