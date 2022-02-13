@@ -294,7 +294,7 @@ class Api{
           { 'filter': { "username": { "eq": username } } },
           'listUsers'
       );
-      return _parseUsers(response['items'], {username: username});
+      return _parseUsers(response['items']?? [], {username: username});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
@@ -321,8 +321,16 @@ class Api{
 
   static Future<UserInfoExResponse?> getUserInfoEx(String? id) async{
     try {
-      List<User> users = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
-      return _parseUsers(users, {id: id});
+      var response = await _query(
+          '''query GetUsers(\$id: ID!) {
+            getUser(id: \$id) {
+              id username email phoneNumber portrait nickname gender bio city birth
+            }
+          }''',
+          { 'id': id },
+          'getUser'
+      );
+      return _parseUsers([response], {id: id});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
