@@ -15,6 +15,10 @@ NotInterestedResponse $NotInterestedResponseFromJson(Map<String, dynamic> json) 
 	if (userId != null) {
 		notInterestedResponse.userId = userId;
 	}
+	final String? type = jsonConvert.convert<String>(json['type']);
+	if (type != null) {
+		notInterestedResponse.type = type;
+	}
 	final bool? value = jsonConvert.convert<bool>(json['value']);
 	if (value != null) {
 		notInterestedResponse.value = value;
@@ -31,6 +35,7 @@ Map<String, dynamic> $NotInterestedResponseToJson(NotInterestedResponse entity) 
 	data['id'] = entity.id;
 	data['postId'] = entity.postId;
 	data['userId'] = entity.userId;
+	data['type'] = entity.type;
 	data['value'] = entity.value;
 	data['createdAt'] = entity.createdAt;
 	return data;
