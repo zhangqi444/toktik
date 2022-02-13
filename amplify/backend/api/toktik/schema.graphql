@@ -17,10 +17,9 @@ type Report @model @auth(rules: [{allow: public}]) @key(name: "reportTargetUserI
   post: Post @connection
   type: String
   result: String
-  reportReporterId: ID
   reportUserId: ID
   reportPostId: ID
-  targetUserId: User @connection
+  targetUser: User @connection
   reportTargetUserId: ID
 }
 

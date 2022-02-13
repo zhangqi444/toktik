@@ -36,9 +36,7 @@ class Report extends Model {
   final Post? _post;
   final String? _type;
   final String? _result;
-  final String? _reportReporterId;
-  final User? _targetUserId;
-  final String? _reportTargetUserId;
+  final User? _targetUser;
 
   @override
   getInstanceType() => classType;
@@ -76,21 +74,13 @@ class Report extends Model {
     return _result;
   }
   
-  String? get reportReporterId {
-    return _reportReporterId;
+  User? get targetUser {
+    return _targetUser;
   }
   
-  User? get targetUserId {
-    return _targetUserId;
-  }
+  const Report._internal({required this.id, reason, description, status, user, post, type, result, targetUser}): _reason = reason, _description = description, _status = status, _user = user, _post = post, _type = type, _result = result, _targetUser = targetUser;
   
-  String? get reportTargetUserId {
-    return _reportTargetUserId;
-  }
-  
-  const Report._internal({required this.id, reason, description, status, user, post, type, result, reportReporterId, targetUserId, reportTargetUserId}): _reason = reason, _description = description, _status = status, _user = user, _post = post, _type = type, _result = result, _reportReporterId = reportReporterId, _targetUserId = targetUserId, _reportTargetUserId = reportTargetUserId;
-  
-  factory Report({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, String? reportReporterId, User? targetUserId, String? reportTargetUserId}) {
+  factory Report({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, User? targetUser}) {
     return Report._internal(
       id: id == null ? UUID.getUUID() : id,
       reason: reason,
@@ -100,9 +90,7 @@ class Report extends Model {
       post: post,
       type: type,
       result: result,
-      reportReporterId: reportReporterId,
-      targetUserId: targetUserId,
-      reportTargetUserId: reportTargetUserId);
+      targetUser: targetUser);
   }
   
   bool equals(Object other) {
@@ -121,9 +109,7 @@ class Report extends Model {
       _post == other._post &&
       _type == other._type &&
       _result == other._result &&
-      _reportReporterId == other._reportReporterId &&
-      _targetUserId == other._targetUserId &&
-      _reportTargetUserId == other._reportTargetUserId;
+      _targetUser == other._targetUser;
   }
   
   @override
@@ -142,15 +128,13 @@ class Report extends Model {
     buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
     buffer.write("type=" + "$_type" + ", ");
     buffer.write("result=" + "$_result" + ", ");
-    buffer.write("reportReporterId=" + "$_reportReporterId" + ", ");
-    buffer.write("targetUserId=" + (_targetUserId != null ? _targetUserId!.toString() : "null") + ", ");
-    buffer.write("reportTargetUserId=" + "$_reportTargetUserId");
+    buffer.write("targetUser=" + (_targetUser != null ? _targetUser!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Report copyWith({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, String? reportReporterId, User? targetUserId, String? reportTargetUserId}) {
+  Report copyWith({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, User? targetUser}) {
     return Report(
       id: id ?? this.id,
       reason: reason ?? this.reason,
@@ -160,9 +144,7 @@ class Report extends Model {
       post: post ?? this.post,
       type: type ?? this.type,
       result: result ?? this.result,
-      reportReporterId: reportReporterId ?? this.reportReporterId,
-      targetUserId: targetUserId ?? this.targetUserId,
-      reportTargetUserId: reportTargetUserId ?? this.reportTargetUserId);
+      targetUser: targetUser ?? this.targetUser);
   }
   
   Report.fromJson(Map<String, dynamic> json)  
@@ -178,14 +160,12 @@ class Report extends Model {
         : null,
       _type = json['type'],
       _result = json['result'],
-      _reportReporterId = json['reportReporterId'],
-      _targetUserId = json['targetUserId']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['targetUserId']['serializedData']))
-        : null,
-      _reportTargetUserId = json['reportTargetUserId'];
+      _targetUser = json['targetUser']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['targetUser']['serializedData']))
+        : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'reason': _reason, 'description': _description, 'status': _status, 'user': _user?.toJson(), 'post': _post?.toJson(), 'type': _type, 'result': _result, 'reportReporterId': _reportReporterId, 'targetUserId': _targetUserId?.toJson(), 'reportTargetUserId': _reportTargetUserId
+    'id': id, 'reason': _reason, 'description': _description, 'status': _status, 'user': _user?.toJson(), 'post': _post?.toJson(), 'type': _type, 'result': _result, 'targetUser': _targetUser?.toJson()
   };
 
   static final QueryField ID = QueryField(fieldName: "report.id");
@@ -200,11 +180,9 @@ class Report extends Model {
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
   static final QueryField TYPE = QueryField(fieldName: "type");
   static final QueryField RESULT = QueryField(fieldName: "result");
-  static final QueryField REPORTREPORTERID = QueryField(fieldName: "reportReporterId");
-  static final QueryField TARGETUSERID = QueryField(
-    fieldName: "targetUserId",
+  static final QueryField TARGETUSER = QueryField(
+    fieldName: "targetUser",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
-  static final QueryField REPORTTARGETUSERID = QueryField(fieldName: "reportTargetUserId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Report";
     modelSchemaDefinition.pluralName = "Reports";
@@ -266,23 +244,11 @@ class Report extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Report.REPORTREPORTERID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Report.TARGETUSERID,
+      key: Report.TARGETUSER,
       isRequired: false,
-      targetName: "reportTargetUserIdId",
+      targetName: "reportTargetUserId",
       ofModelName: (User).toString()
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Report.REPORTTARGETUSERID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }
