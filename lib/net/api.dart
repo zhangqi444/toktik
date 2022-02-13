@@ -588,20 +588,22 @@ class Api{
 
   static Future<ReportResponse?> report(ReportRequest request) async {
     try {
+      var input = {
+        'description': request.description?? '',
+        'type': request.type?? '',
+        'reason': request.reason?? '',
+        'reportUserId': request.reportUserId,
+        'status': request.status?? '',
+      };
+      if(request.reportPostId != null) input['reportPostId'] = request.reportPostId!;
+      if(request.reportTargetUserId != null) input['reportTargetUserId'] = request.reportTargetUserId!;
+
       var report = await _mutation(
           '''mutation CreateReport(\$input: CreateReportInput!) {
               createReport(input: \$input) { id result }
             }''',
           {
-            'input': {
-              'description': request.description?? '',
-              'type': request.type?? '',
-              'reason': request.reason?? '',
-              'reportPostId': request.reportPostId?? '',
-              'reportUserId': request.reportUserId?? '',
-              'reportTargetUserId': request.reportTargetUserId?? '',
-              'status': request.status?? '',
-            },
+            'input': input,
           },
           'createReport'
       );

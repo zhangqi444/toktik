@@ -61,8 +61,9 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
       {
         "text": 'Report',
         "img": 'assets/images/share_action_report.png',
-        "onPressed": (video, reportController, notInterestedController) async {
+        "onPressed": (video, ReportController reportController, notInterestedController, widget, context) async {
           await reportController.reportPost(video.id, ReportReason.OTHER);
+          Navigator.pop(context);
           EasyLoading.showSuccess("Thanks for reporting.");
         }
       },
