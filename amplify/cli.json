@@ -8,7 +8,8 @@
             "enableiterativegsiupdates": true,
             "secondarykeyasgsi": true,
             "skipoverridemutationinputtypes": true,
-            "showfieldauthnotification": false
+            "showfieldauthnotification": false,
+            "securityEnhancementNotification": false
         },
         "frontend-ios": {
             "enablexcodeintegration": true

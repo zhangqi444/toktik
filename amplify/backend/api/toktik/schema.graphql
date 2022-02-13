@@ -15,12 +15,13 @@ type Report @model @auth(rules: [{allow: public}]) @key(name: "reportReporterId-
   status: String
   user: User @connection
   post: Post @connection
-  reporter: User @connection
   type: String
   result: String
-  reportReporterId: ID!
+  reportReporterId: ID
   reportUserId: ID
   reportPostId: ID
+  targetUserId: User @connection
+  reportTargetUserId: ID
 }
 
 type View @model @auth(rules: [{allow: public}]) @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId") @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId") @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId") {
