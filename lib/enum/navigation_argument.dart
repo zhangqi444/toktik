@@ -1,4 +1,8 @@
-enum AuthNavigationArgument {
+enum NavigationArgument {
+  // General
+  ID,
+
+  // Auth
   ACCOUNT,
   EMAIL,
   USERNAME,
@@ -7,10 +11,13 @@ enum AuthNavigationArgument {
   PHONE_NUMBER,
   AUTH_STATUS,
   DESTINATION,
-  IS_RESET_PASSWORD
+  IS_RESET_PASSWORD,
+
+  // User
+  IS_LOGIN_USER,
 }
 
-extension ParseToString on AuthNavigationArgument {
+extension ParseToString on NavigationArgument {
   String toShortString() {
     return this.toString().split('.').last;
   }

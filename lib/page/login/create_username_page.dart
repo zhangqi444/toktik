@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
-import 'package:toktik/enum/auth_navigation_argument.dart';
+import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/res/colors.dart';
@@ -37,9 +37,9 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
     super.initState();
     if(argumentData != null) {
       setState(() {
-        errorMessage = argumentData[AuthNavigationArgument.ERROR_MESSAGE];
-        initText = argumentData[AuthNavigationArgument.USERNAME];
-        username = argumentData[AuthNavigationArgument.USERNAME];
+        errorMessage = argumentData[NavigationArgument.ERROR_MESSAGE];
+        initText = argumentData[NavigationArgument.USERNAME];
+        username = argumentData[NavigationArgument.USERNAME];
       });
     }
   }
@@ -148,7 +148,7 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             setState(() {
               errorMessage = "";
             });
-            Get.toNamed(Routers.createPassword, arguments: { AuthNavigationArgument.USERNAME: username });
+            Get.toNamed(Routers.createPassword, arguments: { NavigationArgument.USERNAME: username });
           }
         },
         buttonEnabled: buttonEnable,

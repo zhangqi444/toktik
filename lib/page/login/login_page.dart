@@ -4,7 +4,7 @@ import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
-import 'package:toktik/enum/auth_navigation_argument.dart';
+import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/page/login/widget/login_subtitle_text_widget.dart';
@@ -44,16 +44,16 @@ class _LoginPageState extends State<LoginPage> {
 
     if (argumentData != null) {
       if (!isStringNullOrEmpty(
-              argumentData[AuthNavigationArgument.AUTH_STATUS]) &&
-          argumentData[AuthNavigationArgument.AUTH_STATUS] ==
+              argumentData[NavigationArgument.AUTH_STATUS]) &&
+          argumentData[NavigationArgument.AUTH_STATUS] ==
               AuthStatus.ALIAS_EXISTS.toShortString()) {
         title = "You've signed up already.";
         subtitle = "Enter your password to log in to your account.";
         isForSignedUpAccount = true;
       }
 
-      if (!isStringNullOrEmpty(argumentData[AuthNavigationArgument.ACCOUNT])) {
-        account = argumentData[AuthNavigationArgument.ACCOUNT];
+      if (!isStringNullOrEmpty(argumentData[NavigationArgument.ACCOUNT])) {
+        account = argumentData[NavigationArgument.ACCOUNT];
       }
     }
   }
