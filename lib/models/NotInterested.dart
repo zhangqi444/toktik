@@ -29,12 +29,10 @@ import 'package:flutter/foundation.dart';
 class NotInterested extends Model {
   static const classType = const _NotInterestedModelType();
   final String id;
-  final User? _userId;
-  final Post? _postId;
-  final User? _targetUserId;
-  final String? _notInterestedUserId;
-  final String? _notInterestedPostId;
-  final String? _notInterestedTargetUserId;
+  final User? _user;
+  final Post? _post;
+  final User? _targetUser;
+  final String? _type;
 
   @override
   getInstanceType() => classType;
@@ -44,41 +42,31 @@ class NotInterested extends Model {
     return id;
   }
   
-  User? get userId {
-    return _userId;
+  User? get user {
+    return _user;
   }
   
-  Post? get postId {
-    return _postId;
+  Post? get post {
+    return _post;
   }
   
-  User? get targetUserId {
-    return _targetUserId;
+  User? get targetUser {
+    return _targetUser;
   }
   
-  String? get notInterestedUserId {
-    return _notInterestedUserId;
+  String? get type {
+    return _type;
   }
   
-  String? get notInterestedPostId {
-    return _notInterestedPostId;
-  }
+  const NotInterested._internal({required this.id, user, post, targetUser, type}): _user = user, _post = post, _targetUser = targetUser, _type = type;
   
-  String? get notInterestedTargetUserId {
-    return _notInterestedTargetUserId;
-  }
-  
-  const NotInterested._internal({required this.id, userId, postId, targetUserId, notInterestedUserId, notInterestedPostId, notInterestedTargetUserId}): _userId = userId, _postId = postId, _targetUserId = targetUserId, _notInterestedUserId = notInterestedUserId, _notInterestedPostId = notInterestedPostId, _notInterestedTargetUserId = notInterestedTargetUserId;
-  
-  factory NotInterested({String? id, User? userId, Post? postId, User? targetUserId, String? notInterestedUserId, String? notInterestedPostId, String? notInterestedTargetUserId}) {
+  factory NotInterested({String? id, User? user, Post? post, User? targetUser, String? type}) {
     return NotInterested._internal(
       id: id == null ? UUID.getUUID() : id,
-      userId: userId,
-      postId: postId,
-      targetUserId: targetUserId,
-      notInterestedUserId: notInterestedUserId,
-      notInterestedPostId: notInterestedPostId,
-      notInterestedTargetUserId: notInterestedTargetUserId);
+      user: user,
+      post: post,
+      targetUser: targetUser,
+      type: type);
   }
   
   bool equals(Object other) {
@@ -90,12 +78,10 @@ class NotInterested extends Model {
     if (identical(other, this)) return true;
     return other is NotInterested &&
       id == other.id &&
-      _userId == other._userId &&
-      _postId == other._postId &&
-      _targetUserId == other._targetUserId &&
-      _notInterestedUserId == other._notInterestedUserId &&
-      _notInterestedPostId == other._notInterestedPostId &&
-      _notInterestedTargetUserId == other._notInterestedTargetUserId;
+      _user == other._user &&
+      _post == other._post &&
+      _targetUser == other._targetUser &&
+      _type == other._type;
   }
   
   @override
@@ -107,60 +93,52 @@ class NotInterested extends Model {
     
     buffer.write("NotInterested {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("userId=" + (_userId != null ? _userId!.toString() : "null") + ", ");
-    buffer.write("postId=" + (_postId != null ? _postId!.toString() : "null") + ", ");
-    buffer.write("targetUserId=" + (_targetUserId != null ? _targetUserId!.toString() : "null") + ", ");
-    buffer.write("notInterestedUserId=" + "$_notInterestedUserId" + ", ");
-    buffer.write("notInterestedPostId=" + "$_notInterestedPostId" + ", ");
-    buffer.write("notInterestedTargetUserId=" + "$_notInterestedTargetUserId");
+    buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
+    buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
+    buffer.write("targetUser=" + (_targetUser != null ? _targetUser!.toString() : "null") + ", ");
+    buffer.write("type=" + "$_type");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  NotInterested copyWith({String? id, User? userId, Post? postId, User? targetUserId, String? notInterestedUserId, String? notInterestedPostId, String? notInterestedTargetUserId}) {
+  NotInterested copyWith({String? id, User? user, Post? post, User? targetUser, String? type}) {
     return NotInterested(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
-      postId: postId ?? this.postId,
-      targetUserId: targetUserId ?? this.targetUserId,
-      notInterestedUserId: notInterestedUserId ?? this.notInterestedUserId,
-      notInterestedPostId: notInterestedPostId ?? this.notInterestedPostId,
-      notInterestedTargetUserId: notInterestedTargetUserId ?? this.notInterestedTargetUserId);
+      user: user ?? this.user,
+      post: post ?? this.post,
+      targetUser: targetUser ?? this.targetUser,
+      type: type ?? this.type);
   }
   
   NotInterested.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _userId = json['userId']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['userId']['serializedData']))
+      _user = json['user']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
         : null,
-      _postId = json['postId']?['serializedData'] != null
-        ? Post.fromJson(new Map<String, dynamic>.from(json['postId']['serializedData']))
+      _post = json['post']?['serializedData'] != null
+        ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
         : null,
-      _targetUserId = json['targetUserId']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['targetUserId']['serializedData']))
+      _targetUser = json['targetUser']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['targetUser']['serializedData']))
         : null,
-      _notInterestedUserId = json['notInterestedUserId'],
-      _notInterestedPostId = json['notInterestedPostId'],
-      _notInterestedTargetUserId = json['notInterestedTargetUserId'];
+      _type = json['type'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'userId': _userId?.toJson(), 'postId': _postId?.toJson(), 'targetUserId': _targetUserId?.toJson(), 'notInterestedUserId': _notInterestedUserId, 'notInterestedPostId': _notInterestedPostId, 'notInterestedTargetUserId': _notInterestedTargetUserId
+    'id': id, 'user': _user?.toJson(), 'post': _post?.toJson(), 'targetUser': _targetUser?.toJson(), 'type': _type
   };
 
   static final QueryField ID = QueryField(fieldName: "notInterested.id");
-  static final QueryField USERID = QueryField(
-    fieldName: "userId",
+  static final QueryField USER = QueryField(
+    fieldName: "user",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
-  static final QueryField POSTID = QueryField(
-    fieldName: "postId",
+  static final QueryField POST = QueryField(
+    fieldName: "post",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
-  static final QueryField TARGETUSERID = QueryField(
-    fieldName: "targetUserId",
+  static final QueryField TARGETUSER = QueryField(
+    fieldName: "targetUser",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
-  static final QueryField NOTINTERESTEDUSERID = QueryField(fieldName: "notInterestedUserId");
-  static final QueryField NOTINTERESTEDPOSTID = QueryField(fieldName: "notInterestedPostId");
-  static final QueryField NOTINTERESTEDTARGETUSERID = QueryField(fieldName: "notInterestedTargetUserId");
+  static final QueryField TYPE = QueryField(fieldName: "type");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "NotInterested";
     modelSchemaDefinition.pluralName = "NotInteresteds";
@@ -179,40 +157,28 @@ class NotInterested extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: NotInterested.USERID,
+      key: NotInterested.USER,
       isRequired: false,
-      targetName: "notInterestedUserIdId",
+      targetName: "notInterestedUserId",
       ofModelName: (User).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: NotInterested.POSTID,
+      key: NotInterested.POST,
       isRequired: false,
-      targetName: "notInterestedPostIdId",
+      targetName: "notInterestedPostId",
       ofModelName: (Post).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: NotInterested.TARGETUSERID,
+      key: NotInterested.TARGETUSER,
       isRequired: false,
-      targetName: "notInterestedTargetUserIdId",
+      targetName: "notInterestedTargetUserId",
       ofModelName: (User).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: NotInterested.NOTINTERESTEDUSERID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: NotInterested.NOTINTERESTEDPOSTID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: NotInterested.NOTINTERESTEDTARGETUSERID,
+      key: NotInterested.TYPE,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));

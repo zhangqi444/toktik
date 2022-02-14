@@ -1,11 +1,12 @@
 type NotInterested @model @auth(rules: [{allow: public}]) {
   id: ID!
-  userId: User @connection
-  postId: Post @connection
-  targetUserId: User @connection
+  user: User @connection
+  post: Post @connection
+  targetUser: User @connection
   notInterestedUserId: ID
   notInterestedPostId: ID
   notInterestedTargetUserId: ID
+  type: String
 }
 
 type Report @model @auth(rules: [{allow: public}]) @key(name: "reportTargetUserId-index", fields: ["reportTargetUserId"], queryField: "reportTargetUserId") @key(name: "reportUserId-index", fields: ["reportUserId"], queryField: "reportUserId") @key(name: "reportPostId-index", fields: ["reportPostId"], queryField: "reportPostId") {
