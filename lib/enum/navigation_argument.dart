@@ -15,6 +15,9 @@ enum NavigationArgument {
 
   // User
   IS_LOGIN_USER,
+
+  // WEBVIEW
+  URL,
 }
 
 extension ParseToString on NavigationArgument {

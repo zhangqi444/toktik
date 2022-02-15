@@ -4,6 +4,9 @@ import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:get/get.dart';
 
+import '../../common/configs.dart';
+import '../../enum/navigation_argument.dart';
+
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() {
@@ -110,6 +113,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                           style: TextStyle(color: Color(0xff888888))),
                                       TextSpan(
                                           text: 'Terms of Service ',
+                                          recognizer: new TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );;
+                                            },
                                           style: TextStyle(
                                               color: Color(0xff2A2A2A),
                                               fontWeight: FontWeight.bold)),
@@ -119,6 +126,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                           style: TextStyle(color: Color(0xff888888))),
                                       TextSpan(
                                           text: 'Privacy Policy ',
+                                          recognizer: new TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );;
+                                            },
                                           style: TextStyle(
                                               color: Color(0xff2A2A2A),
                                               fontWeight: FontWeight.bold)),
