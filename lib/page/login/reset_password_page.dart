@@ -65,7 +65,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         color: Colors.white,
       ),
       child: Container(
-        height: 600,
         margin: EdgeInsets.only(left: 30, right: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -46,7 +46,6 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Stack(alignment: Alignment.center, //指定未定位或部分定位widget的对齐方式
                 children: <Widget>[
                   Container(
-                    height: 600,
                     margin: EdgeInsets.only(left: 30, right: 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
