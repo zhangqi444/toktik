@@ -9,6 +9,9 @@ import 'package:toktik/page/widget/item_turn_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
+import '../common/configs.dart';
+import '../enum/navigation_argument.dart';
+
 //设置页面
 class SettingPage extends StatefulWidget {
   SettingPage({Key? key}) : super(key: key);
@@ -96,13 +99,13 @@ class _SettingPageState extends State<SettingPage> {
             _getHeader(SETTING_HEADER_ABOUT),
             // ItemTurnWidget(img: 'assets/images/ad.png',title: '广告反馈与设置',onClick: (){EasyLoading.showToast('功能待开发');},),
             ItemTurnWidget(img: 'assets/images/user_service.png',title: SETTING_TERMS_OF_SERVICE, onClick: (){
-              Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/terms"} );
+              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );
             }),
             ItemTurnWidget(img: 'assets/images/community_service.png',title: SETTING_COMMUNITY_GUIDELINES, onClick: (){
               Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/community-guidelines"} );
             }),
             ItemTurnWidget(img: 'assets/images/private_service.png',title: SETTING_PRIVACY_POLICY, onClick: (){
-              Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/privacy"} );
+              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );
             }),
             ItemTurnWidget(img: 'assets/images/sdk_list.png',title: SETTING_COPYRIGHT_POLICY, onClick: (){
               Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me/copyright"} );
