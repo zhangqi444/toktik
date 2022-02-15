@@ -24,19 +24,15 @@ import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_inte
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Report type in your schema. */
+/** This is an auto generated class representing the NotInterested type in your schema. */
 @immutable
-class Report extends Model {
-  static const classType = const _ReportModelType();
+class NotInterested extends Model {
+  static const classType = const _NotInterestedModelType();
   final String id;
-  final String? _reason;
-  final String? _description;
-  final String? _status;
   final User? _user;
   final Post? _post;
-  final String? _type;
-  final String? _result;
   final User? _targetUser;
+  final String? _type;
 
   @override
   getInstanceType() => classType;
@@ -46,18 +42,6 @@ class Report extends Model {
     return id;
   }
   
-  String? get reason {
-    return _reason;
-  }
-  
-  String? get description {
-    return _description;
-  }
-  
-  String? get status {
-    return _status;
-  }
-  
   User? get user {
     return _user;
   }
@@ -65,33 +49,24 @@ class Report extends Model {
   Post? get post {
     return _post;
   }
-
-  String? get type {
-    return _type;
-  }
   
-  String? get result {
-    return _result;
-  }
-
   User? get targetUser {
     return _targetUser;
   }
   
-  const Report._internal({required this.id, reason, description, status, user, post, type, result, targetUser}): _reason = reason, _description = description, _status = status, _user = user, _post = post, _type = type, _result = result, _targetUser = targetUser;
+  String? get type {
+    return _type;
+  }
   
-  factory Report({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, User? targetUser}) {
-
-    return Report._internal(
+  const NotInterested._internal({required this.id, user, post, targetUser, type}): _user = user, _post = post, _targetUser = targetUser, _type = type;
+  
+  factory NotInterested({String? id, User? user, Post? post, User? targetUser, String? type}) {
+    return NotInterested._internal(
       id: id == null ? UUID.getUUID() : id,
-      reason: reason,
-      description: description,
-      status: status,
       user: user,
       post: post,
-      type: type,
-      result: result,
-      targetUser: targetUser);
+      targetUser: targetUser,
+      type: type);
   }
   
   bool equals(Object other) {
@@ -101,16 +76,12 @@ class Report extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Report &&
+    return other is NotInterested &&
       id == other.id &&
-      _reason == other._reason &&
-      _description == other._description &&
-      _status == other._status &&
       _user == other._user &&
       _post == other._post &&
-      _type == other._type &&
-      _result == other._result &&
-      _targetUser == other._targetUser;
+      _targetUser == other._targetUser &&
+      _type == other._type;
   }
   
   @override
@@ -120,73 +91,57 @@ class Report extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Report {");
+    buffer.write("NotInterested {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("reason=" + "$_reason" + ", ");
-    buffer.write("description=" + "$_description" + ", ");
-    buffer.write("status=" + "$_status" + ", ");
     buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
     buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
-    buffer.write("type=" + "$_type" + ", ");
-    buffer.write("result=" + "$_result" + ", ");
-    buffer.write("targetUser=" + (_targetUser != null ? _targetUser!.toString() : "null"));
+    buffer.write("targetUser=" + (_targetUser != null ? _targetUser!.toString() : "null") + ", ");
+    buffer.write("type=" + "$_type");
     buffer.write("}");
     
     return buffer.toString();
   }
-
-  Report copyWith({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, User? targetUser}) {
-    return Report(
+  
+  NotInterested copyWith({String? id, User? user, Post? post, User? targetUser, String? type}) {
+    return NotInterested(
       id: id ?? this.id,
-      reason: reason ?? this.reason,
-      description: description ?? this.description,
-      status: status ?? this.status,
       user: user ?? this.user,
       post: post ?? this.post,
-      type: type ?? this.type,
-      result: result ?? this.result,
-      targetUser: targetUser ?? this.targetUser);
+      targetUser: targetUser ?? this.targetUser,
+      type: type ?? this.type);
   }
   
-  Report.fromJson(Map<String, dynamic> json)  
+  NotInterested.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _reason = json['reason'],
-      _description = json['description'],
-      _status = json['status'],
       _user = json['user']?['serializedData'] != null
         ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
         : null,
       _post = json['post']?['serializedData'] != null
         ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
         : null,
-      _type = json['type'],
-      _result = json['result'],
       _targetUser = json['targetUser']?['serializedData'] != null
         ? User.fromJson(new Map<String, dynamic>.from(json['targetUser']['serializedData']))
-        : null;
+        : null,
+      _type = json['type'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'reason': _reason, 'description': _description, 'status': _status, 'user': _user?.toJson(), 'post': _post?.toJson(), 'type': _type, 'result': _result, 'targetUser': _targetUser?.toJson()
+    'id': id, 'user': _user?.toJson(), 'post': _post?.toJson(), 'targetUser': _targetUser?.toJson(), 'type': _type
   };
 
-  static final QueryField ID = QueryField(fieldName: "report.id");
-  static final QueryField REASON = QueryField(fieldName: "reason");
-  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
-  static final QueryField STATUS = QueryField(fieldName: "status");
+  static final QueryField ID = QueryField(fieldName: "notInterested.id");
   static final QueryField USER = QueryField(
     fieldName: "user",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
   static final QueryField POST = QueryField(
     fieldName: "post",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
-  static final QueryField TYPE = QueryField(fieldName: "type");
-  static final QueryField RESULT = QueryField(fieldName: "result");
   static final QueryField TARGETUSER = QueryField(
     fieldName: "targetUser",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
+  static final QueryField TYPE = QueryField(fieldName: "type");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Report";
-    modelSchemaDefinition.pluralName = "Reports";
+    modelSchemaDefinition.name = "NotInterested";
+    modelSchemaDefinition.pluralName = "NotInteresteds";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -201,64 +156,40 @@ class Report extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Report.REASON,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Report.DESCRIPTION,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Report.STATUS,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Report.USER,
+      key: NotInterested.USER,
       isRequired: false,
-      targetName: "reportUserId",
+      targetName: "notInterestedUserId",
       ofModelName: (User).toString()
     ));
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Report.POST,
+      key: NotInterested.POST,
       isRequired: false,
-      targetName: "reportPostId",
+      targetName: "notInterestedPostId",
       ofModelName: (Post).toString()
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Report.TYPE,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Report.RESULT,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Report.TARGETUSER,
+      key: NotInterested.TARGETUSER,
       isRequired: false,
-      targetName: "reportTargetUserId",
+      targetName: "notInterestedTargetUserId",
       ofModelName: (User).toString()
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: NotInterested.TYPE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }
 
-class _ReportModelType extends ModelType<Report> {
-  const _ReportModelType();
+class _NotInterestedModelType extends ModelType<NotInterested> {
+  const _NotInterestedModelType();
   
   @override
-  Report fromJson(Map<String, dynamic> jsonData) {
-    return Report.fromJson(jsonData);
+  NotInterested fromJson(Map<String, dynamic> jsonData) {
+    return NotInterested.fromJson(jsonData);
   }
 }

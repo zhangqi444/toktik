@@ -23,17 +23,23 @@ import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_inte
 import 'Comment.dart';
 import 'Like.dart';
 import 'Music.dart';
+import 'NotInterested.dart';
 import 'Post.dart';
 import 'Report.dart';
 import 'Share.dart';
 import 'User.dart';
 import 'View.dart';
+import 'ModelPostExConnection.dart';
+import 'PostEx.dart';
 
 export 'Comment.dart';
 export 'Like.dart';
 export 'ModelAttributeTypes.dart';
+export 'ModelPostExConnection.dart';
 export 'Music.dart';
+export 'NotInterested.dart';
 export 'Post.dart';
+export 'PostEx.dart';
 export 'Report.dart';
 export 'Share.dart';
 export 'User.dart';
@@ -41,50 +47,35 @@ export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "be4482ca50f941cd72f9e9296249b90d";
+  String version = "f0bb3430383986e9ec926e55824a7a45";
   @override
-  List<ModelSchema> modelSchemas = [Comment.schema, Like.schema, Music.schema, Post.schema, Report.schema, Share.schema, User.schema, View.schema];
+  List<ModelSchema> modelSchemas = [Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, User.schema, View.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
   
   ModelType getModelTypeByModelName(String modelName) {
     switch(modelName) {
-    case "Comment": {
+    case "Comment":
     return Comment.classType;
-    }
-    break;
-    case "Like": {
+    case "Like":
     return Like.classType;
-    }
-    break;
-    case "Music": {
+    case "Music":
     return Music.classType;
-    }
-    break;
-    case "Post": {
+    case "NotInterested":
+    return NotInterested.classType;
+    case "Post":
     return Post.classType;
-    }
-    break;
-    case "Report": {
+    case "Report":
     return Report.classType;
-    }
-    break;
-    case "Share": {
+    case "Share":
     return Share.classType;
-    }
-    break;
-    case "User": {
+    case "User":
     return User.classType;
-    }
-    break;
-    case "View": {
+    case "View":
     return View.classType;
-    }
-    break;
-    default: {
+    default:
     throw Exception("Failed to find model in model provider for model name: " + modelName);
-    }
     }
   }
 }

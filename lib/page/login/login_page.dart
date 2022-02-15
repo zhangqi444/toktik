@@ -1,11 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
-import 'package:toktik/enum/auth_navigation_argument.dart';
+import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
 import 'package:toktik/page/login/widget/login_subtitle_text_widget.dart';
@@ -15,6 +14,8 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
+
+import '../widget/spinner_widget.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -35,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   final MainPageScrollController mainPageController = Get.find();
   dynamic argumentData = Get.arguments;
   bool isButtonActived = false;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -42,16 +44,16 @@ class _LoginPageState extends State<LoginPage> {
 
     if (argumentData != null) {
       if (!isStringNullOrEmpty(
-              argumentData[AuthNavigationArgument.AUTH_STATUS]) &&
-          argumentData[AuthNavigationArgument.AUTH_STATUS] ==
+              argumentData[NavigationArgument.AUTH_STATUS]) &&
+          argumentData[NavigationArgument.AUTH_STATUS] ==
               AuthStatus.ALIAS_EXISTS.toShortString()) {
         title = "You've signed up already.";
         subtitle = "Enter your password to log in to your account.";
         isForSignedUpAccount = true;
       }
 
-      if (!isStringNullOrEmpty(argumentData[AuthNavigationArgument.ACCOUNT])) {
-        account = argumentData[AuthNavigationArgument.ACCOUNT];
+      if (!isStringNullOrEmpty(argumentData[NavigationArgument.ACCOUNT])) {
+        account = argumentData[NavigationArgument.ACCOUNT];
       }
     }
   }
@@ -63,26 +65,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    pwdField = TextField(
-      cursorColor: ColorRes.color_1,
-      cursorWidth: 2,
-      obscureText: true,
-      decoration:
-          InputDecoration(border: InputBorder.none, hintText: 'Password'),
-      onChanged: (text) {
-        pwd = text;
 
-        if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
-          setState(() {
-            isButtonActived = true;
-          });
-        } else {
-          setState(() {
-            isButtonActived = false;
-          });
-        }
-      },
-    );
+    if(isLoading) {
+
+    }
 
     return Scaffold(
       appBar: LoginAppBarWidget(title: "Log in"),
@@ -97,43 +83,67 @@ class _LoginPageState extends State<LoginPage> {
       ),
       child: Container(
         // margin: EdgeInsets.only(top: 91),
-        child: Column(
+        child: Stack(
           children: [
-            isForSignedUpAccount ? _getTitle() : Container(),
-            Container(
-              margin: EdgeInsets.only(left: 30, right: 30, top: 34),
-              child: LoginTextFieldWidget(
-                  readOnly: isForSignedUpAccount,
-                  initText: account,
-                  hintText: 'Email, phone or user name',
-                  onChanged: (text) {
-                    account = text;
-                    if (!isStringNullOrEmpty(account) &&
-                        !isStringNullOrEmpty(pwd)) {
-                      setState(() {
-                        isButtonActived = true;
-                      });
-                    } else {
-                      setState(() {
-                        isButtonActived = false;
-                      });
-                    }
-                  }),
+            Column(
+              children: [
+                isForSignedUpAccount ? _getTitle() : Container(),
+                Container(
+                  margin: EdgeInsets.only(left: 30, right: 30, top: 34),
+                  child: LoginTextFieldWidget(
+                      readOnly: isForSignedUpAccount,
+                      initText: account,
+                      hintText: 'Email, phone or user name',
+                      onChanged: (text) {
+                        account = text;
+                        if (!isStringNullOrEmpty(account) &&
+                            !isStringNullOrEmpty(pwd)) {
+                          setState(() {
+                            isButtonActived = true;
+                          });
+                        } else {
+                          setState(() {
+                            isButtonActived = false;
+                          });
+                        }
+                      }),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 30, right: 30),
+                  child: LoginTextFieldWidget(
+                      readOnly: isForSignedUpAccount,
+                      initText: pwd,
+                      hintText: 'Password',
+                      onChanged: (text) {
+                        pwd = text;
+                        if (!isStringNullOrEmpty(account) &&
+                            !isStringNullOrEmpty(pwd)) {
+                          setState(() {
+                            isButtonActived = true;
+                          });
+                        } else {
+                          setState(() {
+                            isButtonActived = false;
+                          });
+                        }
+                      }),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                _getBottomLayout(context),
+                SizedBox(
+                  height: 20,
+                ),
+                _getLogin(context),
+              ],
             ),
-            SizedBox(
-              height: 10,
-            ),
-            _getPwdTextField(),
-            SizedBox(
-              height: 10,
-            ),
-            _getBottomLayout(context),
-            SizedBox(
-              height: 20,
-            ),
-            _getLogin(context),
+            SpinnerWidget(isLoading)
           ],
-        ),
+        )
       ),
     );
   }
@@ -152,19 +162,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _getPwdTextField() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.only(left: 30, right: 30),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: pwdField,
-    );
-  }
-
   _getLogin(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 30, right: 30),
@@ -173,6 +170,7 @@ class _LoginPageState extends State<LoginPage> {
       child: LoginPrimaryButtonWidget(
         text: 'Log in',
         onPressed: () async {
+          isLoading = true;
           if (!isStringNullOrEmpty(account) && !isStringNullOrEmpty(pwd)) {
             String? status = await loginController.login(
                 account, pwd, EmailValidator.validate(account!));
@@ -195,6 +193,7 @@ class _LoginPageState extends State<LoginPage> {
               errorMessage = 'Check your info and try again.';
             });
           }
+          isLoading = false;
         },
         buttonEnabled: isButtonActived,
       ),

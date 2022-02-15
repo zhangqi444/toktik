@@ -39,11 +39,11 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
         ),
       child: Column(
         children: [
-          // TODO: disable video right widget for now
-          // _getHeader(),
-          // SizedBox(height: 25,),
+          _getHeader(),
+          SizedBox(height: 25,),
           _getLikeButton(),
           SizedBox(height: 20,),
+          // TODO: disable video right widget comment for now
           // _getCommentButton(),
           // SizedBox(height: 20,),
           _getShareButton(),
@@ -51,6 +51,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
       ),
     );
   }
+
   //头像
   _getHeader() {
     String? headerUrl = '';
@@ -93,6 +94,7 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
       ),
     );
   }
+
   //获取点赞按钮
   _getLikeButton() {
     int? likeCount = widget.video!.likeCount! < 0 ? 0 : widget.video!.likeCount;

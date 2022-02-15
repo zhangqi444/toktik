@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
-import 'package:toktik/enum/auth_navigation_argument.dart';
+import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
+import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
 class CreateUsernamePage extends StatefulWidget {
   CreateUsernamePage({Key? key}) : super(key: key);
@@ -36,9 +37,9 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
     super.initState();
     if(argumentData != null) {
       setState(() {
-        errorMessage = argumentData[AuthNavigationArgument.ERROR_MESSAGE];
-        initText = argumentData[AuthNavigationArgument.USERNAME];
-        username = argumentData[AuthNavigationArgument.USERNAME];
+        errorMessage = argumentData[NavigationArgument.ERROR_MESSAGE];
+        initText = argumentData[NavigationArgument.USERNAME];
+        username = argumentData[NavigationArgument.USERNAME];
       });
     }
   }
@@ -135,7 +136,8 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
     return Container(
       height: 42,
       width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
+      child: LoginPrimaryButtonWidget(
+        text: 'Next',
         onPressed: !buttonEnable ? () {} : () async {
           String? userId = await userController.loadUserInfoExByUsername(username);
           if(!isStringNullOrEmpty(userId)) {
@@ -146,18 +148,12 @@ class _CreateUsernamePageState extends State<CreateUsernamePage> {
             setState(() {
               errorMessage = "";
             });
-            Get.toNamed(Routers.createPassword, arguments: { AuthNavigationArgument.USERNAME: username });
+            Get.toNamed(Routers.createPassword, arguments: { NavigationArgument.USERNAME: username });
           }
         },
-        child: Text(
-          'Next',
-          style: buttonEnable
-              ? TextStyle(color: Color(0xffFFFFFF), fontSize: 14)
-              : TextStyle(color: Color(0xffAAAAAA), fontSize: 14),
-        ),
-        color: buttonEnable ? Color(0xff39CBE3) : Color(0xffEEEEEE),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        buttonEnabled: buttonEnable,
       ),
     );
   }
 }
+

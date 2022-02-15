@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/controller/self_controller.dart';
-import 'package:toktik/enum/auth_navigation_argument.dart';
+import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:toktik/util/string_util.dart';
+import 'package:toktik/page/login/widget/login_text_field_widget.dart';
+import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
 class SignUpEmailPage extends StatefulWidget {
   SignUpEmailPage({Key? key}) : super(key: key);
@@ -26,15 +28,16 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
   String? username;
   String? password;
   String? errorMessage;
+  bool isButtonActived = false;
   SelfController loginController = Get.put(SelfController());
   dynamic argumentData = Get.arguments;
 
   @override
   void initState() {
     super.initState();
-    if(argumentData != null) {
-      username = argumentData[AuthNavigationArgument.USERNAME];
-      password = argumentData[AuthNavigationArgument.PASSWORD];
+    if (argumentData != null) {
+      username = argumentData[NavigationArgument.USERNAME];
+      password = argumentData[NavigationArgument.PASSWORD];
     }
   }
 
@@ -79,10 +82,27 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       ),
       child: Container(
         height: 300,
-        margin: EdgeInsets.only(top: 91),
+        margin: EdgeInsets.only(top: 57),
         child: Column(
           children: [
-            _getAccountTextField(),
+            Container(
+              margin: EdgeInsets.only(left: 30, right: 30),
+              child: LoginTextFieldWidget(
+                  initText: email,
+                  hintText: 'Email address',
+                  onChanged: (text) {
+                    email = text;
+                    if (!isStringNullOrEmpty(email)) {
+                      setState(() {
+                        isButtonActived = true;
+                      });
+                    } else {
+                      setState(() {
+                        isButtonActived = false;
+                      });
+                    }
+                  }),
+            ),
             !isStringNullOrEmpty(errorMessage)
                 ? LoginErrorMessageWidget(text: errorMessage)
                 : SizedBox(height: 10),
@@ -109,14 +129,17 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       child: TextFormField(
         cursorColor: ColorRes.color_1,
         cursorWidth: 2,
-        decoration: InputDecoration(border: InputBorder.none, hintText: 'Email address'),
+        decoration: InputDecoration(
+            border: InputBorder.none, hintText: 'Email address'),
         onChanged: (text) {
           email = text;
           setState(() {
             errorMessage = '';
           });
         },
-        validator: (value) => EmailValidator.validate(value!) ? null : "Please enter a valid email address.",
+        validator: (value) => EmailValidator.validate(value!)
+            ? null
+            : "Please enter a valid email address.",
       ),
     );
   }
@@ -126,45 +149,48 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       margin: EdgeInsets.only(left: 30, right: 30),
       height: 50,
       width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
+      child: LoginPrimaryButtonWidget(
+        text: 'Next',
         onPressed: () async {
-          setState(() { errorMessage = ''; });
+          setState(() {
+            errorMessage = '';
+          });
           if (!EmailValidator.validate(email!)) {
             setState(() {
-              errorMessage = 'The email address is invalid, please check and try again.';
+              errorMessage =
+                  'The email address is invalid, please check and try again.';
             });
             return;
           }
 
-          String? status = await loginController.registerByEmail(email, username, password, password);
-          if(status == AuthStatus.SIGN_UP_DONE.toShortString()) {
-            Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
-          } else if(status == AuthStatus.USERNAME_EXISTS.toShortString()) {
+          String? status = await loginController.registerByEmail(
+              email, username, password, password);
+          if (status == AuthStatus.SIGN_UP_DONE.toShortString()) {
+            Get.offNamedUntil(
+                Routers.login, ModalRoute.withName(Routers.scroll));
+          } else if (status == AuthStatus.USERNAME_EXISTS.toShortString()) {
             Get.until(ModalRoute.withName(Routers.signUp));
             Get.toNamed(Routers.createUsername, arguments: {
-              AuthNavigationArgument.ERROR_MESSAGE: 'The username is not valid or already existing, please try another one.',
-              AuthNavigationArgument.USERNAME: username
+              NavigationArgument.ERROR_MESSAGE:
+                  'The username is not valid or already existing, please try another one.',
+              NavigationArgument.USERNAME: username
             });
-          } else if(status == AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
+          } else if (status ==
+              AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
             Get.toNamed(Routers.verificationCode, arguments: {
-              AuthNavigationArgument.DESTINATION: email,
-              AuthNavigationArgument.USERNAME: username,
-              AuthNavigationArgument.PASSWORD: password,
-              AuthNavigationArgument.EMAIL: email,
+              NavigationArgument.DESTINATION: email,
+              NavigationArgument.USERNAME: username,
+              NavigationArgument.PASSWORD: password,
+              NavigationArgument.EMAIL: email,
             });
           } else {
             setState(() {
-              errorMessage = 'Failed to send verification code, please try again.';
+              errorMessage =
+                  'Failed to send verification code, please try again.';
             });
           }
-
         },
-        child: Text(
-          'Sign Up',
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        color: ColorRes.color_3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        buttonEnabled: isButtonActived,
       ),
     );
   }

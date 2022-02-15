@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:toktik/controller/post_controller.dart';
 import 'package:toktik/enum/report.dart';
+
+import '../../controller/not_interested_controller.dart';
+import '../../controller/report_controller.dart';
 
 class VideoShareWidget extends StatefulWidget {
   var video;
-  VideoShareWidget({Key? key, this.video}) : super(key: key);
+  Function? onNotInterested;
+  VideoShareWidget({Key? key, this.video, this.onNotInterested}) : super(key: key);
 
   @override
   _VideoShareWidgetState createState() {
@@ -16,7 +19,8 @@ class VideoShareWidget extends StatefulWidget {
 }
 
 class _VideoShareWidgetState extends State<VideoShareWidget> {
-  PostController _postController = Get.put(PostController());
+  ReportController _reportController = Get.put(ReportController());
+  NotInterestedController _notInterestedController = Get.put(NotInterestedController());
 
   //私信好友名字
   List<String> nameList = [
@@ -56,9 +60,10 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   List<Map<String, dynamic>> actions = [
       {
         "text": 'Report',
-        "img": 'assets/images/share_action_jubao.png',
-        "onPressed": (video, postController) async {
-          await postController.reportPost(video.id, ReportReason.OTHER);
+        "img": 'assets/images/share_action_report.png',
+        "onPressed": (video, ReportController reportController, notInterestedController, widget, context) async {
+          await reportController.reportPost(video.id, ReportReason.OTHER);
+          Navigator.pop(context);
           EasyLoading.showSuccess("Thanks for reporting.");
         }
       },
@@ -70,9 +75,20 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
     // '复制链接',
     // '抖音码',
       {
+        "text": 'Not interested',
+        "img": 'assets/images/share_action_not_interested.webp',
+        "onPressed": (video, reportController, notInterestedController, widget, context) async {
+          var result = await notInterestedController.notInterestedPost(video.id);
+          if(result != null) {
+            Navigator.pop(context);
+            widget.onNotInterested?.call();
+          }
+        }
+      },
+      {
         "text":'Share',
         "img": 'assets/images/share_action_share.png',
-        "onPressed": (video, postController) {
+        "onPressed": (video) {
           // TO customize the bottomsheet with sharing target, we need to rely on this,
           // https://www.youtube.com/watch?v=bWehAFTFc9o
           // https://pub.dev/packages/url_launcher
@@ -206,7 +222,9 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.transparent,
                 ),
-                onPressed: actions[index]['onPressed'] != null ? () => actions[index]['onPressed'](widget.video, _postController) : (){},
+                onPressed: actions[index]['onPressed'] != null
+                    ? () => actions[index]['onPressed'](widget.video, _reportController, _notInterestedController, widget, context)
+                    : (){},
                 child: Column(
                   children: [
                     CircleAvatar(

@@ -35,9 +35,9 @@ ReportRequest $ReportRequestFromJson(Map<String, dynamic> json) {
 	if (reportUserId != null) {
 		reportRequest.reportUserId = reportUserId;
 	}
-	final String? reportReporterId = jsonConvert.convert<String>(json['reportReporterId']);
-	if (reportReporterId != null) {
-		reportRequest.reportReporterId = reportReporterId;
+	final String? reportTargetUserId = jsonConvert.convert<String>(json['reportTargetUserId']);
+	if (reportTargetUserId != null) {
+		reportRequest.reportTargetUserId = reportTargetUserId;
 	}
 	return reportRequest;
 }
@@ -52,6 +52,6 @@ Map<String, dynamic> $ReportRequestToJson(ReportRequest entity) {
 	data['result'] = entity.result;
 	data['reportPostId'] = entity.reportPostId;
 	data['reportUserId'] = entity.reportUserId;
-	data['reportReporterId'] = entity.reportReporterId;
+	data['reportTargetUserId'] = entity.reportTargetUserId;
 	return data;
 }

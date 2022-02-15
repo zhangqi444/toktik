@@ -20,6 +20,7 @@ import 'package:toktik/model/response/follow_response.dart';
 import 'package:toktik/model/response/like_response.dart';
 import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/model/response/logout_response.dart';
+import 'package:toktik/model/response/not_interested_response.dart';
 import 'package:toktik/model/response/publish_feed_response.dart';
 import 'package:toktik/model/response/register_response.dart';
 import 'package:toktik/model/response/report_response.dart';
@@ -44,6 +45,8 @@ import 'package:toktik/net/http_constant.dart';
 import 'package:toktik/util/sp_util.dart';
 
 import '../model/comment_model.dart';
+import '../model/response/get_current_user_response.dart';
+import '../util/string_util.dart';
 
 class Api{
   /// ----------------------------------接口api--------------------------------------------------------
@@ -111,13 +114,19 @@ class Api{
     }
   }
 
-  static Future<LoginResponse?> getCurrentUser() async {
+  static Future<GetCurrentUserResponse?> getCurrentUser() async {
+    Map<String, dynamic> result = {};
     try {
-      var result = await Amplify.Auth.getCurrentUser();
-      return result != null ? LoginResponse.fromJson({}) : null;
+      var res = await Amplify.Auth.getCurrentUser();
+      result['userId'] = res.userId;
+      result['username'] = res.username;
     } on AuthException catch (e, stacktrack) {
-      print("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
+      if(e is SignedOutException) {
+        result["status"] = AuthStatus.SIGNED_OUT_UNEXPECTED.toShortString();
+      }
+      debugPrint("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
     }
+    return GetCurrentUserResponse.fromJson(result);
   }
 
   static Future<RegisterResponse?> resendSignUpCode(String username) async{
@@ -285,7 +294,7 @@ class Api{
           { 'filter': { "username": { "eq": username } } },
           'listUsers'
       );
-      return _parseUsers(response['items'], {username: username});
+      return _parseUsers(response['items']?? [], {username: username});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
@@ -312,8 +321,16 @@ class Api{
 
   static Future<UserInfoExResponse?> getUserInfoEx(String? id) async{
     try {
-      List<User> users = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
-      return _parseUsers(users, {id: id});
+      var response = await _query(
+          '''query GetUsers(\$id: ID!) {
+            getUser(id: \$id) {
+              id username email phoneNumber portrait nickname gender bio city birth
+            }
+          }''',
+          { 'id': id },
+          'getUser'
+      );
+      return _parseUsers([response], {id: id});
     } catch (e, stacktrace) {
       print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
     }
@@ -427,7 +444,10 @@ class Api{
         } else {
           // TODO: remove if the sign in status is required for like
           post['isLiked'] = false;
-          if(localPosts != null && localPosts[post['id']] != null && localPosts[post['id']]['isLiked']['value'] != null) {
+          if(localPosts != null
+              && localPosts[post['id']] != null
+              && localPosts[post['id']]['isLiked'] != null
+              && localPosts[post['id']]['isLiked']['value'] != null) {
             post['isLiked'] = localPosts[post['id']]['isLiked']['value'];
           }
         }
@@ -524,22 +544,66 @@ class Api{
     }
   }
 
+  static Future<NotInterestedResponse?> notInterested(String userId, {String? postId="", String? targetUserId=""}) async{
+    try {
+      var result;
+      result = await _mutation(
+          '''mutation CreateNotInterested(\$input: CreateNotInterestedInput!) {
+            createNotInterested(input: \$input) { id }
+          }''',
+          {
+            'input': {
+              'notInterestedPostId': postId,
+              'notInterestedUserId': userId,
+              'notInterestedTargetUserId': targetUserId,
+            },
+          },
+          'createNotInterested'
+      );
+
+      // TODO: in short term, block the content from local only
+      if(!isStringNullOrEmpty(postId)) {
+        var localPosts = await SPUtil.getString(SPKeys.POSTS);
+        localPosts = localPosts != null ? jsonDecode(localPosts) : {};
+        if (localPosts == null) localPosts = {};
+        localPosts[postId] = { "isNotInterested": { "id": postId}};
+        SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
+        result = localPosts[postId]["isNotInterested"];
+      }
+
+      if(!isStringNullOrEmpty(targetUserId)) {
+        var localUsers = await SPUtil.getString(SPKeys.USERS);
+        localUsers = localUsers != null ? jsonDecode(localUsers) : {};
+        if (localUsers == null) localUsers = {};
+        localUsers[targetUserId] = { "isNotInterested": { "id": targetUserId}};
+        SPUtil.set(SPKeys.USERS, jsonEncode(localUsers));
+        result = localUsers[targetUserId]["isNotInterested"];
+      }
+
+      return NotInterestedResponse.fromJson(result);
+    } catch (e, stacktrace) {
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+    }
+  }
+
   static Future<ReportResponse?> report(ReportRequest request) async {
     try {
+      var input = {
+        'description': request.description?? '',
+        'type': request.type?? '',
+        'reason': request.reason?? '',
+        'reportUserId': request.reportUserId,
+        'status': request.status?? '',
+      };
+      if(request.reportPostId != null) input['reportPostId'] = request.reportPostId!;
+      if(request.reportTargetUserId != null) input['reportTargetUserId'] = request.reportTargetUserId!;
+
       var report = await _mutation(
           '''mutation CreateReport(\$input: CreateReportInput!) {
               createReport(input: \$input) { id result }
             }''',
           {
-            'input': {
-              'description': request.description?? '',
-              'type': request.type?? '',
-              'reason': request.reason?? '',
-              'reportPostId': request.reportPostId?? '',
-              'reportUserId': request.reportUserId?? '',
-              'reportReporterId': request.reportReporterId?? '',
-              'status': request.status?? '',
-            },
+            'input': input,
           },
           'createReport'
       );

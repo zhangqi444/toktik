@@ -8,5 +8,6 @@ class SPKeys{
   static const selfUserInfoEmail = 'selfUserInfoEmail';
   static const selfUserInfoPhoneNumber = 'selfUserInfoPhoneNumber';
 
-  static const POSTS = 'posts';
+  static const POSTS = 'POSTS';
+  static const USERS = 'USERS';
 }
