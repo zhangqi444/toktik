@@ -78,6 +78,23 @@ import amplify_core
                 }
             }
             return
+        case "convertSpeechToText":
+            let options = PredictionsSpeechToTextRequest.Options(
+                defaultNetworkPolicy: .auto,
+                language: .usEnglish,
+                pluginOptions: nil
+            )
+
+            Amplify.Predictions.convert(speechToText: URL(string: "http://localhost:3000/audio-cut.wav")!, options: options) { event in
+                switch event {
+                case let .success(tResult):
+                    print("success \(tResult.transcription)")
+                    result(tResult.transcription);
+                case let .failure(tError):
+                    print("hmm \(tError)")
+                    result("")
+                }
+            }
         default:
             result(FlutterMethodNotImplemented);
         }

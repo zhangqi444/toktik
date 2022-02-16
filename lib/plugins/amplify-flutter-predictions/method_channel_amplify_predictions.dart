@@ -20,4 +20,23 @@ class AmplifyPredictionsMethodChannel {
       print('hmm $e');
     }
   }
+
+  Future<String> convertSpeechToText() async {
+    try {
+      String? transcribedText =
+          await _channel.invokeMethod<String>('convertSpeechToText');
+      return transcribedText ?? "";
+    } on PlatformException catch (e) {
+      if (e.code == "AmplifyAlreadyConfiguredException") {
+        throw AmplifyAlreadyConfiguredException(
+            AmplifyExceptionMessages.alreadyConfiguredDefaultMessage,
+            recoverySuggestion:
+                AmplifyExceptionMessages.alreadyConfiguredDefaultSuggestion);
+      } else {
+        throw AmplifyException.fromMap(Map<String, String>.from(e.details));
+      }
+    } catch (e) {
+      return "";
+    }
+  }
 }

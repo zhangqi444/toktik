@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:toktik/page/feed_publish/feed_draft_widget.dart';
 import 'package:toktik/page/feed_publish/feed_post_widget.dart';
 import 'package:toktik/page/feed_publish/feed_transcript_selection_widget.dart';
+import 'package:toktik/plugins/amplify-flutter-predictions/amplify_predictions.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -160,8 +161,15 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
         return podcastEpisode != null
             ? FeedDraftWidget(
                 onNext: () {
-                  setState(() {
-                    currentScreenIdx++;
+                  AmplifyPredictions.instance
+                      .convertSpeechToText()
+                      .then((value) {
+                    print('transcription $value');
+                    setState(() {
+                      currentScreenIdx++;
+                    });
+                  }).catchError((error) {
+                    print('transcription $error');
                   });
                 },
                 podcastName: podcastEpisode!['trackName'],
