@@ -34,7 +34,11 @@ dependencies:
   cached_network_image: ^3.0.0
   event_bus: ^2.0.0
   # 相机插件，还在开发中
-  camera: ^0.8.1
+  camera:
+    git:
+      url: https://github.com/flutter/plugins
+      path: packages/camera/camera
+      ref: 9e46048ad2e1f085c1e8f6c77391fa52025e681f
   # 图片选择
   image_picker: ^0.8.2
   # 获取视频缩略图
