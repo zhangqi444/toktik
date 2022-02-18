@@ -11,6 +11,8 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../enum/navigation_argument.dart';
+
 ///发布视频页面
 class FeedPublishPage extends StatefulWidget {
   FeedPublishPage({
@@ -39,7 +41,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
   @override
   void initState() {
     super.initState();
-    podcastUrl = Get.parameters['podcastUrl']!;
+    podcastUrl = Get.parameters[NavigationArgument.PODCAST_URL.toShortString()]!;
     _getDataFromPodcastUrl();
     // _getCoverImgPath();
   }

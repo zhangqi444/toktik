@@ -1,3 +1,4 @@
+// TODO: migrate all arguments to parameters when invoke Get.toNamedxxx()
 enum NavigationArgument {
   // General
   ID,
@@ -16,8 +17,11 @@ enum NavigationArgument {
   // User
   IS_LOGIN_USER,
 
-  // WEBVIEW
+  // Webview
   URL,
+
+  // Feed Publish
+  PODCAST_URL
 }
 
 extension ParseToString on NavigationArgument {
