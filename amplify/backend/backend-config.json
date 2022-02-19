@@ -123,6 +123,20 @@
           ]
         }
       ]
+    },
+    "transcribeAudioPart": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "toktikgraphqlLambdaLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "predictions": {
