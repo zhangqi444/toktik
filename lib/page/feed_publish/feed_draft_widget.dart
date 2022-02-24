@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:toktik/res/colors.dart';
 
@@ -8,6 +10,7 @@ class FeedDraftWidget extends StatefulWidget {
   final int? podcastLengthMillis;
   final String? podcastDescription;
   final String? podcastReleaseDate;
+  final String? podcastThumbnail;
 
   FeedDraftWidget({
     required this.onNext,
@@ -16,6 +19,7 @@ class FeedDraftWidget extends StatefulWidget {
     this.podcastLengthMillis,
     this.podcastDescription,
     this.podcastReleaseDate,
+    this.podcastThumbnail,
   });
 
   @override
@@ -25,6 +29,9 @@ class FeedDraftWidget extends StatefulWidget {
 }
 
 class _FeedDraftWidgetState extends State<FeedDraftWidget> {
+  TextEditingController timeTextEditingController =
+      TextEditingController(text: "00:00:00");
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -54,7 +61,7 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
           Row(
             children: [
               Image.network(
-                "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510_1280.jpg",
+                widget.podcastThumbnail ?? "",
                 width: 45,
                 height: 45,
                 fit: BoxFit.contain,
@@ -138,14 +145,18 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
             height: 15,
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(23, 14, 23, 14),
+            padding: EdgeInsets.fromLTRB(0, 14, 0, 14),
+            width: 108,
             decoration: BoxDecoration(
               color: Color(0xffeeeeee),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Text(
-              "00:00:00",
+            child: TextField(
+              controller: timeTextEditingController,
+              decoration: InputDecoration.collapsed(hintText: "00:00:00"),
               style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+              // inputFormatters: [FilteringTextInputFormatter.allow(r'[0-9]')],
             ),
           ),
         ],
@@ -170,50 +181,17 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                 color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
           ),
           onPressed: () {
-            widget.onNext();
+            int inputTimeSeconds =
+                _convertInputTimeToSeconds(timeTextEditingController.text);
+            int startTimeSeconds = max(inputTimeSeconds - 180, 0);
+            int lengthSeconds = min(startTimeSeconds + 180, inputTimeSeconds);
+            widget.onNext(startTimeSeconds, lengthSeconds);
           },
           style: TextButton.styleFrom(
             backgroundColor: Color(0xff39CBE3),
           ),
         ),
       ),
-      // child: InkWell(
-      //   onTap: () async {
-      //     VideoPlayerValue videoValue =
-      //         await VideoUtil.getVideoValue(videoFile);
-
-      //     print(
-      //         '发布视频时长:${videoValue.duration.inSeconds}  width:${videoValue.size.width}  height:${videoValue.size.height}');
-      //     bool? videoUpload =
-      //         await _uploadController.uploadSingleFile('mp4', videoFile);
-      //     String? videoUrl =
-      //         _uploadController.uploadResponse.tokens![0]!.effectUrl;
-      //     print('发布视频：$videoUpload 地址:$videoUrl');
-      //     bool? imgUpload = await _uploadController.uploadSingleFile(
-      //         CameraUtil.getImgSuffix(coverPath!), File(coverPath!));
-      //     String? coverUrl =
-      //         _uploadController.uploadResponse.tokens![0]!.effectUrl;
-      //     print('发布封面图：$imgUpload 地址:$coverUrl');
-      //     _feedController.publishFeed(
-      //         _editingController.text,
-      //         videoUrl,
-      //         coverUrl,
-      //         videoValue.duration.inSeconds.toInt(),
-      //         videoValue.size.width.toInt(),
-      //         videoValue.size.height.toInt());
-      //   },
-      //   child: Container(
-      //     height: 60,
-      //     decoration: BoxDecoration(
-      //         color: ColorRes.color_3,
-      //         borderRadius: BorderRadius.circular(5)),
-      //     alignment: Alignment.center,
-      //     child: Text(
-      //       '发布',
-      //       style: TextStyle(color: Colors.white, fontSize: 18),
-      //     ),
-      //   ),
-      // )
     );
   }
 
@@ -223,5 +201,13 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
     if (isoDate == null) return "";
     DateTime date = DateTime.parse(isoDate);
     return date.toString();
+  }
+
+  int _convertInputTimeToSeconds(String text) {
+    List<int> timeSegments = text.split(":").map((s) => int.parse(s)).toList();
+    if (timeSegments[1] >= 60 || timeSegments[2] >= 60) {
+      throw ArgumentError.value("Invalid time value");
+    }
+    return timeSegments[0] * 3600 + timeSegments[1] * 60 + timeSegments[2];
   }
 }

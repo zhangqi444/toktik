@@ -169,7 +169,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
       case 0:
         return podcastEpisode != null
             ? FeedDraftWidget(
-                onNext: () async {
+                onNext: (int startTime, int length) async {
                   //
                   CognitoAuthSession session =
                       await Amplify.Auth.fetchAuthSession(
@@ -184,7 +184,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
                       Lambda(region: "us-west-2", credentials: cred);
 
                   List<int> list =
-                      '{"arguments": { "input": {"audioUrl": "https://rss.art19.com/episodes/fbc430c2-546e-424f-9528-ce3588fed951.mp3" }}}'
+                      '{"arguments": { "input": {"audioUrl": "${podcastEpisode!["episodeUrl"]}", "startTime": $startTime, "length": $length }}}'
                           .codeUnits;
                   print("start lambda");
                   InvocationResponse lambdaResponse = await service.invoke(
@@ -192,9 +192,17 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
                       invocationType: InvocationType.requestResponse,
                       payload: Uint8List.fromList(list));
 
+                  var respData = json
+                      .decode(String.fromCharCodes(lambdaResponse.payload!));
+                  print("respData $respData");
+                  if (respData["error"] != null) {
+                    // TODO: show error dialog
+                    print(respData["error"]);
+                    return;
+                  }
+                  print(respData['subtitleFileUri']);
                   setState(() {
-                    this.subtitleFileUri = json.decode(String.fromCharCodes(
-                        lambdaResponse.payload!))['subtitleFileUri'];
+                    this.subtitleFileUri = respData['subtitleFileUri'];
                     currentScreenIdx++;
                   });
                 },
@@ -203,6 +211,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
                 podcastLengthMillis: podcastEpisode!['trackTimeMillis'],
                 podcastDescription: podcastEpisode!['description'],
                 podcastReleaseDate: podcastEpisode!['releaseDate'],
+                podcastThumbnail: podcastEpisode!['artworkUrl160'],
               )
             : null;
       case 1:
