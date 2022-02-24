@@ -667,6 +667,18 @@ class Api {
   }
 
   static Future<String> transcribeAudioPart(String audioUrl) async {
+    var result = await _mutation(
+        '''mutation TranscribeAudioPart(\$input: TranscribeAudioPartInput!) {
+            transcribeAudioPart(input: \$input) { subtitleFileUri }
+          }''',
+        {
+          'input': {
+            'audioUrl': audioUrl,
+          },
+        },
+        'transcribeAudioPart');
+
+    print(result);
     return "";
   }
 

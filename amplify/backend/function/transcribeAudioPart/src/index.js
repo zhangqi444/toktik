@@ -1,5 +1,5 @@
 var AWS = require("aws-sdk");
-var { https } = require("follow-redirects");
+const { exec } = require("child_process");
 var fs = require("fs");
 var path = require("path");
 const { default: transcribe } = require("./utils/transcribe");
@@ -8,22 +8,21 @@ const s3Client = new AWS.S3({
   region: "us-west-2",
 });
 
-const transcribeClient = new AWS.TranscribeService();
-
 var download = function (url, dest, cb) {
-  var file = fs.createWriteStream(dest);
-  var request = https
-    .get(url, function (response) {
-      response.pipe(file);
-      file.on("finish", function () {
-        file.close(cb); // close() is async, call cb after close completes.
-      });
-    })
-    .on("error", function (err) {
-      // Handle errors
-      fs.unlink(dest); // Delete the file async. (But we don't check the result)
-      if (cb) cb(err.message);
-    });
+  exec(
+    `/opt/bin/ffmpeg -ss 300 -i \"${url}\" -t 180 ${dest} -loglevel error`,
+    (err, stdout, stderr) => {
+      if (err) {
+        cb(err);
+        return;
+      }
+      if (stderr) {
+        cb(stderr);
+        return;
+      }
+      cb();
+    }
+  );
 };
 
 const uploadFile = (fileName, key, cb) => {
@@ -46,13 +45,19 @@ const uploadFile = (fileName, key, cb) => {
  */
 exports.handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
+  const {
+    arguments: {
+      input: { audioUrl },
+    },
+  } = event;
 
-  let fileExt = path.extname(event.audioUrl);
+  console.log("audioUrl", audioUrl);
+  let fileExt = path.extname(audioUrl);
   let s3Key = String(new Date().getTime()) + fileExt;
   let locallySavedAudioFileName = `/tmp/${s3Key}`;
 
   await new Promise((resolve, reject) => {
-    download(event.audioUrl, locallySavedAudioFileName, (error) => {
+    download(audioUrl, locallySavedAudioFileName, (error) => {
       if (error) {
         reject(error);
         return;
@@ -84,7 +89,19 @@ exports.handler = async (event) => {
     });
   });
 
-  console.log("hmm", transcribeData);
+  const subtitleFileUri =
+    transcribeData.TranscriptionJob.Subtitles.SubtitleFileUris[0];
+  if (subtitleFileUri) {
+    return {
+      statusCode: 200,
+      //  Uncomment below to enable CORS requests
+      //  headers: {
+      //      "Access-Control-Allow-Origin": "*",
+      //      "Access-Control-Allow-Headers": "*"
+      //  },
+      subtitleFileUri,
+    };
+  }
 
   return {
     statusCode: 200,
@@ -93,6 +110,6 @@ exports.handler = async (event) => {
     //      "Access-Control-Allow-Origin": "*",
     //      "Access-Control-Allow-Headers": "*"
     //  },
-    transcript: JSON.stringify("Hello from Lambda!"),
+    error: "Hmm",
   };
 };

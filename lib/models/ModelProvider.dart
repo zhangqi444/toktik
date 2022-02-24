@@ -31,6 +31,7 @@ import 'User.dart';
 import 'View.dart';
 import 'ModelPostExConnection.dart';
 import 'PostEx.dart';
+import 'TranscribeAudioPartResult.dart';
 
 export 'Comment.dart';
 export 'Like.dart';
@@ -42,12 +43,13 @@ export 'Post.dart';
 export 'PostEx.dart';
 export 'Report.dart';
 export 'Share.dart';
+export 'TranscribeAudioPartResult.dart';
 export 'User.dart';
 export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "f0bb3430383986e9ec926e55824a7a45";
+  String version = "5c00d0e90374969534313c5700c1f26b";
   @override
   List<ModelSchema> modelSchemas = [Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, User.schema, View.schema];
   static final ModelProvider _instance = ModelProvider();

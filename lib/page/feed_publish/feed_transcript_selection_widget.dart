@@ -1,10 +1,37 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:toktik/res/colors.dart';
 
-class FeedTranscriptSelectionWidget extends StatelessWidget {
+class FeedTranscriptSelectionWidget extends StatefulWidget {
   final Function onNext;
+  final String subtitleFileUri;
 
-  FeedTranscriptSelectionWidget({required this.onNext});
+  FeedTranscriptSelectionWidget(
+      {required this.onNext, required this.subtitleFileUri});
+
+  @override
+  _FeedTranscriptSelectionWidgetState createState() {
+    // TODO: implement createState
+    return _FeedTranscriptSelectionWidgetState();
+  }
+}
+
+class _FeedTranscriptSelectionWidgetState
+    extends State<FeedTranscriptSelectionWidget> {
+  String? subtitle;
+  @override
+  void initState() {
+    super.initState();
+
+    Dio dio = Dio();
+    dio.get<String>(widget.subtitleFileUri).then((response) {
+      setState(() {
+        subtitle = response.data;
+      });
+    }).catchError((error) {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +47,16 @@ class FeedTranscriptSelectionWidget extends StatelessWidget {
   Widget _topLayout(BuildContext context) {
     return Expanded(
         flex: 1,
-        child: Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Transcript goes here",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: ColorRes.light_foreground_color,
-                    fontWeight: FontWeight.w500),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              subtitle ?? "",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: ColorRes.light_foreground_color,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
         ));
   }
@@ -60,7 +84,7 @@ class FeedTranscriptSelectionWidget extends StatelessWidget {
                     fontWeight: FontWeight.w500),
               ),
               onPressed: () {
-                this.onNext();
+                widget.onNext();
               },
               style: TextButton.styleFrom(
                 backgroundColor: Color(0xff39CBE3),

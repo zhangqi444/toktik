@@ -5,7 +5,6 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.92",
-    "follow-redirects": "^1.14.9"
+    "@types/aws-lambda": "^8.10.92"
   }
 }

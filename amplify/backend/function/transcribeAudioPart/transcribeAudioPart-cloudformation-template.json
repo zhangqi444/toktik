@@ -170,21 +170,21 @@
               }
             },
             {
-                "Effect": "Allow",
-                "Action": [
-                    "s3:PutObject",
-                    "s3:PutObjectAcl",
-                    "s3:GetObject"
-                ],
-                "Resource": "arn:aws:s3:::toktik-transcription-testing/*"
+              "Effect": "Allow",
+              "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:GetObject"
+              ],
+              "Resource": "arn:aws:s3:::toktik-transcription-testing/*"
             },
             {
-                "Effect": "Allow",
-                "Action": [
-                    "transcribe:StartTranscriptionJob",
-                    "transcribe:GetTranscriptionJob"
-                ],
-                "Resource": "*"
+              "Effect": "Allow",
+              "Action": [
+                "transcribe:StartTranscriptionJob",
+                "transcribe:GetTranscriptionJob"
+              ],
+              "Resource": "*"
             }
           ]
         }

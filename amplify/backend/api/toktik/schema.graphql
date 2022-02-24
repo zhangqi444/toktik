@@ -334,7 +334,7 @@ input TranscribeAudioPartInput {
 }
 
 type TranscribeAudioPartResult {
-  transcript: String
+  subtitleFileUri: String
 }
 
 type Mutation {

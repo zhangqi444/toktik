@@ -1,12 +1,17 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify.dart';
+import 'package:aws_lambda_api/lambda-2015-03-31.dart' hide State;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:toktik/net/api.dart';
 import 'package:toktik/page/feed_publish/feed_draft_widget.dart';
 import 'package:toktik/page/feed_publish/feed_post_widget.dart';
 import 'package:toktik/page/feed_publish/feed_transcript_selection_widget.dart';
-import 'package:toktik/plugins/amplify-flutter-predictions/amplify_predictions.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -37,6 +42,8 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
 
   Map<String, dynamic>? podcastEpisode;
   Map<String, dynamic>? podcastCollection;
+
+  String? subtitleFileUri;
 
   @override
   void initState() {
@@ -162,16 +169,33 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
       case 0:
         return podcastEpisode != null
             ? FeedDraftWidget(
-                onNext: () {
-                  AmplifyPredictions.instance
-                      .convertSpeechToText()
-                      .then((value) {
-                    print('transcription $value');
-                    setState(() {
-                      currentScreenIdx++;
-                    });
-                  }).catchError((error) {
-                    print('transcription $error');
+                onNext: () async {
+                  //
+                  CognitoAuthSession session =
+                      await Amplify.Auth.fetchAuthSession(
+                          options: CognitoSessionOptions(
+                              getAWSCredentials: true)) as CognitoAuthSession;
+
+                  AwsClientCredentials cred = AwsClientCredentials(
+                      accessKey: session.credentials?.awsAccessKey ?? "",
+                      secretKey: session.credentials?.awsSecretKey ?? "",
+                      sessionToken: session.credentials?.sessionToken);
+                  final Lambda service =
+                      Lambda(region: "us-west-2", credentials: cred);
+
+                  List<int> list =
+                      '{"arguments": { "input": {"audioUrl": "https://rss.art19.com/episodes/fbc430c2-546e-424f-9528-ce3588fed951.mp3" }}}'
+                          .codeUnits;
+                  print("start lambda");
+                  InvocationResponse lambdaResponse = await service.invoke(
+                      functionName: "transcribeAudioPart-margit",
+                      invocationType: InvocationType.requestResponse,
+                      payload: Uint8List.fromList(list));
+
+                  setState(() {
+                    this.subtitleFileUri = json.decode(String.fromCharCodes(
+                        lambdaResponse.payload!))['subtitleFileUri'];
+                    currentScreenIdx++;
                   });
                 },
                 podcastName: podcastEpisode!['trackName'],
@@ -182,11 +206,15 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
               )
             : null;
       case 1:
-        return FeedTranscriptSelectionWidget(onNext: () {
-          setState(() {
-            currentScreenIdx++;
-          });
-        });
+        return subtitleFileUri != null
+            ? FeedTranscriptSelectionWidget(
+                onNext: () {
+                  setState(() {
+                    currentScreenIdx++;
+                  });
+                },
+                subtitleFileUri: subtitleFileUri!)
+            : null;
       case 2:
         return FeedPostWidget();
       default:
