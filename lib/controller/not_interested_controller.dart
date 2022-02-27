@@ -3,6 +3,7 @@ import 'package:toktik/model/response/not_interested_response.dart';
 import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
 
+import '../enum/notInterested.dart';
 import 'feed_controller.dart';
 
 class NotInterestedController extends GetxController{
@@ -12,7 +13,7 @@ class NotInterestedController extends GetxController{
 
   Future<NotInterestedResponse?> notInterestedPost(String postId) async {
     String userId = selfController.loginUserId.value;
-    NotInterestedResponse? result = await Api.notInterested(userId, postId: postId);
+    NotInterestedResponse? result = await Api.notInterested(userId, NotInterestedType.POST postId: postId);
     if(result == null) return null;
 
     feedController.removeFeedListList(postId);
@@ -21,7 +22,7 @@ class NotInterestedController extends GetxController{
 
   Future<NotInterestedResponse?> notInterestedUser(String targetUserId) async {
     String userId = selfController.loginUserId.value;
-    NotInterestedResponse? result = await Api.notInterested(userId, targetUserId: targetUserId);
+    NotInterestedResponse? result = await Api.notInterested(userId, NotInterestedType.USER targetUserId: targetUserId);
     if(result == null) return null;
 
     feedController.removeFeedListListByUser(targetUserId);

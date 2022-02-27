@@ -544,10 +544,9 @@ class Api{
     }
   }
 
-  static Future<NotInterestedResponse?> notInterested(String userId, {String? postId="", String? targetUserId=""}) async{
+  static Future<NotInterestedResponse?> notInterested(String userId, String type, {String? postId="", String? targetUserId=""}) async{
     try {
-      var result;
-      result = await _mutation(
+      var result = await _mutation(
           '''mutation CreateNotInterested(\$input: CreateNotInterestedInput!) {
             createNotInterested(input: \$input) { id }
           }''',
@@ -556,6 +555,7 @@ class Api{
               'notInterestedPostId': postId,
               'notInterestedUserId': userId,
               'notInterestedTargetUserId': targetUserId,
+              'type': type
             },
           },
           'createNotInterested'
