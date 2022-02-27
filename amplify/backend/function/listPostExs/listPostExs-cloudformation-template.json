@@ -276,6 +276,32 @@
             },
             "API_TOKTIK_GRAPHQLAPIKEYOUTPUT": {
               "Ref": "apitoktikGraphQLAPIKeyOutput"
+            },
+            "API_TOKTIK_NOTINTERESTEDTABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apitoktikGraphQLAPIIdOutput}:GetAtt:NotInterestedTable:Name"
+              }
+            },
+            "API_TOKTIK_NOTINTERESTEDTABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apitoktikGraphQLAPIIdOutput}:GetAtt:NotInterestedTable:Name"
+                    }
+                  }
+                ]
+              ]
             }
           }
         },
@@ -414,6 +440,62 @@
                         "Ref": "apitoktikGraphQLAPIIdOutput"
                       },
                       "/types/Query/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apitoktikGraphQLAPIIdOutput}:GetAtt:NotInterestedTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apitoktikGraphQLAPIIdOutput}:GetAtt:NotInterestedTable:Name"
+                        }
+                      },
+                      "/index/*"
                     ]
                   ]
                 }
