@@ -6,5 +6,9 @@ module.exports.constants = {
         SHARE: 'Share',
         COMMENT: 'Comment',
         USER: 'User',
+    },
+    NOT_INTERESTED_TYPE: {
+        USER: 'USER',
+        POST: 'POST',
     }
 };
