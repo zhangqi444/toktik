@@ -5,21 +5,23 @@ import 'package:toktik/res/colors.dart';
 
 class FeedDraftWidget extends StatefulWidget {
   final Function onNext;
-  final String? podcastName;
-  final String? podcastArtistName;
-  final int? podcastLengthMillis;
-  final String? podcastDescription;
-  final String? podcastReleaseDate;
-  final String? podcastThumbnail;
+  late final String podcastName;
+  late final String podcastArtistName;
+  late final int podcastLengthMillis;
+  late final String podcastDescription;
+  late final DateTime podcastReleaseDate;
+  late final String podcastThumbnail;
+  late final String podcastAudioUrl;
 
   FeedDraftWidget({
+    required this.podcastName,
+    required this.podcastArtistName,
+    required this.podcastLengthMillis,
+    required this.podcastDescription,
+    required this.podcastReleaseDate,
+    required this.podcastThumbnail,
+    required this.podcastAudioUrl,
     required this.onNext,
-    this.podcastName,
-    this.podcastArtistName,
-    this.podcastLengthMillis,
-    this.podcastDescription,
-    this.podcastReleaseDate,
-    this.podcastThumbnail,
   });
 
   @override
@@ -61,7 +63,7 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
           Row(
             children: [
               Image.network(
-                widget.podcastThumbnail ?? "",
+                widget.podcastThumbnail,
                 width: 45,
                 height: 45,
                 fit: BoxFit.contain,
@@ -73,14 +75,14 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.podcastName ?? "",
+                    widget.podcastName,
                     style: TextStyle(
                         fontSize: 18,
                         color: ColorRes.light_foreground_color,
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    widget.podcastArtistName ?? "",
+                    widget.podcastArtistName,
                     style: TextStyle(fontSize: 16, color: Color(0xff888888)),
                   )
                 ],
@@ -102,11 +104,11 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.podcastDescription ?? "",
+                      widget.podcastDescription,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 12),
                     ),
-                    Text(_formatUTCDate(widget.podcastReleaseDate),
+                    Text(widget.podcastReleaseDate.toString(),
                         style:
                             TextStyle(fontSize: 10, color: Color(0xff888888))),
                   ],
@@ -124,7 +126,7 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                     ],
                   ),
                   child: Text(
-                    "${this._convertMillisToMinutes(widget.podcastLengthMillis ?? 0).toString()} min",
+                    "${this._convertMillisToMinutes(widget.podcastLengthMillis).toString()} min",
                     style: TextStyle(fontSize: 10),
                   ),
                 ),
@@ -196,12 +198,6 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
   }
 
   int _convertMillisToMinutes(int millis) => millis ~/ 1000 ~/ 60;
-
-  String _formatUTCDate(String? isoDate) {
-    if (isoDate == null) return "";
-    DateTime date = DateTime.parse(isoDate);
-    return date.toString();
-  }
 
   int _convertInputTimeToSeconds(String text) {
     List<int> timeSegments = text.split(":").map((s) => int.parse(s)).toList();
