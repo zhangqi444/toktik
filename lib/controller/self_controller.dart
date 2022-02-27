@@ -141,8 +141,8 @@ class SelfController extends GetxController{
       loginUserId.value = selfUserInfo[SPKeys.selfUserInfoId];
       loginUserUsername.value = selfUserInfo[SPKeys.selfUserInfoUsername];
       loginUserToken.value = selfUserInfo[SPKeys.selfUserInfoToken];
-      loginUserEmail.value = selfUserInfo[SPKeys.selfUserInfoEmail];
-      loginUserPhoneNumber.value = selfUserInfo[SPKeys.selfUserInfoPhoneNumber];
+      loginUserEmail.value = selfUserInfo[SPKeys.selfUserInfoEmail]?? "";
+      loginUserPhoneNumber.value = selfUserInfo[SPKeys.selfUserInfoPhoneNumber]?? "";
 
       if (!isStringNullOrEmpty(loginUserId.value)) {
         UserInfoExResponse user = new UserInfoExResponse();

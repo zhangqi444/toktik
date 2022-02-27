@@ -62,7 +62,9 @@ class FeedController extends GetxController{
     String userId = _selfController.loginUserId.value;
     var result = await Api.getHotFeedList(cursor, count, userId);
     if(result != null){
-      hotFeedList.addAll(result.xList!.map((e) => e!.id));
+      hotFeedList.addAll(
+        result.xList!.where((e) => e!.id != null).map((e) => e!.id as String).toList()
+      );
       result.xList!.forEach((element) {
         feedListListMap[element!.id] = element;
       });

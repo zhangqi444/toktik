@@ -157,10 +157,10 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
         centerTitle:true,
       ),
       // stretchTriggerOffset:145,
-      onStretchTrigger:(){
+      onStretchTrigger: () async {
         print('onStretchTrigger');
         return;
-      } as Future<void> Function()?,
+      },
     );
   }
 
