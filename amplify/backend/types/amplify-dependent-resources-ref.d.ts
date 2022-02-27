@@ -46,11 +46,5 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string"
         }
-    },
-    "predictions": {
-        "toktikTranscription": {
-            "region": "string",
-            "language": "string"
-        }
     }
 }
