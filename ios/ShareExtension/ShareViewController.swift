@@ -36,18 +36,6 @@ class ShareViewController: UIViewController {
         self.dismissWithError()
     }
 
-//    override func isContentValid() -> Bool {
-//        // Do validation of contentText and/or NSExtensionContext attachments here
-//        return true
-//    }
-//
-//    override func didSelectPost() {}
-//
-//    override func configurationItems() -> [Any]! {
-//        // To add configuration options via table cells at the bottom of the sheet, return an array of SLComposeSheetConfigurationItem here.
-//        return []
-//    }
-
     private func handleUrl(url: URL) {
         self.sharedText.append(url.absoluteString)
         

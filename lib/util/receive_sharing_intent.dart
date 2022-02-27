@@ -1,10 +1,11 @@
 import 'package:flutter/services.dart';
+import 'package:toktik/common/configs.dart';
 
 class ReceiveSharingIntent {
-  static const _mChannel = const MethodChannel(
-      "com.bitom.mobile.breeze/receive-sharing-intent/method");
-  static const _eChannel = const EventChannel(
-      "com.bitom.mobile.breeze/receive-sharing-intent/event");
+  static const _mChannel =
+      const MethodChannel(RECEIVE_SHARING_INTENT_METHOD_CHANNEL);
+  static const _eChannel =
+      const EventChannel(RECEIVE_SHARING_INTENT_EVENT_CHANNEL);
 
   static Stream<String>? _streamLink;
 
