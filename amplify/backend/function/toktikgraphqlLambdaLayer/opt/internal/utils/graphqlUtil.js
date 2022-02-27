@@ -1,4 +1,6 @@
-module.exports.query = (data, queryName) => {
+const axios = require('axios');
+
+module.exports.query = async (data, queryName) => {
     const graphqlData = await axios({
         url: process.env.API_TOKTIK_GRAPHQLAPIENDPOINTOUTPUT,
         method: 'post',
