@@ -15,6 +15,7 @@ class UserController extends GetxController{
   MainPageScrollController mainPageController = Get.find();
 
   final userExMap = {}.obs;
+  final userVideoCoverList = {}.obs;
 
   final isLoginUser = true.obs;//是否是登录用户
 
@@ -74,6 +75,26 @@ class UserController extends GetxController{
     if(response != null) {
       userExMap[response.user!.id] = response;
       return response.user!.id;
+    }
+  }
+
+  // 获取用户视频列表
+  Future<void> getUserPostsListData(String id) async {
+    var result = await Api.getUserPostList(cursor, count, id);
+
+    if (result != null) {
+      // TODO：后续调通attachment转封面的问题
+      // userVideoMap[id] = result.xList;
+      userVideoCoverList[id] = [
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
+      ];
     }
   }
 

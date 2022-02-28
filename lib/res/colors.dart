@@ -11,6 +11,7 @@ class ColorRes{
   static const Color light_icon_color = Color.fromRGBO(42, 42, 42, 1);
   static const Color tab_bottom_border_color = Color.fromRGBO(42, 42, 42, 1);
   static const Color divider_color = Color.fromRGBO(238, 238, 238, 1);
+  static const Color cover_list_background_color = Color.fromRGBO(244, 244, 244, 1);
 
   static const Color light_foreground_color = Color(0xff2A2A2A);
   static const Color light_background_sub_color = Color(0xffAAAAAA);
