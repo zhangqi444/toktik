@@ -638,30 +638,7 @@ class Api {
             },
           },
           'createNotInterested');
-
-      // TODO: in short term, block the content from local only
-      if (!isStringNullOrEmpty(postId)) {
-        var localPosts = await SPUtil.getString(SPKeys.POSTS);
-        localPosts = localPosts != null ? jsonDecode(localPosts) : {};
-        if (localPosts == null) localPosts = {};
-        localPosts[postId] = {
-          "isNotInterested": {"id": postId}
-        };
-        SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
-        result = localPosts[postId]["isNotInterested"];
-      }
-
-      if (!isStringNullOrEmpty(targetUserId)) {
-        var localUsers = await SPUtil.getString(SPKeys.USERS);
-        localUsers = localUsers != null ? jsonDecode(localUsers) : {};
-        if (localUsers == null) localUsers = {};
-        localUsers[targetUserId] = {
-          "isNotInterested": {"id": targetUserId}
-        };
-        SPUtil.set(SPKeys.USERS, jsonEncode(localUsers));
-        result = localUsers[targetUserId]["isNotInterested"];
-      }
-
+          
       return NotInterestedResponse.fromJson(result);
     } catch (e, stacktrace) {
       print("Could not query server: " +
