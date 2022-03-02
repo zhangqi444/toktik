@@ -60,7 +60,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   List<Map<String, dynamic>> actions = [
       {
         "text": 'Report',
-        "img": 'assets/images/share_action_report.png',
+        "img": 'assets/images/video_share_widget/report.png',
         "onPressed": (video, ReportController reportController, notInterestedController, widget, context) async {
           await reportController.reportPost(video.id, ReportReason.OTHER);
           Navigator.pop(context);
@@ -76,7 +76,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
     // '抖音码',
       {
         "text": 'Not interested',
-        "img": 'assets/images/share_action_not_interested.webp',
+        "img": 'assets/images/video_share_widget/not_interested.png',
         "onPressed": (video, reportController, notInterestedController, widget, context) async {
           var result = await notInterestedController.notInterestedPost(video.id);
           if(result != null) {
@@ -86,8 +86,14 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
         }
       },
       {
-        "text":'Share',
-        "img": 'assets/images/share_action_share.png',
+        "text": 'Setting and privacy',
+        "img": 'assets/images/video_share_widget/setting.png',
+        "onPressed": (video, reportController, notInterestedController, widget, context) async {
+        }
+      },
+      {
+        "text": 'Share',
+        "img": 'assets/images/video_share_widget/share.png',
         "onPressed": (video) {
           // TO customize the bottomsheet with sharing target, we need to rely on this,
           // https://www.youtube.com/watch?v=bWehAFTFc9o
@@ -114,17 +120,22 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
     return Container(
       constraints: BoxConstraints(
         minHeight: 90, //设置最小高度（必要）
-        maxHeight: 160, //设置最大高度（必要）
+        maxHeight: 220, //设置最大高度（必要）
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white
       ),
       child: Column(
         children: [
           _getTitleLayout(),
-          SizedBox(height: 20,),
+          SizedBox(height: 10),
           // _getFriendsLayout(),
-          Divider(height: 0.5,color: Colors.grey,),
-          SizedBox(height: 9,),
+          // Divider(height: 0.5,color: Colors.grey,),
           // _getAppsLayout(),
           _getActionsLayout(),
+          SizedBox(height: 10),
+          Divider(height: 0.5,color: Colors.grey,),
+          _getBackLayout()
         ],
       ),
     );
@@ -137,18 +148,9 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
         alignment:Alignment.center,
         children: [
           Positioned(
-            left: 16,
             bottom: 0,
-            child: Text('Share to',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 14),),
-          ),
-          Positioned(
-              right: 16,
-              bottom: 0,
-              child: InkWell(
-                  onTap: (){
-                    Get.back();
-                  },
-                  child: Image.asset('assets/images/bg_cross.webp',width: 25,height: 25,))),
+            child: Text('Share',style: TextStyle(fontWeight: FontWeight.normal,color: Color(0xff000000),fontSize: 12),),
+          )
         ],
       ),
     );
@@ -212,15 +214,19 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   _getActionsLayout() {
     return Container(
       height: 80,
+      alignment:Alignment.centerLeft,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: List.generate(actions.length, (index) {
             return Container(
-              margin: EdgeInsets.only(left: 20),
+              width: 80,
+              margin: EdgeInsets.only(left: 0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.transparent,
+                  primary: Colors.white,
+                  elevation: 0
                 ),
                 onPressed: actions[index]['onPressed'] != null
                     ? () => actions[index]['onPressed'](widget.video, _reportController, _notInterestedController, widget, context)
@@ -228,12 +234,13 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
                 child: Column(
                   children: [
                     CircleAvatar(
-                        backgroundColor: Color(0x18181818),
+                        backgroundColor: Color(0xffffffff),
                         radius: 24,
-                        backgroundImage:AssetImage(actions[index]['img'])
+                        backgroundImage:AssetImage(actions[index]['img']),
+
                     ),
                     SizedBox(height: 5,),
-                    Text(actions[index]['text'], style: TextStyle(color: Colors.white,fontSize: 10),)
+                    Text(actions[index]['text'], style: TextStyle(color: Color(0xff5c5c5c),fontSize: 10),maxLines: 2,textAlign: TextAlign.center,)
                   ],
                 ),
               )
@@ -241,6 +248,17 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
           }
           ),
         ),
+      ),
+    );
+  }
+
+  _getBackLayout() {
+    return Container(
+      height: 30,
+      margin: EdgeInsets.only(top: 10),
+      child: TextButton(
+        child: Text('Cancel',style: TextStyle(color: Color(0xff2a2a2a), fontSize: 14),),
+        onPressed: () { Get.back(); },
       ),
     );
   }
