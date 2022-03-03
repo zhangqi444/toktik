@@ -461,6 +461,43 @@ class Api{
     }
   }
 
+  static Future<FeedListResponse?> getUserPostList(int? cursor,int limit, String userId) async{
+    try {
+      var response = await _query(
+          '''query ListPosts(\$filter: ModelPostFilterInput, \$limit: Int) {
+            listPosts(filter: \$filter, limit: \$limit) {
+              items {
+                id attachments music { id } text likeCount viewCount
+                user { id nickname username portrait }
+              }
+            }
+          }''',
+          { 'limit': limit, 'filter': { 'postUserId': { 'eq': userId} } },
+          'listPosts'
+      );
+
+      List posts = (response['items'] != null) ? (response['items']) : [];
+      posts = posts.where((f) => f['attachments'] != null).toList();
+      Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
+        post['content'] = {
+          'attachments': jsonDecode(post['attachments'])['data'],
+          'music': post['music'] != null ? post['music'] : null,
+          'text': post['text'],
+        };
+        post['likeCount'] = post['likeCount'] != null ? post['likeCount'] : 0;
+
+        return post;
+      }
+
+      var parsed = await Future.wait(posts.map((post) async => await convert(post)));
+
+      return FeedListResponse.fromJson({'list': parsed.toList()});
+    } catch (e, stacktrace) {
+      print("Fail to user list post: " + stacktrace.toString());
+    }
+  }
+
+
   static Future<dynamic> _mutation(document, variables, key) async {
     try {
       var operation = Amplify.API.mutate(

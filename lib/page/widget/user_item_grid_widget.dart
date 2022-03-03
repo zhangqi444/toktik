@@ -27,8 +27,8 @@ class _UserItemGridWidgetState extends State<UserItemGridWidget> {
           children: [
             Image.network(widget.gifUrl!,fit: BoxFit.cover,),
             Positioned(
-              left: 2,
-              bottom: 2,
+              right: 8,
+              bottom: 14,
               child: Row(
                 children: [
                   Image.asset('assets/images/hollow_heart.webp',width: 15,height: 15,),

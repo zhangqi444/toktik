@@ -6,7 +6,10 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
 class UserWorkListWidget extends StatefulWidget {
-  UserWorkListWidget({Key? key}) : super(key: key);
+  String? id;
+  UserWorkListWidget({ String? id }) {
+    this.id = id;
+  }
 
   @override
   _UserWorkListWidgetState createState() {
@@ -29,17 +32,19 @@ class _UserWorkListWidgetState extends State<UserWorkListWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorRes.color_1,
+      backgroundColor: ColorRes.cover_list_background_color,
       body: _getBody(context),
     );
   }
 
   _getBody(BuildContext context) {
-    List<UserWorkListList?> workList = _userController.userWorkList.value;
+    List<String> workList = _userController.userVideoCoverList[widget.id];
     if(null == workList || workList.length == 0){
       return Container();
     }else{
       return Container(
+        padding: EdgeInsets.only(top: 8),
+        color: ColorRes.cover_list_background_color,
         child: GridView.builder(
           //处理GridView顶部空白
           padding: EdgeInsets.zero,
@@ -52,12 +57,12 @@ class _UserWorkListWidgetState extends State<UserWorkListWidget> {
               //纵轴间距
               mainAxisSpacing: 1,
               //横轴间距
-              crossAxisSpacing: 1,
+              crossAxisSpacing: 5,
               //子组件宽高长度比例
-              childAspectRatio: 9/16),
+              childAspectRatio: 4/6),
           itemBuilder: (BuildContext context, int index) {
             return UserItemGridWidget(
-              url: workList[index]!.content!.attachments![0]!.cover,
+              url: workList[index],
               onTap: (){
                 // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoListPage(videoList: _userModel.worksVideo,)));
               },

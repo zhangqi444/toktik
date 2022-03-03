@@ -83,6 +83,8 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     String? id = widget.id;
     if(id != null) {
       await _userController.loadUserInfoExById(id);
+      // 测试用id：'edd58e50-8bf2-4cb3-9bbf-129b5e5a90a2'
+      await _userController.getUserPostsListData(id);
     }
     return;
     // TODO: disbale before we have the api reday.
@@ -233,13 +235,13 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width,
               minWidth: MediaQuery.of(context).size.width,
-              maxHeight:itemHeight * _userController.userWorkList.length / 3,
+              maxHeight:itemHeight * (null == _userController.userVideoCoverList[widget.id] ? 0 : _userController.userVideoCoverList[widget.id].length) / 3,
             ),
             child:  PageView.builder(
               controller: _pageController,
               itemCount:2,
               itemBuilder: (context,index){
-                return index == 0?UserWorkListWidget():_getPageLayout(index);
+                return index == 0?UserWorkListWidget(id: widget.id,):_getPageLayout(index);
               },
               onPageChanged: (index){
                 _tabController!.animateTo(index);
