@@ -39,7 +39,7 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
   @override
   void initState() {
     super.initState();
-    podcastUrl = Get.parameters[NavigationArgument.PODCAST_URL.toShortString()]!;
+    podcastUrl = Get.arguments[NavigationArgument.PODCAST_URL]!;
     _getDataFromPodcastUrl();
     // _getCoverImgPath();
   }

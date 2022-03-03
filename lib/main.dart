@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/route_manager.dart';
+import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/util/receive_sharing_intent.dart';
 
 import 'common/router_manager.dart';
@@ -47,7 +48,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void handleSharedPodcastUrl(String url) {
-    Get.toNamed("${Routers.feedPublish}?podcastUrl=$url");
+    Get.toNamed(Routers.feedPublish,
+        arguments: {NavigationArgument.PODCAST_URL: url});
   }
 
   @override
