@@ -1,21 +1,28 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:toktik/net/lambda.dart';
 import 'package:toktik/res/colors.dart';
 
 class FeedDraftWidget extends StatefulWidget {
   final Function onNext;
-  final String? podcastName;
-  final String? podcastArtistName;
-  final int? podcastLengthMillis;
-  final String? podcastDescription;
-  final String? podcastReleaseDate;
+  late final String podcastName;
+  late final String podcastArtistName;
+  late final int podcastLengthMillis;
+  late final String podcastDescription;
+  late final DateTime podcastReleaseDate;
+  late final String podcastThumbnail;
+  late final String podcastAudioUrl;
 
   FeedDraftWidget({
+    required this.podcastName,
+    required this.podcastArtistName,
+    required this.podcastLengthMillis,
+    required this.podcastDescription,
+    required this.podcastReleaseDate,
+    required this.podcastThumbnail,
+    required this.podcastAudioUrl,
     required this.onNext,
-    this.podcastName,
-    this.podcastArtistName,
-    this.podcastLengthMillis,
-    this.podcastDescription,
-    this.podcastReleaseDate,
   });
 
   @override
@@ -25,13 +32,22 @@ class FeedDraftWidget extends StatefulWidget {
 }
 
 class _FeedDraftWidgetState extends State<FeedDraftWidget> {
+  TextEditingController timeTextEditingController =
+      TextEditingController(text: "00:00:00");
+
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [
+      _topLayout(context),
+      _bottomLayout(context),
+    ];
+    if (_isLoading) {
+      children.add(_loadingIndicator());
+    }
     return Stack(
-      children: [
-        _topLayout(context),
-        _bottomLayout(context),
-      ],
+      children: children,
     );
   }
 
@@ -54,7 +70,7 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
           Row(
             children: [
               Image.network(
-                "https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510_1280.jpg",
+                widget.podcastThumbnail,
                 width: 45,
                 height: 45,
                 fit: BoxFit.contain,
@@ -66,14 +82,14 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.podcastName ?? "",
+                    widget.podcastName,
                     style: TextStyle(
                         fontSize: 18,
                         color: ColorRes.light_foreground_color,
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    widget.podcastArtistName ?? "",
+                    widget.podcastArtistName,
                     style: TextStyle(fontSize: 16, color: Color(0xff888888)),
                   )
                 ],
@@ -95,11 +111,11 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.podcastDescription ?? "",
+                      widget.podcastDescription,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 12),
                     ),
-                    Text(_formatUTCDate(widget.podcastReleaseDate),
+                    Text(widget.podcastReleaseDate.toString(),
                         style:
                             TextStyle(fontSize: 10, color: Color(0xff888888))),
                   ],
@@ -117,7 +133,7 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
                     ],
                   ),
                   child: Text(
-                    "${this._convertMillisToMinutes(widget.podcastLengthMillis ?? 0).toString()} min",
+                    "${this._convertMillisToMinutes(widget.podcastLengthMillis).toString()} min",
                     style: TextStyle(fontSize: 10),
                   ),
                 ),
@@ -138,14 +154,18 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
             height: 15,
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(23, 14, 23, 14),
+            padding: EdgeInsets.fromLTRB(0, 14, 0, 14),
+            width: 108,
             decoration: BoxDecoration(
               color: Color(0xffeeeeee),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Text(
-              "00:00:00",
+            child: TextField(
+              controller: timeTextEditingController,
+              decoration: InputDecoration.collapsed(hintText: "00:00:00"),
               style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+              // inputFormatters: [FilteringTextInputFormatter.allow(r'[0-9]')],
             ),
           ),
         ],
@@ -169,59 +189,53 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
             style: TextStyle(
                 color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
           ),
-          onPressed: () {
-            widget.onNext();
+          onPressed: () async {
+            int inputTimeSeconds =
+                _convertInputTimeToSeconds(timeTextEditingController.text);
+            if (inputTimeSeconds * 1000 > widget.podcastLengthMillis) {
+              print("Invalid time input");
+              return;
+            }
+
+            setState(() {
+              _isLoading = true;
+            });
+            int startTimeSeconds = max(inputTimeSeconds - 180, 0);
+            int lengthSeconds = min(180, inputTimeSeconds - startTimeSeconds);
+            try {
+              String subtitleUri = await LambdaWrapper.transcribeAudioPart(
+                  widget.podcastAudioUrl, startTimeSeconds, lengthSeconds);
+
+              widget.onNext(subtitleUri);
+            } catch (e) {
+              print("error: $e");
+            }
+            setState(() {
+              _isLoading = false;
+            });
           },
           style: TextButton.styleFrom(
             backgroundColor: Color(0xff39CBE3),
           ),
         ),
       ),
-      // child: InkWell(
-      //   onTap: () async {
-      //     VideoPlayerValue videoValue =
-      //         await VideoUtil.getVideoValue(videoFile);
+    );
+  }
 
-      //     print(
-      //         '发布视频时长:${videoValue.duration.inSeconds}  width:${videoValue.size.width}  height:${videoValue.size.height}');
-      //     bool? videoUpload =
-      //         await _uploadController.uploadSingleFile('mp4', videoFile);
-      //     String? videoUrl =
-      //         _uploadController.uploadResponse.tokens![0]!.effectUrl;
-      //     print('发布视频：$videoUpload 地址:$videoUrl');
-      //     bool? imgUpload = await _uploadController.uploadSingleFile(
-      //         CameraUtil.getImgSuffix(coverPath!), File(coverPath!));
-      //     String? coverUrl =
-      //         _uploadController.uploadResponse.tokens![0]!.effectUrl;
-      //     print('发布封面图：$imgUpload 地址:$coverUrl');
-      //     _feedController.publishFeed(
-      //         _editingController.text,
-      //         videoUrl,
-      //         coverUrl,
-      //         videoValue.duration.inSeconds.toInt(),
-      //         videoValue.size.width.toInt(),
-      //         videoValue.size.height.toInt());
-      //   },
-      //   child: Container(
-      //     height: 60,
-      //     decoration: BoxDecoration(
-      //         color: ColorRes.color_3,
-      //         borderRadius: BorderRadius.circular(5)),
-      //     alignment: Alignment.center,
-      //     child: Text(
-      //       '发布',
-      //       style: TextStyle(color: Colors.white, fontSize: 18),
-      //     ),
-      //   ),
-      // )
+  Widget _loadingIndicator() {
+    return Container(
+      child: CircularProgressIndicator(),
+      alignment: Alignment.center,
     );
   }
 
   int _convertMillisToMinutes(int millis) => millis ~/ 1000 ~/ 60;
 
-  String _formatUTCDate(String? isoDate) {
-    if (isoDate == null) return "";
-    DateTime date = DateTime.parse(isoDate);
-    return date.toString();
+  int _convertInputTimeToSeconds(String text) {
+    List<int> timeSegments = text.split(":").map((s) => int.parse(s)).toList();
+    if (timeSegments[1] >= 60 || timeSegments[2] >= 60) {
+      throw ArgumentError.value("Invalid time value");
+    }
+    return timeSegments[0] * 3600 + timeSegments[1] * 60 + timeSegments[2];
   }
 }

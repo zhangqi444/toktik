@@ -48,13 +48,12 @@ import '../model/comment_model.dart';
 import '../model/response/get_current_user_response.dart';
 import '../util/string_util.dart';
 
-class Api{
+class Api {
   /// ----------------------------------接口api--------------------------------------------------------
   //
 
   ///登录
   static Future<LoginResponse?> login(String username, String password) async {
-
     await logout();
 
     Map<String, dynamic> result = HashMap();
@@ -65,35 +64,37 @@ class Api{
         username: username,
         password: password,
       );
-      if(res != null && res.nextStep!.signInStep == "DONE") {
+      if (res != null && res.nextStep!.signInStep == "DONE") {
         result['isSignedIn'] = res.isSignedIn;
         result["status"] = AuthStatus.SIGN_IN_DONE.toShortString();
         result['token'] = await _fetchAuthSession();
       }
     } on AuthException catch (e, stacktrack) {
-      if(e is InvalidStateException) {
+      if (e is InvalidStateException) {
         result['isSignedIn'] = true;
         result["status"] = AuthStatus.SIGN_IN_DONE.toShortString();
         result['token'] = await _fetchAuthSession();
-      } else if(e is UserNotFoundException) {
+      } else if (e is UserNotFoundException) {
         result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
-      } else if(e is NotAuthorizedException) {
+      } else if (e is NotAuthorizedException) {
         result["status"] = AuthStatus.NOT_AUTHORIZED.toShortString();
-      } else if(e is InvalidStateException) {
+      } else if (e is InvalidStateException) {
         result["status"] = AuthStatus.INVALID_STATE.toShortString();
       } else {
         result["status"] = AuthStatus.UNKNOWN.toShortString();
-        print("Fail to sign in: " + e.toString() + '\n' + stacktrack.toString());
+        print(
+            "Fail to sign in: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
     return LoginResponse.fromJson(result);
   }
 
-  static Future<String?> _fetchAuthSession() async{
+  static Future<String?> _fetchAuthSession() async {
     AuthSession authSession = await Amplify.Auth.fetchAuthSession(
       options: CognitoSessionOptions(getAWSCredentials: true),
     );
-    if(authSession != null && (authSession as CognitoAuthSession).identityId != null) {
+    if (authSession != null &&
+        (authSession as CognitoAuthSession).identityId != null) {
       return authSession.userPoolTokens!.accessToken;
     }
   }
@@ -102,10 +103,11 @@ class Api{
     Map<String, dynamic> result = HashMap();
     try {
       SignOutResult res = await Amplify.Auth.signOut();
-      if(res == null) {
+      if (res == null) {
         result['status'] = AuthStatus.UNKNOWN.toShortString();
       } else {
-        result['status'] = AuthStatus.SIGN_OUT_DONE.toShortString();;
+        result['status'] = AuthStatus.SIGN_OUT_DONE.toShortString();
+        ;
         return LogoutResponse.fromJson(result);
       }
     } on AuthException catch (e, stacktrack) {
@@ -121,24 +123,28 @@ class Api{
       result['userId'] = res.userId;
       result['username'] = res.username;
     } on AuthException catch (e, stacktrack) {
-      if(e is SignedOutException) {
+      if (e is SignedOutException) {
         result["status"] = AuthStatus.SIGNED_OUT_UNEXPECTED.toShortString();
       }
-      debugPrint("Fail to get current user info: " + e.toString() + '\n' + stacktrack.toString());
+      debugPrint("Fail to get current user info: " +
+          e.toString() +
+          '\n' +
+          stacktrack.toString());
     }
     return GetCurrentUserResponse.fromJson(result);
   }
 
-  static Future<RegisterResponse?> resendSignUpCode(String username) async{
+  static Future<RegisterResponse?> resendSignUpCode(String username) async {
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
     try {
-      ResendSignUpCodeResult res = await Amplify.Auth.resendSignUpCode(username: username);
-      if(res != null && res.codeDeliveryDetails != null) {
+      ResendSignUpCodeResult res =
+          await Amplify.Auth.resendSignUpCode(username: username);
+      if (res != null && res.codeDeliveryDetails != null) {
         result["status"] = AuthStatus.CONFIRM_SIGN_UP_STEP;
       }
     } on AuthException catch (e, stacktrack) {
-      if(e is UserNotFoundException) {
+      if (e is UserNotFoundException) {
         result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
       } else {
         result["status"] = AuthStatus.UNKNOWN.toShortString();
@@ -149,34 +155,33 @@ class Api{
   }
 
   ///注册
-  static Future<RegisterResponse?> registerByEmail(String email, String username, String? pwd, String? pwdRepeat) async{
+  static Future<RegisterResponse?> registerByEmail(
+      String email, String username, String? pwd, String? pwdRepeat) async {
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
     try {
       Map<String, String> userAttributes = HashMap();
       userAttributes['email'] = email;
       SignUpResult res = await Amplify.Auth.signUp(
-        username: username,
-        password: pwd,
-        options: CognitoSignUpOptions(
-            userAttributes: userAttributes
-        )
-      );
-      if(res != null) {
+          username: username,
+          password: pwd,
+          options: CognitoSignUpOptions(userAttributes: userAttributes));
+      if (res != null) {
         result["isSignUpComplete"] = res.isSignUpComplete;
         result["status"] = res.nextStep.signUpStep;
       }
     } on AuthException catch (e, stacktrack) {
       result["isSignUpComplete"] = false;
-      if(e is UsernameExistsException) {
+      if (e is UsernameExistsException) {
         result["status"] = AuthStatus.USERNAME_EXISTS.toShortString();
-      } else if(e is InvalidPasswordException) {
+      } else if (e is InvalidPasswordException) {
         result["status"] = AuthStatus.INVALID_PASSWORD.toShortString();
-      } else if(e is InvalidParameterException) {
+      } else if (e is InvalidParameterException) {
         result["isSignUpComplete"] = true;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else {
-        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+        print(
+            "Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
         result["status"] = AuthStatus.UNKNOWN.toShortString();
       }
     }
@@ -184,57 +189,63 @@ class Api{
   }
 
   ///注册
-  static Future<RegisterResponse?> confirmSignUp(
-      String username, String confirmationCode, ConfirmSignUpOptions? options) async {
+  static Future<RegisterResponse?> confirmSignUp(String username,
+      String confirmationCode, ConfirmSignUpOptions? options) async {
     Map<String, dynamic> result = HashMap();
     try {
       SignUpResult res = await Amplify.Auth.confirmSignUp(
-          username: username, confirmationCode: confirmationCode, options: options);
-      if(res != null && res.isSignUpComplete && res.nextStep.signUpStep == "DONE") {
+          username: username,
+          confirmationCode: confirmationCode,
+          options: options);
+      if (res != null &&
+          res.isSignUpComplete &&
+          res.nextStep.signUpStep == "DONE") {
         result["isSignUpComplete"] = res.isSignUpComplete;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
       } else {
         result = {};
       }
     } on AuthException catch (e, stacktrack) {
-      if(e is NotAuthorizedException) {
+      if (e is NotAuthorizedException) {
         result["isSignUpComplete"] = true;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
-      } else if(e is AliasExistsException) {
+      } else if (e is AliasExistsException) {
         result["isSignUpComplete"] = false;
         result["status"] = AuthStatus.ALIAS_EXISTS.toShortString();
-      } if(e is CodeMismatchException) {
+      }
+      if (e is CodeMismatchException) {
         result["isSignUpComplete"] = false;
         result["status"] = AuthStatus.CODE_MISMATCH.toShortString();
-      }
-      else {
-        print("Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
+      } else {
+        print(
+            "Fail to sign up: " + e.toString() + '\n' + stacktrack.toString());
       }
     }
     return RegisterResponse.fromJson(result);
   }
 
-  static Future<RegisterResponse?> resetPassword(
-      String username, {ResetPasswordOptions? options}) async {
+  static Future<RegisterResponse?> resetPassword(String username,
+      {ResetPasswordOptions? options}) async {
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
     try {
       ResetPasswordResult res = await Amplify.Auth.resetPassword(
-          username: username,
-          options: options
-      );
-      if(res != null) {
+          username: username, options: options);
+      if (res != null) {
         result["isPasswordReset"] = res.isPasswordReset;
         result["status"] = res.nextStep.updateStep;
       }
     } on AuthException catch (e, stacktrack) {
       result["isPasswordReset"] = false;
-      if(e is UserNotFoundException) {
+      if (e is UserNotFoundException) {
         result["status"] = AuthStatus.USER_NOT_FOUND.toShortString();
-      } else if(e is InvalidParameterException) {
+      } else if (e is InvalidParameterException) {
         result["status"] = AuthStatus.INVALID_PARAMETER.toShortString();
       } else {
-        print("Fail to reset password: " + e.toString() + '\n' + stacktrack.toString());
+        print("Fail to reset password: " +
+            e.toString() +
+            '\n' +
+            stacktrack.toString());
         result["status"] = AuthStatus.UNKNOWN.toShortString();
       }
     }
@@ -247,96 +258,116 @@ class Api{
     Map<String, dynamic> result = HashMap();
     try {
       UpdatePasswordResult res = await Amplify.Auth.confirmResetPassword(
-          username: username, newPassword: newPassword, confirmationCode: confirmationCode, options: options);
-      if(res != null) {
+          username: username,
+          newPassword: newPassword,
+          confirmationCode: confirmationCode,
+          options: options);
+      if (res != null) {
         result["isPasswordReset"] = true;
         result["status"] = AuthStatus.RESET_PASSWORD_DONE.toShortString();
       } else {
         result = {};
       }
     } on AuthException catch (e, stacktrack) {
-      if(e is InvalidParameterException) {
+      if (e is InvalidParameterException) {
         result["isPasswordReset"] = false;
         result["status"] = AuthStatus.SIGN_UP_DONE.toShortString();
-      } else if(e is CodeMismatchException) {
+      } else if (e is CodeMismatchException) {
         result["isPasswordReset"] = false;
         result["status"] = AuthStatus.CODE_MISMATCH.toShortString();
       } else {
         result["status"] = AuthStatus.UNKNOWN.toShortString();
-        print("Fail to confirm reset password: " + e.toString() + '\n' + stacktrack.toString());
+        print("Fail to confirm reset password: " +
+            e.toString() +
+            '\n' +
+            stacktrack.toString());
       }
     }
     return RegisterResponse.fromJson(result);
   }
 
-  static Future<UserInfoExResponse?> createUser({String? username, String? email, String? phoneNumber}) async {
+  static Future<UserInfoExResponse?> createUser(
+      {String? username, String? email, String? phoneNumber}) async {
     try {
-      User user = User(username: username, email: email, phoneNumber: phoneNumber);
+      User user =
+          User(username: username, email: email, phoneNumber: phoneNumber);
       await Amplify.DataStore.save(user);
       return _parseUsers([user], {username: username});
     } catch (e, stacktrace) {
-      print("Could not create user: " + e.toString() + '\n' + stacktrace.toString());
+      print("Could not create user: " +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
   //
 
   ///获取用户资料信息(扩展)
-  static Future<UserInfoExResponse?> getUserInfoExByUsername(String? username) async {
+  static Future<UserInfoExResponse?> getUserInfoExByUsername(
+      String? username) async {
     try {
-      var response = await _query(
-          '''query ListUsers(\$filter: ModelUserFilterInput) {
+      var response =
+          await _query('''query ListUsers(\$filter: ModelUserFilterInput) {
             listUsers(filter: \$filter) {
               items {
                 id username email phoneNumber portrait nickname gender bio city birth
               }
             }
-          }''',
-          { 'filter': { "username": { "eq": username } } },
-          'listUsers'
-      );
-      return _parseUsers(response['items']?? [], {username: username});
+          }''', {
+        'filter': {
+          "username": {"eq": username}
+        }
+      }, 'listUsers');
+      return _parseUsers(response['items'] ?? [], {username: username});
     } catch (e, stacktrace) {
-      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      print("Could not query server: " +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
 
   static Future<UserInfoExResponse?> getUserInfoExByEmail(String email) async {
     try {
-      var response = await _query(
-          '''query ListUsers(\$filter: ModelUserFilterInput) {
+      var response =
+          await _query('''query ListUsers(\$filter: ModelUserFilterInput) {
             listUsers(filter: \$filter) {
               items {
                 id username email phoneNumber portrait nickname gender bio city birth
               }
             }
-          }''',
-          { 'filter': { "email": { "eq": email } } },
-          'listUsers'
-      );
+          }''', {
+        'filter': {
+          "email": {"eq": email}
+        }
+      }, 'listUsers');
       return _parseUsers(response['items'], {email: email});
     } catch (e, stacktrace) {
-      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      print("Could not query server: " +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
 
-  static Future<UserInfoExResponse?> getUserInfoEx(String? id) async{
+  static Future<UserInfoExResponse?> getUserInfoEx(String? id) async {
     try {
-      var response = await _query(
-          '''query GetUsers(\$id: ID!) {
+      var response = await _query('''query GetUsers(\$id: ID!) {
             getUser(id: \$id) {
               id username email phoneNumber portrait nickname gender bio city birth
             }
-          }''',
-          { 'id': id },
-          'getUser'
-      );
+          }''', {'id': id}, 'getUser');
       return _parseUsers([response], {id: id});
     } catch (e, stacktrace) {
-      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      print("Could not query server: " +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
 
-  static UserInfoExResponse? _parseUsers(List<dynamic> users, Map<String?, dynamic> overrides) {
+  static UserInfoExResponse? _parseUsers(
+      List<dynamic> users, Map<String?, dynamic> overrides) {
     Map<String, dynamic> convert(user) {
       Map<String, dynamic> result = {};
       var userJson = user;
@@ -345,16 +376,16 @@ class Api{
       }
 
       result['user'] = userJson;
-      if(result['user']['username'] == null) {
+      if (result['user']['username'] == null) {
         result['user']['username'] = overrides['username'];
       }
-      if(result['user']['email'] == null) {
+      if (result['user']['email'] == null) {
         result['user']['email'] = overrides['email'];
       }
-      if(result['user']['phoneNumber'] == null) {
+      if (result['user']['phoneNumber'] == null) {
         result['user']['phoneNumber'] = overrides['phoneNumber'];
       }
-      if(result['user']['id'] == null) {
+      if (result['user']['id'] == null) {
         result['user']['id'] = overrides['id'];
       }
       // TODO: generate counts from server side
@@ -367,19 +398,21 @@ class Api{
     }
 
     var parsed = users.map((user) => convert(user)).toList();
-    return (parsed != null && parsed.length > 0) ? UserInfoExResponse.fromJson(parsed[0]) : null;
+    return (parsed != null && parsed.length > 0)
+        ? UserInfoExResponse.fromJson(parsed[0])
+        : null;
   }
 
   static void recordEvent(String eventName, Map<String, dynamic> events) {
     AnalyticsEvent event = AnalyticsEvent(eventName);
     events.forEach((key, value) {
-      if(value is String) {
+      if (value is String) {
         event.properties.addStringProperty(key, value);
-      } else if(value is bool) {
+      } else if (value is bool) {
         event.properties.addBoolProperty(key, value);
-      } else if(value is int) {
+      } else if (value is int) {
         event.properties.addIntProperty(key, value);
-      } else if(value is double) {
+      } else if (value is double) {
         event.properties.addDoubleProperty(key, value);
       } else {
         return;
@@ -392,46 +425,41 @@ class Api{
   }
 
   ///获取热门作品列表
-  static Future<FeedListResponse?> getHotFeedList(int? cursor,int limit, String userId) async{
+  static Future<FeedListResponse?> getHotFeedList(
+      int? cursor, int limit, String userId) async {
     try {
       var response;
       var localPosts;
-      if(userId == null || userId.isEmpty) {
+      if (userId == null || userId.isEmpty) {
         localPosts = await SPUtil.getString(SPKeys.POSTS);
-        if(localPosts != null) {
+        if (localPosts != null) {
           localPosts = jsonDecode(localPosts);
         }
-        response = await _query(
-          '''query ListPosts(\$limit: Int) {
+        response = await _query('''query ListPosts(\$limit: Int) {
             listPosts(limit: \$limit) {
               items {
                 id attachments music { id } text likeCount
                 user { id nickname username portrait }
               }
             }
-          }''',
-          { 'limit': limit },
-          'listPosts'
-        );
+          }''', {'limit': limit}, 'listPosts');
       } else {
-        response = await _query(
-          '''query ListPostExs(\$limit: Int, \$userId: ID!) {
+        response =
+            await _query('''query ListPostExs(\$limit: Int, \$userId: ID!) {
             listPostExs(limit: \$limit, userId: \$userId) {
               items {
                 id attachments music { id } text likeCount isLiked { value }
                 user { id nickname username portrait }
               }
             }
-          }''',
-          { 'limit': limit, 'userId': userId },
-          'listPostExs'
-        );
+          }''', {'limit': limit, 'userId': userId}, 'listPostExs');
       }
 
       var rng = new Random(DateTime.now().millisecondsSinceEpoch);
-      List posts = (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
+      List posts =
+          (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
       posts = posts.where((f) => f['attachments'] != null).toList();
-      Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
+      Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async {
         post['content'] = {
           'attachments': jsonDecode(post['attachments'])['data'],
           'music': post['music'] != null ? post['music'] : null,
@@ -439,22 +467,23 @@ class Api{
         };
         post['likeCount'] = post['likeCount'] != null ? post['likeCount'] : 0;
 
-        if(post['isLiked'] != null && post['isLiked']['value'] != null) {
+        if (post['isLiked'] != null && post['isLiked']['value'] != null) {
           post['isLiked'] = post['isLiked']['value'];
         } else {
           // TODO: remove if the sign in status is required for like
           post['isLiked'] = false;
-          if(localPosts != null
-              && localPosts[post['id']] != null
-              && localPosts[post['id']]['isLiked'] != null
-              && localPosts[post['id']]['isLiked']['value'] != null) {
+          if (localPosts != null &&
+              localPosts[post['id']] != null &&
+              localPosts[post['id']]['isLiked'] != null &&
+              localPosts[post['id']]['isLiked']['value'] != null) {
             post['isLiked'] = localPosts[post['id']]['isLiked']['value'];
           }
         }
         return post;
       }
 
-      var parsed = await Future.wait(posts.map((post) async => await convert(post)));
+      var parsed =
+          await Future.wait(posts.map((post) async => await convert(post)));
       return FeedListResponse.fromJson({'list': parsed.toList()});
     } catch (e, stacktrace) {
       print("Fail to get post lists: " + stacktrace.toString());
@@ -501,87 +530,100 @@ class Api{
   static Future<dynamic> _mutation(document, variables, key) async {
     try {
       var operation = Amplify.API.mutate(
-          request: GraphQLRequest<String>(document: document, variables: variables)
-      );
+          request:
+              GraphQLRequest<String>(document: document, variables: variables));
       var result = await operation.response;
-      if(result == null || result.data == null || result.errors.length > 0) {
-        debugPrint("Could not query server:" + result.errors.toString() + "\n" + document);
+      if (result == null || result.data == null || result.errors.length > 0) {
+        debugPrint("Could not query server:" +
+            result.errors.toString() +
+            "\n" +
+            document);
         return null;
       }
       return jsonDecode(result.data)[key];
     } catch (e, stacktrace) {
-      debugPrint("Could not query server: " + document + '\n' + e.toString() + '\n' + stacktrace.toString());
+      debugPrint("Could not query server: " +
+          document +
+          '\n' +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
 
   static Future<dynamic> _query(document, variables, key) async {
     try {
       var operation = Amplify.API.query(
-          request: GraphQLRequest<String>(
-              document: document, variables: variables)
-      );
+          request:
+              GraphQLRequest<String>(document: document, variables: variables));
       var result = await operation.response;
-      if(result == null || result.data == null || result.errors.length > 0) {
-        debugPrint("Could not query server:" + result.errors.toString() + "\n" + document);
+      if (result == null || result.data == null || result.errors.length > 0) {
+        debugPrint("Could not query server:" +
+            result.errors.toString() +
+            "\n" +
+            document);
         return null;
       }
       return jsonDecode(result.data)[key];
     } catch (e, stacktrace) {
-      debugPrint("Could not query server: " + document + '\n' + e.toString() + '\n' + stacktrace.toString());
+      debugPrint("Could not query server: " +
+          document +
+          '\n' +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
 
-  static Future<ViewResponse?> viewPost(String? postId, String userId) async{
+  static Future<ViewResponse?> viewPost(String? postId, String userId) async {
     try {
-      var view = await _mutation(
-          '''mutation ViewPost(\$input: CreateViewInput!) {
+      var view =
+          await _mutation('''mutation ViewPost(\$input: CreateViewInput!) {
             viewPost(input: \$input) { id }
-          }''',
-          {
-            'input': { 'viewPostId': postId, 'viewUserId': userId },
-          },
-          'viewPost'
-      );
+          }''', {
+        'input': {'viewPostId': postId, 'viewUserId': userId},
+      }, 'viewPost');
       return ViewResponse.fromJson(view);
     } catch (e, stacktrace) {
       print("Fail to view post: " + stacktrace.toString());
     }
   }
 
-  static Future<LikeResponse?> likePost(String? postId, String userId, bool value) async{
+  static Future<LikeResponse?> likePost(
+      String? postId, String userId, bool value) async {
     try {
       var result;
-      if(userId != null) {
-        result = await _mutation(
-            '''mutation LikePost(\$input: CreateLikeInput!) {
+      if (userId != null) {
+        result =
+            await _mutation('''mutation LikePost(\$input: CreateLikeInput!) {
               likePost(input: \$input) { id, value }
-            }''',
-            {
-              'input': {
-                'likePostId': postId,
-                'likeUserId': userId,
-                'value': value
-              },
-            },
-            'likePost'
-        );
+            }''', {
+          'input': {'likePostId': postId, 'likeUserId': userId, 'value': value},
+        }, 'likePost');
       } else {
         // TODO: remove if the sign in status is required for like
         var localPosts = await SPUtil.getString(SPKeys.POSTS);
         localPosts = localPosts != null ? jsonDecode(localPosts) : {};
-        if(localPosts == null) localPosts = {};
-        localPosts[postId] = { "isLiked": {"value": value} };
+        if (localPosts == null) localPosts = {};
+        localPosts[postId] = {
+          "isLiked": {"value": value}
+        };
         SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
         result = localPosts[postId]["isLiked"];
       }
 
       return LikeResponse.fromJson(result);
     } catch (e, stacktrace) {
-      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      print("Could not query server: " +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
 
-  static Future<NotInterestedResponse?> notInterested(String userId, String type, {String? postId="", String? targetUserId=""}) async{
+  static Future<NotInterestedResponse?> notInterested(
+      String userId, String type,
+      {String? postId = "", String? targetUserId = ""}) async {
     try {
       var result = await _mutation(
           '''mutation CreateNotInterested(\$input: CreateNotInterestedInput!) {
@@ -595,45 +637,53 @@ class Api{
               'type': type
             },
           },
-          'createNotInterested'
-      );
+          'createNotInterested');
 
       // TODO: in short term, block the content from local only
-      if(!isStringNullOrEmpty(postId)) {
+      if (!isStringNullOrEmpty(postId)) {
         var localPosts = await SPUtil.getString(SPKeys.POSTS);
         localPosts = localPosts != null ? jsonDecode(localPosts) : {};
         if (localPosts == null) localPosts = {};
-        localPosts[postId] = { "isNotInterested": { "id": postId}};
+        localPosts[postId] = {
+          "isNotInterested": {"id": postId}
+        };
         SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
         result = localPosts[postId]["isNotInterested"];
       }
 
-      if(!isStringNullOrEmpty(targetUserId)) {
+      if (!isStringNullOrEmpty(targetUserId)) {
         var localUsers = await SPUtil.getString(SPKeys.USERS);
         localUsers = localUsers != null ? jsonDecode(localUsers) : {};
         if (localUsers == null) localUsers = {};
-        localUsers[targetUserId] = { "isNotInterested": { "id": targetUserId}};
+        localUsers[targetUserId] = {
+          "isNotInterested": {"id": targetUserId}
+        };
         SPUtil.set(SPKeys.USERS, jsonEncode(localUsers));
         result = localUsers[targetUserId]["isNotInterested"];
       }
 
       return NotInterestedResponse.fromJson(result);
     } catch (e, stacktrace) {
-      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      print("Could not query server: " +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
   }
 
   static Future<ReportResponse?> report(ReportRequest request) async {
     try {
       var input = {
-        'description': request.description?? '',
-        'type': request.type?? '',
-        'reason': request.reason?? '',
+        'description': request.description ?? '',
+        'type': request.type ?? '',
+        'reason': request.reason ?? '',
         'reportUserId': request.reportUserId,
-        'status': request.status?? '',
+        'status': request.status ?? '',
       };
-      if(request.reportPostId != null) input['reportPostId'] = request.reportPostId!;
-      if(request.reportTargetUserId != null) input['reportTargetUserId'] = request.reportTargetUserId!;
+      if (request.reportPostId != null)
+        input['reportPostId'] = request.reportPostId!;
+      if (request.reportTargetUserId != null)
+        input['reportTargetUserId'] = request.reportTargetUserId!;
 
       var report = await _mutation(
           '''mutation CreateReport(\$input: CreateReportInput!) {
@@ -642,55 +692,88 @@ class Api{
           {
             'input': input,
           },
-          'createReport'
-      );
+          'createReport');
 
-      return ReportResponse.fromJson(report?? {});
+      return ReportResponse.fromJson(report ?? {});
     } catch (e, stacktrace) {
-      print("Could not create report: " + e.toString() + '\n' + stacktrace.toString());
+      print("Could not create report: " +
+          e.toString() +
+          '\n' +
+          stacktrace.toString());
     }
+  }
+
+  static Future<String> transcribeAudioPart(String audioUrl) async {
+    var result = await _mutation(
+        '''mutation TranscribeAudioPart(\$input: TranscribeAudioPartInput!) {
+            transcribeAudioPart(input: \$input) { subtitleFileUri }
+          }''',
+        {
+          'input': {
+            'audioUrl': audioUrl,
+          },
+        },
+        'transcribeAudioPart');
+
+    print(result);
+    return "";
   }
 
   ///发布feed
   // @deprecated
-  static Future<PublishFeedResponse> publishFeed(PublishFeedRequest publishFeedRequest) async{
-    var result = await HttpManager.getInstance().post(url: HttpConstant.publishFeed, cancelTokenTag: 'publishFeed',data: publishFeedRequest.toJson());
+  static Future<PublishFeedResponse> publishFeed(
+      PublishFeedRequest publishFeedRequest) async {
+    var result = await HttpManager.getInstance().post(
+        url: HttpConstant.publishFeed,
+        cancelTokenTag: 'publishFeed',
+        data: publishFeedRequest.toJson());
     return PublishFeedResponse.fromJson(result);
   }
 
   ///获取用户作品列表
   // @deprecated
-  static Future<UserWorkListResponse> getUserFeedList(String id, int? cursor,int count)async{
-    var result = await HttpManager.getInstance().get(url: HttpConstant.userFeedList+'?id=$id&cursor=$cursor&count=$count', cancelTokenTag: 'getUserFeedList');
+  static Future<UserWorkListResponse> getUserFeedList(
+      String id, int? cursor, int count) async {
+    var result = await HttpManager.getInstance().get(
+        url: HttpConstant.userFeedList + '?id=$id&cursor=$cursor&count=$count',
+        cancelTokenTag: 'getUserFeedList');
     return UserWorkListResponse.fromJson(result);
   }
 
-
   ///更新用户资料信息
   // @deprecated
-  static Future<UserInfoResponse> updateUserInfo(Map<String,dynamic> map) async{
-    var result = await HttpManager.getInstance().put(url: HttpConstant.userInfo+map['id'].toString(), cancelTokenTag: 'getUserInfo',data: map);
+  static Future<UserInfoResponse> updateUserInfo(
+      Map<String, dynamic> map) async {
+    var result = await HttpManager.getInstance().put(
+        url: HttpConstant.userInfo + map['id'].toString(),
+        cancelTokenTag: 'getUserInfo',
+        data: map);
     return UserInfoResponse.fromJson(result);
   }
 
   ///获取上传文件凭证
   // @deprecated
-  static Future<UploadTokenResponse> getSingleUploadToken(List<String> filePathList) async{
-    Map<String,List> map = HashMap();
+  static Future<UploadTokenResponse> getSingleUploadToken(
+      List<String> filePathList) async {
+    Map<String, List> map = HashMap();
     List resources = [];
-    for(int i=0;i<filePathList.length;i++){
-      Map<String,String> mapTemp = HashMap();
+    for (int i = 0; i < filePathList.length; i++) {
+      Map<String, String> mapTemp = HashMap();
       mapTemp['type'] = filePathList[i];
       resources.add(mapTemp);
     }
     map['resources'] = resources;
-    var result = await HttpManager.getInstance().post(url: HttpConstant.uploadToken, cancelTokenTag: "getUploadToken",data: map);
+    var result = await HttpManager.getInstance().post(
+        url: HttpConstant.uploadToken,
+        cancelTokenTag: "getUploadToken",
+        data: map);
     return UploadTokenResponse.fromJson(result);
   }
 
   ///上传文件
   /// @deprecated
-  static Future<bool?> uploadSingleFile(File file,UploadTokenResponse tokenResponse,String fileSuffix) async{
+  static Future<bool?> uploadSingleFile(
+      File file, UploadTokenResponse tokenResponse, String fileSuffix) async {
     Stream<List<int>> listStream = file.openRead();
     UploadTokenTokensHeaders headers = tokenResponse.tokens![0]!.headers!;
     UploadTokenToken tokenToken = tokenResponse.tokens![0]!;
@@ -699,28 +782,32 @@ class Api{
       cancelTokenTag: 'uploadFile',
       data: listStream,
       method: HttpMethod.PUT,
-      options: Options(
-          headers: {
-            'Content-Type':headers.contentType,
-            'Date':headers.date,
-            'Authorization':headers.authorization
-          }
-      ),
-
+      options: Options(headers: {
+        'Content-Type': headers.contentType,
+        'Date': headers.date,
+        'Authorization': headers.authorization
+      }),
     );
     return success;
   }
 
   ///获取好友作品列表
-  static Future<FeedListResponse?> getFriendFeedList(int? cursor,int count) async{
-  // @deprecated
-    var result = await HttpManager.getInstance().get(url: HttpConstant.friendFeedList+'?cursor=$cursor&count=$count', cancelTokenTag: 'getFriendFeedList',);
+  static Future<FeedListResponse?> getFriendFeedList(
+      int? cursor, int count) async {
+    // @deprecated
+    var result = await HttpManager.getInstance().get(
+      url: HttpConstant.friendFeedList + '?cursor=$cursor&count=$count',
+      cancelTokenTag: 'getFriendFeedList',
+    );
     return FeedListResponse.fromJson(result);
   }
 
-  static Future<FollowResponse?> follow(FollowRequest request) async{
-  // @deprecated
-    var result = await HttpManager.getInstance().post(url: HttpConstant.follow, cancelTokenTag: 'follow',data: request.toJson());
+  static Future<FollowResponse?> follow(FollowRequest request) async {
+    // @deprecated
+    var result = await HttpManager.getInstance().post(
+        url: HttpConstant.follow,
+        cancelTokenTag: 'follow',
+        data: request.toJson());
     return FollowResponse.fromJson(result);
   }
 
@@ -802,13 +889,7 @@ class Api{
   //   return list;
   // }
 
-
-
 }
-
-
-
-
 
 List<UserModel> userModelList = List.generate(6, (i) {
   UserModel userModel = UserModel();
@@ -817,7 +898,7 @@ List<UserModel> userModelList = List.generate(6, (i) {
   userModel.headerImg = authorHeaderUrlList[i];
   userModel.douYinNumber = '19234$i';
   userModel.introduction = introductionList[i];
-  userModel.male = i%2 == 0?true:false;
+  userModel.male = i % 2 == 0 ? true : false;
   userModel.city = '杭州';
   userModel.likeTotalNumber = '156${i}w';
   userModel.focusNumber = '45${i}w';
@@ -846,23 +927,22 @@ List<UserModel> userModelList = List.generate(6, (i) {
 });
 
 UserModel loginUserModel = UserModel(
-  name: '钉某人',
-  loginUser: true,
-  headerBgImage: 'assets/images/bg_1.jpg',
-  headerImg: 'assets/images/header_holder.jpg',
-  douYinNumber: '19423900',
-  introduction: 'Flutter小战士\nGithub:https://github.com/DingMouRen\n简书:https://www.jianshu.com/u/4abd568623a2\nB站:搜索[码农钉某人]',
-  male: true,
-  city: '杭州',
-  likeTotalNumber: '66w',
-  focusNumber: '66w',
-  fansNumber: '888',
-  worksVideo: videoModelList,
-  likeVideo: videoModelList,
-  likeVideoGif: gifList,
-  worksVideoGif: gifList
-
-);
+    name: '钉某人',
+    loginUser: true,
+    headerBgImage: 'assets/images/bg_1.jpg',
+    headerImg: 'assets/images/header_holder.jpg',
+    douYinNumber: '19423900',
+    introduction:
+        'Flutter小战士\nGithub:https://github.com/DingMouRen\n简书:https://www.jianshu.com/u/4abd568623a2\nB站:搜索[码农钉某人]',
+    male: true,
+    city: '杭州',
+    likeTotalNumber: '66w',
+    focusNumber: '66w',
+    fansNumber: '888',
+    worksVideo: videoModelList,
+    likeVideo: videoModelList,
+    likeVideoGif: gifList,
+    worksVideoGif: gifList);
 
 List<VideoModel> videoModelList = List.generate(6, (i) {
   VideoModel videoModel = VideoModel();
@@ -880,30 +960,45 @@ List<VideoModel> videoModelList = List.generate(6, (i) {
   return videoModel;
 });
 
-
 //评论的本地假数据
 List<CommentModel> commentList = [
-  CommentModel('Alis',  'assets/images/header_0.jpg','千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！', false, 234, '2分钟前'),
-  CommentModel('一条小团团',  'assets/images/header_1.jpg','芙蓉不及美人妆，水殿风来珠翠香', false, 688, '9分钟前'),
-  CommentModel('伊素婉',  'assets/images/header_2.jpg', '届笑春桃兮，云堆翠髻；唇绽樱颗兮，榴齿含香',false, 7567, '6分钟前'),
-  CommentModel('超级马里奥',  'assets/images/header_3.jpg','朱粉不深匀,闲花淡淡香。细看诸处好,人人道,柳腰身', false, 3543, '23分钟前'),
-  CommentModel('肖了个邦',  'assets/images/header_4.jpg', '头上金爵钗，腰佩翠琅玕。明珠交玉体，珊瑚间木难。罗衣何飘飘，轻裾随风远。顾盼遗光彩，长啸气若兰',false, 234, '4小时前'),
-  CommentModel('惠子',  'assets/images/header_5.jpg', '皎皎兮似轻云之蔽月，飘飘兮若回风之流雪',false, 888, '4分钟前'),
-  CommentModel('爱丽丝',  'assets/images/header_0.jpg','千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！', false, 234, '2分钟前'),
-  CommentModel('一条小团团',  'assets/images/header_1.jpg','芙蓉不及美人妆，水殿风来珠翠香', false, 688, '9分钟前'),
-  CommentModel('伊素婉',  'assets/images/header_2.jpg', '届笑春桃兮，云堆翠髻；唇绽樱颗兮，榴齿含香',false, 7567, '6分钟前'),
-  CommentModel('超级马里奥',  'assets/images/header_3.jpg','朱粉不深匀,闲花淡淡香。细看诸处好,人人道,柳腰身', false, 3543, '23分钟前'),
-  CommentModel('肖了个邦',  'assets/images/header_4.jpg', '头上金爵钗，腰佩翠琅玕。明珠交玉体，珊瑚间木难。罗衣何飘飘，轻裾随风远。顾盼遗光彩，长啸气若兰',false, 234, '4小时前'),
-  CommentModel('惠子',  'assets/images/header_5.jpg', '皎皎兮似轻云之蔽月，飘飘兮若回风之流雪',false, 888, '4分钟前'),
-  CommentModel('爱丽丝',  'assets/images/header_0.jpg','千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！', false, 234, '2分钟前'),
-  CommentModel('一条小团团',  'assets/images/header_1.jpg','芙蓉不及美人妆，水殿风来珠翠香', false, 688, '9分钟前'),
-  CommentModel('伊素婉',  'assets/images/header_2.jpg', '届笑春桃兮，云堆翠髻；唇绽樱颗兮，榴齿含香',false, 7567, '6分钟前'),
-  CommentModel('超级马里奥',  'assets/images/header_3.jpg','朱粉不深匀,闲花淡淡香。细看诸处好,人人道,柳腰身', false, 3543, '23分钟前'),
-  CommentModel('肖了个邦',  'assets/images/header_4.jpg', '头上金爵钗，腰佩翠琅玕。明珠交玉体，珊瑚间木难。罗衣何飘飘，轻裾随风远。顾盼遗光彩，长啸气若兰',false, 234, '4小时前'),
-  CommentModel('惠子',  'assets/images/header_5.jpg', '皎皎兮似轻云之蔽月，飘飘兮若回风之流雪',false, 888, '4分钟前'),
+  CommentModel('Alis', 'assets/images/header_0.jpg', '千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！',
+      false, 234, '2分钟前'),
+  CommentModel('一条小团团', 'assets/images/header_1.jpg', '芙蓉不及美人妆，水殿风来珠翠香', false,
+      688, '9分钟前'),
+  CommentModel('伊素婉', 'assets/images/header_2.jpg', '届笑春桃兮，云堆翠髻；唇绽樱颗兮，榴齿含香',
+      false, 7567, '6分钟前'),
+  CommentModel('超级马里奥', 'assets/images/header_3.jpg',
+      '朱粉不深匀,闲花淡淡香。细看诸处好,人人道,柳腰身', false, 3543, '23分钟前'),
+  CommentModel('肖了个邦', 'assets/images/header_4.jpg',
+      '头上金爵钗，腰佩翠琅玕。明珠交玉体，珊瑚间木难。罗衣何飘飘，轻裾随风远。顾盼遗光彩，长啸气若兰', false, 234, '4小时前'),
+  CommentModel('惠子', 'assets/images/header_5.jpg', '皎皎兮似轻云之蔽月，飘飘兮若回风之流雪', false,
+      888, '4分钟前'),
+  CommentModel('爱丽丝', 'assets/images/header_0.jpg', '千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！',
+      false, 234, '2分钟前'),
+  CommentModel('一条小团团', 'assets/images/header_1.jpg', '芙蓉不及美人妆，水殿风来珠翠香', false,
+      688, '9分钟前'),
+  CommentModel('伊素婉', 'assets/images/header_2.jpg', '届笑春桃兮，云堆翠髻；唇绽樱颗兮，榴齿含香',
+      false, 7567, '6分钟前'),
+  CommentModel('超级马里奥', 'assets/images/header_3.jpg',
+      '朱粉不深匀,闲花淡淡香。细看诸处好,人人道,柳腰身', false, 3543, '23分钟前'),
+  CommentModel('肖了个邦', 'assets/images/header_4.jpg',
+      '头上金爵钗，腰佩翠琅玕。明珠交玉体，珊瑚间木难。罗衣何飘飘，轻裾随风远。顾盼遗光彩，长啸气若兰', false, 234, '4小时前'),
+  CommentModel('惠子', 'assets/images/header_5.jpg', '皎皎兮似轻云之蔽月，飘飘兮若回风之流雪', false,
+      888, '4分钟前'),
+  CommentModel('爱丽丝', 'assets/images/header_0.jpg', '千秋无绝色！悦目是佳人！倾国倾城貌！惊为天下人！',
+      false, 234, '2分钟前'),
+  CommentModel('一条小团团', 'assets/images/header_1.jpg', '芙蓉不及美人妆，水殿风来珠翠香', false,
+      688, '9分钟前'),
+  CommentModel('伊素婉', 'assets/images/header_2.jpg', '届笑春桃兮，云堆翠髻；唇绽樱颗兮，榴齿含香',
+      false, 7567, '6分钟前'),
+  CommentModel('超级马里奥', 'assets/images/header_3.jpg',
+      '朱粉不深匀,闲花淡淡香。细看诸处好,人人道,柳腰身', false, 3543, '23分钟前'),
+  CommentModel('肖了个邦', 'assets/images/header_4.jpg',
+      '头上金爵钗，腰佩翠琅玕。明珠交玉体，珊瑚间木难。罗衣何飘飘，轻裾随风远。顾盼遗光彩，长啸气若兰', false, 234, '4小时前'),
+  CommentModel('惠子', 'assets/images/header_5.jpg', '皎皎兮似轻云之蔽月，飘飘兮若回风之流雪', false,
+      888, '4分钟前'),
 ];
-
-
 
 //视频本地标题
 List<String> videoTitleList = [
@@ -997,9 +1092,11 @@ List<String> introductionList = [
 //消息列表
 List<MessageModel> messageList = List.generate(20, (index) {
   MessageModel model = MessageModel();
-  model.imgUrl = videoMusicImageList[index%6];
-  model.title = authorList[index%6];
-  model.desc = index%2 == 0?'started following you · 2h':'Just viewed the video you shared · 2w';
+  model.imgUrl = videoMusicImageList[index % 6];
+  model.title = authorList[index % 6];
+  model.desc = index % 2 == 0
+      ? 'started following you · 2h'
+      : 'Just viewed the video you shared · 2w';
   return model;
 });
 //明星列表
@@ -1042,10 +1139,10 @@ List<BrandRankModel> brandList = [
 
 //直播页评论
 List<LivingCommendModel> livingCommendList = [
-  LivingCommendModel('小冰人','cool'),
-  LivingCommendModel('张靓颖','好帅呀,cool'),
-  LivingCommendModel('Jack','主播牛逼呀，厉害呢'),
-  LivingCommendModel('一朵花花','主播牛逼呀，厉害呢'),
-  LivingCommendModel('小红','好帅呀，俺要嫁给你，么么哒~~~'),
-  LivingCommendModel('小黄人','好帅呀，左手一只鸭，右手一只鸡，啊啊'),
+  LivingCommendModel('小冰人', 'cool'),
+  LivingCommendModel('张靓颖', '好帅呀,cool'),
+  LivingCommendModel('Jack', '主播牛逼呀，厉害呢'),
+  LivingCommendModel('一朵花花', '主播牛逼呀，厉害呢'),
+  LivingCommendModel('小红', '好帅呀，俺要嫁给你，么么哒~~~'),
+  LivingCommendModel('小黄人', '好帅呀，左手一只鸭，右手一只鸡，啊啊'),
 ];

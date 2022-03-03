@@ -20,6 +20,8 @@ dependencies:
   amplify_auth_cognito: ^0.2.0
   amplify_analytics_pinpoint: ^0.2.0
 
+  aws_lambda_api: ^1.2.0
+
   cupertino_icons: ^1.0.2
   video_player: ^2.1.4
   stacked_services: ^0.8.6
