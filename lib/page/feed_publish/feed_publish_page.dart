@@ -1,10 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify.dart';
-import 'package:aws_lambda_api/lambda-2015-03-31.dart' hide State;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:toktik/page/feed_publish/feed_draft_widget.dart';
@@ -179,39 +175,9 @@ class _FeedPublishPageState extends State<FeedPublishPage> {
       case 0:
         return podcastEpisodeData != null
             ? FeedDraftWidget(
-                onNext: (int startTime, int length) async {
-                  //
-                  CognitoAuthSession session =
-                      await Amplify.Auth.fetchAuthSession(
-                          options: CognitoSessionOptions(
-                              getAWSCredentials: true)) as CognitoAuthSession;
-
-                  AwsClientCredentials cred = AwsClientCredentials(
-                      accessKey: session.credentials?.awsAccessKey ?? "",
-                      secretKey: session.credentials?.awsSecretKey ?? "",
-                      sessionToken: session.credentials?.sessionToken);
-                  final Lambda service =
-                      Lambda(region: "us-west-2", credentials: cred);
-
-                  List<int> list =
-                      '{"arguments": { "input": {"audioUrl": "${podcastEpisodeData!.audioUrl}", "startTime": $startTime, "length": $length }}}'
-                          .codeUnits;
-                  InvocationResponse lambdaResponse = await service.invoke(
-                      functionName: "transcribeAudioPart-margit",
-                      invocationType: InvocationType.requestResponse,
-                      payload: Uint8List.fromList(list));
-
-                  var respData = json
-                      .decode(String.fromCharCodes(lambdaResponse.payload!));
-                  print("respData $respData");
-                  if (respData["subtitleFileUri"] == null) {
-                    // ignore: todo
-                    // TODO: show error dialog
-                    print("error transcribing");
-                    return;
-                  }
+                onNext: (String subtitleUri) {
                   setState(() {
-                    this.subtitleFileUri = respData['subtitleFileUri'];
+                    this.subtitleFileUri = subtitleUri;
                     currentScreenIdx++;
                   });
                 },

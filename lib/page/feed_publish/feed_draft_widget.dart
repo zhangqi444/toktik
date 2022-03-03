@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:toktik/net/lambda.dart';
 import 'package:toktik/res/colors.dart';
 
 class FeedDraftWidget extends StatefulWidget {
@@ -34,13 +35,19 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
   TextEditingController timeTextEditingController =
       TextEditingController(text: "00:00:00");
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [
+      _topLayout(context),
+      _bottomLayout(context),
+    ];
+    if (_isLoading) {
+      children.add(_loadingIndicator());
+    }
     return Stack(
-      children: [
-        _topLayout(context),
-        _bottomLayout(context),
-      ],
+      children: children,
     );
   }
 
@@ -182,18 +189,43 @@ class _FeedDraftWidgetState extends State<FeedDraftWidget> {
             style: TextStyle(
                 color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
           ),
-          onPressed: () {
+          onPressed: () async {
             int inputTimeSeconds =
                 _convertInputTimeToSeconds(timeTextEditingController.text);
+            if (inputTimeSeconds * 1000 > widget.podcastLengthMillis) {
+              print("Invalid time input");
+              return;
+            }
+
+            setState(() {
+              _isLoading = true;
+            });
             int startTimeSeconds = max(inputTimeSeconds - 180, 0);
-            int lengthSeconds = min(startTimeSeconds + 180, inputTimeSeconds);
-            widget.onNext(startTimeSeconds, lengthSeconds);
+            int lengthSeconds = min(180, inputTimeSeconds - startTimeSeconds);
+            try {
+              String subtitleUri = await LambdaWrapper.transcribeAudioPart(
+                  widget.podcastAudioUrl, startTimeSeconds, lengthSeconds);
+
+              widget.onNext(subtitleUri);
+            } catch (e) {
+              print("error: $e");
+            }
+            setState(() {
+              _isLoading = false;
+            });
           },
           style: TextButton.styleFrom(
             backgroundColor: Color(0xff39CBE3),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _loadingIndicator() {
+    return Container(
+      child: CircularProgressIndicator(),
+      alignment: Alignment.center,
     );
   }
 
