@@ -75,6 +75,7 @@ flutter:
     - assets/images/login/nav-arrow-left.png
     - assets/images/main_page_bottom_icon/
     - assets/images/feed_publish/
+    - assets/images/video_share_widget/
   fonts:
     - family: TikTokIcons
       fonts:
