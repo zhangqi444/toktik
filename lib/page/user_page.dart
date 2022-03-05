@@ -241,7 +241,9 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
               controller: _pageController,
               itemCount:2,
               itemBuilder: (context,index){
-                return index == 0?UserWorkListWidget(id: widget.id,):_getPageLayout(index);
+                // TODO: disable the work list for now
+                // return index == 0?UserWorkListWidget(id: widget.id,):_getPageLayout(index);
+                return _getPageLayout(index);
               },
               onPageChanged: (index){
                 _tabController!.animateTo(index);
