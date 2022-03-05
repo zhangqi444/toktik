@@ -86,12 +86,6 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
         }
       },
       {
-        "text": 'Setting and privacy',
-        "img": 'assets/images/video_share_widget/setting.png',
-        "onPressed": (video, reportController, notInterestedController, widget, context) async {
-        }
-      },
-      {
         "text": 'Share',
         "img": 'assets/images/video_share_widget/share.png',
         "onPressed": (video) {
