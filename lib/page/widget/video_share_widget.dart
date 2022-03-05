@@ -88,7 +88,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
       {
         "text": 'Share',
         "img": 'assets/images/video_share_widget/share.png',
-        "onPressed": (video) {
+        "onPressed": (video, reportController, notInterestedController, widget, context) {
           // TO customize the bottomsheet with sharing target, we need to rely on this,
           // https://www.youtube.com/watch?v=bWehAFTFc9o
           // https://pub.dev/packages/url_launcher
