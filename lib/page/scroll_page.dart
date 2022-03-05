@@ -63,7 +63,11 @@ class _ScrollPageState extends State<ScrollPage> {
     ]);
 
     // Once Plugins are added, configure Amplify
-    await Amplify.configure(amplifyconfig);
+    try {
+      await Amplify.configure(amplifyconfig);
+    } catch (e) {
+      print(e);
+    }
     try {
       Amplify.DataStore.clear();
       Application.eventBus.fire(AmplifyConfiguredEvent());
