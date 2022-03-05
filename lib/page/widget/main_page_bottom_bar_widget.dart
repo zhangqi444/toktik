@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
@@ -14,6 +15,9 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
 import 'package:toktik/util/tik_tok_icons_icons.dart';
+
+import '../../common/configs.dart';
+import '../../enum/navigation_argument.dart';
 
 ///首页底部导航
 class MainPageBottomBarWidget extends StatefulWidget {
@@ -70,18 +74,19 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
                   'Home',
                   Image.asset("assets/images/main_page_bottom_icon/home.png"),
                   Image.asset("assets/images/main_page_bottom_icon/home-active.png"), 0),
-              SizedBox(width: 1),
-              menuButton(
-                  'Live',
-                  mainPageScrollController.indexBottomBarMainPage == 0
-                      ? Image.asset("assets/images/main_page_bottom_icon/live-dark.png")
-                      : Image.asset("assets/images/main_page_bottom_icon/live.png"),
-                  Image.asset("assets/images/main_page_bottom_icon/live-active.png"), 1),
+              // TODO: disabel unlaunched feature
+              // SizedBox(width: 1),
+              // menuButton(
+              //     'Live',
+              //     mainPageScrollController.indexBottomBarMainPage == 0
+              //         ? Image.asset("assets/images/main_page_bottom_icon/live-dark.png")
+              //         : Image.asset("assets/images/main_page_bottom_icon/live.png"),
+              //     Image.asset("assets/images/main_page_bottom_icon/live-active.png"), 1),
+              // SizedBox(width: 3.5),
+              // customCreateIcon,
               SizedBox(width: 3.5),
-              customCreateIcon,
-              SizedBox(width: 3.5),
               menuButton(
-                  'Message',
+                  'Feedback',
                   mainPageScrollController.indexBottomBarMainPage == 0
                       ? Image.asset("assets/images/main_page_bottom_icon/message-dark.png")
                       : Image.asset("assets/images/main_page_bottom_icon/message.png"),
@@ -106,10 +111,6 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
 
   Widget get customCreateIcon => GestureDetector(
       onTap: () {
-        // TODO: disable publish page
-        EasyLoading.showToast("This feature is coming soon.",
-            duration: Duration(seconds: 3));
-        return;
         Application.eventBus.fire(StopPlayEvent());
         Get.toNamed(Routers.shoot);
       },
@@ -158,7 +159,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
     return GestureDetector(
         onTap: () {
           // TODO: disable bottom tab for now.
-          if (index == 1 || index == 2) {
+          if (index == 1) {
             EasyLoading.showToast("This feature is coming soon.",
                 duration: Duration(seconds: 3));
             return;
@@ -166,6 +167,8 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
 
           if (index == 0 || index == 1) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
+          } else if(index == 2) {
+            Get.toNamed(Routers.webView, arguments: { NavigationArgument.URL: FEEDBACK_URL });
           } else {
             var loginUserInfo = userController.userExMap[_selfController.loginUserId.value];
             if(loginUserInfo != null) {
@@ -178,11 +181,11 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
         },
         child: Container(
               height: 45,
-              width: 45,
+              width: 48,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  mainPageScrollController.indexBottomBarMainPage == index
+                  mainPageScrollController.indexBottomBarMainPage.value == index
                       ? icon_active
                       : icon,
                   SizedBox(
@@ -192,15 +195,14 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
                     text,
                     style: TextStyle(
                         fontWeight:
-                            mainPageScrollController.indexBottomBarMainPage ==
-                                    index
+                            mainPageScrollController.indexBottomBarMainPage.value == index
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                         color:
-                            mainPageScrollController.indexBottomBarMainPage == 0
-                                ? (mainPageScrollController.indexBottomBarMainPage == index
+                            mainPageScrollController.indexBottomBarMainPage.value == 0
+                                ? (mainPageScrollController.indexBottomBarMainPage.value == index
                                         ? Color(0xffffffff) : Color(0xff8b8b8b))
-                                : (mainPageScrollController.indexBottomBarMainPage == index
+                                : (mainPageScrollController.indexBottomBarMainPage.value == index
                                         ? Color(0xff2A2A2A) : Color(0xff2A2A2A)),
                         fontSize: 10.0),
                   )
