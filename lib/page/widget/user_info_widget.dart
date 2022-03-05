@@ -208,32 +208,33 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children:[
-          SizedBox(
-            width: 100,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(response == null ? '' : response.followingCount.toString(),
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
-                SizedBox(width: 2,),
-                Text('Following',
-                    style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(response == null ?'':response.followerCount.toString(),
-                    style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
-                SizedBox(width: 2,),
-                Text('Followers',
-                    style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
-              ],
-            ),
-          ),
+          // TODO: follow is not supported yet
+          // SizedBox(
+          //   width: 100,
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Text(response == null ? '' : response.followingCount.toString(),
+          //           style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
+          //       SizedBox(width: 2,),
+          //       Text('Following',
+          //           style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
+          //     ],
+          //   ),
+          // ),
+          // SizedBox(
+          //   width: 100,
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Text(response == null ?'':response.followerCount.toString(),
+          //           style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16)),
+          //       SizedBox(width: 2,),
+          //       Text('Followers',
+          //           style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
+          //     ],
+          //   ),
+          // ),
           SizedBox(
             width: 100,
             child: Column(

@@ -80,7 +80,8 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
             itemBuilder: (context, index) {
               return VideoWidget(
                 video: videoList[index],
-                showFocusButton: true,
+                // TODO: follow is not supported yet.
+                showFocusButton: false,
                 contentHeight: widget.contentHeight,
                 onClickHeader: () {
                   var user = videoList[index]!.user!;
