@@ -4,7 +4,6 @@ import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/enum/auth_status.dart';
-import 'package:toktik/model/response/login_response.dart';
 import 'package:toktik/model/response/user_info_ex_response.dart';
 import 'package:toktik/net/api.dart';
 import 'package:toktik/util/sp_util.dart';
@@ -136,36 +135,33 @@ class SelfController extends GetxController{
   Future<void> load() async {
     init();
     var selfUserInfo = await SPUtil.getString(SPKeys.selfUserInfo);
-    if(!isStringNullOrEmpty(selfUserInfo)) {
-      selfUserInfo = json.decode(selfUserInfo);
-      loginUserId.value = selfUserInfo[SPKeys.selfUserInfoId];
-      loginUserUsername.value = selfUserInfo[SPKeys.selfUserInfoUsername];
-      loginUserToken.value = selfUserInfo[SPKeys.selfUserInfoToken];
-      loginUserEmail.value = selfUserInfo[SPKeys.selfUserInfoEmail]?? "";
-      loginUserPhoneNumber.value = selfUserInfo[SPKeys.selfUserInfoPhoneNumber]?? "";
+    
+    if(isStringNullOrEmpty(selfUserInfo)) return;
 
-      if (!isStringNullOrEmpty(loginUserId.value)) {
-        UserInfoExResponse user = new UserInfoExResponse();
-        user.user = new UserInfoExUser();
-        user.user?.id = loginUserId.value;
-        user.user?.username = loginUserUsername.value;
-        user.user?.email = loginUserEmail.value;
-        user.user?.phoneNumber = loginUserPhoneNumber.value;
-        userController.userExMap[loginUserId.value] = user;
-        // try to refresh the user data async
-        userController.loadUserInfoExByUsername(loginUserUsername.value);
-        return;
-      }
-    }
+    selfUserInfo = json.decode(selfUserInfo);
+    loginUserId.value = selfUserInfo[SPKeys.selfUserInfoId];
+    loginUserUsername.value = selfUserInfo[SPKeys.selfUserInfoUsername];
+    loginUserToken.value = selfUserInfo[SPKeys.selfUserInfoToken];
+    loginUserEmail.value = selfUserInfo[SPKeys.selfUserInfoEmail]?? "";
+    loginUserPhoneNumber.value = selfUserInfo[SPKeys.selfUserInfoPhoneNumber]?? "";
+
+    if (isStringNullOrEmpty(loginUserId.value)) return;
 
     var res = await Api.getCurrentUser();
-    if(res == null || res.username == null) return;
+    if(res == null || res.username != loginUserUsername.value) {
+      init();
+      return;
+    }
 
     String? userId = await userController.loadUserInfoExByUsername(res.username);
+    if(userId != loginUserId.value) {
+      init();
+      return;
+    }
     await setLoginUserAuthInfo(username: res.username, userId: userId, token: "", persistent: true);
   }
 
-  // TODO: migrate to a datamodel for better organized getting/putting logic
+  /// TODO: migrate to a datamodel for better organized getting/putting logic
   Future<void> setLoginUserAuthInfo({
     String? email, String? phoneNumber, String? username, String? token, String? userId, persistent = false
   }) async {

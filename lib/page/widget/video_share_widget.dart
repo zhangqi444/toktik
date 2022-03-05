@@ -186,28 +186,28 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   _getAppsLayout() {
     return Container(
       height: 80,
-     child: SingleChildScrollView(
-       scrollDirection: Axis.horizontal,
-       child: Row(
-         children: List.generate(nameApps.length, (index) {
-           return Container(
-             margin: EdgeInsets.only(left: 20),
-             child: Column(
-               children: [
-                 CircleAvatar(
-                     backgroundColor:Colors.transparent,
-                     radius: 24,
-                     backgroundImage:AssetImage(imgApps[index])
-                 ),
-                 SizedBox(height: 5,),
-                 Text(nameApps[index],style: TextStyle(color: Colors.white,fontSize: 10),)
-               ],
-             ),
-           );
-         }
-         ),
-       ),
-     ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: List.generate(nameApps.length, (index) {
+            return Container(
+              margin: EdgeInsets.only(left: 20),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                      backgroundColor:Colors.transparent,
+                      radius: 24,
+                      backgroundImage:AssetImage(imgApps[index])
+                  ),
+                  SizedBox(height: 5,),
+                  Text(nameApps[index],style: TextStyle(color: Colors.white,fontSize: 10),)
+                ],
+              ),
+            );
+          }
+          ),
+        ),
+      ),
     );
   }
 

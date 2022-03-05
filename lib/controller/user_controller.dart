@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/model/request/follow_request.dart';
 import 'package:toktik/model/response/follow_response.dart';
-import 'package:toktik/model/response/user_info_ex_response.dart';
-import 'package:toktik/model/response/user_info_response.dart';
 import 'package:toktik/model/response/user_work_list_response.dart';
 import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
@@ -56,26 +54,25 @@ class UserController extends GetxController{
     if(isStringNullOrEmpty(id)) return;
 
     var response = await Api.getUserInfoEx(id);
-    if(response != null) {
-      userExMap[response.user!.id] = response;
-    }
+    if(response == null) return null;
+    userExMap[response.user!.id] = response;
   }
 
   ///获取用户资料信息(扩展)
   Future<String?> loadUserInfoExByUsername(String? username) async{
     var response = await Api.getUserInfoExByUsername(username);
-    if(response != null) {
-      userExMap[response.user!.id] = response;
-      return response.user!.id;
-    }
+    if(response == null) return null;
+
+    userExMap[response.user!.id] = response;
+    return response.user!.id;
   }
 
   Future<String?> loadUserInfoExByEmail(String email) async{
     var response = await Api.getUserInfoExByEmail(email);
-    if(response != null) {
-      userExMap[response.user!.id] = response;
-      return response.user!.id;
-    }
+    if(response == null) return null;
+
+    userExMap[response.user!.id] = response;
+    return response.user!.id;
   }
 
   // 获取用户视频列表
