@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
-import 'package:toktik/controller/recommend_page_controller.dart';
+import 'package:toktik/controller/home_tab_recommend_page_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/event/amplify_configured_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../common/router_manager.dart';
 import '../enum/navigation_argument.dart';
-import '../util/screen_utils.dart';
 
 ///首页tab推荐
 class HomeTabRecommendPage extends StatefulWidget {
@@ -29,12 +27,10 @@ class HomeTabRecommendPage extends StatefulWidget {
 }
 
 class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with AutomaticKeepAliveClientMixin {
-  RecommendPageController _controller = Get.put(RecommendPageController());
+  HomeTabRecommendPageController _controller = Get.put(HomeTabRecommendPageController());
   MainPageScrollController _mainController = Get.find();
   PageController _pageController = PageController(initialPage: 0, keepPage: true);
-  FeedController _feedController = Get.put(FeedController());
   SelfController _selfController = Get.put(SelfController());
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
   var amplifyConfiguredListner;
 
   @override
@@ -45,14 +41,13 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
 
   Future<void> init() async {
     await _selfController.load();
-    _feedController.refreshHotFeedList(_refreshController);
+    _controller.loadFeedList();
   }
 
   @override
   void dispose() {
     super.dispose();
     _pageController.dispose();
-    _refreshController.dispose();
     if(amplifyConfiguredListner != null) {
       amplifyConfiguredListner.cancel();
     }
@@ -62,59 +57,58 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
   Widget build(BuildContext context) {
     return  Scaffold(
       backgroundColor: ColorRes.color_1,
-      body: SmartRefresher(
-        controller: _refreshController,
-        onRefresh: (){_feedController.refreshHotFeedList(_refreshController);},
-        onLoading: (){_feedController.loadHotFeedList(_refreshController);},
-        child: _getVideoList(context),
+      body: RefreshIndicator(
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
+          onRefresh: () async{ _controller.refreshFeedList(); },
+          child: _getVideoList(context),
       )
     );
   }
 
   _getVideoList(BuildContext context) {
     return Obx((){
-      List<FeedListList?> videoList = _feedController.hotFeedList.value.map(
-           (element) => _feedController.feedListListMap.value[element]
-      ).toList();
-      if(null == videoList || videoList.length == 0){
+      List<FeedListList?>? videoList = _controller.getFeedList();
+      if(videoList == null || videoList.length == 0){
         return Container(color: ColorRes.color_1);
       } else {
-        return PageView.builder(
-          controller: _pageController,
-          itemCount: videoList.length,
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context, index) {
-            return VideoWidget(
-              video: videoList[index],
-              showFocusButton: true,
-              contentHeight: widget.contentHeight,
-              onClickHeader: () {
-                var user = videoList[index]!.user!;
-                _mainController.setCurrentUserOfVideo(user);
-                Get.toNamed(Routers.user, arguments: {
-                  NavigationArgument.IS_LOGIN_USER: false,
-                  NavigationArgument.ID: user.id
-                });
-              },
-              onNotInterested: () {
-                // move to the next video.
-                _pageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
+        return Container(
+          child: PageView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: _pageController,
+            itemCount: videoList.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return VideoWidget(
+                video: videoList[index],
+                showFocusButton: true,
+                contentHeight: widget.contentHeight,
+                onClickHeader: () {
+                  var user = videoList[index]!.user!;
+                  Get.toNamed(Routers.user, arguments: {
+                    NavigationArgument.IS_LOGIN_USER: false,
+                    NavigationArgument.ID: user.id
+                  });
+                },
+                onNotInterested: () {
+                  // move to the next video.
+                  _pageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);
+                }
+              );
+            },
+            onPageChanged: (index) {
+              if(videoList.length - index < 3) {
+                _controller.loadFeedList();
               }
-            );
-          },
-          onPageChanged: (index){
-            _mainController.setCurrentUserOfVideo(videoList[index]!.user!);
-          },
+            },
+          )
         );
       }
 
     });
   }
 
-  /**
-   * To stop the page from rebuilding, please follow this
-   * https://developpaper.com/three-ways-to-keep-the-state-of-the-original-page-after-page-switching-by-flutter/
-   */
+  /// To stop the page from rebuilding, please follow this
+  /// https://developpaper.com/three-ways-to-keep-the-state-of-the-original-page-after-page-switching-by-flutter/
   @override
   bool get wantKeepAlive => true;
 }

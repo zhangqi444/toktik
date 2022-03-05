@@ -7,9 +7,9 @@ FeedListResponse $FeedListResponseFromJson(Map<String, dynamic> json) {
 	if (xList != null) {
 		feedListResponse.xList = xList;
 	}
-	final int? cursor = jsonConvert.convert<int>(json['cursor']);
-	if (cursor != null) {
-		feedListResponse.cursor = cursor;
+	final String? nextToken = jsonConvert.convert<String>(json['nextToken']);
+	if (nextToken != null) {
+		feedListResponse.nextToken = nextToken;
 	}
 	final int? count = jsonConvert.convert<int>(json['count']);
 	if (count != null) {
@@ -25,7 +25,7 @@ FeedListResponse $FeedListResponseFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> $FeedListResponseToJson(FeedListResponse entity) {
 	final Map<String, dynamic> data = <String, dynamic>{};
 	data['list'] =  entity.xList?.map((v) => v?.toJson()).toList();
-	data['cursor'] = entity.cursor;
+	data['nextToken'] = entity.nextToken;
 	data['count'] = entity.count;
 	data['hasMore'] = entity.hasMore;
 	return data;

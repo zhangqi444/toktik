@@ -13,7 +13,7 @@ class FeedListResponse {
 
 	@JSONField(name: "list")
 	List<FeedListList?>? xList;
-	int? cursor;
+	String? nextToken;
 	int? count;
 	bool? hasMore;
 }

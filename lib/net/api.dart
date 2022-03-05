@@ -352,17 +352,19 @@ class Api {
 
   static Future<UserInfoExResponse?> getUserInfoEx(String? id) async {
     try {
-      var response = await _query('''query GetUsers(\$id: ID!) {
+      var response = await _query(
+          '''query GetUser(\$id: ID!) {
             getUser(id: \$id) {
               id username email phoneNumber portrait nickname gender bio city birth
             }
-          }''', {'id': id}, 'getUser');
-      return _parseUsers([response], {id: id});
+          }''',
+          { 'id': id },
+          'getUser'
+      );
+      return response == null ? null : _parseUsers([response], {id: id});
     } catch (e, stacktrace) {
-      print("Could not query server: " +
-          e.toString() +
-          '\n' +
-          stacktrace.toString());
+      print("Could not query server: " + e.toString() + '\n' + stacktrace.toString());
+      return null;
     }
   }
 
@@ -425,41 +427,50 @@ class Api {
   }
 
   ///获取热门作品列表
-  static Future<FeedListResponse?> getHotFeedList(
-      int? cursor, int limit, String userId) async {
+  static Future<FeedListResponse?> getHotFeedList(String? nextToken, int limit, String userId) async{
     try {
       var response;
       var localPosts;
-      if (userId == null || userId.isEmpty) {
+      if(userId.isEmpty) {
         localPosts = await SPUtil.getString(SPKeys.POSTS);
         if (localPosts != null) {
           localPosts = jsonDecode(localPosts);
         }
-        response = await _query('''query ListPosts(\$limit: Int) {
-            listPosts(limit: \$limit) {
+        response = await _query(
+          '''query ListPosts(\$limit: Int, \$nextToken: String) {
+            listPosts(limit: \$limit, nextToken: \$nextToken) {
+              nextToken
               items {
                 id attachments music { id } text likeCount
                 user { id nickname username portrait }
               }
             }
-          }''', {'limit': limit}, 'listPosts');
+          }''',
+          { 'limit': limit, 'nextToken': nextToken },
+          'listPosts'
+        );
       } else {
-        response =
-            await _query('''query ListPostExs(\$limit: Int, \$userId: ID!) {
-            listPostExs(limit: \$limit, userId: \$userId) {
+        response = await _query(
+          '''query ListPostExs(\$limit: Int, \$userId: ID!, \$nextToken: String) {
+            listPostExs(limit: \$limit, userId: \$userId, nextToken: \$nextToken) {
+              nextToken
               items {
                 id attachments music { id } text likeCount isLiked { value }
                 user { id nickname username portrait }
               }
             }
-          }''', {'limit': limit, 'userId': userId}, 'listPostExs');
+          }''',
+          { 'limit': limit, 'userId': userId, 'nextToken': nextToken },
+          'listPostExs'
+        );
       }
+      String newNextToken = response?['nextToken'];
 
       var rng = new Random(DateTime.now().millisecondsSinceEpoch);
       List posts =
           (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
       posts = posts.where((f) => f['attachments'] != null).toList();
-      Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async {
+      Map<String, dynamic> convert(Map<String, dynamic> post) {
         post['content'] = {
           'attachments': jsonDecode(post['attachments'])['data'],
           'music': post['music'] != null ? post['music'] : null,
@@ -481,10 +492,8 @@ class Api {
         }
         return post;
       }
-
-      var parsed =
-          await Future.wait(posts.map((post) async => await convert(post)));
-      return FeedListResponse.fromJson({'list': parsed.toList()});
+      var parsed = posts.map((post) => convert(post)).toList();
+      return FeedListResponse.fromJson({'list': parsed, 'nextToken': newNextToken});
     } catch (e, stacktrace) {
       print("Fail to get post lists: " + stacktrace.toString());
     }
@@ -557,7 +566,7 @@ class Api {
           request:
               GraphQLRequest<String>(document: document, variables: variables));
       var result = await operation.response;
-      if (result == null || result.data == null || result.errors.length > 0) {
+      if (result.errors.length > 0) {
         debugPrint("Could not query server:" +
             result.errors.toString() +
             "\n" +
@@ -638,7 +647,7 @@ class Api {
             },
           },
           'createNotInterested');
-          
+
       return NotInterestedResponse.fromJson(result);
     } catch (e, stacktrace) {
       print("Could not query server: " +
