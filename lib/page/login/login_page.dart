@@ -91,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                       initText: account,
                       hintText: 'Email, phone or user name',
                       onChanged: (text) {
+                        this.errorMessage = "";
                         account = text;
                         if (!isStringNullOrEmpty(account) &&
                             !isStringNullOrEmpty(pwd)) {
@@ -111,8 +112,10 @@ class _LoginPageState extends State<LoginPage> {
                   child: LoginTextFieldWidget(
                       readOnly: isForSignedUpAccount,
                       initText: pwd,
+                      obscureText: true,
                       hintText: 'Password',
                       onChanged: (text) {
+                        this.errorMessage = "";
                         pwd = text;
                         if (!isStringNullOrEmpty(account) &&
                             !isStringNullOrEmpty(pwd)) {
