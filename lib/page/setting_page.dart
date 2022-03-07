@@ -38,10 +38,9 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: ColorRes.light_background_color,
-      appBar:AppBarWidget(title: 'Setting'),
+      appBar:AppBarWidget(title: 'Settings and privacy'),
       body: _getBody(context),
     );
   }
@@ -96,6 +95,7 @@ class _SettingPageState extends State<SettingPage> {
             // ItemTurnWidget(img: 'assets/images/share_app_toutiao.webp',title: '头条主页',onClick: (){EasyLoading.showToast('功能待开发');},),
             // ItemTurnWidget(img: 'assets/images/fensi.png',title: '粉丝',onClick: (){EasyLoading.showToast('功能待开发');},),
             // Divider(color: ColorRes.color_2.withAlpha(20),),
+            _getDivider(),
             _getHeader(SETTING_HEADER_ABOUT),
             // ItemTurnWidget(img: 'assets/images/ad.png',title: '广告反馈与设置',onClick: (){EasyLoading.showToast('功能待开发');},),
             ItemTurnWidget(img: 'assets/images/user_service.png',title: SETTING_TERMS_OF_SERVICE, onClick: (){
