@@ -13,7 +13,7 @@ class HomeTabRecommendPageController extends GetxController{
   final RxList<String?> feedList = <String>[].obs;
 
   String? nextToken;
-  int limit = 20;
+  int limit = 100;
 
   FeedController _feedController = Get.put(FeedController());
   SelfController _selfController = Get.put(SelfController());
