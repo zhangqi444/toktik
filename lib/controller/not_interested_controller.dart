@@ -1,30 +1,31 @@
+import 'package:toktik/controller/home_tab_recommend_page_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/model/response/not_interested_response.dart';
 import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
 
-import 'feed_controller.dart';
+import '../enum/not_interested.dart';
 
 class NotInterestedController extends GetxController{
 
   SelfController selfController = Get.put(SelfController());
-  FeedController feedController = Get.put(FeedController());
+  HomeTabRecommendPageController homeTabRecommendPageController = Get.put(HomeTabRecommendPageController());
 
   Future<NotInterestedResponse?> notInterestedPost(String postId) async {
     String userId = selfController.loginUserId.value;
-    NotInterestedResponse? result = await Api.notInterested(userId, postId: postId);
+    NotInterestedResponse? result = await Api.notInterested(userId, NotInterestedType.POST postId: postId);
     if(result == null) return null;
 
-    feedController.removeFeedListList(postId);
+    homeTabRecommendPageController.removeFeedListList(postId);
     return result;
   }
 
   Future<NotInterestedResponse?> notInterestedUser(String targetUserId) async {
     String userId = selfController.loginUserId.value;
-    NotInterestedResponse? result = await Api.notInterested(userId, targetUserId: targetUserId);
+    NotInterestedResponse? result = await Api.notInterested(userId, NotInterestedType.USER targetUserId: targetUserId);
     if(result == null) return null;
 
-    feedController.removeFeedListListByUser(targetUserId);
+    homeTabRecommendPageController.removeFeedListListByUser(targetUserId);
     return result;
   }
 }

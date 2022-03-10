@@ -1,4 +1,4 @@
-type NotInterested @model @auth(rules: [{allow: public}]) {
+type NotInterested @model @auth(rules: [{ allow: public }]) {
   id: ID!
   user: User @connection
   post: Post @connection
@@ -9,7 +9,24 @@ type NotInterested @model @auth(rules: [{allow: public}]) {
   type: String
 }
 
-type Report @model @auth(rules: [{allow: public}]) @key(name: "reportTargetUserId-index", fields: ["reportTargetUserId"], queryField: "reportTargetUserId") @key(name: "reportUserId-index", fields: ["reportUserId"], queryField: "reportUserId") @key(name: "reportPostId-index", fields: ["reportPostId"], queryField: "reportPostId") {
+type Report
+  @model
+  @auth(rules: [{ allow: public }])
+  @key(
+    name: "reportTargetUserId-index"
+    fields: ["reportTargetUserId"]
+    queryField: "reportTargetUserId"
+  )
+  @key(
+    name: "reportUserId-index"
+    fields: ["reportUserId"]
+    queryField: "reportUserId"
+  )
+  @key(
+    name: "reportPostId-index"
+    fields: ["reportPostId"]
+    queryField: "reportPostId"
+  ) {
   id: ID!
   reason: String
   description: String
@@ -24,7 +41,24 @@ type Report @model @auth(rules: [{allow: public}]) @key(name: "reportTargetUserI
   reportTargetUserId: ID
 }
 
-type View @model @auth(rules: [{allow: public}]) @key(name: "viewPostId-index", fields: ["viewPostId"], queryField: "viewPostId") @key(name: "viewUserId-index", fields: ["viewUserId"], queryField: "viewUserId") @key(name: "viewPostId-viewUserId-index", fields: ["viewPostId", "viewUserId"], queryField: "viewByPostIdUserId") {
+type View
+  @model
+  @auth(rules: [{ allow: public }])
+  @key(
+    name: "viewPostId-index"
+    fields: ["viewPostId"]
+    queryField: "viewPostId"
+  )
+  @key(
+    name: "viewUserId-index"
+    fields: ["viewUserId"]
+    queryField: "viewUserId"
+  )
+  @key(
+    name: "viewPostId-viewUserId-index"
+    fields: ["viewPostId", "viewUserId"]
+    queryField: "viewByPostIdUserId"
+  ) {
   id: ID!
   post: Post @connection
   user: User @connection
@@ -32,7 +66,7 @@ type View @model @auth(rules: [{allow: public}]) @key(name: "viewPostId-index", 
   viewPostId: ID!
 }
 
-type Share @model @auth(rules: [{allow: public}]) {
+type Share @model @auth(rules: [{ allow: public }]) {
   id: ID!
   to: String
   user: User @connection
@@ -41,7 +75,7 @@ type Share @model @auth(rules: [{allow: public}]) {
   sharePostId: ID!
 }
 
-type Comment @model @auth(rules: [{allow: public}]) {
+type Comment @model @auth(rules: [{ allow: public }]) {
   id: ID!
   user: User @connection
   post: Post @connection
@@ -50,7 +84,24 @@ type Comment @model @auth(rules: [{allow: public}]) {
   commentPostId: ID!
 }
 
-type Like @model @auth(rules: [{allow: public}]) @key(name: "likePostId-likeUserId-index", fields: ["likePostId", "likeUserId"], queryField: "likeByPostIdUserId") @key(name: "likePostId-index", fields: ["likePostId"], queryField: "likeByPostId") @key(name: "likeUserId-index", fields: ["likeUserId"], queryField: "likeByUserId") {
+type Like
+  @model
+  @auth(rules: [{ allow: public }])
+  @key(
+    name: "likePostId-likeUserId-index"
+    fields: ["likePostId", "likeUserId"]
+    queryField: "likeByPostIdUserId"
+  )
+  @key(
+    name: "likePostId-index"
+    fields: ["likePostId"]
+    queryField: "likeByPostId"
+  )
+  @key(
+    name: "likeUserId-index"
+    fields: ["likeUserId"]
+    queryField: "likeByUserId"
+  ) {
   id: ID!
   user: User @connection
   post: Post @connection
@@ -59,7 +110,14 @@ type Like @model @auth(rules: [{allow: public}]) @key(name: "likePostId-likeUser
   value: Boolean
 }
 
-type Post @model @auth(rules: [{allow: public}]) @key(name: "postUserId-index", fields: ["postUserId"], queryField: "postByUserId") {
+type Post
+  @model
+  @auth(rules: [{ allow: public }])
+  @key(
+    name: "postUserId-index"
+    fields: ["postUserId"]
+    queryField: "postByUserId"
+  ) {
   id: ID!
   text: String
   user: User @connection
@@ -72,13 +130,13 @@ type Post @model @auth(rules: [{allow: public}]) @key(name: "postUserId-index", 
   viewCount: Int
 }
 
-type Music @model @auth(rules: [{allow: public}]) {
+type Music @model @auth(rules: [{ allow: public }]) {
   id: ID!
   url: String
   img: String
 }
 
-type User @model @auth(rules: [{allow: public}]) {
+type User @model @auth(rules: [{ allow: public }]) {
   id: ID!
   nickname: String
   portrait: String
@@ -271,14 +329,46 @@ input ModelPostFilterInput {
   not: ModelPostFilterInput
 }
 
+input TranscribeAudioPartInput {
+  audioUrl: String
+}
+
+type TranscribeAudioPartResult {
+  subtitleFileUri: String
+}
+
 type Mutation {
-  updatePostEx(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
-  updatePostPowered(input: UpdatePostInput!, add: AddPostInput, condition: ModelPostConditionInput): Post @aws_api_key @aws_iam
-  likePost(input: CreateLikeInput!, condition: ModelLikeConditionInput): Like @aws_api_key @aws_iam @function(name: "likePost-${env}")
-  viewPost(input: CreateViewInput!, condition: ModelViewConditionInput): View @aws_api_key @aws_iam @function(name: "viewPost-${env}")
+  updatePostEx(
+    input: UpdatePostInput!
+    add: AddPostInput
+    condition: ModelPostConditionInput
+  ): Post @aws_api_key @aws_iam
+  updatePostPowered(
+    input: UpdatePostInput!
+    add: AddPostInput
+    condition: ModelPostConditionInput
+  ): Post @aws_api_key @aws_iam
+  likePost(input: CreateLikeInput!, condition: ModelLikeConditionInput): Like
+    @aws_api_key
+    @aws_iam
+    @function(name: "likePost-${env}")
+  viewPost(input: CreateViewInput!, condition: ModelViewConditionInput): View
+    @aws_api_key
+    @aws_iam
+    @function(name: "viewPost-${env}")
+  transcribeAudioPart(
+    input: TranscribeAudioPartInput!
+  ): TranscribeAudioPartResult
+    @aws_api_key
+    @aws_iam
+    @function(name: "transcribeAudioPart-${env}")
 }
 
 type Query {
-  listPostExs(filter: ModelPostFilterInput, userId: ID!, limit: Int, nextToken: String): ModelPostExConnection @function(name: "listPostExs-${env}")
+  listPostExs(
+    filter: ModelPostFilterInput
+    userId: ID!
+    limit: Int
+    nextToken: String
+  ): ModelPostExConnection @function(name: "listPostExs-${env}")
 }
- 

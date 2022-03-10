@@ -124,7 +124,7 @@ class _SettingPageState extends State<SettingPage> {
             _getDivider(),
             _getHeader(SETTING_HEADER_SUPPORT),
             ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
-              Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/contact"} );
+              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
             }),
             _getDivider(),
             _getHeader(SETTING_HEADER_LOGIN),

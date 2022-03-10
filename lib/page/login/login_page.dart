@@ -7,6 +7,7 @@ import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/page/login/widget/login_app_bar_widget.dart';
+import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/page/login/widget/login_subtitle_text_widget.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/page/login/widget/login_title_text_widget.dart';
@@ -65,11 +66,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
-    if(isLoading) {
-
-    }
-
     return Scaffold(
       appBar: LoginAppBarWidget(title: "Log in"),
       body: _layoutLogin(context),
@@ -82,19 +78,20 @@ class _LoginPageState extends State<LoginPage> {
         color: Colors.white,
       ),
       child: Container(
-        // margin: EdgeInsets.only(top: 91),
+        margin: EdgeInsets.only(left: 30, right: 30),
         child: Stack(
           children: [
             Column(
               children: [
                 isForSignedUpAccount ? _getTitle() : Container(),
                 Container(
-                  margin: EdgeInsets.only(left: 30, right: 30, top: 34),
+                  margin: EdgeInsets.only(top: 34),
                   child: LoginTextFieldWidget(
                       readOnly: isForSignedUpAccount,
                       initText: account,
                       hintText: 'Email, phone or user name',
                       onChanged: (text) {
+                        this.errorMessage = "";
                         account = text;
                         if (!isStringNullOrEmpty(account) &&
                             !isStringNullOrEmpty(pwd)) {
@@ -112,12 +109,13 @@ class _LoginPageState extends State<LoginPage> {
                   height: 10,
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 30, right: 30),
                   child: LoginTextFieldWidget(
                       readOnly: isForSignedUpAccount,
                       initText: pwd,
+                      obscureText: true,
                       hintText: 'Password',
                       onChanged: (text) {
+                        this.errorMessage = "";
                         pwd = text;
                         if (!isStringNullOrEmpty(account) &&
                             !isStringNullOrEmpty(pwd)) {
@@ -131,13 +129,10 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       }),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                !isStringNullOrEmpty(errorMessage)
+                    ? LoginErrorMessageWidget(text: errorMessage)
+                    : SizedBox(height: 10),
                 _getBottomLayout(context),
-                SizedBox(
-                  height: 20,
-                ),
                 _getLogin(context),
               ],
             ),
@@ -151,7 +146,6 @@ class _LoginPageState extends State<LoginPage> {
   _getTitle() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(left: 30, right: 30),
       height: 80,
       child: Column(
         children: [
@@ -164,7 +158,6 @@ class _LoginPageState extends State<LoginPage> {
 
   _getLogin(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 30, right: 30),
       height: 50,
       width: MediaQuery.of(context).size.width,
       child: LoginPrimaryButtonWidget(
@@ -177,8 +170,7 @@ class _LoginPageState extends State<LoginPage> {
 
             if (status == AuthStatus.USER_NOT_FOUND.toShortString()) {
               setState(() {
-                errorMessage =
-                    'Sorry, we cannot find the user. Please Check your information and try again.';
+                errorMessage = 'Sorry, we cannot find the user. Please try again.';
               });
             } else if (status == AuthStatus.SIGN_IN_DONE.toShortString()) {
               Get.offAllNamed(Routers.scroll);
@@ -203,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
   _getBottomLayout(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(left: 25, right: 30),
       height: 40,
       child: Stack(
         children: [

@@ -8,6 +8,8 @@
 	API_TOKTIK_LIKETABLE_NAME
 	API_TOKTIK_MUSICTABLE_ARN
 	API_TOKTIK_MUSICTABLE_NAME
+	API_TOKTIK_NOTINTERESTEDTABLE_ARN
+	API_TOKTIK_NOTINTERESTEDTABLE_NAME
 	API_TOKTIK_POSTTABLE_ARN
 	API_TOKTIK_POSTTABLE_NAME
 	API_TOKTIK_SHARETABLE_ARN
@@ -26,6 +28,8 @@ const axios = require('axios');
 const gql = require('graphql-tag');
 const graphql = require('graphql');
 const { print } = graphql;
+const { query } = require('/opt/internal/utils/graphqlUtil');
+const { constants } = require('/opt/internal/index');
 
 const getPosts = async (args) => {
     const { nextToken, limit, filter } = args;
@@ -50,6 +54,22 @@ const getPosts = async (args) => {
         }
     });
     if(!graphqlData.data.errors) return graphqlData.data.data.listPosts;
+}
+
+const getNotInteresteds = async (userId) => {
+    const data = {
+        query: print(gql`
+            query listNotInteresteds($filter: ModelNotInterestedFilterInput, $limit: Int, $nextToken: String) {
+                listNotInteresteds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    nextToken startedAt items {
+                        id notInterestedPostId notInterestedTargetUserId type
+                    }
+                }
+            }
+        `),
+        variables: { filter: { notInterestedUserId: { eq: userId } } }
+    };
+    return await query(data, "listNotInteresteds");
 }
 
 const getIsLiked = async (requesterId, posts) => {
@@ -82,15 +102,34 @@ exports.handler = async (event, context) => {
         const args = event['arguments'];
         const requesterId = args['userId'];
 
-        const { items, nextToken, startedAt } = await getPosts(args);
+        const result = await Promise.all([
+            getPosts(args), getNotInteresteds(requesterId)
+        ]);
+        const postsData = result[0];
+        const notInteresteds = result[1];
+        const { items, nextToken, startedAt } = postsData;
+        const notInterestedPosts = {};
+        const notInterestedTargetUsers = {};
+
+        if(notInteresteds && notInteresteds.items) {
+            notInteresteds.items.forEach(item => {
+                if(item.type === constants.NOT_INTERESTED_TYPE.USER) {
+                    notInterestedTargetUsers[item.notInterestedTargetUserId] = true;
+                } else if(item.type === constants.NOT_INTERESTED_TYPE.POST) {
+                    notInterestedPosts[item.notInterestedPostId] = true;
+                }
+            })
+        }
 
         const isLikedMap = requesterId && await getIsLiked(requesterId, items);
-        const posts = items.map(post => {
-            const result = { ...post };
-            if(isLikedMap) result['isLiked'] = isLikedMap[post['id']];
-            result['attachments'] = JSON.parse(result['attachments']);
-            return result;
-        });
+        const posts = items
+            .filter(post => !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId])
+            .map(post => {
+                const result = { ...post };
+                if(isLikedMap) result['isLiked'] = isLikedMap[post['id']];
+                result['attachments'] = JSON.parse(result['attachments']);
+                return result;
+            });
 
         return {
             items: posts, nextToken, startedAt,

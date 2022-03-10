@@ -150,7 +150,8 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
           },
           icon: Image.asset('assets/images/share_button.webp',width: 35,height: 35,),
         ),
-        Text('$shareCount',style: TextStyle(color: Colors.white),)
+        /// TODO: remove share count
+        // Text('$shareCount',style: TextStyle(color: Colors.white),)
 
       ],
     );

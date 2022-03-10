@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 enum EventType {
   HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO,
   HOME_TAB_RECOMMEND_PAGE_LOADED,
