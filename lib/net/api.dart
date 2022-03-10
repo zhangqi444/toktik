@@ -464,7 +464,7 @@ class Api {
           'listPostExs'
         );
       }
-      String newNextToken = response?['nextToken'];
+      String? newNextToken = response['nextToken'];
 
       var rng = new Random(DateTime.now().millisecondsSinceEpoch);
       List posts =
@@ -495,7 +495,7 @@ class Api {
       var parsed = posts.map((post) => convert(post)).toList();
       return FeedListResponse.fromJson({'list': parsed, 'nextToken': newNextToken});
     } catch (e, stacktrace) {
-      print("Fail to get post lists: " + stacktrace.toString());
+      print("Fail to get post lists: " + e.toString() + stacktrace.toString());
     }
   }
 
