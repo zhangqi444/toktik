@@ -464,7 +464,7 @@ class Api {
           'listPostExs'
         );
       }
-      String newNextToken = response?['nextToken'];
+      String? newNextToken = response['nextToken'];
 
       var rng = new Random(DateTime.now().millisecondsSinceEpoch);
       List posts =
