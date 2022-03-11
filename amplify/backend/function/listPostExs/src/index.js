@@ -31,8 +31,6 @@ const { print } = graphql;
 const { query } = require('/opt/internal/utils/graphqlUtil');
 const { constants } = require('/opt/internal/index');
 
-const GRAPHQL_QUERY_MAX_LIMIT = 100;
-
 const getPosts = async (args) => {
     const { nextToken, limit, filter } = args;
     const graphqlData = await axios({
@@ -104,42 +102,27 @@ exports.handler = async (event, context) => {
         const args = event['arguments'];
         const requesterId = args['userId'];
 
-        let { limit, nextToken } = args;
-        if(limit === null || limit === undefined) {
-            limit = GRAPHQL_QUERY_MAX_LIMIT;
-        }
-        let startedAt;
-        let postsData = [];
-        let notInterestedsData = [];
-        while(limit) {
-            const getPostArgs = { ...args };
-            getPostArgs.limit = Math.min(GRAPHQL_QUERY_MAX_LIMIT, limit);
-            limit -= GRAPHQL_QUERY_MAX_LIMIT;
-            if(nextToken !== null && nextToken !== undefined) {
-                getPostArgs.nextToken = nextToken;
-            }
-            const result = await Promise.all([
-                getPosts(getPostArgs), getNotInteresteds(requesterId)
-            ]);
-            nextToken = result[0].nextToken;
-            startedAt = result[0].startedAt;
-            postsData = postsData.concat(result[0].items);
-            notInterestedsData = notInterestedsData.concat((result[1] && result[1].items) ? result[1].items : []);
-        }
-        
+        const result = await Promise.all([
+            getPosts(args), getNotInteresteds(requesterId)
+        ]);
+        const postsData = result[0];
+        const notInteresteds = result[1];
+        const { items, nextToken, startedAt } = postsData;
         const notInterestedPosts = {};
         const notInterestedTargetUsers = {};
 
-        notInterestedsData.forEach(item => {
-            if(item.type === constants.NOT_INTERESTED_TYPE.USER) {
-                notInterestedTargetUsers[item.notInterestedTargetUserId] = true;
-            } else if(item.type === constants.NOT_INTERESTED_TYPE.POST) {
-                notInterestedPosts[item.notInterestedPostId] = true;
-            }
-        })
+        if(notInteresteds && notInteresteds.items) {
+            notInteresteds.items.forEach(item => {
+                if(item.type === constants.NOT_INTERESTED_TYPE.USER) {
+                    notInterestedTargetUsers[item.notInterestedTargetUserId] = true;
+                } else if(item.type === constants.NOT_INTERESTED_TYPE.POST) {
+                    notInterestedPosts[item.notInterestedPostId] = true;
+                }
+            })
+        }
 
-        const isLikedMap = requesterId && await getIsLiked(requesterId, postsData);
-        const posts = postsData
+        const isLikedMap = requesterId && await getIsLiked(requesterId, items);
+        const posts = items
             .filter(post => !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId])
             .map(post => {
                 const result = { ...post };
