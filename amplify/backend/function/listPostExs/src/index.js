@@ -121,7 +121,24 @@ exports.handler = async (event, context) => {
             })
         }
 
-        const isLikedMap = requesterId && await getIsLiked(requesterId, items);
+        // The filtering logic of DDB query can't support too many parameters.
+        // We have to submit multiple queries.
+        let isLikedMap;
+        if(requesterId) {
+            isLikedMap = {};
+            let startIndex = 0;
+            const queries = [];
+            while(startIndex < items.length) {
+                queries.push(getIsLiked(requesterId, items.slice(startIndex, startIndex+100)));
+                startIndex += 100;
+                
+            }
+            const queryResults = await Promise.all(queries);
+            queryResults.forEach(q => {
+                isLikedMap = { ...isLikedMap, ...q };
+            })
+        }
+        
         const posts = items
             .filter(post => !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId])
             .map(post => {
