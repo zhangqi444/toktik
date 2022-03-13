@@ -102,14 +102,14 @@ class _VideoRightBarWidgetState extends State<VideoRightBarWidget> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         LikeButton(
-            isLiked: widget.video!.isLiked,
+            isLiked: widget.video!.isLiked?? false,
             size: 40,
             circleColor:CircleColor(start: ColorRes.color_3,end: ColorRes.color_3),
             likeBuilder: (isLiked){
-              return isLiked == true?Image.asset('assets/images/red_heart.webp'):Image.asset('assets/images/red_heart.webp',color: Colors.white,);
+              return isLiked ? Image.asset('assets/images/red_heart.webp') : Image.asset('assets/images/red_heart.webp',color: Colors.white,);
             },
             bubblesColor:const BubblesColor(dotPrimaryColor: ColorRes.color_3,dotSecondaryColor: ColorRes.color_3,dotThirdColor: ColorRes.color_3,dotLastColor: ColorRes.color_3,),
-            onTap: (bool isLiked) async { await widget.onClickLike?.call(); },
+            onTap: (isLiked) async { await widget.onClickLike?.call(); },
         ),
         SizedBox(height: 2,),
         Text('$likeCount',style: TextStyle(color: Colors.white),)

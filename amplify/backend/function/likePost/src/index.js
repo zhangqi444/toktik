@@ -32,12 +32,12 @@ exports.handler = async (event, context) => {
             "KeyConditionExpression": "likeUserId = :likeUserId And likePostId = :likePostId",
             "ProjectionExpression": "#id,#value,updatedAt,createdAt",
             "ExpressionAttributeValues": {
-              ":likeUserId": { "S": likeUserId },
-              ":likePostId": { "S": likePostId },
+                ":likeUserId": { "S": likeUserId },
+                ":likePostId": { "S": likePostId },
             },
             "ExpressionAttributeNames": {
-              "#id": "id",
-              "#value": "value"
+                "#id": "id",
+                "#value": "value"
             }
         }).promise();
         existingLike = existingLike && existingLike['Count'] === 1 && existingLike['Items'][0];
@@ -76,20 +76,20 @@ exports.handler = async (event, context) => {
             };
         } else {
             updateLikeParam = {
-              "Put": {
-                "TableName": process.env.API_TOKTIK_LIKETABLE_NAME,
-                "Item": {
-                    "id": { "S": viewId },
-                    "value": { "BOOL": value },
-                    "likePostId": { "S": likePostId },
-                    "likeUserId": { "S": likeUserId },
-                    "createdAt": { "S": nowISOString },
-                    "updatedAt": { "S": nowISOString },
-                    "_lastChangedAt": { "N": nowTimestamp },
-                    "_version": { "N": "1" },
-                    "__typename": { "S": constants.GRAPHQL_MODEL_NAME.LIKE },
+                "Put": {
+                    "TableName": process.env.API_TOKTIK_LIKETABLE_NAME,
+                    "Item": {
+                        "id": { "S": viewId },
+                        "value": { "BOOL": value },
+                        "likePostId": { "S": likePostId },
+                        "likeUserId": { "S": likeUserId },
+                        "createdAt": { "S": nowISOString },
+                        "updatedAt": { "S": nowISOString },
+                        "_lastChangedAt": { "N": nowTimestamp },
+                        "_version": { "N": "1" },
+                        "__typename": { "S": constants.GRAPHQL_MODEL_NAME.LIKE },
+                    }
                 }
-              }
             };
         }
 

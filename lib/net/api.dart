@@ -480,15 +480,6 @@ class Api {
 
         if (post['isLiked'] != null && post['isLiked']['value'] != null) {
           post['isLiked'] = post['isLiked']['value'];
-        } else {
-          // TODO: remove if the sign in status is required for like
-          post['isLiked'] = false;
-          if (localPosts != null &&
-              localPosts[post['id']] != null &&
-              localPosts[post['id']]['isLiked'] != null &&
-              localPosts[post['id']]['isLiked']['value'] != null) {
-            post['isLiked'] = localPosts[post['id']]['isLiked']['value'];
-          }
         }
         return post;
       }
@@ -601,25 +592,14 @@ class Api {
   static Future<LikeResponse?> likePost(
       String? postId, String userId, bool value) async {
     try {
-      var result;
-      if (userId != null) {
-        result =
-            await _mutation('''mutation LikePost(\$input: CreateLikeInput!) {
-              likePost(input: \$input) { id, value }
-            }''', {
-          'input': {'likePostId': postId, 'likeUserId': userId, 'value': value},
-        }, 'likePost');
-      } else {
-        // TODO: remove if the sign in status is required for like
-        var localPosts = await SPUtil.getString(SPKeys.POSTS);
-        localPosts = localPosts != null ? jsonDecode(localPosts) : {};
-        if (localPosts == null) localPosts = {};
-        localPosts[postId] = {
-          "isLiked": {"value": value}
-        };
-        SPUtil.set(SPKeys.POSTS, jsonEncode(localPosts));
-        result = localPosts[postId]["isLiked"];
-      }
+      if (isStringNullOrEmpty(userId)) return null;
+        
+      var result =
+          await _mutation('''mutation LikePost(\$input: CreateLikeInput!) {
+            likePost(input: \$input) { id, value }
+          }''', {
+        'input': {'likePostId': postId, 'likeUserId': userId, 'value': value},
+      }, 'likePost');
 
       return LikeResponse.fromJson(result);
     } catch (e, stacktrace) {

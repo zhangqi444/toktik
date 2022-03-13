@@ -229,30 +229,28 @@ class _VideoWidgetState extends State<VideoWidget> {
 
   void _likePost() async {
     if(!_likeEnabled.value) return;
-    var isLiked = !widget.video!.isLiked!;
+    var isLiked = widget.video!.isLiked?? false;
     _likeEnabled = ValueNotifier<bool>(false);
     var eventValue;
     if(_selfController.loginUserId == null || isStringNullOrEmpty(_selfController.loginUserId.value)) {
       // TODO: add the correct logic to stop the video during login
-      // _videoPlayerController.pause();
-      // Get.toNamed(Routers.login);
-      // return;
+      _videoPlayerController.pause();
+      Get.toNamed(Routers.login);
+      eventValue = { Events.VALUE: null, Events.ID: widget.video!.id };
+    } else {
+      var result = await _postController.likePost(widget.video!.id, !isLiked);
+      if(result != null && result.value != null) {
+        int likeCount = widget.video!.likeCount! + (result.value! ? 1 : -1);
+        var newVideoJson = widget.video!.toJson();
+        newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
+        var newVideo = new FeedListList.fromJson(newVideoJson);
+        _feedController.updateFeedListList(widget.video!.id, newVideo);
+      }
+      eventValue = { Events.VALUE: isLiked, Events.ID: widget.video!.id };
     }
 
-    // TODO: allow the not signed customer to like post
-    var result = await _postController.likePost(widget.video!.id, isLiked);
-    if(result != null && result.value != null) {
-      int likeCount = widget.video!.likeCount! + (result.value! ? 1 : -1);
-      var newVideoJson = widget.video!.toJson();
-      newVideoJson..addAll({ 'isLiked': result.value, 'likeCount': likeCount });
-      var newVideo = new FeedListList.fromJson(newVideoJson);
-      _feedController.updateFeedListList(widget.video!.id, newVideo);
-    }
-    eventValue = isLiked;
 
-    mainController.recordEvent(
-        EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(),
-        { Events.VALUE: eventValue, Events.ID: widget.video!.id });
+    mainController.recordEvent(EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(), eventValue);
     _debounceTimer = Timer(_debounceDuration, () => _likeEnabled.value = true);
   }
 
