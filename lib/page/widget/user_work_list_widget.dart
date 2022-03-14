@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/controller/user_controller.dart';
-import 'package:toktik/model/response/user_work_list_response.dart';
 import 'package:toktik/page/widget/user_item_grid_widget.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
@@ -38,38 +37,36 @@ class _UserWorkListWidgetState extends State<UserWorkListWidget> {
   }
 
   _getBody(BuildContext context) {
-    List<String> workList = _userController.userVideoCoverList[widget.id];
-    if(null == workList || workList.length == 0){
-      return Container();
-    }else{
-      return Container(
-        padding: EdgeInsets.only(top: 8),
-        color: ColorRes.cover_list_background_color,
-        child: GridView.builder(
-          //处理GridView顶部空白
-          padding: EdgeInsets.zero,
-          itemCount: workList.length,
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //横轴元素个数
-              crossAxisCount: 3,
-              //纵轴间距
-              mainAxisSpacing: 1,
-              //横轴间距
-              crossAxisSpacing: 5,
-              //子组件宽高长度比例
-              childAspectRatio: 4/6),
-          itemBuilder: (BuildContext context, int index) {
-            return UserItemGridWidget(
-              url: workList[index],
-              onTap: (){
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoListPage(videoList: _userModel.worksVideo,)));
-              },
-            );
-          },
-        ),
-      );
-    }
+    var feedList = _userController.getFeedList(widget.id?? "") ?? [];
+    if(feedList.length == 0) return Container();
+    
+    return Container(
+      padding: EdgeInsets.only(top: 8),
+      color: ColorRes.cover_list_background_color,
+      child: GridView.builder(
+        //处理GridView顶部空白
+        padding: EdgeInsets.zero,
+        itemCount: feedList.length,
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //横轴元素个数
+          crossAxisCount: 3,
+          //纵轴间距
+          mainAxisSpacing: 1,
+          //横轴间距
+          crossAxisSpacing: 5,
+          //子组件宽高长度比例
+          childAspectRatio: 4/6),
+        itemBuilder: (BuildContext context, int index) {
+          return UserItemGridWidget(
+            url: feedList[index]?.content!.attachments![0]!.url,
+            onTap: (){
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoListPage(videoList: _userModel.worksVideo,)));
+            },
+          );
+        },
+      ),
+    );
   }
 }

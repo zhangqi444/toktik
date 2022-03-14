@@ -2,28 +2,29 @@ import 'dart:async';
 
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/model/request/follow_request.dart';
+import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/model/response/follow_response.dart';
-import 'package:toktik/model/response/user_work_list_response.dart';
 import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
+
+import 'feed_controller.dart';
+import 'self_controller.dart';
 
 class UserController extends GetxController{
 
   MainPageScrollController mainPageController = Get.find();
 
   final userExMap = {}.obs;
-  final userVideoCoverList = {}.obs;
 
   final isLoginUser = true.obs;//是否是登录用户
 
-  //--------用户作品列表-------------
-  final RxList<UserWorkListList?> userWorkList = <UserWorkListList>[].obs;
-  int? cursor = 0;
-  int count = 10;
-  bool hasMore = true;
-  //--------用户作品列表-------------
+  final RxMap<String, List<String>> feedLists = <String, List<String>>{}.obs;
 
+  String? nextToken;
+  int limit = 1000;
+
+  FeedController _feedController = Get.put(FeedController());
 
   Future<String?> createUser({String? username, String? email, String? phoneNumber}) async {
     var response = await Api.createUser(username: username, email: email, phoneNumber: phoneNumber);
@@ -31,6 +32,36 @@ class UserController extends GetxController{
       userExMap[response.user!.id] = response;
       return response.user!.id;
     }
+    return null;
+  }
+
+  Future<bool> loadFeedListByUser(String userId) async {
+    
+    var result = await Api.getPostsByUser(nextToken, limit, userId);
+    var loaded = false;
+    if(result != null){
+      var feedList = feedLists[userId]?? [];
+      feedList.addAll(
+        result.xList!.where((e) => e!.id != null).map((e) => e!.id as String).toList()
+      );
+      feedList = feedList.toSet().toList();
+      result.xList!.forEach((element) {
+        /// Only update the not existing post, as the isLiked data is not returned.
+        if(element == null || _feedController.feedListListMap[element.id] != null) return;
+        _feedController.feedListListMap[element.id] = element;
+      });
+      nextToken = result.nextToken;
+      loaded = true;
+      feedLists[userId] = feedList;
+    }
+
+    return loaded;
+  }
+
+  List<FeedListList?>? getFeedList(String userId) {
+    return feedLists[userId]?.map(
+      (element) => _feedController.feedListListMap[element]
+    ).toList();
   }
 
   // ///更新用户资料
@@ -73,33 +104,6 @@ class UserController extends GetxController{
 
     userExMap[response.user!.id] = response;
     return response.user!.id;
-  }
-
-  // 获取用户视频列表
-  Future<void> getUserPostsListData(String id) async {
-    var result = await Api.getUserPostList(cursor, count, id);
-
-    if (result != null) {
-      // TODO：后续调通attachment转封面的问题
-      // userVideoMap[id] = result.xList;
-      userVideoCoverList[id] = [
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-        'https://i.ytimg.com/vi_webp/16su9KIX1Ds/movieposter.webp',
-      ];
-    }
-  }
-
-  ///获取用户作品列表
-  void getUserWorkList(String id)async{
-    var result = await (Api.getUserFeedList(id, cursor, count) as FutureOr<UserWorkListResponse>);
-    userWorkList.value.addAll(result.xList!);
-    cursor = result.cursor;
   }
 
   ///关注
