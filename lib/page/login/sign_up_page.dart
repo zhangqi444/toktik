@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../common/configs.dart';
 import '../../enum/navigation_argument.dart';
+import 'widget/login_app_bar_widget.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -20,18 +21,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        elevation: 0,
-        actions: <Widget>[
-          new IconButton(
-            icon: Image.asset('assets/images/login/question.png',
-                color: Color(0xff888888), width: 22, height: 22),
-            onPressed: () {},
-          )
-        ],
-      ),
+      appBar: LoginAppBarWidget(title: ""),
       body: _layoutSignUp(context),
     );
   }
@@ -64,106 +54,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         SizedBox(
                           height: 21,
                         ),
-                        Container(
-                            width: 311,
-                            height: 44,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xffDEDEDE))),
-                            padding: EdgeInsets.only(
-                                top: 13, bottom: 11, left: 18, right: 18),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  RawMaterialButton(
-                                    onPressed: () {
-                                      Get.toNamed(Routers.createUsername);
-                                    },
-                                    child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Padding(
-                                              child: Icon(Icons.account_circle),
-                                              padding:
-                                                  EdgeInsets.only(right: 51.0)),
-                                          Text('Use phone or email',
-                                              style: TextStyle(
-                                                  color: Color(0xff2A2A2A)))
-                                        ]),
-                                    textStyle: TextStyle(
-                                        color: Color(0xff2A2A2A),
-                                        fontSize: 15.0),
-                                  )
-                                ])),
+                        _getButton(),
                         SizedBox(
-                          height: 300,
+                          height: 440,
                         ),
-                        Expanded(
-                          child:
-                              RichText(
-                                textAlign: TextAlign.center,
-                                maxLines: 3,
-                                text: TextSpan(
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: 'By signing, you agree to our ',
-                                          style: TextStyle(color: Color(0xff888888))),
-                                      TextSpan(
-                                          text: 'Terms of Service ',
-                                          recognizer: new TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );;
-                                            },
-                                          style: TextStyle(
-                                              color: Color(0xff2A2A2A),
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text:
-                                          'and acknowledge that you have read our ',
-                                          style: TextStyle(color: Color(0xff888888))),
-                                      TextSpan(
-                                          text: 'Privacy Policy ',
-                                          recognizer: new TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );;
-                                            },
-                                          style: TextStyle(
-                                              color: Color(0xff2A2A2A),
-                                              fontWeight: FontWeight.bold)),
-                                      TextSpan(
-                                          text:
-                                          'to learn how we collect, use, and share your data.',
-                                          style: TextStyle(color: Color(0xff888888))),
-                                    ]),
-                              )),
+                        _getPolicies()
                       ],
                     ),
                   ),
-
-                  Positioned(
-                      bottom: 60.0,
-                      child: RichText(
-                          text: TextSpan(children: [
-                            TextSpan(
-                              text: "Already have an account?",
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 15,
-                                color: Color(0xff2A2A2A)),
-                            ),
-                            TextSpan(
-                              text: " Log in",
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Get.back();
-                                },
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 15,
-                                color: Color(0xff39CBE3)))
-                          ])))
+                  _getFooter(),
                 ])));
   }
 
@@ -179,6 +78,114 @@ class _SignUpPageState extends State<SignUpPage> {
         maxLines: 2,
       ),
     );
+  }
+
+  _getButton() {
+    return Container(
+      width: 311,
+      height: 44,
+      decoration: BoxDecoration(
+          border: Border.all(color: Color(0xffDEDEDE))),
+      padding: EdgeInsets.only(
+          top: 13, bottom: 11, left: 18, right: 18),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          RawMaterialButton(
+            onPressed: () {
+              Get.toNamed(Routers.createUsername);
+            },
+            child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                      child: Icon(Icons.account_circle),
+                      padding:
+                          EdgeInsets.only(right: 51.0)),
+                  Text('Use phone or email',
+                      style: TextStyle(
+                          color: Color(0xff2A2A2A)))
+                ]),
+            textStyle: TextStyle(
+                color: Color(0xff2A2A2A),
+                fontSize: 15.0),
+          )
+        ]));
+  }
+
+  _getFooter() {
+    return Positioned(
+      bottom: 60.0,
+      child: Column(children: [
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "Already have an account?",
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 15,
+                  color: Color(0xff2A2A2A)),
+              ),
+              TextSpan(
+                text: " Log in",
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Get.back();
+                  },
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 15,
+                  color: Color(0xff39CBE3)))
+            ]
+          )
+        )
+      ])
+    );            
+  }
+
+  _getPolicies() {
+    return Expanded(
+      child:
+          RichText(
+            textAlign: TextAlign.center,
+            maxLines: 3,
+            text: TextSpan(
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                      text: 'By signing, you agree to our ',
+                      style: TextStyle(color: Color(0xff888888))),
+                  TextSpan(
+                      text: 'Terms of Service ',
+                      recognizer: new TapGestureRecognizer()
+                        ..onTap = () {
+                          Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );;
+                        },
+                      style: TextStyle(
+                          color: Color(0xff2A2A2A),
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                      'and acknowledge that you have read our ',
+                      style: TextStyle(color: Color(0xff888888))),
+                  TextSpan(
+                      text: 'Privacy Policy ',
+                      recognizer: new TapGestureRecognizer()
+                        ..onTap = () {
+                          Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );;
+                        },
+                      style: TextStyle(
+                          color: Color(0xff2A2A2A),
+                          fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                      'to learn how we collect, use, and share your data.',
+                      style: TextStyle(color: Color(0xff888888))),
+                ]),
+          ));
   }
 
   _getBottomLayout(BuildContext context) {
