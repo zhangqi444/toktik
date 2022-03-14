@@ -24,13 +24,14 @@ class _LoginAppBarWidgetState extends State<LoginAppBarWidget> {
       title: Text(widget.title!, style: TextStyle(color: Color(0xff2A2A2A), fontSize: 16, fontWeight: FontWeight.bold)),
       elevation: 0,
       centerTitle: true,
-      actions: <Widget>[
-        new IconButton(
-          icon: Image.asset('assets/images/login/question.png',
-              color: Color(0xff888888), width: 22, height: 22),
-          onPressed: () {},
-        )
-      ],
+      // TODO: disable action button for login/signup pages.
+      // actions: <Widget>[
+      //   new IconButton(
+      //     icon: Image.asset('assets/images/login/question.png',
+      //         color: Color(0xff888888), width: 22, height: 22),
+      //     onPressed: () {},
+      //   )
+      // ],
       leading: TextButton(
         onPressed: () {
           Get.back();
