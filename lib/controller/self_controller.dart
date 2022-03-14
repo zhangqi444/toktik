@@ -77,6 +77,7 @@ class SelfController extends GetxController{
       mainPageController.indexBottomBarMainPage.value = 0;
       return response.status;
     }
+    return null;
   }
 
   ///注册
@@ -85,6 +86,7 @@ class SelfController extends GetxController{
     if(response != null) {
       return response.status;
     }
+    return null;
   }
 
   Future<String?> resendSignUpCode(email) async {
@@ -92,6 +94,7 @@ class SelfController extends GetxController{
     if(response != null) {
       return response.status;
     }
+    return null;
   }
 
   Future<String?> resetPassword(String username) async {
@@ -99,6 +102,7 @@ class SelfController extends GetxController{
     if(response != null) {
       return response.status;
     }
+    return null;
   }
 
   Future<String?> confirmResetPassword(account, password, verificationCode) async {
@@ -106,6 +110,7 @@ class SelfController extends GetxController{
     if(response != null) {
       return response.status;
     }
+    return null;
   }
 
   Future<String?> registerVerify(String username, String? email, String verificationCode) async {
@@ -128,7 +133,7 @@ class SelfController extends GetxController{
   }
 
   bool isLoginUserById(String id) {
-    return loginUserId != null && !isStringNullOrEmpty(loginUserId.value) && loginUserId.value == id;
+    return !isStringNullOrEmpty(loginUserId.value) && loginUserId.value == id;
   }
 
   ///获取登录用户的id

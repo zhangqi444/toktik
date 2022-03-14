@@ -187,15 +187,4 @@ class _SignUpPageState extends State<SignUpPage> {
                 ]),
           ));
   }
-
-  _getBottomLayout(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 40,
-      child: Text(
-        "Login with password",
-        style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
-      ),
-    );
-  }
 }
