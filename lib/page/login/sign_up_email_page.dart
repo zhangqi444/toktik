@@ -12,6 +12,8 @@ import 'package:toktik/util/string_util.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
+import 'widget/login_app_bar_widget.dart';
+
 class SignUpEmailPage extends StatefulWidget {
   SignUpEmailPage({Key? key}) : super(key: key);
 
@@ -49,28 +51,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        brightness: Brightness.light,
-        title: Text(appBarTitle,
-            style: TextStyle(color: Colors.black, fontSize: 16)),
-        elevation: 0,
-        centerTitle: true,
-        actions: <Widget>[
-          new IconButton(
-            icon: Image.asset('assets/images/login/question.png',
-                color: Color(0xff888888), width: 22, height: 22),
-            onPressed: () {},
-          )
-        ],
-        leading: TextButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Image.asset('assets/images/login/nav-arrow-left.png',
-              color: Color(0xff2A2A2A), width: 24, height: 24),
-        ),
-      ),
+      appBar: LoginAppBarWidget(title: appBarTitle),
       body: _layoutSignUp(context),
     );
   }
