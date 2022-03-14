@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion80c1e98f": {
+    "LambdaLayerVersionc656a440": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": [
@@ -47,19 +47,23 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionAwsAccounts52738983772380c1e98f": {
+    "LambdaLayerPermissionAwsAccounts527389837723c656a440": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-west-2:527389837723:layer:toktikgraphqlLambdaLayer-staging:90",
+        "LayerVersionArn": {
+          "Ref": "LambdaLayerVersionc656a440"
+        },
         "Principal": "527389837723"
       }
     },
-    "LambdaLayerPermissionPrivate80c1e98f": {
+    "LambdaLayerPermissionPrivatec656a440": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-west-2:527389837723:layer:toktikgraphqlLambdaLayer-staging:90",
+        "LayerVersionArn": {
+          "Ref": "LambdaLayerVersionc656a440"
+        },
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -69,7 +73,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion80c1e98f"
+        "Ref": "LambdaLayerVersionc656a440"
       }
     }
   }
