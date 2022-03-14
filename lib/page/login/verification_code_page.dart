@@ -247,24 +247,28 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                       'resend code',
                       style: _unavailableStyle,
                     ),
+                    onTap: () async {
+                      await loginController.resendSignUpCode(account);
+                    }
                   ),
             SizedBox(
               height: 16,
             ),
-            Row(
-              children: [
-                Text(
-                  "Didn't get a code?",
-                      style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
-                ),
-                InkWell(
-                  child: Text(
-                    ' Request phone call',
-                    style: _availableStyle,
-                  ),
-                ),
-              ],
-            ),
+            /// TODO: disable phone call verification entry
+            // Row(
+            //   children: [
+            //     Text(
+            //       "Didn't get a code?",
+            //           style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
+            //     ),
+            //     InkWell(
+            //       child: Text(
+            //         ' Request phone call',
+            //         style: _availableStyle,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             SizedBox(
               height: 151,
             ),
@@ -291,10 +295,15 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 40,
-      child: Text(
-        "Login with password",
-        style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
-      ),
+      child: InkWell(
+        child: Text(
+          "Login with password",
+          style: TextStyle(color: Color(0xff2A2A2A), fontSize: 13),
+        ),
+        onTap: () {
+          Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
+        }
+      ),        
     );
   }
 }
