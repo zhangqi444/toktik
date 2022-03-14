@@ -235,19 +235,19 @@ class _UserInfoWidgetState extends State<UserInfoWidget> {
           //     ],
           //   ),
           // ),
-          SizedBox(
-            width: 100,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(response == null ? '' : response.likeCount.toString(),
-                    style: TextStyle(color: ColorRes.text_color,fontWeight: FontWeight.bold,fontSize: 16)),
-                SizedBox(width: 2,),
-                Text('Likes',
-                    style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
-              ],
-            ),
-          )
+          // SizedBox(
+          //   width: 100,
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Text(response == null ? '' : response.likeCount.toString(),
+          //           style: TextStyle(color: ColorRes.text_color,fontWeight: FontWeight.bold,fontSize: 16)),
+          //       SizedBox(width: 2,),
+          //       Text('Likes',
+          //           style: TextStyle(color: ColorRes.text_color,fontSize: 13)),
+          //     ],
+          //   ),
+          // )
         ]);
     });
   }
