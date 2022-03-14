@@ -19,7 +19,7 @@
       "resourceName": "toktikgraphqlLambdaLayer",
       "version": "Always choose latest version",
       "isLatestVersionSelected": true,
-      "env": "staging"
+      "env": "prod"
     }
   ]
 }

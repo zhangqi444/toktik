@@ -54,7 +54,7 @@
       "function": {
         "listPostExs": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/listPostExs-4e524a73534554617069-build.zip"
+          "s3Key": "amplify-builds/listPostExs-2f576b57782f38693456-build.zip"
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
