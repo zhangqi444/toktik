@@ -426,7 +426,31 @@ class Api {
     Amplify.Analytics.flushEvents();
   }
 
-  ///获取热门作品列表
+  static Future<FeedListResponse?> _parsePosts(response) async {
+    String? newNextToken = response['nextToken'];
+
+    var rng = new Random(DateTime.now().millisecondsSinceEpoch);
+    List posts =
+        (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
+    posts = posts.where((f) => f['attachments'] != null).toList();
+    Map<String, dynamic> convert(Map<String, dynamic> post) {
+      post['content'] = {
+        'attachments': jsonDecode(post['attachments'])['data'],
+        'music': post['music'] != null ? post['music'] : null,
+        'text': post['text'],
+      };
+      post['likeCount'] = post['likeCount']?? 0;
+      post['viewCount'] = post['viewCount']?? 0;
+
+      if (post['isLiked'] != null && post['isLiked']['value'] != null) {
+        post['isLiked'] = post['isLiked']['value'];
+      }
+      return post;
+    }
+    var parsed = posts.map((post) => convert(post)).toList();
+    return FeedListResponse.fromJson({'list': parsed, 'nextToken': newNextToken});
+  }
+
   static Future<FeedListResponse?> getHotFeedList(String? nextToken, int limit, String userId) async{
     try {
       var response;
@@ -464,33 +488,14 @@ class Api {
           'listPostExs'
         );
       }
-      String? newNextToken = response['nextToken'];
-
-      var rng = new Random(DateTime.now().millisecondsSinceEpoch);
-      List posts =
-          (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
-      posts = posts.where((f) => f['attachments'] != null).toList();
-      Map<String, dynamic> convert(Map<String, dynamic> post) {
-        post['content'] = {
-          'attachments': jsonDecode(post['attachments'])['data'],
-          'music': post['music'] != null ? post['music'] : null,
-          'text': post['text'],
-        };
-        post['likeCount'] = post['likeCount'] != null ? post['likeCount'] : 0;
-
-        if (post['isLiked'] != null && post['isLiked']['value'] != null) {
-          post['isLiked'] = post['isLiked']['value'];
-        }
-        return post;
-      }
-      var parsed = posts.map((post) => convert(post)).toList();
-      return FeedListResponse.fromJson({'list': parsed, 'nextToken': newNextToken});
+      return await _parsePosts(response);
     } catch (e, stacktrace) {
-      print("Fail to get post lists: " + stacktrace.toString());
+      debugPrint("Fail to get post lists: " + e.toString() + stacktrace.toString());
+      return null;
     }
   }
 
-  static Future<FeedListResponse?> getUserPostList(int? cursor,int limit, String userId) async{
+  static Future<FeedListResponse?> getPostsByUser(String? nextToken, int limit, String userId) async{
     try {
       var response = await _query(
           '''query ListPosts(\$filter: ModelPostFilterInput, \$limit: Int) {
@@ -505,24 +510,10 @@ class Api {
           'listPosts'
       );
 
-      List posts = (response['items'] != null) ? (response['items']) : [];
-      posts = posts.where((f) => f['attachments'] != null).toList();
-      Future<Map<String, dynamic>> convert(Map<String, dynamic> post) async{
-        post['content'] = {
-          'attachments': jsonDecode(post['attachments'])['data'],
-          'music': post['music'] != null ? post['music'] : null,
-          'text': post['text'],
-        };
-        post['likeCount'] = post['likeCount'] != null ? post['likeCount'] : 0;
-
-        return post;
-      }
-
-      var parsed = await Future.wait(posts.map((post) async => await convert(post)));
-
-      return FeedListResponse.fromJson({'list': parsed.toList()});
+      return await _parsePosts(response);
     } catch (e, stacktrace) {
-      print("Fail to user list post: " + stacktrace.toString());
+      debugPrint("Fail to user list post: " + stacktrace.toString());
+      return null;
     }
   }
 

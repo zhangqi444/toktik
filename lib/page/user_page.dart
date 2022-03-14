@@ -37,13 +37,11 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
-  MainPageScrollController _mainController = Get.find();
   UserPageController _userPageController = Get.put(UserPageController());
   TabController? _tabController;
   PageController _pageController = PageController(keepPage: true);
   ScrollController _scrollController = ScrollController();
   UserController _userController = Get.put(UserController());
-  SelfController _selfController = Get.put(SelfController());
   ReportController _reportController = Get.put(ReportController());
   NotInterestedController _notInterestedController = Get.put(NotInterestedController());
   dynamic argumentData = Get.arguments;
@@ -80,15 +78,10 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
   }
 
   void initData() async {
-    String? id = widget.id;
-    if(id != null) {
-      await _userController.loadUserInfoExById(id);
-      // 测试用id：'edd58e50-8bf2-4cb3-9bbf-129b5e5a90a2'
-      await _userController.getUserPostsListData(id);
-    }
-    return;
-    // TODO: disbale before we have the api reday.
-    // _userController.getUserWorkList(id);
+    String id = widget.id?? "";
+    if(isStringNullOrEmpty(id)) return;
+    await _userController.loadUserInfoExById(id);
+    _userController.loadFeedListByUser(id);
   }
 
   @override
@@ -115,8 +108,9 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
               slivers: [
                 _getSliverAppBar(),
                 _getSliverUserInfo(),
-                _getTabBarLayout(),
-                _getTabViewLayout(),
+                /// TODO: disable the work list for now
+                // _getTabBarLayout(),
+                // _getTabViewLayout(),
               ],
             )
           ),
@@ -230,39 +224,39 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
     double itemHeight = itemWidth / 9 * 16;
 
     return SliverToBoxAdapter(
-      child: Obx(()=>
-          ConstrainedBox(
+      child: Obx(() {
+          var feedList = _userController.feedLists[widget.id];
+          return ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width,
               minWidth: MediaQuery.of(context).size.width,
-              maxHeight:itemHeight * (null == _userController.userVideoCoverList[widget.id] ? 0 : _userController.userVideoCoverList[widget.id].length) / 3,
+              maxHeight:itemHeight * (feedList == null ? 0 : feedList.length) / 3,
             ),
             child:  PageView.builder(
               controller: _pageController,
               itemCount:2,
               itemBuilder: (context,index){
-                // TODO: disable the work list for now
-                // return index == 0?UserWorkListWidget(id: widget.id,):_getPageLayout(index);
-                return _getPageLayout(index);
+                return index == 0 ? UserWorkListWidget(id: widget.id,) : _getPageLayout(index);
               },
               onPageChanged: (index){
                 _tabController!.animateTo(index);
               },
             ),
-          ),
+          );
+        }
       ),
     );
   }
 
   //获取PageView的每页
   Widget _getPageLayout(int index) {
-
+    var feedList = _userController.getFeedList(widget.id?? "");
     return Container(
       color: ColorRes.color_2,
       child: GridView.builder(
         //处理GridView顶部空白
         padding: EdgeInsets.zero,
-        itemCount: _userController.userWorkList.length,
+        itemCount: feedList?.length,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -276,7 +270,7 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
             childAspectRatio: 9/16),
         itemBuilder: (BuildContext context, int index) {
           return UserItemGridWidget(
-            url: _userController.userWorkList[index]!.content!.attachments![0]!.cover,
+            url: feedList?[index]!.content!.attachments![0]!.cover,
             onTap: (){
               // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoListPage(videoList: _userModel.worksVideo,)));
             },
