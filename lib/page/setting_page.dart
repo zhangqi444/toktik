@@ -78,57 +78,78 @@ class _SettingPageState extends State<SettingPage> {
             // Padding(
             //     padding: EdgeInsets.only(left: 20,right: 20),
             //     child: Text('账号',style: TextStyle(color: ColorRes.color_2,fontSize: 12),)),
-            // ItemTurnWidget(img: 'assets/images/person.png',title: '账号与安全',onClick: (){EasyLoading.showToast('账号与安全');},),
-            // ItemTurnWidget(img: 'assets/images/lock.png',title: '隐私设置',onClick: (){EasyLoading.showToast('功能待开发');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/person.png',title: '账号与安全',onClick: (){EasyLoading.showToast('账号与安全');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/lock.png',title: '隐私设置',onClick: (){EasyLoading.showToast('功能待开发');},),
             // Divider(color: ColorRes.color_2.withAlpha(20),),
             // Padding(
             //     padding: EdgeInsets.only(left: 20,right: 20),
             //     child: Text('通用',style: TextStyle(color: ColorRes.color_2,fontSize: 12),)),
-            // ItemTurnWidget(img: 'assets/images/notice.png',title: '通知设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/active_wallpager.png',title: '动态壁纸',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/setting_common.png',title: '通用设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/color_palette.png',title: '背景设置',onClick: (){EasyLoading.showToast('功能待开发');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/notice.png',title: '通知设置',onClick: (){EasyLoading.showToast('功能待开发');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/active_wallpager.png',title: '动态壁纸',onClick: (){EasyLoading.showToast('功能待开发');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/setting_common.png',title: '通用设置',onClick: (){EasyLoading.showToast('功能待开发');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/color_palette.png',title: '背景设置',onClick: (){EasyLoading.showToast('功能待开发');},),
             // Divider(color: ColorRes.color_2.withAlpha(20),),
             // Padding(
             //     padding: EdgeInsets.only(left: 20,right: 20),
             //     child: Text('账号互通',style: TextStyle(color: ColorRes.color_2,fontSize: 12),)),
-            // ItemTurnWidget(img: 'assets/images/share_app_toutiao.webp',title: '头条主页',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/fensi.png',title: '粉丝',onClick: (){EasyLoading.showToast('功能待开发');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/share_app_toutiao.webp',title: '头条主页',onClick: (){EasyLoading.showToast('功能待开发');},),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/fensi.png',title: '粉丝',onClick: (){EasyLoading.showToast('功能待开发');},),
             // Divider(color: ColorRes.color_2.withAlpha(20),),
             _getDivider(),
-            _getHeader(SETTING_HEADER_ABOUT),
-            // ItemTurnWidget(img: 'assets/images/ad.png',title: '广告反馈与设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            ItemTurnWidget(img: 'assets/images/user_service.png',title: SETTING_TERMS_OF_SERVICE, onClick: (){
+            _getHeader("ACCOUNT"),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/ad.png',title: '广告反馈与设置',onClick: (){EasyLoading.showToast('功能待开发');},),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/manage_account.png',title: "Manage account", onClick: (){
               Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );
             }),
-            ItemTurnWidget(img: 'assets/images/community_service.png',title: SETTING_COMMUNITY_GUIDELINES, onClick: (){
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/privacy.png',title: "Privacy", onClick: (){
               Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/community-guidelines"} );
             }),
-            ItemTurnWidget(img: 'assets/images/private_service.png',title: SETTING_PRIVACY_POLICY, onClick: (){
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/security_and_login.png',title: "Security and login", onClick: (){
               Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );
             }),
-            ItemTurnWidget(img: 'assets/images/sdk_list.png',title: SETTING_COPYRIGHT_POLICY, onClick: (){
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/balance.png',title: "Balance", onClick: (){
               Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me/copyright"} );
             }),
-            ItemTurnWidget(img: 'assets/images/setting_about.png',title: SETTING_ABOUT, onClick: () {
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/qr_code.png',title: "QR code", onClick: () {
               Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
             }),
-            // ItemTurnWidget(img: 'assets/images/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/share_profile.png',title: "Share profile", onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
+            }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
 
-            // ItemTurnWidget(img: 'assets/images/setting_exchange.png',title: '切换账号',onClick: (){
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/setting_exchange.png',title: '切换账号',onClick: (){
             //
             //   // SPUtil.remove(SPKeys.userUid);
             //   // SPUtil.remove(SPKeys.token);
             //
             //   Get.offNamed(Routers.login);},),
             _getDivider(),
-            _getHeader(SETTING_HEADER_SUPPORT),
-            ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
+            _getHeader("CONTENT&ACTIVITY"),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/push_notifications.png',title: "Push notifications", onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            }),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/app_language.png',title: "App language", rightTitle: "English", onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            }),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/dark_mode.png',title: "Dark mode", onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            }),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/content_preferences.png',title: "Content preferences", onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            }),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/ads.png',title: "Ads", onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            }),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/digital_wellbeing.png',title: "Digital Wellbeing", onClick: () {
+              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            }),
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/family_pairing.png',title: "Family Pairing", onClick: () {
               Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
             }),
             _getDivider(),
             _getHeader(SETTING_HEADER_LOGIN),
-            ItemTurnWidget(img: 'assets/images/setting_logout.png',title: SETTING_LOGOUT, onClick: () async {
+            ItemTurnWidget(img: 'assets/images/setting_and_privacy/setting_logout.png',title: SETTING_LOGOUT, onClick: () async {
               await loginController.logout();
               Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
             }),
