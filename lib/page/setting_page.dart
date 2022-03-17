@@ -102,16 +102,23 @@ class _SettingPageState extends State<SettingPage> {
               Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );
             }),
             ItemTurnWidget(img: 'assets/images/community_service.png',title: SETTING_COMMUNITY_GUIDELINES, onClick: (){
-              Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/community-guidelines"} );
+                  Get.toNamed(Routers.webView, arguments: {
+                    NavigationArgument.URL:
+                        "https://www.getbreeze.me/community-guidelines"
+                  });
             }),
             ItemTurnWidget(img: 'assets/images/private_service.png',title: SETTING_PRIVACY_POLICY, onClick: (){
               Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );
             }),
             ItemTurnWidget(img: 'assets/images/sdk_list.png',title: SETTING_COPYRIGHT_POLICY, onClick: (){
-              Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me/copyright"} );
+                  Get.toNamed(Routers.webView, arguments: {
+                    NavigationArgument.URL: "https://getbreeze.me/copyright"
+                  });
             }),
             ItemTurnWidget(img: 'assets/images/setting_about.png',title: SETTING_ABOUT, onClick: () {
-              Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
+                  Get.toNamed(Routers.webView, arguments: {
+                    NavigationArgument.URL: "https://getbreeze.me"
+                  });
             }),
             // ItemTurnWidget(img: 'assets/images/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
 
@@ -124,7 +131,8 @@ class _SettingPageState extends State<SettingPage> {
             _getDivider(),
             _getHeader(SETTING_HEADER_SUPPORT),
             ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
-              Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+                  Get.toNamed(Routers.webView,
+                      arguments: {NavigationArgument.URL: FEEDBACK_URL});
             }),
             _getDivider(),
             _getHeader(SETTING_HEADER_LOGIN),
