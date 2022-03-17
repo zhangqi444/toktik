@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "api": {
+      "toktik": [
+        "Query",
+        "Mutation"
+      ]
+    },
+    "storage": {
+      "s3toktikstorage55239e93": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "Post:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "User:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "toktikgraphqlLambdaLayer",
+      "env": "staging",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
+}
