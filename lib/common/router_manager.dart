@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:toktik/page/feed_publish/feed_publish_page.dart';
 // import 'package:toktik/page/friend_page.dart';
 import 'package:toktik/page/home_page.dart';
@@ -30,6 +31,8 @@ import 'package:toktik/page/user_page.dart';
 import 'package:get/get.dart';
 import 'package:toktik/page/web_view_page.dart';
 
+import '../transition/custom_transition.dart';
+
 ///路由管理者
 class RouterManager {
   static final routes = [
@@ -52,7 +55,7 @@ class RouterManager {
     GetPage(
       name: Routers.login,
       page: () => LoginPage(),
-      transition: Transition.downToUp,
+      customTransition: SlideUpTransitions()
     ),
     GetPage(name: Routers.createUsername, page: () => CreateUsernamePage()),
     GetPage(name: Routers.createPassword, page: () => CreatePasswordPage()),
