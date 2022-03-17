@@ -31,7 +31,7 @@ import 'package:toktik/page/user_page.dart';
 import 'package:get/get.dart';
 import 'package:toktik/page/web_view_page.dart';
 
-import 'custom_transition.dart';
+import '../transition/custom_transition.dart';
 
 ///路由管理者
 class RouterManager {
