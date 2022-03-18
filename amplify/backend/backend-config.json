@@ -131,5 +131,12 @@
       "service": "Transcribe",
       "convertType": "transcription"
     }
+  },
+  "storage": {
+    "s3toktikstoraged847e71c": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    }
   }
 }

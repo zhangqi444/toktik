@@ -58,26 +58,26 @@ class ModelProvider implements ModelProviderInterface {
   
   ModelType getModelTypeByModelName(String modelName) {
     switch(modelName) {
-    case "Comment":
-    return Comment.classType;
-    case "Like":
-    return Like.classType;
-    case "Music":
-    return Music.classType;
-    case "NotInterested":
-    return NotInterested.classType;
-    case "Post":
-    return Post.classType;
-    case "Report":
-    return Report.classType;
-    case "Share":
-    return Share.classType;
-    case "User":
-    return User.classType;
-    case "View":
-    return View.classType;
-    default:
-    throw Exception("Failed to find model in model provider for model name: " + modelName);
+      case "Comment":
+        return Comment.classType;
+      case "Like":
+        return Like.classType;
+      case "Music":
+        return Music.classType;
+      case "NotInterested":
+        return NotInterested.classType;
+      case "Post":
+        return Post.classType;
+      case "Report":
+        return Report.classType;
+      case "Share":
+        return Share.classType;
+      case "User":
+        return User.classType;
+      case "View":
+        return View.classType;
+      default:
+        throw Exception("Failed to find model in model provider for model name: " + modelName);
     }
   }
 }

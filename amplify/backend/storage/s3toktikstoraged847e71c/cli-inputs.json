@@ -1,0 +1,12 @@
+{
+  "resourceName": "s3toktikstoraged847e71c",
+  "bucketName": "toktik-storage-d847e71c",
+  "policyUUID": "d4dc4fa6",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "READ"
+  ]
+}

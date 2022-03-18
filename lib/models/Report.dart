@@ -65,7 +65,7 @@ class Report extends Model {
   Post? get post {
     return _post;
   }
-
+  
   String? get type {
     return _type;
   }
@@ -73,7 +73,7 @@ class Report extends Model {
   String? get result {
     return _result;
   }
-
+  
   User? get targetUser {
     return _targetUser;
   }
@@ -81,7 +81,6 @@ class Report extends Model {
   const Report._internal({required this.id, reason, description, status, user, post, type, result, targetUser}): _reason = reason, _description = description, _status = status, _user = user, _post = post, _type = type, _result = result, _targetUser = targetUser;
   
   factory Report({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, User? targetUser}) {
-
     return Report._internal(
       id: id == null ? UUID.getUUID() : id,
       reason: reason,
@@ -134,7 +133,7 @@ class Report extends Model {
     
     return buffer.toString();
   }
-
+  
   Report copyWith({String? id, String? reason, String? description, String? status, User? user, Post? post, String? type, String? result, User? targetUser}) {
     return Report(
       id: id ?? this.id,
@@ -225,7 +224,7 @@ class Report extends Model {
       targetName: "reportUserId",
       ofModelName: (User).toString()
     ));
-
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: Report.POST,
       isRequired: false,

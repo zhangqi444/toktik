@@ -52,5 +52,11 @@ export type AmplifyDependentResourcesAttributes = {
             "region": "string",
             "language": "string"
         }
+    },
+    "storage": {
+        "s3toktikstoraged847e71c": {
+            "BucketName": "string",
+            "Region": "string"
+        }
     }
 }
