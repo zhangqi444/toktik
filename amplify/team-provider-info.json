@@ -15,15 +15,15 @@
       "function": {
         "listPostExs": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/listPostExs-437577357738766d344a-build.zip"
+          "s3Key": "amplify-builds/listPostExs-2f576b57782f38693456-build.zip"
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion80c1e98f-build.zip"
+          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion36c4d70b-build.zip"
         },
         "likePost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/likePost-72486c2b5a5a6759656e-build.zip"
+          "s3Key": "amplify-builds/likePost-484a786553554b637272-build.zip"
         },
         "viewPost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
