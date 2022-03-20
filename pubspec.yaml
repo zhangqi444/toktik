@@ -80,6 +80,7 @@ flutter:
     - assets/images/main_page_bottom_icon/
     - assets/images/feed_publish/
     - assets/images/video_share_widget/
+    - assets/images/setting_and_privacy/
   fonts:
     - family: TikTokIcons
       fonts:
