@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 import 'dart:ui';
 
@@ -73,11 +75,8 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(width: 3.5),
-              menuButton(
-                  'Home',
-                  Image.asset("assets/images/main_page_bottom_icon/home.png"),
-                  Image.asset("assets/images/main_page_bottom_icon/home-active.png"), 0),
-              // TODO: disabel unlaunched feature
+              menuButton(_MainPageBottomBarWidgetConfig.HOME),
+                  // todo: disabel unlaunched feature
               // SizedBox(width: 1),
               // menuButton(
               //     'Live',
@@ -88,19 +87,15 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
               // SizedBox(width: 3.5),
               // customCreateIcon,
               SizedBox(width: 3.5),
-              menuButton(
-                  'Feedback',
-                  mainPageScrollController.indexBottomBarMainPage == 0
-                      ? Image.asset("assets/images/main_page_bottom_icon/message-dark.png")
-                      : Image.asset("assets/images/main_page_bottom_icon/message.png"),
-                  Image.asset("assets/images/main_page_bottom_icon/message-active.png"), 2),
+              menuButton(mainPageScrollController.indexBottomBarMainPage ==
+                      _MainPageBottomBarWidgetConfig.HOME['index']
+                  ? _MainPageBottomBarWidgetConfig.FEEDBACK_DARK
+                  : _MainPageBottomBarWidgetConfig.FEEDBACK),
               SizedBox(width: 1),
-              menuButton(
-                  'Profile',
-                  mainPageScrollController.indexBottomBarMainPage == 0
-                      ? Image.asset("assets/images/main_page_bottom_icon/profile-dark.png")
-                      : Image.asset("assets/images/main_page_bottom_icon/profile.png"),
-                  Image.asset("assets/images/main_page_bottom_icon/profile-active.png"), 3),
+              menuButton(mainPageScrollController.indexBottomBarMainPage ==
+                      _MainPageBottomBarWidgetConfig.HOME['index']
+                  ? _MainPageBottomBarWidgetConfig.PROFILE_DARK
+                  : _MainPageBottomBarWidgetConfig.PROFILE),
               SizedBox(width: 3.5),
             ],
           ),
@@ -158,19 +153,25 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
           //     ]))
       ));
 
-  Widget menuButton(String text, Image icon, Image iconActive, int index) {
+  Widget menuButton(config) {
     return GestureDetector(
         onTap: () {
+          var index = config['index'];
           eventController.recordEvent(
-            Event.MAIN_PAGE_BOTTOM_BAR_PRESS, { EventKey.INDEX: index, EventKey.NAME: text,  EventKey.VALUE: 1 });
-          if (index == 0 || index == 1) {
+            Event.MAIN_PAGE_BOTTOM_BAR_PRESS, {
+            EventKey.INDEX: config['index'],
+            EventKey.NAME: config['type'],
+            EventKey.VALUE: 1
+          });
+          if (index == 0) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
-          } else if(index == 2) {
+          } else if (index == 1) {
             Get.toNamed(Routers.webView, arguments: { NavigationArgument.URL: FEEDBACK_URL });
           } else {
             var loginUserInfo = userController.userExMap[_selfController.loginUserId.value];
             if(loginUserInfo != null) {
-              mainPageScrollController.selectIndexBottomBarMainPage(index);
+              mainPageScrollController
+                  .selectIndexBottomBarMainPage(index);
             } else {
               Application.eventBus.fire(StopPlayEvent());
               Get.toNamed(Routers.login);
@@ -178,35 +179,44 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
           }
         },
         child: Container(
-              height: 45,
-              width: 48,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  mainPageScrollController.indexBottomBarMainPage.value == index
-                      ? iconActive
-                      : icon,
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    text,
-                    style: TextStyle(
-                        fontWeight:
-                            mainPageScrollController.indexBottomBarMainPage.value == index
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                        color:
-                            mainPageScrollController.indexBottomBarMainPage.value == 0
-                                ? (mainPageScrollController.indexBottomBarMainPage.value == index
-                                        ? Color(0xffffffff) : Color(0xff8b8b8b))
-                                : (mainPageScrollController.indexBottomBarMainPage.value == index
-                                        ? Color(0xff2A2A2A) : Color(0xff2A2A2A)),
-                        fontSize: 10.0),
-                  )
-                ],
+          height: 45,
+          width: 48,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              mainPageScrollController.indexBottomBarMainPage.value == config['index']
+                  ? Image.asset(config['iconActive'])
+                  : Image.asset(config['icon']),
+              SizedBox(
+                height: 4,
               ),
-            )
+              Text(
+                config['name'],
+                style: TextStyle(
+                    fontWeight:
+                        mainPageScrollController
+                                .indexBottomBarMainPage.value ==
+                            config['index']
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                    color:
+                        mainPageScrollController.indexBottomBarMainPage.value ==
+                                0
+                            ? (mainPageScrollController
+                                        .indexBottomBarMainPage.value ==
+                                    config['index']
+                                ? Color(0xffffffff)
+                                : Color(0xff8b8b8b))
+                            : (mainPageScrollController
+                                        .indexBottomBarMainPage.value ==
+                                    config['index']
+                                ? Color(0xff2A2A2A)
+                                : Color(0xff2A2A2A)),
+                    fontSize: 10.0),
+              )
+            ],
+          ),
+        )
     );
   }
 
@@ -225,4 +235,40 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
       ));
     }
   }
+}
+
+class _MainPageBottomBarWidgetConfig {
+  static final HOME = {
+    'name': 'Home',
+    'type': 'HOME',
+    'icon': "assets/images/main_page_bottom_icon/home.png",
+    'iconActive': "assets/images/main_page_bottom_icon/home-active.png",
+    'index': 0,
+  };
+
+  static final FEEDBACK = {
+    'name': 'Feedback',
+    'type': 'FEEDBACK',
+    'icon': "assets/images/main_page_bottom_icon/message.png",
+    'iconActive': "assets/images/main_page_bottom_icon/message-active.png",
+    'index': 1,
+  };
+
+  static final FEEDBACK_DARK = {
+    ..._MainPageBottomBarWidgetConfig.FEEDBACK,
+    'icon': "assets/images/main_page_bottom_icon/message-dark.png",
+  };
+
+  static final PROFILE = {
+    'name': 'Profile',
+    'type': 'PROFILE',
+    'icon': "assets/images/main_page_bottom_icon/profile.png",
+    'iconActive': "assets/images/main_page_bottom_icon/profile-active.png",
+    'index': 2,
+  };
+
+  static final PROFILE_DARK = {
+    ..._MainPageBottomBarWidgetConfig.PROFILE,
+    'icon': "assets/images/main_page_bottom_icon/profile-dark.png",
+  };
 }

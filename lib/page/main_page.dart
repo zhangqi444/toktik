@@ -39,7 +39,7 @@ class MainPage extends StatelessWidget {
         children: [
           HomePage(pageController: _scrollPageController),
           SearchPage(),
-          MessagePage(),
+          // MessagePage(),
           isStringNullOrEmpty(_selfController.loginUserId.value)
             ? Scaffold()
             : UserPage(

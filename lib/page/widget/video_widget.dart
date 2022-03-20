@@ -33,7 +33,7 @@ class VideoWidget extends StatefulWidget {
   double? contentHeight;
   Function? onClickHeader;
   Function? onNotInterested;
-  String? pageType;
+  String pageType;
   FeedListList? video;
   VideoWidget({
     Key? key,
@@ -42,7 +42,7 @@ class VideoWidget extends StatefulWidget {
     this.contentHeight,
     this.onClickHeader,
     this.onNotInterested,
-    this.pageType,
+    required this.pageType,
     this.video,}) : super(key: key);
 
   @override
@@ -299,11 +299,14 @@ class _VideoWidgetState extends State<VideoWidget> {
       .recordEvent(Event.LIKE_VIDEO, buildEvent());
   }
 
-  dynamic buildEvent({event}) {
-    return {
+  dynamic buildEvent({Map<String, dynamic>? event}) {
+    Map<String, dynamic> defaultEvent = {
       EventKey.POST_ID: widget.video!.id,
       EventKey.PAGE_TYPE: widget.pageType,
-    }.addAll(event);
+    };
+
+    defaultEvent.addAll(event!);
+    return defaultEvent;
   }
 
 }
