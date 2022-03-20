@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:toktik/common/events.dart';
+import 'package:toktik/controller/event_controller.dart';
 import 'package:toktik/enum/report.dart';
 
 import '../../controller/not_interested_controller.dart';
@@ -10,7 +12,8 @@ import '../../controller/report_controller.dart';
 class VideoShareWidget extends StatefulWidget {
   var video;
   Function? onNotInterested;
-  VideoShareWidget({Key? key, this.video, this.onNotInterested}) : super(key: key);
+  String? pageType;
+  VideoShareWidget({Key? key, this.video, this.onNotInterested, this.pageType}) : super(key: key);
 
   @override
   _VideoShareWidgetState createState() {
@@ -19,8 +22,9 @@ class VideoShareWidget extends StatefulWidget {
 }
 
 class _VideoShareWidgetState extends State<VideoShareWidget> {
-  ReportController _reportController = Get.put(ReportController());
-  NotInterestedController _notInterestedController = Get.put(NotInterestedController());
+  final ReportController reportController = Get.put(ReportController());
+  final EventController eventController = Get.find();
+  final NotInterestedController notInterestedController = Get.put(NotInterestedController());
 
   //私信好友名字
   List<String> nameList = [
@@ -59,9 +63,10 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
   //操作名称
   List<Map<String, dynamic>> actions = [
       {
-        "text": 'Report',
+        "text": _VideoShareWidgetMenuName.REPORT,
         "img": 'assets/images/video_share_widget/report.png',
-        "onPressed": (video, ReportController reportController, notInterestedController, widget, context) async {
+        "onPressed": (video, reportController, notInterestedController, widget, context, recordEvent) async {
+          recordEvent(_VideoShareWidgetMenuName.REPORT);
           await reportController.reportPost(video.id, ReportReason.OTHER);
           Navigator.pop(context);
           EasyLoading.showSuccess("Thanks for reporting.");
@@ -75,9 +80,10 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
     // '复制链接',
     // '抖音码',
       {
-        "text": 'Not interested',
+        "text": _VideoShareWidgetMenuName.NOT_INTERESTED,
         "img": 'assets/images/video_share_widget/not_interested.png',
-        "onPressed": (video, reportController, notInterestedController, widget, context) async {
+        "onPressed": (video, reportController, notInterestedController, widget, context, recordEvent) async {
+          recordEvent(_VideoShareWidgetMenuName.NOT_INTERESTED);
           var result = await notInterestedController.notInterestedPost(video.id);
           if(result != null) {
             Navigator.pop(context);
@@ -86,13 +92,13 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
         }
       },
       {
-        "text": 'Share',
+        "text": _VideoShareWidgetMenuName.SHARE,
         "img": 'assets/images/video_share_widget/share.png',
-        "onPressed": (video, reportController, notInterestedController, widget, context) {
-          // TO customize the bottomsheet with sharing target, we need to rely on this,
+        "onPressed": (video, reportController, notInterestedController, widget, context, recordEvent) {
+          // todo: TO customize the bottomsheet with sharing target, we need to rely on this,
           // https://www.youtube.com/watch?v=bWehAFTFc9o
           // https://pub.dev/packages/url_launcher
-
+          recordEvent(_VideoShareWidgetMenuName.SHARE);
           if(video == null || video.content == null || video.user == null) return;
           Share.share("${video.content.attachments[0].url}", subject: "Check out ${video.user.username}'s video on Breeze.");
         }
@@ -223,7 +229,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
                   elevation: 0
                 ),
                 onPressed: actions[index]['onPressed'] != null
-                    ? () => actions[index]['onPressed'](widget.video, _reportController, _notInterestedController, widget, context)
+                    ? () => actions[index]['onPressed'](widget.video, reportController, notInterestedController, widget, context, recordEvent)
                     : (){},
                 child: Column(
                   children: [
@@ -251,9 +257,27 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
       height: 30,
       margin: EdgeInsets.only(top: 10),
       child: TextButton(
-        child: Text('Cancel',style: TextStyle(color: Color(0xff2a2a2a), fontSize: 14),),
-        onPressed: () { Get.back(); },
+        child: Text(_VideoShareWidgetMenuName.CANCEL, style: TextStyle(color: Color(0xff2a2a2a), fontSize: 14),),
+        onPressed: () { 
+          Get.back(); 
+          recordEvent(_VideoShareWidgetMenuName.CANCEL);
+        },
       ),
     );
   }
+
+  recordEvent(name) {
+    eventController.recordEvent(Event.VIDEO_SHARE_WIDGET_CLICK, {
+      EventKey.POST_ID: widget.video!.id,
+      EventKey.PAGE_TYPE: widget.pageType,
+      EventKey.NAME: name
+    });
+  }
+}
+
+class _VideoShareWidgetMenuName {
+  static const REPORT = 'Report';
+  static const NOT_INTERESTED = 'Not interested';
+  static const SHARE = 'Share';
+  static const CANCEL = 'Cancel';
 }

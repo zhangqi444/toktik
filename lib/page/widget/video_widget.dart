@@ -1,16 +1,16 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
 import 'package:toktik/common/events.dart';
 import 'package:toktik/common/router_manager.dart';
-import 'package:toktik/common/sp_keys.dart';
+import 'package:toktik/controller/event_controller.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/post_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
+import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:toktik/page/widget/video_bottom_bar_widget.dart';
@@ -18,7 +18,6 @@ import 'package:toktik/page/widget/video_right_bar_widget.dart';
 import 'package:toktik/page/widget/video_share_widget.dart';
 import 'package:toktik/util/screen_utils.dart';
 import 'package:get/get.dart';
-import 'package:toktik/util/sp_util.dart';
 import 'package:toktik/util/string_util.dart';
 import 'package:video_player/video_player.dart';
 
@@ -34,6 +33,7 @@ class VideoWidget extends StatefulWidget {
   double? contentHeight;
   Function? onClickHeader;
   Function? onNotInterested;
+  String? pageType;
   FeedListList? video;
   VideoWidget({
     Key? key,
@@ -42,6 +42,7 @@ class VideoWidget extends StatefulWidget {
     this.contentHeight,
     this.onClickHeader,
     this.onNotInterested,
+    this.pageType,
     this.video,}) : super(key: key);
 
   @override
@@ -53,6 +54,7 @@ class VideoWidget extends StatefulWidget {
 class _VideoWidgetState extends State<VideoWidget> {
   late VideoPlayerController _videoPlayerController;
   MainPageScrollController mainController = Get.find();
+  EventController eventController = Get.find();
   PostController _postController = Get.put(PostController());
   FeedController _feedController = Get.put(FeedController());
   final SelfController _selfController = Get.put(SelfController());
@@ -76,9 +78,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       _videoPlayerController.pause();
     });
     
-    mainController.recordEvent(
-        EventType.HOME_TAB_RECOMMEND_PAGE_LOADED.toShortString(),
-        {Events.VALUE: 1, Events.ID: widget.video!.id});
+    eventController.recordEvent(Event.VIDEO_LOADED, buildEvent(event: { EventKey.VALUE: 1 }));
     _durationSW.start();
     _postController.viewPost(widget.video!.id);
   }
@@ -89,9 +89,9 @@ class _VideoWidgetState extends State<VideoWidget> {
     _videoPlayerController.dispose();
     _durationSW.stop();
     if(_debounceTimer != null) _debounceTimer!.cancel();
-    mainController.recordEvent(
-        EventType.HOME_TAB_RECOMMEND_PAGE_VIEW_VIDEO.toShortString(),
-        { Events.DWELL: _durationSW.elapsedMilliseconds, Events.ID: widget.video!.id });
+    eventController.recordEvent(Event.VIEW_VIDEO, buildEvent(event: {
+      EventKey.DWELL: _durationSW.elapsedMilliseconds,
+    }));
   }
 
   @override
@@ -107,7 +107,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                 onSingleTap: () {
                   _playOrPause();
                 },
-                onAddFavorite: () async => _likePost(),
+                onAddFavorite: () async => likePost(),
                 child: Stack(
                   children: [
                     _getVideoPlayer(),
@@ -125,9 +125,9 @@ class _VideoWidgetState extends State<VideoWidget> {
                         video: widget.video,
                         showFocusButton: widget.showFocusButton,
                         onClickComment: () => showBottomComment(),
-                        onClickLike: () async => _likePost(),
+                        onClickLike: () async => likePost(),
                         onClickShare: () => showBottomShare(),
-                        onClickHeader: () => widget.onClickHeader?.call(),
+                        onClickHeader: () => clickHeader(),
                       )),
               ),
               Positioned(
@@ -227,16 +227,30 @@ class _VideoWidgetState extends State<VideoWidget> {
     );
   }
 
-  void _likePost() async {
+  void clickHeader() {
+    var user = this.widget.video!.user!;
+    Get.toNamed(Routers.user, arguments: {
+      NavigationArgument.IS_LOGIN_USER: false,
+      NavigationArgument.ID: user.id
+    });
+
+    if (widget.onClickHeader != null) {
+      widget.onClickHeader?.call();
+    }
+
+    eventController.recordEvent(Event.LIKE_VIDEO, buildEvent());
+  }
+
+  void likePost() async {
     if(!_likeEnabled.value) return;
     var isLiked = widget.video!.isLiked?? false;
     _likeEnabled = ValueNotifier<bool>(false);
     var eventValue;
-    if(_selfController.loginUserId == null || isStringNullOrEmpty(_selfController.loginUserId.value)) {
-      // TODO: add the correct logic to stop the video during login
+    if (isStringNullOrEmpty(_selfController.loginUserId.value)) {
+      // todo: add the correct logic to stop the video during login
       _videoPlayerController.pause();
       Get.toNamed(Routers.login);
-      eventValue = { Events.VALUE: null, Events.ID: widget.video!.id };
+      eventValue = {EventKey.VALUE: EventValue.NO_OP};
     } else {
       var result = await _postController.likePost(widget.video!.id, !isLiked);
       if(result != null && result.value != null) {
@@ -246,11 +260,10 @@ class _VideoWidgetState extends State<VideoWidget> {
         var newVideo = new FeedListList.fromJson(newVideoJson);
         _feedController.updateFeedListList(widget.video!.id, newVideo);
       }
-      eventValue = { Events.VALUE: isLiked, Events.ID: widget.video!.id };
+      eventValue = { EventKey.VALUE: isLiked };
     }
 
-
-    mainController.recordEvent(EventType.HOME_TAB_RECOMMEND_PAGE_LIKE_VIDEO.toShortString(), eventValue);
+    eventController.recordEvent(Event.LIKE_VIDEO, buildEvent(event: eventValue));
     _debounceTimer = Timer(_debounceDuration, () => _likeEnabled.value = true);
   }
 
@@ -280,8 +293,17 @@ class _VideoWidgetState extends State<VideoWidget> {
         ),),
         backgroundColor: ColorRes.color_1,
         builder: (context){
-          return VideoShareWidget(video: widget.video, onNotInterested: widget.onNotInterested);
+          return VideoShareWidget(video: widget.video, onNotInterested: widget.onNotInterested, pageType: widget.pageType);
         });
+    eventController
+      .recordEvent(Event.LIKE_VIDEO, buildEvent());
+  }
+
+  dynamic buildEvent({event}) {
+    return {
+      EventKey.POST_ID: widget.video!.id,
+      EventKey.PAGE_TYPE: widget.pageType,
+    }.addAll(event);
   }
 
 }

@@ -1,6 +1,7 @@
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:toktik/common/application.dart';
+import 'package:toktik/common/types.dart';
 import 'package:toktik/controller/feed_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/home_tab_recommend_page_controller.dart';
@@ -80,16 +81,10 @@ class _HomeTabRecommendPageState extends State<HomeTabRecommendPage> with Automa
             itemBuilder: (context, index) {
               return VideoWidget(
                 video: videoList[index],
-                // TODO: follow is not supported yet.
+                // todo: follow is not supported yet.
                 showFocusButton: false,
                 contentHeight: widget.contentHeight,
-                onClickHeader: () {
-                  var user = videoList[index]!.user!;
-                  Get.toNamed(Routers.user, arguments: {
-                    NavigationArgument.IS_LOGIN_USER: false,
-                    NavigationArgument.ID: user.id
-                  });
-                },
+                pageType: PageType.HOME_TAB_RECOMMEND,
                 onNotInterested: () {
                   // move to the next video.
                   _pageController.nextPage(duration: Duration(milliseconds: 200), curve: Curves.linear);

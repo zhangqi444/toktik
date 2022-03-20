@@ -71,3 +71,8 @@ class _UserMoreBottomSheetState extends State<UserMoreBottomSheet> {
     );
   }
 }
+
+class _UserMoreBottomSheetMenuName {
+  static const REPORT = 'Report';
+  static const NOT_INTERESTED = 'Not interested';
+}

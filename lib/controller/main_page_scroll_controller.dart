@@ -1,8 +1,10 @@
+import 'package:toktik/controller/event_controller.dart';
 import 'package:toktik/model/response/feed_list_response.dart';
 import 'package:get/get.dart';
 import 'package:toktik/net/api.dart';
 ///用来控制首页滑动、存储当前播放视频的用户model数据
-class MainPageScrollController extends GetxController{
+class MainPageScrollController extends GetxController {
+  final EventController eventController = Get.put(EventController());
 
   var amplifyConfigured = false.obs;
 
@@ -45,10 +47,6 @@ class MainPageScrollController extends GetxController{
   //ScrollPage的PageView是否可以滑动
   void updateScrollPageScrollState(bool scroll){
     scrollPageViewScrollPage.value = scroll;
-  }
-
-  void recordEvent(String eventName,  Map<String, dynamic> events) {
-    Api.recordEvent(eventName, events);
   }
 
 }

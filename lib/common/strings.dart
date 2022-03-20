@@ -1,6 +1,5 @@
 const String APP_NAME = "Breeze";
 
-
 const SETTING_HEADER_ABOUT = "ABOUT";
 const SETTING_HEADER_SUPPORT = "SUPPORT";
 const SETTING_HEADER_LOGIN = "LOGIN";

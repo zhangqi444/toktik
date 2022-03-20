@@ -332,3 +332,4 @@ class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
+

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toktik/common/application.dart';
+import 'package:toktik/common/events.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/strings.dart';
+import 'package:toktik/controller/event_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
@@ -31,6 +33,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
   final MainPageScrollController mainPageScrollController = Get.find();
   final SelfController _selfController = Get.put(SelfController());
   final UserController userController = Get.find();
+  final EventController eventController = Get.find();
   //用来获取BottomBar的高度
   final GlobalKey bottomBarKey = GlobalKey();
   late Widget _bottomBarLayout;
@@ -155,16 +158,11 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
           //     ]))
       ));
 
-  Widget menuButton(String text, Image icon, Image icon_active, int index) {
+  Widget menuButton(String text, Image icon, Image iconActive, int index) {
     return GestureDetector(
         onTap: () {
-          // TODO: disable bottom tab for now.
-          if (index == 1) {
-            EasyLoading.showToast("This feature is coming soon.",
-                duration: Duration(seconds: 3));
-            return;
-          }
-
+          eventController.recordEvent(
+            Event.MAIN_PAGE_BOTTOM_BAR_PRESS, { EventKey.INDEX: index, EventKey.NAME: text,  EventKey.VALUE: 1 });
           if (index == 0 || index == 1) {
             mainPageScrollController.selectIndexBottomBarMainPage(index);
           } else if(index == 2) {
@@ -186,7 +184,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   mainPageScrollController.indexBottomBarMainPage.value == index
-                      ? icon_active
+                      ? iconActive
                       : icon,
                   SizedBox(
                     height: 4,
