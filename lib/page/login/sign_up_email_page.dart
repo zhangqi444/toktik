@@ -12,6 +12,8 @@ import 'package:toktik/util/string_util.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
+import '../../common/events.dart';
+import '../../controller/event_controller.dart';
 import 'widget/login_app_bar_widget.dart';
 
 class SignUpEmailPage extends StatefulWidget {
@@ -32,6 +34,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
   String? errorMessage;
   bool isButtonActived = false;
   SelfController loginController = Get.put(SelfController());
+  final EventController eventController = Get.find();
   dynamic argumentData = Get.arguments;
 
   @override
@@ -51,7 +54,9 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LoginAppBarWidget(title: appBarTitle),
+      appBar: LoginAppBarWidget(title: appBarTitle, backCallback: () {
+        eventController.recordEvent(Event.SIGN_UP_EMAIL_PAGE_BACK_PRESS);
+      },),
       body: _layoutSignUp(context),
     );
   }
@@ -98,33 +103,6 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
     );
   }
 
-  _getAccountTextField() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.only(left: 30, right: 30),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(bottom: BorderSide(width: 0.3, color: Color(0xff2A2A2A)))),
-      child: TextFormField(
-        cursorColor: ColorRes.color_1,
-        cursorWidth: 2,
-        decoration: InputDecoration(
-            border: InputBorder.none, hintText: 'Email address'),
-        onChanged: (text) {
-          email = text;
-          setState(() {
-            errorMessage = '';
-          });
-        },
-        validator: (value) => EmailValidator.validate(value!)
-            ? null
-            : "Please enter a valid email address.",
-      ),
-    );
-  }
-
   _getSignUp(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 30, right: 30),
@@ -133,6 +111,7 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
       child: LoginPrimaryButtonWidget(
         text: 'Next',
         onPressed: () async {
+          eventController.recordEvent(Event.SIGN_UP_EMAIL_PAGE_NEXT_PRESS);
           setState(() {
             errorMessage = '';
           });

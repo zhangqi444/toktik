@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/strings.dart';
+import 'package:toktik/controller/event_controller.dart';
 import 'package:toktik/controller/main_page_scroll_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/enum/navigation_argument.dart';
@@ -11,11 +12,11 @@ import 'package:toktik/page/login/widget/login_error_message_widget.dart';
 import 'package:toktik/page/login/widget/login_subtitle_text_widget.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/page/login/widget/login_title_text_widget.dart';
-import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 import 'package:toktik/util/string_util.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
 
+import '../../common/events.dart';
 import '../widget/spinner_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -35,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   String errorMessage = "";
   SelfController loginController = Get.put(SelfController());
   final MainPageScrollController mainPageController = Get.find();
+  final EventController eventController = Get.find();
   dynamic argumentData = Get.arguments;
   bool isButtonActived = false;
   bool isLoading = false;
@@ -67,7 +69,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LoginAppBarWidget(title: "Log in"),
+      appBar: LoginAppBarWidget(title: "Log in", backCallback: () {
+        eventController.recordEvent(Event.LOGIN_PAGE_BACK_PRESS);
+      }),
       body: _layoutLogin(context),
     );
   }
@@ -186,6 +190,7 @@ class _LoginPageState extends State<LoginPage> {
             });
           }
           isLoading = false;
+          eventController.recordEvent(Event.LOGIN_PAGE_LOGIN_BUTTON_PRESS);
         },
         buttonEnabled: isButtonActived,
       ),
@@ -203,6 +208,7 @@ class _LoginPageState extends State<LoginPage> {
               child: TextButton(
                 onPressed: () {
                   Get.toNamed(Routers.resetPassword);
+                  eventController.recordEvent(Event.LOGIN_PAGE_FORGOT_PASSWORD_PRESS);
                 },
                 child: Text(
                   'Forgot password?',
@@ -214,6 +220,7 @@ class _LoginPageState extends State<LoginPage> {
               child: TextButton(
                 onPressed: () {
                   Get.toNamed(Routers.signUp);
+                  eventController.recordEvent(Event.LOGIN_PAGE_SIGN_UP_PRESS);
                 },
                 child: Text(
                   'Sign up',

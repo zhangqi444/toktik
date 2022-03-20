@@ -158,7 +158,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
         onTap: () {
           var index = config['index'];
           eventController.recordEvent(
-            Event.MAIN_PAGE_BOTTOM_BAR_PRESS, {
+            Event.MAIN_PAGE_BOTTOM_BAR_PRESS, event: {
             EventKey.INDEX: config['index'],
             EventKey.NAME: config['type'],
             EventKey.VALUE: 1

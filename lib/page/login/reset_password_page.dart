@@ -14,6 +14,9 @@ import 'package:get/get.dart';
 import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/util/string_util.dart';
 
+import '../../common/events.dart';
+import '../../controller/event_controller.dart';
+
 class ResetPasswordPage extends StatefulWidget {
   ResetPasswordPage({Key? key}) : super(key: key);
 
@@ -34,6 +37,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   String? errorMessage = "";
   UserController userController = Get.put(UserController());
   SelfController loginController = Get.put(SelfController());
+  final EventController eventController = Get.find();
 
   @override
   void initState() {
@@ -54,7 +58,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: LoginAppBarWidget(title: appBarTitle),
+      appBar: LoginAppBarWidget(title: appBarTitle, backCallback: () {
+        eventController.recordEvent(Event.RESET_PASSWORD_PAGE_BACK_PRESS);
+      },),
       body: _getLayout(context),
     );
   }
@@ -101,6 +107,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 } else {
                   setState(() { errorMessage = LOGIN_UNKNOWN_ERROR_MESSAGE; });
                 }
+                eventController.recordEvent(Event.RESET_PASSWORD_PAGE_NEXT_PRESS);
               }
             )
           ],

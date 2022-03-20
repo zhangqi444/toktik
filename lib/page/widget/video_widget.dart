@@ -78,7 +78,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       _videoPlayerController.pause();
     });
     
-    eventController.recordEvent(Event.VIDEO_LOADED, buildEvent(event: { EventKey.VALUE: 1 }));
+    eventController.recordEvent(Event.VIDEO_LOADED, event: buildEvent(event: { EventKey.VALUE: 1 }));
     _durationSW.start();
     _postController.viewPost(widget.video!.id);
   }
@@ -89,7 +89,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     _videoPlayerController.dispose();
     _durationSW.stop();
     if(_debounceTimer != null) _debounceTimer!.cancel();
-    eventController.recordEvent(Event.VIEW_VIDEO, buildEvent(event: {
+    eventController.recordEvent(Event.VIEW_VIDEO, event: buildEvent(event: {
       EventKey.DWELL: _durationSW.elapsedMilliseconds,
     }));
   }
@@ -238,7 +238,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       widget.onClickHeader?.call();
     }
 
-    eventController.recordEvent(Event.LIKE_VIDEO, buildEvent());
+    eventController.recordEvent(Event.LIKE_VIDEO, event: buildEvent());
   }
 
   void likePost() async {
@@ -263,7 +263,7 @@ class _VideoWidgetState extends State<VideoWidget> {
       eventValue = { EventKey.VALUE: isLiked };
     }
 
-    eventController.recordEvent(Event.LIKE_VIDEO, buildEvent(event: eventValue));
+    eventController.recordEvent(Event.LIKE_VIDEO, event: buildEvent(event: eventValue));
     _debounceTimer = Timer(_debounceDuration, () => _likeEnabled.value = true);
   }
 
@@ -296,7 +296,7 @@ class _VideoWidgetState extends State<VideoWidget> {
           return VideoShareWidget(video: widget.video, onNotInterested: widget.onNotInterested, pageType: widget.pageType);
         });
     eventController
-      .recordEvent(Event.LIKE_VIDEO, buildEvent());
+      .recordEvent(Event.SHARE_VIDEO, event: buildEvent());
   }
 
   dynamic buildEvent({Map<String, dynamic>? event}) {
@@ -305,7 +305,9 @@ class _VideoWidgetState extends State<VideoWidget> {
       EventKey.PAGE_TYPE: widget.pageType,
     };
 
-    defaultEvent.addAll(event!);
+    if(event != null) {
+      defaultEvent.addAll(event);
+    }
     return defaultEvent;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/controller/event_controller.dart';
 import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:toktik/enum/navigation_argument.dart';
@@ -12,6 +13,8 @@ import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:get/get.dart';
 import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/util/string_util.dart';
+
+import '../../common/events.dart';
 
 class ResetPasswordPasswordPage extends StatefulWidget {
   ResetPasswordPasswordPage({Key? key}) : super(key: key);
@@ -33,6 +36,7 @@ class _ResetPasswordPasswordPageState extends State<ResetPasswordPasswordPage> {
   String? errorMessage = "";
   UserController userController = Get.put(UserController());
   SelfController loginController = Get.put(SelfController());
+  final EventController eventController = Get.find();
 
   @override
   void initState() {
@@ -54,7 +58,9 @@ class _ResetPasswordPasswordPageState extends State<ResetPasswordPasswordPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: LoginAppBarWidget(title: appBarTitle),
+      appBar: LoginAppBarWidget(title: appBarTitle, backCallback: () {
+        eventController.recordEvent(Event.RESET_PASSWORD_PASSWORD_PAGE_BACK_PRESS);
+      },),
       body: _getLayout(context),
     );
   }
@@ -96,6 +102,7 @@ class _ResetPasswordPasswordPageState extends State<ResetPasswordPasswordPage> {
                   NavigationArgument.ACCOUNT: account,
                   NavigationArgument.PASSWORD: password
                 });
+                eventController.recordEvent(Event.RESET_PASSWORD_PASSWORD_PAGE_NEXT_PRESS);
               }
             )
           ],

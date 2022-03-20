@@ -123,7 +123,7 @@ class _VideoShareWidgetState extends State<VideoShareWidget> {
         ),
         onPressed: () {
           Get.back();
-          eventController.recordEvent(Event.VIDEO_SHARE_WIDGET_PRESS, {
+          eventController.recordEvent(Event.VIDEO_SHARE_WIDGET_PRESS, event: {
             EventKey.POST_ID: widget.video!.id,
             EventKey.PAGE_TYPE: widget.pageType,
             EventKey.NAME: _VideoShareWidgetMenuConfig.CANCEL['type'],
@@ -159,7 +159,7 @@ class _VideoShareWidgetMenu extends StatelessWidget {
           style: ElevatedButton.styleFrom(primary: Colors.white, elevation: 0),
           onPressed: () async {
             await callback!();
-            eventController.recordEvent(Event.VIDEO_SHARE_WIDGET_PRESS, {
+            eventController.recordEvent(Event.VIDEO_SHARE_WIDGET_PRESS, event: {
               EventKey.POST_ID: video!.id,
               EventKey.PAGE_TYPE: pageType,
               EventKey.NAME: config['type'],

@@ -26,6 +26,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final SelfController loginController = Get.put(SelfController());
+  final EventController eventController = Get.find();
   var platformInfo;
 
   @override
@@ -132,6 +133,10 @@ class _SettingPageState extends State<SettingPage> {
                 callback: () async {
               await loginController.logout();
               Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
+              eventController.recordEvent(Event.SETTING_PAGE_MENU_PRESS, event: {
+                EventKey.NAME: _SettingPageMenuConfig.LOGOUT['type'],
+                EventKey.VALUE: 1,
+              });
             }),
             FutureBuilder<void>(
               future: _getVersionNumber(),
@@ -172,7 +177,7 @@ class _SettingPageMenu extends StatelessWidget {
             callback!();
           }
 
-          eventController.recordEvent(Event.SETTING_PAGE_MENU_PRESS, {
+          eventController.recordEvent(Event.SETTING_PAGE_MENU_PRESS, event: {
             EventKey.NAME: config['type'],
             EventKey.VALUE: 1,
           });

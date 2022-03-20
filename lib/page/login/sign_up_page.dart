@@ -1,10 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/controller/event_controller.dart';
 import 'package:toktik/controller/user_controller.dart';
 import 'package:get/get.dart';
 
 import '../../common/configs.dart';
+import '../../common/events.dart';
 import '../../enum/navigation_argument.dart';
 import 'widget/login_app_bar_widget.dart';
 
@@ -16,12 +18,15 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  UserController loginController = Get.find();
+  final UserController loginController = Get.find();
+  final EventController eventController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LoginAppBarWidget(title: ""),
+      appBar: LoginAppBarWidget(title: "", backCallback: () {
+        eventController.recordEvent(Event.SIGN_UP_PAGE_BACK_PRESS);
+      }),
       body: _layoutSignUp(context),
     );
   }
@@ -90,6 +95,7 @@ class _SignUpPageState extends State<SignUpPage> {
           RawMaterialButton(
             onPressed: () {
               Get.toNamed(Routers.createUsername);
+              eventController.recordEvent(Event.SIGN_UP_PAGE_USE_PHONE_OR_EMAIL_BUTTON_PRESS);
             },
             child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -122,34 +128,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  _getSignIn() {
-    return Column(children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: "Already have an account?",
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 15,
-                  color: Color(0xff2A2A2A)),
-              ),
-              TextSpan(
-                text: " Log in",
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    Get.back();
-                  },
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 15,
-                  color: Color(0xff39CBE3)))
-            ]
-          )
-        )
-    ]);            
-  }
-
   _getPolicies() {
     return Container(
         width: 420,
@@ -171,7 +149,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       text: 'Terms of Service ',
                       recognizer: new TapGestureRecognizer()
                         ..onTap = () {
-                          Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );;
+                          Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );
+                          eventController.recordEvent(Event.SIGN_UP_PAGE_TERMS_OF_SERVICE__PRESS);
                         },
                       style: TextStyle(
                           color: Color(0xff2A2A2A),
@@ -184,7 +163,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       text: 'Privacy Policy ',
                       recognizer: new TapGestureRecognizer()
                         ..onTap = () {
-                          Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );;
+                          Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );
+                          eventController.recordEvent(Event.SIGN_UP_PAGE_PRIVACY_POLICY_PRESS);
                         },
                       style: TextStyle(
                           color: Color(0xff2A2A2A),
@@ -195,5 +175,34 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(color: Color(0xff888888))),
                 ]),
         )));
+  }
+
+  _getSignIn() {
+    return Column(children: [
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: "Already have an account?",
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 15,
+                  color: Color(0xff2A2A2A)),
+              ),
+              TextSpan(
+                text: " Log in",
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Get.back();
+                    eventController.recordEvent(Event.SIGN_UP_PAGE_LOGIN_PRESS);
+                  },
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 15,
+                  color: Color(0xff39CBE3)))
+            ]
+          )
+        )
+    ]);            
   }
 }

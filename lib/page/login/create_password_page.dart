@@ -10,6 +10,9 @@ import 'package:get/get.dart';
 import 'package:toktik/page/login/widget/login_title_text_widget.dart';
 import 'package:toktik/util/string_util.dart';
 
+import '../../common/events.dart';
+import '../../controller/event_controller.dart';
+
 class CreatePasswordPage extends StatefulWidget {
   CreatePasswordPage({Key? key}) : super(key: key);
 
@@ -27,6 +30,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
   String title = "Create password";
   String appBarTitle = "Sign up";
   SelfController loginController = Get.put(SelfController());
+  final EventController eventController = Get.find();
   dynamic argumentData = Get.arguments;
 
   @override
@@ -45,7 +49,9 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LoginAppBarWidget(title: appBarTitle),
+      appBar: LoginAppBarWidget(title: appBarTitle, backCallback: () {
+        eventController.recordEvent(Event.SIGN_UP_PASSWORD_PAGE_BACK_PRESS);
+      },),
       body: _layoutSignUp(context),
     );
   }
@@ -81,7 +87,9 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
               buttonEnabled: buttonEnabled,
               onPressed: () async {
                 Get.toNamed(Routers.signUpEmail, arguments: {
-                  NavigationArgument.USERNAME: username, NavigationArgument.PASSWORD: password });
+                  NavigationArgument.USERNAME: username, NavigationArgument.PASSWORD: password 
+                });
+                eventController.recordEvent(Event.SIGN_UP_PASSWORD_PAGE_NEXT_PRESS);
               })
           ],
         ),
