@@ -103,6 +103,11 @@ class _SettingPageState extends State<SettingPage> {
             }),
             ItemTurnWidget(img: 'assets/images/setting_and_privacy/privacy.png',title: "Privacy", onClick: (){
               Get.toNamed(Routers.webView, arguments: {"url": "https://www.getbreeze.me/community-guidelines"} );
+            ItemTurnWidget(img: 'assets/images/community_service.png',title: SETTING_COMMUNITY_GUIDELINES, onClick: (){
+                  Get.toNamed(Routers.webView, arguments: {
+                    NavigationArgument.URL:
+                        "https://www.getbreeze.me/community-guidelines"
+                  });
             }),
             ItemTurnWidget(img: 'assets/images/setting_and_privacy/security_and_login.png',title: "Security and login", onClick: (){
               Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );
@@ -115,6 +120,15 @@ class _SettingPageState extends State<SettingPage> {
             }),
             ItemTurnWidget(img: 'assets/images/setting_and_privacy/share_profile.png',title: "Share profile", onClick: () {
               Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
+            ItemTurnWidget(img: 'assets/images/sdk_list.png',title: SETTING_COPYRIGHT_POLICY, onClick: (){
+                  Get.toNamed(Routers.webView, arguments: {
+                    NavigationArgument.URL: "https://getbreeze.me/copyright"
+                  });
+            }),
+            ItemTurnWidget(img: 'assets/images/setting_about.png',title: SETTING_ABOUT, onClick: () {
+                  Get.toNamed(Routers.webView, arguments: {
+                    NavigationArgument.URL: "https://getbreeze.me"
+                  });
             }),
             // ItemTurnWidget(img: 'assets/images/setting_and_privacy/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
 
@@ -146,6 +160,10 @@ class _SettingPageState extends State<SettingPage> {
             }),
             ItemTurnWidget(img: 'assets/images/setting_and_privacy/family_pairing.png',title: "Family Pairing", onClick: () {
               Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            _getHeader(SETTING_HEADER_SUPPORT),
+            ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
+                  Get.toNamed(Routers.webView,
+                      arguments: {NavigationArgument.URL: FEEDBACK_URL});
             }),
             _getDivider(),
             _getHeader(SETTING_HEADER_LOGIN),

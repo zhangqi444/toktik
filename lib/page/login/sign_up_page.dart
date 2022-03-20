@@ -55,10 +55,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 21,
                         ),
                         _getButton(),
-                        SizedBox(
-                          height: 440,
-                        ),
-                        _getPolicies()
                       ],
                     ),
                   ),
@@ -117,6 +113,17 @@ class _SignUpPageState extends State<SignUpPage> {
     return Positioned(
       bottom: 60.0,
       child: Column(children: [
+        _getPolicies(),
+        SizedBox(
+          height: 20,
+        ),
+        _getSignIn()
+      ]),
+    );
+  }
+
+  _getSignIn() {
+    return Column(children: [
         RichText(
           text: TextSpan(
             children: [
@@ -140,12 +147,14 @@ class _SignUpPageState extends State<SignUpPage> {
             ]
           )
         )
-      ])
-    );            
+    ]);            
   }
 
   _getPolicies() {
-    return Expanded(
+    return Container(
+        width: 420,
+        padding: EdgeInsets.only(left: 30, right: 30),
+        child: Expanded(
       child:
           RichText(
             textAlign: TextAlign.center,
@@ -156,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                      text: 'By signing, you agree to our ',
+                    text: 'By continuing, you agree to our ',
                       style: TextStyle(color: Color(0xff888888))),
                   TextSpan(
                       text: 'Terms of Service ',
@@ -185,6 +194,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       'to learn how we collect, use, and share your data.',
                       style: TextStyle(color: Color(0xff888888))),
                 ]),
-          ));
+        )));
   }
 }
