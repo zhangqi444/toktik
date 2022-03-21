@@ -175,7 +175,7 @@ type User
   @key(
     name: "username-index"
     fields: ["username"]
-    queryField: "getUserByUsername"
+    queryField: "getUserByUsername" 
   ) {
   id: ID!
   nickname: String
