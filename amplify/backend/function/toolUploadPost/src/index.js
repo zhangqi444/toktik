@@ -12,103 +12,46 @@
 Amplify Params - DO NOT EDIT */
 
 const AWS = require('aws-sdk');
-const docClient = new AWS.DynamoDB.DocumentClient();
 const axios = require('axios');
 const gql = require('graphql-tag');
 const graphql = require('graphql');
 const { print } = graphql;
-const { query } = require('/opt/internal/utils/graphqlUtil');
+const { query, getCategoryByName, getTagByName, createCategory, createTag } = require('/opt/internal/utils/graphqlUtil');
 const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
 
-const getPosts = async (userId) => {
-    const data = {
+const listPosts = async (args) => {
+    const { nextToken, limit, filter } = args;
+    return await query({
         query: print(gql`
-            query listNotInteresteds($filter: ModelNotInterestedFilterInput, $limit: Int, $nextToken: String) {
-                listNotInteresteds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+            query listPosts($filter: ModelPostFilterInput, $limit: Int, $nextToken: String) {
+                listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
                     nextToken startedAt items {
-                        id notInterestedPostId notInterestedTargetUserId type
+                        id text attachments likeCount commentCount shareCount viewCount
+                        user { id _deleted _lastChangedAt _version bio birth city
+                            createdAt gender nickname portrait profession updatedAt username }
+                        music { id _deleted _lastChangedAt _version img url createdAt updatedAt }
                     }
                 }
             }
         `),
-        variables: { filter: { notInterestedUserId: { eq: userId } } }
-    };
-    return await query(data, "listNotInteresteds");
+        variables: { filter, limit, nextToken }
+    }, 'listPosts');
 }
 
-const getCategory = async (name) => {
-    const data = {
+const getUserByUsername = async (username) => {
+    const q = {
         query: print(gql`
-            query getCategory($name: String) {
-                getCategory(name: $name) {
-                    id
-                }
-            }
-        `),
-        variables: { name }
-    };
-    return await query(data, "getCategory");
-}
-
-const getTag = async (name) => {
-    const data = {
-        query: print(gql`
-            query getTag($name: String) {
-                getTag(name: $name) {
-                    id
-                }
-            }
-        `),
-        variables: { name }
-    };
-    return await query(data, "getTag");
-}
-
-const getUser = async (username) => {
-    const data = {
-        query: print(gql`
-            query getUser($username: String) {
-                getUser(username: $username) {
-                    id
+            query getUserByUsername($username: String) {
+                getUserByUsername(username: $username) {
+                    items { id }
                 }
             }
         `),
         variables: { username }
     };
-    return await query(data, "getUser");
-}
-
-
-
-const createCategory = async (input) => {
-    const data = {
-        query: print(gql`
-            mutation createCategory($input: CreateCategoryInput!) {
-                createCategory(input: $input) {
-                    id
-                }
-            }
-        `),
-        variables: { input }
-    };
-    return await query(data, "createCategory");
-}
-
-
-
-const createTag = async (input) => {
-    const data = {
-        query: print(gql`
-            mutation createTag($input: CreateTagInput!) {
-                createTag(input: $input) {
-                    id
-                }
-            }
-        `),
-        variables: { input }
-    };
-    return await query(data, "createTag");
+    const data = await query(q, "getUserByUsername");
+    return data && data.items;
 }
 
 const createUser = async (input) => {
@@ -126,22 +69,17 @@ const createUser = async (input) => {
 }
 
 const createPost = async (input) => {
-    const graphqlData = await axios({
-        url: process.env.API_TOKTIK_GRAPHQLAPIENDPOINTOUTPUT,
-        method: 'post',
-        headers: { 'x-api-key': process.env.API_TOKTIK_GRAPHQLAPIKEYOUTPUT },
-        data: {
-            query: print(gql`
-                mutation CreatePost($input: CreatePostInput!) {
-                    createPost(input: $input) {
-                        id
-                    }
+    const data = {
+        query: print(gql`
+            mutation createPost($input: createPostInput!) {
+                createPost(input: $input) {
+                    id
                 }
-            `),
-            variables: { input }
-        }
-    });
-    if(!graphqlData.data.errors) return graphqlData.data.data.createPost;
+            }
+        `),
+        variables: { input }
+    };
+    return await query(data, "createPost");
 }
 
 const parseCategory = async (data) => {
@@ -150,12 +88,12 @@ const parseCategory = async (data) => {
     const map = {};
     data.forEach(d => {
         if(!d || !d.category) return;
-        map[d.category] = d.category;
+        map[d.category] = null;
     });
     
     await Promise.all(Object.keys(map).map(async name => {
-        let res = await getCategory(name);
-        console.log('zzz', res)
+        let res = await getCategoryByName(name);
+        res = res[0];
         if(!res) {
             res = await createCategory({ name, isSubcategory: false });
         }
@@ -169,9 +107,11 @@ const parseUser = async (data) => {
     if(!data) return;
     
     const map = {};
+    const userDataMap = {}
     data.forEach(d => {
         if(!d || !d.user) return;
-        map[d.user] = { 
+        map[d.user] = null;
+        userDataMap[d.user] = { 
             bio: d.userBio, 
             nickname: d.userNickname || d.user, 
             username: d.user,
@@ -179,8 +119,9 @@ const parseUser = async (data) => {
         };
     });
     await Promise.all(Object.keys(map).map(async name => {
-        const input = map[name];
-        let res = await getUser(name);
+        const input = userDataMap[name];
+        let res = await getUserByUsername(name);
+        res = res[0];
         if(!res) {
             res = await createUser(input);
         }
@@ -196,11 +137,12 @@ const parseTag = async (data) => {
     data.forEach(d => {
         const tags = d && d.tags && d.tags.split(',');
         tags && tags.forEach(name => {
-            map[name] = { name };
+            map[name] = null;
         })
     });
     await Promise.all(Object.keys(map).map(async name => {
-        let res = await getTag(name);
+        let res = await getTagByName(name);
+        res = res[0];
         if(!res) {
             res = await createTag({ name });
         }
@@ -247,18 +189,19 @@ exports.handler = async (event) => {
     let data = await s3GetObject(params);
 
     const categoryMap = await parseCategory(data);
-    // const tagMap = await parseTag(data);
-    // const userMap = await parseUser(data);
+    const tagMap = await parseTag(data);
+    const userMap = await parseUser(data);
     
-    console.log(categoryMap)
-    // console.log(tagMap)
-    // console.log(userMap)
+    console.log(userMap)
+    
     // const createPosts = await Promise.all(data.map(async d => {
     //     let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
     //     let url = videoAttachments;
     //     if(videoURL && (!url || !url.match(/[^()]+(?=\})/g))) {
     //         url = videoURL;
     //     }
+
+    //     const existingPosts = await listPosts({ filter: { postUserId: { eq: userMap[user] },  } });
 
     //     const cp = await createPost({
     //         commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000),
@@ -273,15 +216,8 @@ exports.handler = async (event) => {
     // }));
 
     
-    console.log(createPosts);
-
     return {
         statusCode: 200,
-    //  Uncomment below to enable CORS requests
-    //  headers: {
-    //      "Access-Control-Allow-Origin": "*",
-    //      "Access-Control-Allow-Headers": "*"
-    //  }, 
-        body: JSON.stringify(),
+        body: JSON.stringify({ count: createPosts.length }),
     };
 };
