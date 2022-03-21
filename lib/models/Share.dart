@@ -19,7 +19,6 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
-import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
@@ -30,8 +29,8 @@ class Share extends Model {
   static const classType = const _ShareModelType();
   final String id;
   final String? _to;
-  final User? _user;
-  final Post? _post;
+  final String? _shareUserId;
+  final String? _sharePostId;
 
   @override
   getInstanceType() => classType;
@@ -45,22 +44,40 @@ class Share extends Model {
     return _to;
   }
   
-  User? get user {
-    return _user;
+  String get shareUserId {
+    try {
+      return _shareUserId!;
+    } catch(e) {
+      throw new DataStoreException(
+          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  Post? get post {
-    return _post;
+  String get sharePostId {
+    try {
+      return _sharePostId!;
+    } catch(e) {
+      throw new DataStoreException(
+          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  const Share._internal({required this.id, to, user, post}): _to = to, _user = user, _post = post;
+  const Share._internal({required this.id, to, required shareUserId, required sharePostId}): _to = to, _shareUserId = shareUserId, _sharePostId = sharePostId;
   
-  factory Share({String? id, String? to, User? user, Post? post}) {
+  factory Share({String? id, String? to, required String shareUserId, required String sharePostId}) {
     return Share._internal(
       id: id == null ? UUID.getUUID() : id,
       to: to,
-      user: user,
-      post: post);
+      shareUserId: shareUserId,
+      sharePostId: sharePostId);
   }
   
   bool equals(Object other) {
@@ -73,8 +90,8 @@ class Share extends Model {
     return other is Share &&
       id == other.id &&
       _to == other._to &&
-      _user == other._user &&
-      _post == other._post;
+      _shareUserId == other._shareUserId &&
+      _sharePostId == other._sharePostId;
   }
   
   @override
@@ -87,43 +104,35 @@ class Share extends Model {
     buffer.write("Share {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("to=" + "$_to" + ", ");
-    buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
-    buffer.write("post=" + (_post != null ? _post!.toString() : "null"));
+    buffer.write("shareUserId=" + "$_shareUserId" + ", ");
+    buffer.write("sharePostId=" + "$_sharePostId");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Share copyWith({String? id, String? to, User? user, Post? post}) {
+  Share copyWith({String? id, String? to, String? shareUserId, String? sharePostId}) {
     return Share(
       id: id ?? this.id,
       to: to ?? this.to,
-      user: user ?? this.user,
-      post: post ?? this.post);
+      shareUserId: shareUserId ?? this.shareUserId,
+      sharePostId: sharePostId ?? this.sharePostId);
   }
   
   Share.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _to = json['to'],
-      _user = json['user']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
-        : null,
-      _post = json['post']?['serializedData'] != null
-        ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
-        : null;
+      _shareUserId = json['shareUserId'],
+      _sharePostId = json['sharePostId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'to': _to, 'user': _user?.toJson(), 'post': _post?.toJson()
+    'id': id, 'to': _to, 'shareUserId': _shareUserId, 'sharePostId': _sharePostId
   };
 
   static final QueryField ID = QueryField(fieldName: "share.id");
   static final QueryField TO = QueryField(fieldName: "to");
-  static final QueryField USER = QueryField(
-    fieldName: "user",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
-  static final QueryField POST = QueryField(
-    fieldName: "post",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
+  static final QueryField SHAREUSERID = QueryField(fieldName: "shareUserId");
+  static final QueryField SHAREPOSTID = QueryField(fieldName: "sharePostId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Share";
     modelSchemaDefinition.pluralName = "Shares";
@@ -147,18 +156,16 @@ class Share extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Share.USER,
-      isRequired: false,
-      targetName: "shareUserId",
-      ofModelName: (User).toString()
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Share.SHAREUSERID,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Share.POST,
-      isRequired: false,
-      targetName: "sharePostId",
-      ofModelName: (Post).toString()
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Share.SHAREPOSTID,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }

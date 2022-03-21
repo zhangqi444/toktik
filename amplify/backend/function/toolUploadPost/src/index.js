@@ -40,7 +40,7 @@ const getPosts = async (userId) => {
 const getCategory = async (name) => {
     const data = {
         query: print(gql`
-            query GetCategory($name: String) {
+            query getCategory($name: String) {
                 getCategory(name: $name) {
                     id
                 }
@@ -114,15 +114,15 @@ const createTag = async (input) => {
 const createUser = async (input) => {
     const data = {
         query: print(gql`
-            mutation createTag($input: CreateUserInput!) {
-                createTag(input: $input) {
+            mutation createUser($input: CreateUserInput!) {
+                createUser(input: $input) {
                     id
                 }
             }
         `),
         variables: { input }
     };
-    return await query(data, "createTag");
+    return await query(data, "createUser");
 }
 
 const createPost = async (input) => {
@@ -145,50 +145,66 @@ const createPost = async (input) => {
 }
 
 const parseCategory = async (data) => {
+    if(!data) return;
+
     const map = {};
     data.forEach(d => {
-        map[d.category] = null;
+        if(!d || !d.category) return;
+        map[d.category] = d.category;
     });
-    await Promise.all(Object.keys(map).map(name => {
-        const res = await getCategory(name);
+    
+    await Promise.all(Object.keys(map).map(async name => {
+        let res = await getCategory(name);
+        console.log('zzz', res)
         if(!res) {
-            res = await createCategory({ name, isSubCategory: false });
+            res = await createCategory({ name, isSubcategory: false });
         }
-        map[res.name] = res.id;
+        map[name] = res.id;
     }));
+    
     return map;
 }
 
 const parseUser = async (data) => {
+    if(!data) return;
+    
     const map = {};
     data.forEach(d => {
-        map[d.user] = null;
+        if(!d || !d.user) return;
+        map[d.user] = { 
+            bio: d.userBio, 
+            nickname: d.userNickname || d.user, 
+            username: d.user,
+            portrait: d.userPortrait,
+        };
     });
-    await Promise.all(Object.keys(map).map(name => {
-        const res = await getUser(name);
+    await Promise.all(Object.keys(map).map(async name => {
+        const input = map[name];
+        let res = await getUser(name);
         if(!res) {
-            res = await createUser({ 
-                username: name, nickname: d.nickname || name, portrait: d.userPortrait, bio: d.userBio
-            });
+            res = await createUser(input);
         }
-        map[res.name] = res.id;
+        map[name] = res.id;
     }));
     return map;
 }
 
 const parseTag = async (data) => {
+    if(!data) return;
+    
     const map = {};
     data.forEach(d => {
-        d.tags && d.tags.forEach(t => {
-            map[t] = null;
+        const tags = d && d.tags && d.tags.split(',');
+        tags && tags.forEach(name => {
+            map[name] = { name };
         })
     });
-    await Promise.all(Object.keys(map).map(name => {
-        const res = await getTag(name);
+    await Promise.all(Object.keys(map).map(async name => {
+        let res = await getTag(name);
         if(!res) {
             res = await createTag({ name });
         }
-        map[res.name] = res.id;
+        map[name] = res.id;
     }));
     return map;
 }
@@ -200,7 +216,7 @@ exports.handler = async (event) => {
     var s3 = new AWS.S3();
     var params = {
         Bucket: process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME,
-        Key: "test.csv"
+        Key: "postSource/test.csv"
     };
 
     const s3GetObject = (params) => {
@@ -219,8 +235,8 @@ exports.handler = async (event) => {
                     ]
                 }).data;
                 data = data.sort((b, a) => {
-                    const ta = a.updatedAt;
-                    const tb = b.updatedAt;
+                    const ta = a.createdAt;
+                    const tb = b.createdAt;
                     return ta.localeCompare(tb);
                 });
                 resolve(data);
@@ -228,28 +244,33 @@ exports.handler = async (event) => {
         })
     }
     
-    const data = await s3GetObject(params);
-
+    let data = await s3GetObject(params);
 
     const categoryMap = await parseCategory(data);
-    const tagMap = await parseTag(data);
-    const userMap = await parseUser(data);
+    // const tagMap = await parseTag(data);
+    // const userMap = await parseUser(data);
+    
+    console.log(categoryMap)
+    // console.log(tagMap)
+    // console.log(userMap)
+    // const createPosts = await Promise.all(data.map(async d => {
+    //     let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
+    //     let url = videoAttachments;
+    //     if(videoURL && (!url || !url.match(/[^()]+(?=\})/g))) {
+    //         url = videoURL;
+    //     }
 
-    const createPosts = await Promise.all(data.map(d => {
-        let { videoAttachments, videoURL, title, category, formatType, description, tags, user } = d;
-        let url = videoAttachments;
-        if(videoURL && (!url || !url.match(/[^()]+(?=\})/g))) {
-            url = videoURL;
-        }
+    //     const cp = await createPost({
+    //         commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000),
+    //         text: title, description, formatType, source,
+    //         attachments: JSON.stringify({ data: [ { url } ] }),
+    //         postCategoryId: categoryMap[category], 
+    //         postTagIds: tags.map(t => tagMap[t]), 
+    //         postUserId: userMap[user]
+    //     });
 
-        const cp = await createPost({
-            commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000),
-            text: title, attachments: JSON.stringify({ data: [ { url } ] }), description: description, formatType,
-            postCategoryId: categoryMap[category], postTagIds: tags.map(t => tagMap[t]), postUserId: userMap[user]
-        });
-
-        return cp;
-    }));
+    //     return cp;
+    // }));
 
     
     console.log(createPosts);

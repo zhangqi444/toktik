@@ -31,47 +31,11 @@
         },
         "toolUploadPost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/toolUploadPost-354f5953723533515265-build.zip"
+          "s3Key": "amplify-builds/toolUploadPost-31372f5437324e4d6174-build.zip"
         }
       },
       "auth": {
         "toktikf7d4ff65": {}
-      }
-    }
-  },
-  "prod": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-toktik-prod-175430-authRole",
-      "UnauthRoleArn": "arn:aws:iam::527389837723:role/amplify-toktik-prod-175430-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::527389837723:role/amplify-toktik-prod-175430-authRole",
-      "Region": "us-west-2",
-      "DeploymentBucketName": "amplify-toktik-prod-175430-deployment",
-      "UnauthRoleName": "amplify-toktik-prod-175430-unauthRole",
-      "StackName": "amplify-toktik-prod-175430",
-      "StackId": "arn:aws:cloudformation:us-west-2:527389837723:stack/amplify-toktik-prod-175430/99859000-3a73-11ec-8101-06aedda0c08b",
-      "AmplifyAppId": "d1mt6rg0ztrl8w"
-    },
-    "categories": {
-      "auth": {
-        "toktikf7d4ff65": {}
-      },
-      "function": {
-        "listPostExs": {
-          "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/listPostExs-46303734317462563638-build.zip"
-        },
-        "toktikgraphqlLambdaLayer": {
-          "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion9ba9ed47-build.zip"
-        },
-        "likePost": {
-          "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/likePost-72486c2b5a5a6759656e-build.zip"
-        },
-        "viewPost": {
-          "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/viewPost-5a2b645067326e312b39-build.zip"
-        }
       }
     }
   }

@@ -23,13 +23,14 @@ import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_inte
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the View type in your schema. */
+/** This is an auto generated class representing the Category type in your schema. */
 @immutable
-class View extends Model {
-  static const classType = const _ViewModelType();
+class Category extends Model {
+  static const classType = const _CategoryModelType();
   final String id;
-  final String? _viewUserId;
-  final String? _viewPostId;
+  final String? _name;
+  final bool? _isSubcategory;
+  final String? _parentCategoryId;
 
   @override
   getInstanceType() => classType;
@@ -39,39 +40,26 @@ class View extends Model {
     return id;
   }
   
-  String get viewUserId {
-    try {
-      return _viewUserId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  String? get name {
+    return _name;
   }
   
-  String get viewPostId {
-    try {
-      return _viewPostId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  bool? get isSubcategory {
+    return _isSubcategory;
   }
   
-  const View._internal({required this.id, required viewUserId, required viewPostId}): _viewUserId = viewUserId, _viewPostId = viewPostId;
+  String? get parentCategoryId {
+    return _parentCategoryId;
+  }
   
-  factory View({String? id, required String viewUserId, required String viewPostId}) {
-    return View._internal(
+  const Category._internal({required this.id, name, isSubcategory, parentCategoryId}): _name = name, _isSubcategory = isSubcategory, _parentCategoryId = parentCategoryId;
+  
+  factory Category({String? id, String? name, bool? isSubcategory, String? parentCategoryId}) {
+    return Category._internal(
       id: id == null ? UUID.getUUID() : id,
-      viewUserId: viewUserId,
-      viewPostId: viewPostId);
+      name: name,
+      isSubcategory: isSubcategory,
+      parentCategoryId: parentCategoryId);
   }
   
   bool equals(Object other) {
@@ -81,10 +69,11 @@ class View extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is View &&
+    return other is Category &&
       id == other.id &&
-      _viewUserId == other._viewUserId &&
-      _viewPostId == other._viewPostId;
+      _name == other._name &&
+      _isSubcategory == other._isSubcategory &&
+      _parentCategoryId == other._parentCategoryId;
   }
   
   @override
@@ -94,37 +83,41 @@ class View extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("View {");
+    buffer.write("Category {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("viewUserId=" + "$_viewUserId" + ", ");
-    buffer.write("viewPostId=" + "$_viewPostId");
+    buffer.write("name=" + "$_name" + ", ");
+    buffer.write("isSubcategory=" + (_isSubcategory != null ? _isSubcategory!.toString() : "null") + ", ");
+    buffer.write("parentCategoryId=" + "$_parentCategoryId");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  View copyWith({String? id, String? viewUserId, String? viewPostId}) {
-    return View(
+  Category copyWith({String? id, String? name, bool? isSubcategory, String? parentCategoryId}) {
+    return Category(
       id: id ?? this.id,
-      viewUserId: viewUserId ?? this.viewUserId,
-      viewPostId: viewPostId ?? this.viewPostId);
+      name: name ?? this.name,
+      isSubcategory: isSubcategory ?? this.isSubcategory,
+      parentCategoryId: parentCategoryId ?? this.parentCategoryId);
   }
   
-  View.fromJson(Map<String, dynamic> json)  
+  Category.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _viewUserId = json['viewUserId'],
-      _viewPostId = json['viewPostId'];
+      _name = json['name'],
+      _isSubcategory = json['isSubcategory'],
+      _parentCategoryId = json['parentCategoryId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'viewUserId': _viewUserId, 'viewPostId': _viewPostId
+    'id': id, 'name': _name, 'isSubcategory': _isSubcategory, 'parentCategoryId': _parentCategoryId
   };
 
-  static final QueryField ID = QueryField(fieldName: "view.id");
-  static final QueryField VIEWUSERID = QueryField(fieldName: "viewUserId");
-  static final QueryField VIEWPOSTID = QueryField(fieldName: "viewPostId");
+  static final QueryField ID = QueryField(fieldName: "category.id");
+  static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField ISSUBCATEGORY = QueryField(fieldName: "isSubcategory");
+  static final QueryField PARENTCATEGORYID = QueryField(fieldName: "parentCategoryId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "View";
-    modelSchemaDefinition.pluralName = "Views";
+    modelSchemaDefinition.name = "Category";
+    modelSchemaDefinition.pluralName = "Categories";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -140,24 +133,30 @@ class View extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: View.VIEWUSERID,
-      isRequired: true,
+      key: Category.NAME,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: View.VIEWPOSTID,
-      isRequired: true,
+      key: Category.ISSUBCATEGORY,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Category.PARENTCATEGORYID,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }
 
-class _ViewModelType extends ModelType<View> {
-  const _ViewModelType();
+class _CategoryModelType extends ModelType<Category> {
+  const _CategoryModelType();
   
   @override
-  View fromJson(Map<String, dynamic> jsonData) {
-    return View.fromJson(jsonData);
+  Category fromJson(Map<String, dynamic> jsonData) {
+    return Category.fromJson(jsonData);
   }
 }

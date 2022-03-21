@@ -19,8 +19,8 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
-import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -30,13 +30,17 @@ class Post extends Model {
   static const classType = const _PostModelType();
   final String id;
   final String? _text;
-  final User? _user;
-  final Music? _music;
   final String? _attachments;
   final int? _likeCount;
   final int? _commentCount;
   final int? _shareCount;
+  final String? _postUserId;
   final int? _viewCount;
+  final String? _description;
+  final String? _formatType;
+  final String? _source;
+  final String? _postCategoryId;
+  final List<String>? _postTagIds;
 
   @override
   getInstanceType() => classType;
@@ -48,14 +52,6 @@ class Post extends Model {
   
   String? get text {
     return _text;
-  }
-  
-  User? get user {
-    return _user;
-  }
-  
-  Music? get music {
-    return _music;
   }
   
   String? get attachments {
@@ -74,23 +70,51 @@ class Post extends Model {
     return _shareCount;
   }
   
+  String? get postUserId {
+    return _postUserId;
+  }
+  
   int? get viewCount {
     return _viewCount;
   }
   
-  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount;
+  String? get description {
+    return _description;
+  }
   
-  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount}) {
+  String? get formatType {
+    return _formatType;
+  }
+  
+  String? get source {
+    return _source;
+  }
+  
+  String? get postCategoryId {
+    return _postCategoryId;
+  }
+  
+  List<String>? get postTagIds {
+    return _postTagIds;
+  }
+  
+  const Post._internal({required this.id, text, attachments, likeCount, commentCount, shareCount, postUserId, viewCount, description, formatType, source, postCategoryId, postTagIds}): _text = text, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _postUserId = postUserId, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _postCategoryId = postCategoryId, _postTagIds = postTagIds;
+  
+  factory Post({String? id, String? text, String? attachments, int? likeCount, int? commentCount, int? shareCount, String? postUserId, int? viewCount, String? description, String? formatType, String? source, String? postCategoryId, List<String>? postTagIds}) {
     return Post._internal(
       id: id == null ? UUID.getUUID() : id,
       text: text,
-      user: user,
-      music: music,
       attachments: attachments,
       likeCount: likeCount,
       commentCount: commentCount,
       shareCount: shareCount,
-      viewCount: viewCount);
+      postUserId: postUserId,
+      viewCount: viewCount,
+      description: description,
+      formatType: formatType,
+      source: source,
+      postCategoryId: postCategoryId,
+      postTagIds: postTagIds != null ? List<String>.unmodifiable(postTagIds) : postTagIds);
   }
   
   bool equals(Object other) {
@@ -103,13 +127,17 @@ class Post extends Model {
     return other is Post &&
       id == other.id &&
       _text == other._text &&
-      _user == other._user &&
-      _music == other._music &&
       _attachments == other._attachments &&
       _likeCount == other._likeCount &&
       _commentCount == other._commentCount &&
       _shareCount == other._shareCount &&
-      _viewCount == other._viewCount;
+      _postUserId == other._postUserId &&
+      _viewCount == other._viewCount &&
+      _description == other._description &&
+      _formatType == other._formatType &&
+      _source == other._source &&
+      _postCategoryId == other._postCategoryId &&
+      DeepCollectionEquality().equals(_postTagIds, other._postTagIds);
   }
   
   @override
@@ -122,63 +150,71 @@ class Post extends Model {
     buffer.write("Post {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("text=" + "$_text" + ", ");
-    buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
-    buffer.write("music=" + (_music != null ? _music!.toString() : "null") + ", ");
     buffer.write("attachments=" + "$_attachments" + ", ");
     buffer.write("likeCount=" + (_likeCount != null ? _likeCount!.toString() : "null") + ", ");
     buffer.write("commentCount=" + (_commentCount != null ? _commentCount!.toString() : "null") + ", ");
     buffer.write("shareCount=" + (_shareCount != null ? _shareCount!.toString() : "null") + ", ");
-    buffer.write("viewCount=" + (_viewCount != null ? _viewCount!.toString() : "null"));
+    buffer.write("postUserId=" + "$_postUserId" + ", ");
+    buffer.write("viewCount=" + (_viewCount != null ? _viewCount!.toString() : "null") + ", ");
+    buffer.write("description=" + "$_description" + ", ");
+    buffer.write("formatType=" + "$_formatType" + ", ");
+    buffer.write("source=" + "$_source" + ", ");
+    buffer.write("postCategoryId=" + "$_postCategoryId" + ", ");
+    buffer.write("postTagIds=" + (_postTagIds != null ? _postTagIds!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount}) {
+  Post copyWith({String? id, String? text, String? attachments, int? likeCount, int? commentCount, int? shareCount, String? postUserId, int? viewCount, String? description, String? formatType, String? source, String? postCategoryId, List<String>? postTagIds}) {
     return Post(
       id: id ?? this.id,
       text: text ?? this.text,
-      user: user ?? this.user,
-      music: music ?? this.music,
       attachments: attachments ?? this.attachments,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
       shareCount: shareCount ?? this.shareCount,
-      viewCount: viewCount ?? this.viewCount);
+      postUserId: postUserId ?? this.postUserId,
+      viewCount: viewCount ?? this.viewCount,
+      description: description ?? this.description,
+      formatType: formatType ?? this.formatType,
+      source: source ?? this.source,
+      postCategoryId: postCategoryId ?? this.postCategoryId,
+      postTagIds: postTagIds ?? this.postTagIds);
   }
   
   Post.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _text = json['text'],
-      _user = json['user']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
-        : null,
-      _music = json['music']?['serializedData'] != null
-        ? Music.fromJson(new Map<String, dynamic>.from(json['music']['serializedData']))
-        : null,
       _attachments = json['attachments'],
       _likeCount = (json['likeCount'] as num?)?.toInt(),
       _commentCount = (json['commentCount'] as num?)?.toInt(),
       _shareCount = (json['shareCount'] as num?)?.toInt(),
-      _viewCount = (json['viewCount'] as num?)?.toInt();
+      _postUserId = json['postUserId'],
+      _viewCount = (json['viewCount'] as num?)?.toInt(),
+      _description = json['description'],
+      _formatType = json['formatType'],
+      _source = json['source'],
+      _postCategoryId = json['postCategoryId'],
+      _postTagIds = json['postTagIds']?.cast<String>();
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount
+    'id': id, 'text': _text, 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'postUserId': _postUserId, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'postCategoryId': _postCategoryId, 'postTagIds': _postTagIds
   };
 
   static final QueryField ID = QueryField(fieldName: "post.id");
   static final QueryField TEXT = QueryField(fieldName: "text");
-  static final QueryField USER = QueryField(
-    fieldName: "user",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
-  static final QueryField MUSIC = QueryField(
-    fieldName: "music",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Music).toString()));
   static final QueryField ATTACHMENTS = QueryField(fieldName: "attachments");
   static final QueryField LIKECOUNT = QueryField(fieldName: "likeCount");
   static final QueryField COMMENTCOUNT = QueryField(fieldName: "commentCount");
   static final QueryField SHARECOUNT = QueryField(fieldName: "shareCount");
+  static final QueryField POSTUSERID = QueryField(fieldName: "postUserId");
   static final QueryField VIEWCOUNT = QueryField(fieldName: "viewCount");
+  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField FORMATTYPE = QueryField(fieldName: "formatType");
+  static final QueryField SOURCE = QueryField(fieldName: "source");
+  static final QueryField POSTCATEGORYID = QueryField(fieldName: "postCategoryId");
+  static final QueryField POSTTAGIDS = QueryField(fieldName: "postTagIds");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Post";
     modelSchemaDefinition.pluralName = "Posts";
@@ -200,20 +236,6 @@ class Post extends Model {
       key: Post.TEXT,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Post.USER,
-      isRequired: false,
-      targetName: "postUserId",
-      ofModelName: (User).toString()
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Post.MUSIC,
-      isRequired: false,
-      targetName: "postMusicId",
-      ofModelName: (Music).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
@@ -241,9 +263,46 @@ class Post extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.POSTUSERID,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Post.VIEWCOUNT,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.DESCRIPTION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.FORMATTYPE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.SOURCE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.POSTCATEGORYID,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.POSTTAGIDS,
+      isRequired: false,
+      isArray: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.string))
     ));
   });
 }

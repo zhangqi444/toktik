@@ -110,6 +110,32 @@ type Like
   value: Boolean
 }
 
+type Category 
+  @model
+  @auth(rules: [{ allow: public }]) 
+  @key(
+    name: "name-index"
+    fields: ["name"]
+    queryField: "getCategoryByName"
+  ) {
+  id: ID!
+  name: String
+  isSubcategory: Boolean
+  parentCategoryId: ID
+}
+
+type Tag 
+  @model
+  @auth(rules: [{ allow: public }]) 
+  @key(
+    name: "name-index"
+    fields: ["name"]
+    queryField: "getTagByName"
+  ) {
+  id: ID!
+  name: String
+}
+
 type Post
   @model
   @auth(rules: [{ allow: public }])
@@ -128,6 +154,13 @@ type Post
   shareCount: Int
   postUserId: ID
   viewCount: Int
+  description: String
+  formatType: String
+  source: String
+  category: Category @connection
+  tags: [Tag] @connection
+  postCategoryId: ID
+  postTagIds: [ID]
 }
 
 type Music @model @auth(rules: [{ allow: public }]) {
@@ -136,7 +169,14 @@ type Music @model @auth(rules: [{ allow: public }]) {
   img: String
 }
 
-type User @model @auth(rules: [{ allow: public }]) {
+type User 
+  @model 
+  @auth(rules: [{ allow: public }])
+  @key(
+    name: "username-index"
+    fields: ["username"]
+    queryField: "getUserByUsername"
+  ) {
   id: ID!
   nickname: String
   portrait: String
@@ -161,6 +201,11 @@ type PostEx {
   commentCount: Int
   shareCount: Int
   viewCount: Int
+  description: String
+  formatType: String
+  category: Category
+  tags: [Tag]
+  
   isLiked: Like
 }
 
