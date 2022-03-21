@@ -9,7 +9,7 @@ const gql = require('graphql-tag');
  * @param {*} queryName 
  * @returns 
  */
-module.exports.query = async (data, queryName) => {
+const query = async (data, queryName) => {
     const graphqlData = await axios({
         url: process.env.API_TOKTIK_GRAPHQLAPIENDPOINTOUTPUT,
         method: 'post',
@@ -18,7 +18,6 @@ module.exports.query = async (data, queryName) => {
     });
     if(graphqlData.data.errors) {
         throw new Error(graphqlData.data.errors);
-        return;
     }
     return graphqlData.data.data[queryName];
 };
@@ -123,3 +122,7 @@ module.exports.createPost = async (input) => {
     };
     return await query(data, "createPost");
 }
+
+module.exports = {
+    query,
+};

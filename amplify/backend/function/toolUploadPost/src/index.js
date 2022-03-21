@@ -39,21 +39,6 @@ const listPosts = async (args) => {
     }, 'listPosts');
 }
 
-const getUserByUsername = async (username) => {
-    const q = {
-        query: print(gql`
-            query getUserByUsername($username: String) {
-                getUserByUsername(username: $username) {
-                    items { id }
-                }
-            }
-        `),
-        variables: { username }
-    };
-    const data = await query(q, "getUserByUsername");
-    return data && data.items;
-}
-
 const createUser = async (input) => {
     const data = {
         query: print(gql`
@@ -121,7 +106,8 @@ const parseUser = async (data) => {
     await Promise.all(Object.keys(map).map(async name => {
         const input = userDataMap[name];
         let res = await getUserByUsername(name);
-        res = res[0];
+
+        res = res && res.items && res[0];
         if(!res) {
             res = await createUser(input);
         }
