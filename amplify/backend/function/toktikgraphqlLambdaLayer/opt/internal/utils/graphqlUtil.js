@@ -1,4 +1,7 @@
 const axios = require('axios');
+const graphql = require('graphql');
+const { print } = graphql;
+const gql = require('graphql-tag');
 
 /**
  * Common interface for graphql query and mutation.
@@ -13,7 +16,11 @@ module.exports.query = async (data, queryName) => {
         headers: { 'x-api-key': process.env.API_TOKTIK_GRAPHQLAPIKEYOUTPUT },
         data
     });
-    if(!graphqlData.data.errors) return graphqlData.data.data[queryName];
+    if(graphqlData.data.errors) {
+        throw new Error(graphqlData.data.errors);
+        return;
+    }
+    return graphqlData.data.data[queryName];
 };
 
 // query
@@ -28,8 +35,7 @@ module.exports.getCategoryByName = async (name) => {
         `),
         variables: { name }
     };
-    const data = await query(q, "getCategoryByName");
-    return data && data.items;
+    return await query(q, "getCategoryByName");
 }
 
 module.exports.getTagByName = async (name) => {
@@ -43,11 +49,22 @@ module.exports.getTagByName = async (name) => {
         `),
         variables: { name }
     };
-    const data = await query(q, "getTagByName");
-    return data && data.items;
+    return await query(q, "getTagByName");
 }
 
-
+module.exports.getUserByUsername = async (username) => {
+    const q = {
+        query: print(gql`
+            query getUserByUsername($username: String) {
+                getUserByUsername(username: $username) {
+                    items { id }
+                }
+            }
+        `),
+        variables: { username }
+    };
+    return await query(q, "getUserByUsername");
+}
 
 // mutation
 
