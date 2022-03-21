@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "api": {
+      "toktik": [
+        "Query"
+      ]
+    },
+    "storage": {
+      "NotInterested:@model(appsync)": [
+        "read"
+      ],
+      "View:@model(appsync)": [
+        "read"
+      ],
+      "Share:@model(appsync)": [
+        "read"
+      ],
+      "Comment:@model(appsync)": [
+        "read"
+      ],
+      "Like:@model(appsync)": [
+        "read"
+      ],
+      "Post:@model(appsync)": [
+        "read"
+      ],
+      "Music:@model(appsync)": [
+        "read"
+      ],
+      "User:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "toktikgraphqlLambdaLayer",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true,
+      "env": "staging"
+    }
+  ]
+}

@@ -23,7 +23,7 @@ const query = async (data, queryName) => {
 };
 
 // query
-module.exports.getCategoryByName = async (name) => {
+const getCategoryByName = async (name) => {
     const q = {
         query: print(gql`
             query getCategoryByName($name: String) {
@@ -37,7 +37,7 @@ module.exports.getCategoryByName = async (name) => {
     return await query(q, "getCategoryByName");
 }
 
-module.exports.getTagByName = async (name) => {
+const getTagByName = async (name) => {
     const q = {
         query: print(gql`
             query getTagByName($name: String) {
@@ -51,7 +51,7 @@ module.exports.getTagByName = async (name) => {
     return await query(q, "getTagByName");
 }
 
-module.exports.getUserByUsername = async (username) => {
+const getUserByUsername = async (username) => {
     const q = {
         query: print(gql`
             query getUserByUsername($username: String) {
@@ -67,7 +67,7 @@ module.exports.getUserByUsername = async (username) => {
 
 // mutation
 
-module.exports.createCategory = async (input) => {
+const createCategory = async (input) => {
     const data = {
         query: print(gql`
             mutation createCategory($input: CreateCategoryInput!) {
@@ -81,7 +81,7 @@ module.exports.createCategory = async (input) => {
     return await query(data, "createCategory");
 }
 
-module.exports.createTag = async (input) => {
+const createTag = async (input) => {
     const data = {
         query: print(gql`
             mutation createTag($input: CreateTagInput!) {
@@ -95,7 +95,7 @@ module.exports.createTag = async (input) => {
     return await query(data, "createTag");
 }
 
-module.exports.createUser = async (input) => {
+const createUser = async (input) => {
     const data = {
         query: print(gql`
             mutation createUser($input: CreateUserInput!) {
@@ -109,7 +109,7 @@ module.exports.createUser = async (input) => {
     return await query(data, "createUser");
 }
 
-module.exports.createPost = async (input) => {
+const createPost = async (input) => {
     const data = {
         query: print(gql`
             mutation createPost($input: createPostInput!) {
@@ -125,4 +125,13 @@ module.exports.createPost = async (input) => {
 
 module.exports = {
     query,
+
+    getUserByUsername,
+    getCategoryByName,
+    getTagByName,
+
+    createPost,
+    createUser,
+    createTag,
+    createCategory,
 };

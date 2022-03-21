@@ -1,0 +1,324 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-toktik-staging-60500-authRole",
+      "UnauthRoleArn": "arn:aws:iam::527389837723:role/amplify-toktik-staging-60500-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::527389837723:role/amplify-toktik-staging-60500-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-toktik-staging-60500-deployment",
+      "UnauthRoleName": "amplify-toktik-staging-60500-unauthRole",
+      "StackName": "amplify-toktik-staging-60500",
+      "StackId": "arn:aws:cloudformation:us-west-2:527389837723:stack/amplify-toktik-staging-60500/0d0392c0-03d8-11ec-805d-0a23c6434ac1",
+      "AmplifyAppId": "d1mt6rg0ztrl8w"
+    }
+  },
+  "api": {
+    "toktik": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 30,
+              "description": "api key description"
+            }
+          },
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ]
+        },
+        "GraphQLAPIIdOutput": "x5i3kzo42vactheop5drsley4m",
+        "GraphQLAPIEndpointOutput": "https://q4f5kespenctna5wmnndr3cjia.appsync-api.us-west-2.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-s32o7q2pizgevhrjp3kdq2gkoq"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.130Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apitoktik"
+      },
+      "lastPushDirHash": "BjgWRp9DY6JmWJsTdmWmcLt5JAI="
+    }
+  },
+  "auth": {
+    "toktikf7d4ff65": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "loginMechanisms": [
+          "EMAIL",
+          "PREFERRED_USERNAME",
+          "PHONE_NUMBER"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "output": {
+        "CreatedSNSRole": "arn:aws:iam::527389837723:role/snsf7d4ff6560500-staging",
+        "UserPoolId": "us-west-2_jHsNrZwvt",
+        "AppClientIDWeb": "3grtdlljstf6fci0pl7b58jrue",
+        "AppClientID": "43o5k4n03898p78kstgrf2vhke",
+        "IdentityPoolId": "us-west-2:7046108c-3721-47cb-9223-f1b8fb80a909",
+        "UserPoolArn": "arn:aws:cognito-idp:us-west-2:527389837723:userpool/us-west-2_jHsNrZwvt",
+        "IdentityPoolName": "toktikf7d4ff65_identitypool_f7d4ff65__staging",
+        "UserPoolName": "toktikf7d4ff65_userpool_f7d4ff65"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.138Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/auth/toktikf7d4ff65-cloudformation-template.json",
+        "logicalId": "authtoktikf7d4ff65"
+      }
+    }
+  },
+  "analytics": {
+    "toktik": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "appName": "toktik-staging",
+        "Region": "us-west-2",
+        "Id": "80effd95da7f4fb38bdc8e6e5b98bd79"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.141Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/analytics/pinpoint-cloudformation-template.json",
+        "logicalId": "analyticstoktik"
+      }
+    }
+  },
+  "function": {
+    "listPostExs": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "toktik",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "toktikgraphqlLambdaLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ],
+      "output": {
+        "Region": "us-west-2",
+        "Arn": "arn:aws:lambda:us-west-2:527389837723:function:listPostExs-staging",
+        "Name": "listPostExs-staging",
+        "LambdaExecutionRole": "toktikLambdaRole140df349-staging"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.143Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/function/listPostExs-cloudformation-template.json",
+        "logicalId": "functionlistPostExs"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+        "s3Key": "amplify-builds/listPostExs-2f576b57782f38693456-build.zip"
+      }
+    },
+    "toktikgraphqlLambdaLayer": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true,
+      "output": {
+        "Arn": "arn:aws:lambda:us-west-2:527389837723:layer:toktikgraphqlLambdaLayer-staging:105"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:15.177Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/function/toktikgraphqlLambdaLayer-awscloudformation-template.json",
+        "logicalId": "functiontoktikgraphqlLambdaLayer"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+        "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersionaaa3bd7c-build.zip"
+      },
+      "lastBuildTimeStamp": "2022-03-21T23:39:17.287Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2022-03-21T23:39:25.487Z",
+      "distZipFilename": "toktikgraphqlLambdaLayer-LambdaLayerVersionaaa3bd7c-build.zip",
+      "latestPushedVersionHash": "183dd9acf13f40fdc2c2ccd0efa1ff2ba13f1a252d2d1405df109b8babab555b"
+    },
+    "likePost": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "toktikgraphqlLambdaLayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "toktik",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        }
+      ],
+      "output": {
+        "Region": "us-west-2",
+        "Arn": "arn:aws:lambda:us-west-2:527389837723:function:likePost-staging",
+        "Name": "likePost-staging",
+        "LambdaExecutionRole": "toktikLambdaRoleec0a9b01-staging"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.147Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/function/likePost-cloudformation-template.json",
+        "logicalId": "functionlikePost"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+        "s3Key": "amplify-builds/likePost-484a786553554b637272-build.zip"
+      }
+    },
+    "viewPost": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "toktik",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "toktikgraphqlLambdaLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ],
+      "output": {
+        "Region": "us-west-2",
+        "Arn": "arn:aws:lambda:us-west-2:527389837723:function:viewPost-staging",
+        "Name": "viewPost-staging",
+        "LambdaExecutionRole": "toktikLambdaRoledc613387-staging"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.149Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/function/viewPost-cloudformation-template.json",
+        "logicalId": "functionviewPost"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+        "s3Key": "amplify-builds/viewPost-5a2b645067326e312b39-build.zip"
+      }
+    },
+    "toolUploadPost": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "toktik",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "storage",
+          "resourceName": "s3toktikstorage55239e93",
+          "attributes": [
+            "BucketName"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "toktikgraphqlLambdaLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ],
+      "output": {
+        "Region": "us-west-2",
+        "Arn": "arn:aws:lambda:us-west-2:527389837723:function:toolUploadPost-staging",
+        "Name": "toolUploadPost-staging",
+        "LambdaExecutionRole": "toktikLambdaRole15f9e035-staging"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:15.177Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/function/toolUploadPost-cloudformation-template.json",
+        "logicalId": "functiontoolUploadPost"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
+        "s3Key": "amplify-builds/toolUploadPost-542f537a474c74346452-build.zip"
+      },
+      "lastBuildTimeStamp": "2022-03-21T23:39:17.294Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2022-03-21T23:39:18.198Z",
+      "distZipFilename": "toolUploadPost-542f537a474c74346452-build.zip",
+      "lastPushDirHash": "pappFDsqWZkyswGwHjTmejhSLZo="
+    }
+  },
+  "predictions": {
+    "toktikTranscription": {
+      "providerPlugin": "awscloudformation",
+      "service": "Transcribe",
+      "convertType": "transcription",
+      "output": {
+        "language": "en-US",
+        "region": "us-west-2"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.153Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/predictions/toktikTranscription-template.json",
+        "logicalId": "predictionstoktikTranscription"
+      }
+    }
+  },
+  "storage": {
+    "s3toktikstorage55239e93": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "BucketName": "toktik-storage-55239e9360500-staging",
+        "Region": "us-west-2"
+      },
+      "lastPushTimeStamp": "2022-03-21T23:42:12.154Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-toktik-staging-60500-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storages3toktikstorage55239e93"
+      }
+    }
+  }
+}

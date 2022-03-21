@@ -1,0 +1,21 @@
+{
+    "appName": "toktik",
+    "roleName": "pinpointLambdaRole0ec6b9ad",
+    "cloudformationPolicyName": "cloudformationPolicy0ec6b9ad",
+    "cloudWatchPolicyName": "cloudWatchPolicy0ec6b9ad",
+    "pinpointPolicyName": "pinpointPolicy0ec6b9ad",
+    "authPolicyName": "pinpoint_amplify_0ec6b9ad",
+    "unauthPolicyName": "pinpoint_amplify_0ec6b9ad",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}
