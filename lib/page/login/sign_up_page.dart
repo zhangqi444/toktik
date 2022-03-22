@@ -132,7 +132,6 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
         width: 420,
         padding: EdgeInsets.only(left: 30, right: 30),
-        child: Expanded(
       child:
           RichText(
             textAlign: TextAlign.center,
@@ -174,7 +173,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       'to learn how we collect, use, and share your data.',
                       style: TextStyle(color: Color(0xff888888))),
                 ]),
-        )));
+        ));
   }
 
   _getSignIn() {
