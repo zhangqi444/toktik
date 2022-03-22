@@ -10,5 +10,9 @@ module.exports.constants = {
     NOT_INTERESTED_TYPE: {
         USER: 'USER',
         POST: 'POST',
-    }
+    },
+    USER_TYPE: {
+        IMPORTED,
+        DEFAULT,
+    },
 };
