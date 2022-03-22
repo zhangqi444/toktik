@@ -20,6 +20,7 @@ const { query, getCategoryByName, getTagByName, createCategory, createTag, getUs
 const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
 const s3 = new AWS.S3();
+const { fileTypeFromFile } = require('file-type');
 
 const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
 const TOKTIK_VIDEOS_VIDEO_PATH = 'videos';
@@ -148,10 +149,13 @@ const putObjectFromUrl = async (url, bucket, path) => {
             decompress: false,
             // Ref: https://stackoverflow.com/a/61621094/4050261
             responseType: 'arraybuffer',
-        }).then((resp) => {
+        }).then(async (resp) => {
                 if(!resp.data) return;
                 console.log(resp.data)
-
+                const fileType = await fileTypeFromBuffer(resp.data)
+                if(!path.endsWith(fileType)) {
+                    path = path.split('.')[0] + fileType;
+                }
             s3.putObject({
                 Body: resp.data,
                 Key: path,
@@ -161,7 +165,7 @@ const putObjectFromUrl = async (url, bucket, path) => {
                 if (error) {
                     reject(error);
                 } else {
-                    resolve(data);
+                    resolve(`https://${process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME}.s3.${process.env.REGION}.amazonaws.com/${path}`);
                 }
             });
         }).catch(error => reject(error));

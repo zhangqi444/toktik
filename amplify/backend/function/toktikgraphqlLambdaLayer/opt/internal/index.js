@@ -12,7 +12,7 @@ module.exports.constants = {
         POST: 'POST',
     },
     USER_TYPE: {
-        IMPORTED,
-        DEFAULT,
+        IMPORTED: "IMPORTED",
+        DEFAULT: "DEFAULT",
     },
 };
