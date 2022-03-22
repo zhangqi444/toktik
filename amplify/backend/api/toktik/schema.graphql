@@ -189,6 +189,8 @@ type User
   email: String
   phoneNumber: String
   authStatus: String
+  type: String
+  status: String
 }
 
 type PostEx {
