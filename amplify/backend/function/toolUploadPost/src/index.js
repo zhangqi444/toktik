@@ -16,9 +16,13 @@ const axios = require('axios');
 const gql = require('graphql-tag');
 const graphql = require('graphql');
 const { print } = graphql;
-const { query, getCategoryByName, getTagByName, createCategory, createTag } = require('/opt/internal/utils/graphqlUtil');
+const { query, getCategoryByName, getTagByName, createCategory, createTag, getUserByUsername, createUser } = require('/opt/internal/utils/graphqlUtil');
 const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
+const s3 = new AWS.S3();
+
+const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
+const TOKTIK_VIDEOS_VIDEO_PATH = 'videos';
 
 const listPosts = async (args) => {
     const { nextToken, limit, filter } = args;
@@ -37,20 +41,6 @@ const listPosts = async (args) => {
         `),
         variables: { filter, limit, nextToken }
     }, 'listPosts');
-}
-
-const createUser = async (input) => {
-    const data = {
-        query: print(gql`
-            mutation createUser($input: CreateUserInput!) {
-                createUser(input: $input) {
-                    id
-                }
-            }
-        `),
-        variables: { input }
-    };
-    return await query(data, "createUser");
 }
 
 const createPost = async (input) => {
@@ -78,7 +68,7 @@ const parseCategory = async (data) => {
     
     await Promise.all(Object.keys(map).map(async name => {
         let res = await getCategoryByName(name);
-        res = res[0];
+        res = res && res.items && res.items[0];
         if(!res) {
             res = await createCategory({ name, isSubcategory: false });
         }
@@ -107,9 +97,23 @@ const parseUser = async (data) => {
         const input = userDataMap[name];
         let res = await getUserByUsername(name);
 
-        res = res && res.items && res[0];
+        res = res && res.items && res.items[0];
         if(!res) {
-            res = await createUser(input);
+            try {
+                const { portrait } = input;
+                if(portrait) {
+                    let portraitUrl = airtableAttachmentRegexMatch(portrait);
+                    portraitUrl = portraitUrl && portraitUrl[0];
+                    let portraitFileName = portrait.split(' ');
+                    portraitFileName = portraitFileName && `${TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH}/${portraitFileName[0]}`;
+                    await putObjectFromUrl(portraitUrl, process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, portraitFileName);
+                    input.portrait = `https://${process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME}.s3.us-west-2.amazonaws.com/${portraitFileName}`;
+                }
+                
+            } catch(e) {
+                console.error('Failed to parse portrait image: ', e);
+            }
+            // res = await createUser(input);
         }
         map[name] = res.id;
     }));
@@ -128,7 +132,7 @@ const parseTag = async (data) => {
     });
     await Promise.all(Object.keys(map).map(async name => {
         let res = await getTagByName(name);
-        res = res[0];
+        res = res && res.items && res.items[0];
         if(!res) {
             res = await createTag({ name });
         }
@@ -137,11 +141,41 @@ const parseTag = async (data) => {
     return map;
 }
 
+const putObjectFromUrl = async (url, bucket, path) => {
+    
+    return new Promise((resolve, reject) => {
+        axios.get(url, {   
+            decompress: false,
+            // Ref: https://stackoverflow.com/a/61621094/4050261
+            responseType: 'arraybuffer',
+        }).then((resp) => {
+                if(!resp.data) return;
+                console.log(resp.data)
+
+            s3.putObject({
+                Body: resp.data,
+                Key: path,
+                Bucket: bucket
+            }, function(error, data) { 
+                console.log(error, data)
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).catch(error => reject(error));
+    });
+}
+
+const airtableAttachmentRegexMatch = (url) => {
+    return url.match(/[^()]+(?=\))/g);
+}
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 exports.handler = async (event) => {
-    var s3 = new AWS.S3();
     var params = {
         Bucket: process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME,
         Key: "postSource/test.csv"
@@ -149,7 +183,7 @@ exports.handler = async (event) => {
 
     const s3GetObject = (params) => {
         return new Promise((resolve, reject) => {
-            s3.getObject(params, (error, data) => {
+            s3.getObject(params, async (error, data) => {
                 data = new Buffer.from(data.Body).toString()
                 data = papa.parse(data, {
                     header: true, 
@@ -162,9 +196,10 @@ exports.handler = async (event) => {
                         "userPortrait", "userNickname", "userBio", "userId", "createdAt", "updatedAt"
                     ]
                 }).data;
+
                 data = data.sort((b, a) => {
-                    const ta = a.createdAt;
-                    const tb = b.createdAt;
+                    const ta = a.updatedAt;
+                    const tb = b.updatedAt;
                     return ta.localeCompare(tb);
                 });
                 resolve(data);
@@ -177,13 +212,14 @@ exports.handler = async (event) => {
     const categoryMap = await parseCategory(data);
     const tagMap = await parseTag(data);
     const userMap = await parseUser(data);
-    
+    console.log(categoryMap);
+    console.log(tagMap);
     console.log(userMap)
     
     // const createPosts = await Promise.all(data.map(async d => {
     //     let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
     //     let url = videoAttachments;
-    //     if(videoURL && (!url || !url.match(/[^()]+(?=\})/g))) {
+    //     if(videoURL && (!url || !airtableAttachmentRegexMatch(url))) {
     //         url = videoURL;
     //     }
 
@@ -204,6 +240,6 @@ exports.handler = async (event) => {
     
     return {
         statusCode: 200,
-        body: JSON.stringify({ count: createPosts.length }),
+        body: JSON.stringify({ count: 1 }),
     };
 };
