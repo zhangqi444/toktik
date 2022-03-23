@@ -193,14 +193,14 @@ class _SettingPageMenuConfig {
   static const Map<String, String> TERMS_OF_SERVICE = {
     'name': "Terms of Service",
     'type': "TERMS_OF_SERVICE",
-    'img': 'assets/images/user_service.png',
+    'img': 'assets/images/setting_and_privacy/terms_of_service.png',
     'url': TERMS_OF_SERVICE_URL
   };
 
   static const Map<String, String> COMMUNITY_GUIDELINES = {
     'name': "Community Guidelines",
     'type': "COMMUNITY_GUIDELINES",
-    'img': "assets/images/community_service.png",
+    'img': "assets/images/setting_and_privacy/community_guidelines.png",
     'url': COMMUNITY_GUIDELINES_URL
   };
 
@@ -214,7 +214,7 @@ class _SettingPageMenuConfig {
   static const Map<String, String> COPYRIGHT_POLICY = {
     'name': "Copyright Policy",
     'type': "COPYRIGHT_POLICY",
-    'img': 'assets/images/sdk_list.png',
+    'img': 'assets/images/setting_and_privacy/copyright_policy.png',
     'url': COPYRIGHT_URL
   };
 
@@ -228,13 +228,13 @@ class _SettingPageMenuConfig {
   static const Map<String, String> REPORT_PROBLEM = {
     'name': "Report a problem",
     'type': "REPORT_PROBLEM",
-    'img': "assets/images/setting_feedback.png",
+    'img': "assets/images/setting_and_privacy/report_a_problem.png",
     'url': FEEDBACK_URL
   };
 
   static const Map<String, String> LOGOUT = {
     'name': "Logout",
     'type': "LOGOUT",
-    'img': 'assets/images/setting_and_privacy/setting_logout.png',
+    'img': 'assets/images/setting_and_privacy/log_out.png',
   };
 }
