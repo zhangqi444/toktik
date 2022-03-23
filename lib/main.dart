@@ -7,6 +7,8 @@ import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/util/receive_sharing_intent.dart';
 
 import 'common/router_manager.dart';
+import 'transition/custom_transition.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,8 +58,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      defaultTransition: Transition
-          .rightToLeft, // https://github.com/jonataslaw/getx/issues/317
+      // defaultTransition: Transition
+      //     .rightToLeft, // https://github.com/jonataslaw/getx/issues/317
+      customTransition: SlideLeftTransitions(),
       getPages: RouterManager.routes,
       // TODO: switch to splash page whenever we have the requirement
       initialRoute: Routers.scroll,
