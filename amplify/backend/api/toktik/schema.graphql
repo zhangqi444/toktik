@@ -330,6 +330,8 @@ input ModelPostFilterInput {
   shareCount: ModelIntInput
   postUserId: ModelStringInput
   viewCount: ModelIntInput
+  isDeleted: ModelBooleanInput
+  isBlocked: ModelBooleanInput
   and: [ModelPostFilterInput]
   or: [ModelPostFilterInput]
   not: ModelPostFilterInput
