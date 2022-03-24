@@ -161,6 +161,8 @@ type Post
   tags: [Tag] @connection
   postCategoryId: ID
   postTagIds: [ID]
+  isDeleted: Boolean
+  isBlocked: Boolean
 }
 
 type Music @model @auth(rules: [{ allow: public }]) {
@@ -191,6 +193,8 @@ type User
   authStatus: String
   type: String
   status: String
+  isDeleted: Boolean
+  isBlocked: Boolean
 }
 
 type PostEx {
@@ -209,6 +213,8 @@ type PostEx {
   tags: [Tag]
   
   isLiked: Like
+  isDeleted: Boolean
+  isBlocked: Boolean
 }
 
 type ModelPostExConnection @aws_api_key @aws_iam {
