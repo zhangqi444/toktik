@@ -12,14 +12,13 @@
 Amplify Params - DO NOT EDIT */
 
 const AWS = require('aws-sdk');
-const axios = require('axios');
 const gql = require('graphql-tag');
 const graphql = require('graphql');
 const { print } = graphql;
 const { query, getCategoryByName, getTagByName, createCategory, createTag, getUserByUsername, createUser } = require('/opt/internal/utils/graphqlUtil');
+const { putObjectFromUrl } = require('/opt/internal/utils/s3Util');
 const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
-const s3 = new AWS.S3();
 
 const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
 const TOKTIK_VIDEOS_VIDEO_PATH = 'videos';
@@ -85,11 +84,12 @@ const parseUser = async (data) => {
     const userDataMap = {}
     data.forEach(d => {
         if(!d || !d.user) return;
-        map[d.user] = null;
-        userDataMap[d.user] = { 
+        const username = d.user.replace(/\s/g, '-');
+        map[username] = null;
+        userDataMap[username] = { 
             bio: d.userBio, 
             nickname: d.userNickname || d.user, 
-            username: d.user,
+            username,
             portrait: d.userPortrait,
         };
     });
@@ -106,14 +106,18 @@ const parseUser = async (data) => {
                     portraitUrl = portraitUrl && portraitUrl[0];
                     let portraitFileName = portrait.split(' ');
                     portraitFileName = portraitFileName && `${TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH}/${portraitFileName[0]}`;
-                    await putObjectFromUrl(portraitUrl, process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, portraitFileName);
-                    input.portrait = `https://${process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME}.s3.process.env.REGION.amazonaws.com/${portraitFileName}`;
+                    input.portrait = await putObjectFromUrl(
+                        portraitUrl, 
+                        process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, 
+                        process.env.REGION,
+                        portraitFileName
+                    );
                 }
                 
             } catch(e) {
                 console.error('Failed to parse portrait image: ', e);
             }
-            // res = await createUser(input);
+            res = await createUser(input);
         }
         map[name] = res.id;
     }));
@@ -139,36 +143,6 @@ const parseTag = async (data) => {
         map[name] = res.id;
     }));
     return map;
-}
-
-const putObjectFromUrl = async (url, bucket, path) => {
-    
-    return new Promise((resolve, reject) => {
-        axios.get(url, {   
-            decompress: false,
-            // Ref: https://stackoverflow.com/a/61621094/4050261
-            responseType: 'arraybuffer',
-        }).then(async (resp) => {
-                if(!resp.data) return;
-                console.log(resp.data)
-                const fileType = await fileTypeFromBuffer(resp.data)
-                if(!path.endsWith(fileType)) {
-                    path = path.split('.')[0] + fileType;
-                }
-            s3.putObject({
-                Body: resp.data,
-                Key: path,
-                Bucket: bucket
-            }, function(error, data) { 
-                console.log(error, data)
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(`https://${process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME}.s3.${process.env.REGION}.amazonaws.com/${path}`);
-                }
-            });
-        }).catch(error => reject(error));
-    });
 }
 
 const airtableAttachmentRegexMatch = (url) => {
@@ -215,9 +189,6 @@ exports.handler = async (event) => {
     const categoryMap = await parseCategory(data);
     const tagMap = await parseTag(data);
     const userMap = await parseUser(data);
-    console.log(categoryMap);
-    console.log(tagMap);
-    console.log(userMap)
     
     // const createPosts = await Promise.all(data.map(async d => {
     //     let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
