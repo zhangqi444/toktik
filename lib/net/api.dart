@@ -463,8 +463,8 @@ class Api {
           localPosts = jsonDecode(localPosts);
         }
         response = await _query(
-          '''query ListPosts(\$limit: Int, \$nextToken: String) {
-            listPosts(limit: \$limit, nextToken: \$nextToken) {
+          '''query ListPosts(\$limit: Int, \$nextToken: String, \$filter: ModelPostFilterInput) {
+            listPosts(limit: \$limit, nextToken: \$nextToken, filter: \$filter) {
               nextToken
               items {
                 id attachments music { id } text likeCount
@@ -472,13 +472,13 @@ class Api {
               }
             }
           }''',
-          { 'limit': limit, 'nextToken': nextToken },
+          { 'limit': limit, 'nextToken': nextToken, 'filter': { "isDeleted": { "ne": true }, "isBlocked": { "ne": true } } },
           'listPosts'
         );
       } else {
         response = await _query(
-          '''query ListPostExs(\$limit: Int, \$userId: ID!, \$nextToken: String) {
-            listPostExs(limit: \$limit, userId: \$userId, nextToken: \$nextToken) {
+          '''query ListPostExs(\$limit: Int, \$userId: ID!, \$nextToken: String, \$filter: ModelPostFilterInput) {
+            listPostExs(limit: \$limit, userId: \$userId, nextToken: \$nextToken, filter: \$filter) {
               nextToken
               items {
                 id attachments music { id } text likeCount isLiked { value }
@@ -486,7 +486,7 @@ class Api {
               }
             }
           }''',
-          { 'limit': limit, 'userId': userId, 'nextToken': nextToken },
+          { 'limit': limit, 'userId': userId, 'nextToken': nextToken, 'filter': { "isDeleted": { "ne": true }, "isBlocked": { "ne": true } } },
           'listPostExs'
         );
       }
