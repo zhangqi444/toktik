@@ -128,6 +128,8 @@ type Post
   shareCount: Int
   postUserId: ID
   viewCount: Int
+  isDeleted: Boolean
+  isBlocked: Boolean
 }
 
 type Music @model @auth(rules: [{ allow: public }]) {
@@ -149,6 +151,8 @@ type User @model @auth(rules: [{ allow: public }]) {
   email: String
   phoneNumber: String
   authStatus: String
+  isDeleted: Boolean
+  isBlocked: Boolean
 }
 
 type PostEx {
@@ -162,6 +166,8 @@ type PostEx {
   shareCount: Int
   viewCount: Int
   isLiked: Like
+  isDeleted: Boolean
+  isBlocked: Boolean
 }
 
 type ModelPostExConnection @aws_api_key @aws_iam {
