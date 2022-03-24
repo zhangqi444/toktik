@@ -20,7 +20,6 @@ const { query, getCategoryByName, getTagByName, createCategory, createTag, getUs
 const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
 const s3 = new AWS.S3();
-const { fileTypeFromFile } = require('file-type');
 
 const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
 const TOKTIK_VIDEOS_VIDEO_PATH = 'videos';
@@ -108,7 +107,7 @@ const parseUser = async (data) => {
                     let portraitFileName = portrait.split(' ');
                     portraitFileName = portraitFileName && `${TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH}/${portraitFileName[0]}`;
                     await putObjectFromUrl(portraitUrl, process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, portraitFileName);
-                    input.portrait = `https://${process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME}.s3.us-west-2.amazonaws.com/${portraitFileName}`;
+                    input.portrait = `https://${process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME}.s3.process.env.REGION.amazonaws.com/${portraitFileName}`;
                 }
                 
             } catch(e) {
