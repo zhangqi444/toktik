@@ -11,50 +11,12 @@
 	API_TOKTIK_USERTABLE_ARN
 Amplify Params - DO NOT EDIT */
 
-const AWS = require('aws-sdk');
-const gql = require('graphql-tag');
-const graphql = require('graphql');
-const { print } = graphql;
-const { query, getCategoryByName, getTagByName, createCategory, createTag, getUserByUsername, createUser } = require('/opt/internal/utils/graphqlUtil');
-const { putObjectFromUrl } = require('/opt/internal/utils/s3Util');
-const { constants } = require('/opt/internal/index');
+const { getCategoryByName, getTagByName, createCategory, createTag, createPost, getUserByUsername, createUser, listPosts } = require('/opt/internal/utils/graphqlUtil');
+const { putObjectFromUrl, getObject } = require('/opt/internal/utils/s3Util');
 const papa = require('papaparse'); 
 
 const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
-const TOKTIK_VIDEOS_VIDEO_PATH = 'videos';
-
-const listPosts = async (args) => {
-    const { nextToken, limit, filter } = args;
-    return await query({
-        query: print(gql`
-            query listPosts($filter: ModelPostFilterInput, $limit: Int, $nextToken: String) {
-                listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-                    nextToken startedAt items {
-                        id text attachments likeCount commentCount shareCount viewCount
-                        user { id _deleted _lastChangedAt _version bio birth city
-                            createdAt gender nickname portrait profession updatedAt username }
-                        music { id _deleted _lastChangedAt _version img url createdAt updatedAt }
-                    }
-                }
-            }
-        `),
-        variables: { filter, limit, nextToken }
-    }, 'listPosts');
-}
-
-const createPost = async (input) => {
-    const data = {
-        query: print(gql`
-            mutation createPost($input: createPostInput!) {
-                createPost(input: $input) {
-                    id
-                }
-            }
-        `),
-        variables: { input }
-    };
-    return await query(data, "createPost");
-}
+const TOKTIK_VIDEOS_PATH = 'videos';
 
 const parseCategory = async (data) => {
     if(!data) return;
@@ -129,8 +91,8 @@ const parseTag = async (data) => {
     
     const map = {};
     data.forEach(d => {
-        const tags = d && d.tags && d.tags.split(',');
-        tags && tags.forEach(name => {
+        const { tags } = d;
+        tags.forEach(name => {
             map[name] = null;
         })
     });
@@ -149,6 +111,20 @@ const airtableAttachmentRegexMatch = (url) => {
     return url.match(/[^()]+(?=\))/g);
 }
 
+const uploadAsset = async (airtableFieldValue, path) => {
+    let url = airtableAttachmentRegexMatch(airtableFieldValue);
+    url = url && url[0];
+    let fileName = airtableFieldValue.split(' ');
+    fileName = fileName && `${path}/${fileName[0]}`;
+
+    return url && await putObjectFromUrl(
+        url, 
+        process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, 
+        process.env.REGION,
+        fileName
+    );
+}
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
@@ -158,62 +134,68 @@ exports.handler = async (event) => {
         Key: "postSource/test.csv"
     };
 
-    const s3GetObject = (params) => {
-        return new Promise((resolve, reject) => {
-            s3.getObject(params, async (error, data) => {
-                data = new Buffer.from(data.Body).toString()
-                data = papa.parse(data, {
-                    header: true, 
-                    skipEmptyLines: true,
-                    delimiter: ",",
-                    escapeChar: "_",
-                    columns: [ 
-                        "title", "uploaded", "videoURL", "videoAttachments",
-                        "user", "formatType", "category", "source", "tags", "description", 
-                        "userPortrait", "userNickname", "userBio", "userId", "createdAt", "updatedAt"
-                    ]
-                }).data;
-
-                data = data.sort((b, a) => {
-                    const ta = a.updatedAt;
-                    const tb = b.updatedAt;
-                    return ta.localeCompare(tb);
-                });
-                resolve(data);
-            });
-        })
-    }
+    let data = await getObject(params);
+    data = papa.parse(data, {
+        header: true, 
+        skipEmptyLines: true,
+        delimiter: ",",
+        escapeChar: "_",
+        columns: [ 
+            "title", "uploaded", "videoURL", "videoAttachments",
+            "user", "formatType", "category", "source", "tags", "description", 
+            "userPortrait", "userNickname", "userBio", "userId", "createdAt", "updatedAt"
+        ]
+    }).data;
     
-    let data = await s3GetObject(params);
+    if(!data) return;
+    data.forEach(d => {
+        d.tags = d.tags ? d.tags.split(',') : [];
+    });
+
+    data = data.sort((b, a) => {
+        const ta = a.updatedAt;
+        const tb = b.updatedAt;
+        return ta.localeCompare(tb);
+    });
 
     const categoryMap = await parseCategory(data);
     const tagMap = await parseTag(data);
     const userMap = await parseUser(data);
     
-    // const createPosts = await Promise.all(data.map(async d => {
-    //     let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
-    //     let url = videoAttachments;
-    //     if(videoURL && (!url || !airtableAttachmentRegexMatch(url))) {
-    //         url = videoURL;
-    //     }
+    let count = 0;
+    try {
+        let createPosts = await Promise.all(data.map(async d => {
+            let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
+            let url = await uploadAsset(videoAttachments, TOKTIK_VIDEOS_PATH);
+            url = url || videoURL;
+            if(!url) return;
+            user = d.user.replace(/\s/g, '-');
+            
+            const existingPosts = await listPosts({ "filter": { "postUserId": { "eq": userMap[user] }, "text": { "eq": title } } });
+            if(existingPosts && existingPosts.items && existingPosts.items.length > 0) return;
 
-    //     const existingPosts = await listPosts({ filter: { postUserId: { eq: userMap[user] },  } });
-
-    //     const cp = await createPost({
-    //         commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000),
-    //         text: title, description, formatType, source,
-    //         attachments: JSON.stringify({ data: [ { url } ] }),
-    //         postCategoryId: categoryMap[category], 
-    //         postTagIds: tags.map(t => tagMap[t]), 
-    //         postUserId: userMap[user]
-    //     });
-
-    //     return cp;
-    // }));
-
+            const cp = await createPost({
+                commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000),
+                text: title, description, formatType, source,
+                attachments: JSON.stringify({ data: [ { url } ] }),
+                postCategoryId: category && categoryMap[category], 
+                postTagIds: tags.map(t => tagMap[t]), 
+                postUserId: user && userMap[user]
+            });
+            count++
+            
+            return cp;
+        }));
+    } catch(e) {
+        console.log('error: ' + e);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error }),
+        };
+    }
     
     return {
         statusCode: 200,
-        body: JSON.stringify({ count: 1 }),
+        body: JSON.stringify({ message: `${count} post added.` }),
     };
 };

@@ -17,6 +17,7 @@ const query = async (data, queryName) => {
         data
     });
     if(graphqlData.data.errors) {
+        console.error(graphqlData.data.errors)
         throw new Error(graphqlData.data.errors);
     }
     return graphqlData.data.data[queryName];
@@ -63,6 +64,25 @@ const getUserByUsername = async (username) => {
         variables: { username }
     };
     return await query(q, "getUserByUsername");
+}
+
+const listPosts = async (args) => {
+    const { nextToken, limit, filter } = args;
+    return await query({
+        query: print(gql`
+            query listPosts($filter: ModelPostFilterInput, $limit: Int, $nextToken: String) {
+                listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    nextToken startedAt items {
+                        id text attachments likeCount commentCount shareCount viewCount
+                        user { id _deleted _lastChangedAt _version bio birth city
+                            createdAt gender nickname portrait profession updatedAt username }
+                        music { id _deleted _lastChangedAt _version img url createdAt updatedAt }
+                    }
+                }
+            }
+        `),
+        variables: { filter, limit, nextToken }
+    }, 'listPosts');
 }
 
 // mutation
@@ -112,7 +132,7 @@ const createUser = async (input) => {
 const createPost = async (input) => {
     const data = {
         query: print(gql`
-            mutation createPost($input: createPostInput!) {
+            mutation createPost($input: CreatePostInput!) {
                 createPost(input: $input) {
                     id
                 }
@@ -129,6 +149,7 @@ module.exports = {
     getUserByUsername,
     getCategoryByName,
     getTagByName,
+    listPosts,
 
     createPost,
     createUser,
