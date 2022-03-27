@@ -143,6 +143,11 @@ type Post
     name: "postUserId-index"
     fields: ["postUserId"]
     queryField: "postByUserId"
+  ) 
+  @key(
+    name: "sortier-createdAt-index"
+    fields: ["sortier", "createdAt"]
+    queryField: "getPostsOrderedByCreatedAt"
   ) {
   id: ID!
   text: String
@@ -163,6 +168,14 @@ type Post
   postTagIds: [ID]
   isDeleted: Boolean
   isBlocked: Boolean
+  sortier: Sortier!
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  __typename: String
+}
+
+enum Sortier {
+  SORTIER
 }
 
 type Music @model @auth(rules: [{ allow: public }]) {
