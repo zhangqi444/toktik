@@ -3,6 +3,18 @@ const axios = require('axios');
 const s3 = new AWS.S3();
 const imageType = require('image-type');
 
+const listObjects = (bucket, prefix) => {
+    return new Promise((resolve, reject) => {
+        s3.listObjects({
+            Bucket: bucket, 
+            Prefix: prefix,
+        }, function(err, data) {
+            if(err) reject(err, err.stack); // an error occurred
+            else     resolve(data);  
+        });
+    });
+}
+
 const putObjectFromUrl = (url, bucket, region, path) => {
     return new Promise((resolve, reject) => {
         axios.get(url, {
@@ -53,4 +65,5 @@ module.exports = {
     putObject,
     putObjectFromUrl,
     getObject,
+    listObjects,
 }

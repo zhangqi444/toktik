@@ -7,6 +7,11 @@ module.exports.constants = {
         COMMENT: 'Comment',
         USER: 'User',
     },
+    GRAPHQL_SORTIER: "SORTIER",
+    GRAPHQL_MODEL_SORT_DIRECTION: {
+        DESC: "DESC",
+        ASC: "ASC",
+    },
     NOT_INTERESTED_TYPE: {
         USER: 'USER',
         POST: 'POST',

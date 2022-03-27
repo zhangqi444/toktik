@@ -11,8 +11,9 @@
 	API_TOKTIK_USERTABLE_ARN
 Amplify Params - DO NOT EDIT */
 
-const { getCategoryByName, getTagByName, createCategory, createTag, createPost, getUserByUsername, createUser, listPosts } = require('/opt/internal/utils/graphqlUtil');
-const { putObjectFromUrl, getObject } = require('/opt/internal/utils/s3Util');
+const { query, getCategoryByName, getTagByName, createCategory, createTag, createPost, getUserByUsername, createUser, listPosts, getPostsOrderedByCreatedAt } = require('/opt/internal/utils/graphqlUtil');
+const { putObjectFromUrl, getObject, listObjects } = require('/opt/internal/utils/s3Util');
+const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
 
 const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
@@ -27,14 +28,18 @@ const parseCategory = async (data) => {
         map[d.category] = null;
     });
     
+    let count = 0;
     await Promise.all(Object.keys(map).map(async name => {
         let res = await getCategoryByName(name);
         res = res && res.items && res.items[0];
         if(!res) {
             res = await createCategory({ name, isSubcategory: false });
+            count++;
         }
         map[name] = res.id;
     }));
+    
+    console.log(`Loaded ${count} of ${Object.keys(map).length} new categories.`);
     
     return map;
 }
@@ -55,6 +60,9 @@ const parseUser = async (data) => {
             portrait: d.userPortrait,
         };
     });
+    
+    let count = 0;
+    
     await Promise.all(Object.keys(map).map(async name => {
         const input = userDataMap[name];
         let res = await getUserByUsername(name);
@@ -75,14 +83,17 @@ const parseUser = async (data) => {
                         portraitFileName
                     );
                 }
-                
             } catch(e) {
                 console.error('Failed to parse portrait image: ', e);
             }
             res = await createUser(input);
+            count++;
         }
         map[name] = res.id;
     }));
+    
+    console.log(`Loaded ${count} of ${Object.keys(map).length} new users.`);
+    
     return map;
 }
 
@@ -96,14 +107,19 @@ const parseTag = async (data) => {
             map[name] = null;
         })
     });
+    let count = 0;
     await Promise.all(Object.keys(map).map(async name => {
         let res = await getTagByName(name);
         res = res && res.items && res.items[0];
         if(!res) {
             res = await createTag({ name });
+            count++;
         }
         map[name] = res.id;
     }));
+    
+    console.log(`Loaded ${count} of ${Object.keys(map).length} new tags.`);
+    
     return map;
 }
 
@@ -129,12 +145,21 @@ const uploadAsset = async (airtableFieldValue, path) => {
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 exports.handler = async (event) => {
-    var params = {
-        Bucket: process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME,
-        Key: "postSource/test.csv"
-    };
 
-    let data = await getObject(params);
+    let objects = await listObjects(
+        process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME,
+        "post-source/",
+    );
+    objects = objects.Contents
+    objects = objects.sort((a, b) => b.LastModified - a.LastModified);
+    const key = objects[0].Key;
+    
+    console.log(`Loading file ${key}...`);
+
+    let data = await getObject({
+        Bucket: process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME,
+        Key: key
+    });
     data = papa.parse(data, {
         header: true, 
         skipEmptyLines: true,
@@ -147,16 +172,24 @@ exports.handler = async (event) => {
         ]
     }).data;
     
-    if(!data) return;
+    if(!data) {
+        console.log(`Failed to parse the data.`);
+        return;
+    }
+    let lastUpdatedPost = await getPostsOrderedByCreatedAt(constants.GRAPHQL_MODEL_SORT_DIRECTION.DESC, 1);
+    lastUpdatedPost = lastUpdatedPost && lastUpdatedPost.items && lastUpdatedPost.items[0] && lastUpdatedPost.items[0].createdAt;
+    data = data.filter(d => {
+        let valid = !lastUpdatedPost || Date.parse(d.updatedAt) > Date.parse(lastUpdatedPost);
+        valid = valid && d.user && d.title && d.formatType && d.categories && (d.videoURL || d.videoAttachments);
+        return valid;
+    });
+    
     data.forEach(d => {
         d.tags = d.tags ? d.tags.split(',') : [];
     });
-
-    data = data.sort((b, a) => {
-        const ta = a.updatedAt;
-        const tb = b.updatedAt;
-        return ta.localeCompare(tb);
-    });
+    
+    console.log(`Loaded ${data.length} rows of data.`);
+    if(data.length <= 0) return;
 
     const categoryMap = await parseCategory(data);
     const tagMap = await parseTag(data);
@@ -164,7 +197,7 @@ exports.handler = async (event) => {
     
     let count = 0;
     try {
-        let createPosts = await Promise.all(data.map(async d => {
+        await Promise.all(data.map(async d => {
             let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
             let url = await uploadAsset(videoAttachments, TOKTIK_VIDEOS_PATH);
             url = url || videoURL;
@@ -190,9 +223,11 @@ exports.handler = async (event) => {
         console.log('error: ' + e);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error }),
+            body: JSON.stringify({ e }),
         };
     }
+    
+    console.log(`Loaded ${count} of ${data.length} new posts.`);
     
     return {
         statusCode: 200,

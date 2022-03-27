@@ -2,6 +2,7 @@ const axios = require('axios');
 const graphql = require('graphql');
 const { print } = graphql;
 const gql = require('graphql-tag');
+const { constants } = require('../index');
 
 /**
  * Common interface for graphql query and mutation.
@@ -85,6 +86,19 @@ const listPosts = async (args) => {
     }, 'listPosts');
 }
 
+const getPostsOrderedByCreatedAt = async (sortDirection, limit, mask, nextToken) => {
+    const q = {
+        query: print(gql`
+            query getPostsOrderedByCreatedAt{
+                getPostsOrderedByCreatedAt(limit: ${limit}, sortier: ${constants.GRAPHQL_SORTIER}, sortDirection: ${sortDirection}, nextToken: ${nextToken || null}) {
+                    items { ${mask || "id createdAt"} }
+                }
+            }
+        `),
+    };
+    return await query(q, "getPostsOrderedByCreatedAt");
+}
+
 // mutation
 
 const createCategory = async (input) => {
@@ -143,6 +157,21 @@ const createPost = async (input) => {
     return await query(data, "createPost");
 }
 
+
+const updatePost = async (input) => {
+    const data = {
+        query: print(gql`
+            mutation updatePost($input: UpdatePostInput!) {
+                updatePost(input: $input) {
+                    id
+                }
+            }
+        `),
+        variables: { input }
+    };
+    return await query(data, "updatePost");
+}
+
 module.exports = {
     query,
 
@@ -150,9 +179,11 @@ module.exports = {
     getCategoryByName,
     getTagByName,
     listPosts,
+    getPostsOrderedByCreatedAt,
 
     createPost,
     createUser,
     createTag,
     createCategory,
+    updatePost,
 };
