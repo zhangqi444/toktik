@@ -11,7 +11,7 @@
 	API_TOKTIK_USERTABLE_ARN
 Amplify Params - DO NOT EDIT */
 
-const { query, getCategoryByName, getTagByName, createCategory, createTag, createPost, getUserByUsername, createUser, listPosts, getPostsOrderedByCreatedAt } = require('/opt/internal/utils/graphqlUtil');
+const { query, getCategoryByName, getTagByName, createCategory, createTag, createPost, getUserByUsername, createUser, listPosts, getPostsOrderedByCreatedAt, updatePost } = require('/opt/internal/utils/graphqlUtil');
 const { putObjectFromUrl, getObject, listObjects } = require('/opt/internal/utils/s3Util');
 const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
@@ -123,15 +123,13 @@ const parseTag = async (data) => {
     return map;
 }
 
-const airtableAttachmentRegexMatch = (url) => {
-    return url.match(/[^()]+(?=\))/g);
-}
-
 const uploadAsset = async (airtableFieldValue, path) => {
-    let url = airtableAttachmentRegexMatch(airtableFieldValue);
-    url = url && url[0];
-    let fileName = airtableFieldValue.split(' ');
-    fileName = fileName && `${path}/${fileName[0]}`;
+    airtableFieldValue = airtableFieldValue.replace(/"/g, '');
+    let lastIndexOf = airtableFieldValue.lastIndexOf('(');
+    let fileName = airtableFieldValue.slice(0, lastIndexOf) || '';
+    
+    fileName = fileName && `${path}/${fileName.trim().replace(/ /g, '+')}`;
+    let url = airtableFieldValue.slice(lastIndexOf+1, airtableFieldValue.length-1);
 
     return url && await putObjectFromUrl(
         url, 
@@ -176,11 +174,12 @@ exports.handler = async (event) => {
         console.log(`Failed to parse the data.`);
         return;
     }
+    
     let lastUpdatedPost = await getPostsOrderedByCreatedAt(constants.GRAPHQL_MODEL_SORT_DIRECTION.DESC, 1);
     lastUpdatedPost = lastUpdatedPost && lastUpdatedPost.items && lastUpdatedPost.items[0] && lastUpdatedPost.items[0].createdAt;
     data = data.filter(d => {
-        let valid = !lastUpdatedPost || Date.parse(d.updatedAt) > Date.parse(lastUpdatedPost);
-        valid = valid && d.user && d.title && d.formatType && d.categories && (d.videoURL || d.videoAttachments);
+        let valid = !lastUpdatedPost || (Date.parse(`${d.updatedAt} GMT`) > Date.parse(lastUpdatedPost));
+        valid = valid && d.user && d.title && d.formatType && d.category && (d.videoURL || d.videoAttachments) && !d.uploaded;
         return valid;
     });
     
@@ -197,40 +196,47 @@ exports.handler = async (event) => {
     
     let count = 0;
     try {
-        await Promise.all(data.map(async d => {
+        for (var i = 0; i < data.length; i++) {
+            const d = data[i];
             let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
             let url = await uploadAsset(videoAttachments, TOKTIK_VIDEOS_PATH);
             url = url || videoURL;
             if(!url) return;
             user = d.user.replace(/\s/g, '-');
             
-            const existingPosts = await listPosts({ "filter": { "postUserId": { "eq": userMap[user] }, "text": { "eq": title } } });
-            if(existingPosts && existingPosts.items && existingPosts.items.length > 0) return;
-
-            const cp = await createPost({
-                commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000),
+            let input = {
                 text: title, description, formatType, source,
                 attachments: JSON.stringify({ data: [ { url } ] }),
                 postCategoryId: category && categoryMap[category], 
                 postTagIds: tags.map(t => tagMap[t]), 
-                postUserId: user && userMap[user]
-            });
-            count++
+                postUserId: user && userMap[user],
+                sortier: constants.GRAPHQL_SORTIER,
+            };
             
-            return cp;
-        }));
+            const existingPosts = await listPosts({ "filter": { "postUserId": { "eq": userMap[user] }, "text": { "eq": title } } });
+            let cp;
+            if(existingPosts && existingPosts.items && existingPosts.items.length > 0) {
+                input.updatedAt = Date.now();
+                cp = await updatePost(input);
+            } else {
+                count++;
+                input = { ...input, commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000) }; 
+                cp = await createPost(input);
+            }
+            console.log(`Loaded post: ${title}.`);
+        }
+            
+        console.log(`Loaded ${count} of ${data.length} new posts.`);
+    
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: `${count} post added.` }),
+        };
     } catch(e) {
-        console.log('error: ' + e);
+        console.error('error: ' + e);
         return {
             statusCode: 500,
             body: JSON.stringify({ e }),
         };
     }
-    
-    console.log(`Loaded ${count} of ${data.length} new posts.`);
-    
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: `${count} post added.` }),
-    };
 };

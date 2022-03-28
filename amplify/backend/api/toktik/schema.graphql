@@ -348,8 +348,20 @@ input UpdatePostInput {
   likeCount: Int
   commentCount: Int
   shareCount: Int
-  _version: Int
   postUserId: ID
+  viewCount: Int
+  description: String
+  formatType: String
+  source: String
+  postCategoryId: ID
+  postTagIds: [ID]
+  isDeleted: Boolean
+  isBlocked: Boolean
+  sortier: Sortier!
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  __typename: String
+  _version: Int
   postMusicId: ID
 }
 
