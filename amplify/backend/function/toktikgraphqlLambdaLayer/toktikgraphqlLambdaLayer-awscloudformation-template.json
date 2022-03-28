@@ -20,60 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion71c44dfb": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": {
-          "Ref": "runtimes"
-        },
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": {
-            "Ref": "s3Key"
-          }
-        },
-        "Description": {
-          "Ref": "description"
-        },
-        "LayerName": {
-          "Fn::Sub": [
-            "toktikgraphqlLambdaLayer-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionAwsAccounts52738983772371c44dfb": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion71c44dfb"
-        },
-        "Principal": "527389837723"
-      }
-    },
-    "LambdaLayerPermissionPrivate71c44dfb": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion71c44dfb"
-        },
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersion3344df45": {
+    "LambdaLayerVersionb4507dd5": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": [
@@ -83,9 +30,9 @@
           "S3Bucket": {
             "Ref": "deploymentBucketName"
           },
-          "S3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion3344df45-build.zip"
+          "S3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersionb4507dd5-build.zip"
         },
-        "Description": "Updated layer version 2022-03-27T22:11:20.629Z",
+        "Description": "Updated layer version 2022-03-28T01:26:34.512Z",
         "LayerName": {
           "Fn::Sub": [
             "toktikgraphqlLambdaLayer-${env}",
@@ -100,19 +47,19 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionAwsAccounts5273898377233344df45": {
+    "LambdaLayerPermissionAwsAccounts527389837723b4507dd5": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-west-2:527389837723:layer:toktikgraphqlLambdaLayer-staging:129",
+        "LayerVersionArn": "arn:aws:lambda:us-west-2:527389837723:layer:toktikgraphqlLambdaLayer-staging:131",
         "Principal": "527389837723"
       }
     },
-    "LambdaLayerPermissionPrivate3344df45": {
+    "LambdaLayerPermissionPrivateb4507dd5": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:us-west-2:527389837723:layer:toktikgraphqlLambdaLayer-staging:129",
+        "LayerVersionArn": "arn:aws:lambda:us-west-2:527389837723:layer:toktikgraphqlLambdaLayer-staging:131",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -122,7 +69,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion71c44dfb"
+        "Ref": "LambdaLayerVersionb4507dd5"
       }
     }
   }

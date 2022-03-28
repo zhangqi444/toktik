@@ -163,12 +163,13 @@
           ]
         },
         "Runtime": "nodejs14.x",
+        "MemorySize": "1024",
         "Layers": [
           {
             "Ref": "functiontoktikgraphqlLambdaLayerArn"
           }
         ],
-        "Timeout": 25
+        "Timeout": 900
       }
     },
     "LambdaExecutionRole": {
