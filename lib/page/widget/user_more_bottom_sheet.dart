@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:toktik/controller/main_page_scroll_controller.dart';
-import 'package:toktik/model/user_model.dart';
-import 'package:toktik/net/api.dart';
 import 'package:get/get.dart';
 import 'package:toktik/common/events.dart';
 import 'package:toktik/controller/event_controller.dart';
@@ -189,8 +186,8 @@ class _UserMoreBottomSheetMenuConfig {
   };
 
   static const NOT_INTERESTED = {
-    'name': 'Not interested',
-    'type': 'NOT_INTERESTED',
+    'name': 'Block',
+    'type': 'BLOCK',
     "img": 'assets/images/video_share_widget/not_interested.png',
   };
 
