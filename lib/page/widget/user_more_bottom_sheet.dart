@@ -36,7 +36,7 @@ class _UserMoreBottomSheetState extends State<UserMoreBottomSheet> {
           // _renderItem('发私信'),
           // _renderItem('不让TA看'),
           _renderItem('Report', () { widget.onReport(); }),
-          _renderItem('Not interested', () { widget.onNotInterested(); }),
+          _renderItem('Block', () { widget.onNotInterested(); }),
           Container(height: 8, color: Colors.grey.withAlpha(100)),
           InkWell(
             onTap: () { Get.back(); },
