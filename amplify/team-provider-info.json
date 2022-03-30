@@ -19,7 +19,7 @@
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion7d75d74c-build.zip"
+          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion71c44dfb-build.zip"
         },
         "likePost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
@@ -31,7 +31,7 @@
         },
         "toolUploadPost": {
           "deploymentBucketName": "amplify-toktik-staging-60500-deployment",
-          "s3Key": "amplify-builds/toolUploadPost-676a366b54665a4c6478-build.zip"
+          "s3Key": "amplify-builds/toolUploadPost-694a6b445a762b74434c-build.zip"
         }
       },
       "auth": {
