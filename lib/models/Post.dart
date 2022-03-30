@@ -37,6 +37,8 @@ class Post extends Model {
   final int? _commentCount;
   final int? _shareCount;
   final int? _viewCount;
+  final bool? _isDeleted;
+  final bool? _isBlocked;
 
   @override
   getInstanceType() => classType;
@@ -78,9 +80,17 @@ class Post extends Model {
     return _viewCount;
   }
   
-  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount;
+  bool? get isDeleted {
+    return _isDeleted;
+  }
   
-  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount}) {
+  bool? get isBlocked {
+    return _isBlocked;
+  }
+  
+  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, isDeleted, isBlocked}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _isDeleted = isDeleted, _isBlocked = isBlocked;
+  
+  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, bool? isDeleted, bool? isBlocked}) {
     return Post._internal(
       id: id == null ? UUID.getUUID() : id,
       text: text,
@@ -90,7 +100,9 @@ class Post extends Model {
       likeCount: likeCount,
       commentCount: commentCount,
       shareCount: shareCount,
-      viewCount: viewCount);
+      viewCount: viewCount,
+      isDeleted: isDeleted,
+      isBlocked: isBlocked);
   }
   
   bool equals(Object other) {
@@ -109,7 +121,9 @@ class Post extends Model {
       _likeCount == other._likeCount &&
       _commentCount == other._commentCount &&
       _shareCount == other._shareCount &&
-      _viewCount == other._viewCount;
+      _viewCount == other._viewCount &&
+      _isDeleted == other._isDeleted &&
+      _isBlocked == other._isBlocked;
   }
   
   @override
@@ -128,13 +142,15 @@ class Post extends Model {
     buffer.write("likeCount=" + (_likeCount != null ? _likeCount!.toString() : "null") + ", ");
     buffer.write("commentCount=" + (_commentCount != null ? _commentCount!.toString() : "null") + ", ");
     buffer.write("shareCount=" + (_shareCount != null ? _shareCount!.toString() : "null") + ", ");
-    buffer.write("viewCount=" + (_viewCount != null ? _viewCount!.toString() : "null"));
+    buffer.write("viewCount=" + (_viewCount != null ? _viewCount!.toString() : "null") + ", ");
+    buffer.write("isDeleted=" + (_isDeleted != null ? _isDeleted!.toString() : "null") + ", ");
+    buffer.write("isBlocked=" + (_isBlocked != null ? _isBlocked!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount}) {
+  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, bool? isDeleted, bool? isBlocked}) {
     return Post(
       id: id ?? this.id,
       text: text ?? this.text,
@@ -144,7 +160,9 @@ class Post extends Model {
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
       shareCount: shareCount ?? this.shareCount,
-      viewCount: viewCount ?? this.viewCount);
+      viewCount: viewCount ?? this.viewCount,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isBlocked: isBlocked ?? this.isBlocked);
   }
   
   Post.fromJson(Map<String, dynamic> json)  
@@ -160,10 +178,12 @@ class Post extends Model {
       _likeCount = (json['likeCount'] as num?)?.toInt(),
       _commentCount = (json['commentCount'] as num?)?.toInt(),
       _shareCount = (json['shareCount'] as num?)?.toInt(),
-      _viewCount = (json['viewCount'] as num?)?.toInt();
+      _viewCount = (json['viewCount'] as num?)?.toInt(),
+      _isDeleted = json['isDeleted'],
+      _isBlocked = json['isBlocked'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount
+    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked
   };
 
   static final QueryField ID = QueryField(fieldName: "post.id");
@@ -179,6 +199,8 @@ class Post extends Model {
   static final QueryField COMMENTCOUNT = QueryField(fieldName: "commentCount");
   static final QueryField SHARECOUNT = QueryField(fieldName: "shareCount");
   static final QueryField VIEWCOUNT = QueryField(fieldName: "viewCount");
+  static final QueryField ISDELETED = QueryField(fieldName: "isDeleted");
+  static final QueryField ISBLOCKED = QueryField(fieldName: "isBlocked");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Post";
     modelSchemaDefinition.pluralName = "Posts";
@@ -244,6 +266,18 @@ class Post extends Model {
       key: Post.VIEWCOUNT,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.ISDELETED,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.ISBLOCKED,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
   });
 }

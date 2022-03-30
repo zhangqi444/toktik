@@ -39,6 +39,8 @@ class User extends Model {
   final String? _email;
   final String? _phoneNumber;
   final String? _authStatus;
+  final bool? _isDeleted;
+  final bool? _isBlocked;
 
   @override
   getInstanceType() => classType;
@@ -92,9 +94,17 @@ class User extends Model {
     return _authStatus;
   }
   
-  const User._internal({required this.id, nickname, portrait, bio, birth, gender, city, profession, username, email, phoneNumber, authStatus}): _nickname = nickname, _portrait = portrait, _bio = bio, _birth = birth, _gender = gender, _city = city, _profession = profession, _username = username, _email = email, _phoneNumber = phoneNumber, _authStatus = authStatus;
+  bool? get isDeleted {
+    return _isDeleted;
+  }
   
-  factory User({String? id, String? nickname, String? portrait, String? bio, TemporalDate? birth, int? gender, String? city, String? profession, String? username, String? email, String? phoneNumber, String? authStatus}) {
+  bool? get isBlocked {
+    return _isBlocked;
+  }
+  
+  const User._internal({required this.id, nickname, portrait, bio, birth, gender, city, profession, username, email, phoneNumber, authStatus, isDeleted, isBlocked}): _nickname = nickname, _portrait = portrait, _bio = bio, _birth = birth, _gender = gender, _city = city, _profession = profession, _username = username, _email = email, _phoneNumber = phoneNumber, _authStatus = authStatus, _isDeleted = isDeleted, _isBlocked = isBlocked;
+  
+  factory User({String? id, String? nickname, String? portrait, String? bio, TemporalDate? birth, int? gender, String? city, String? profession, String? username, String? email, String? phoneNumber, String? authStatus, bool? isDeleted, bool? isBlocked}) {
     return User._internal(
       id: id == null ? UUID.getUUID() : id,
       nickname: nickname,
@@ -107,7 +117,9 @@ class User extends Model {
       username: username,
       email: email,
       phoneNumber: phoneNumber,
-      authStatus: authStatus);
+      authStatus: authStatus,
+      isDeleted: isDeleted,
+      isBlocked: isBlocked);
   }
   
   bool equals(Object other) {
@@ -129,7 +141,9 @@ class User extends Model {
       _username == other._username &&
       _email == other._email &&
       _phoneNumber == other._phoneNumber &&
-      _authStatus == other._authStatus;
+      _authStatus == other._authStatus &&
+      _isDeleted == other._isDeleted &&
+      _isBlocked == other._isBlocked;
   }
   
   @override
@@ -151,13 +165,15 @@ class User extends Model {
     buffer.write("username=" + "$_username" + ", ");
     buffer.write("email=" + "$_email" + ", ");
     buffer.write("phoneNumber=" + "$_phoneNumber" + ", ");
-    buffer.write("authStatus=" + "$_authStatus");
+    buffer.write("authStatus=" + "$_authStatus" + ", ");
+    buffer.write("isDeleted=" + (_isDeleted != null ? _isDeleted!.toString() : "null") + ", ");
+    buffer.write("isBlocked=" + (_isBlocked != null ? _isBlocked!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  User copyWith({String? id, String? nickname, String? portrait, String? bio, TemporalDate? birth, int? gender, String? city, String? profession, String? username, String? email, String? phoneNumber, String? authStatus}) {
+  User copyWith({String? id, String? nickname, String? portrait, String? bio, TemporalDate? birth, int? gender, String? city, String? profession, String? username, String? email, String? phoneNumber, String? authStatus, bool? isDeleted, bool? isBlocked}) {
     return User(
       id: id ?? this.id,
       nickname: nickname ?? this.nickname,
@@ -170,7 +186,9 @@ class User extends Model {
       username: username ?? this.username,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      authStatus: authStatus ?? this.authStatus);
+      authStatus: authStatus ?? this.authStatus,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isBlocked: isBlocked ?? this.isBlocked);
   }
   
   User.fromJson(Map<String, dynamic> json)  
@@ -185,10 +203,12 @@ class User extends Model {
       _username = json['username'],
       _email = json['email'],
       _phoneNumber = json['phoneNumber'],
-      _authStatus = json['authStatus'];
+      _authStatus = json['authStatus'],
+      _isDeleted = json['isDeleted'],
+      _isBlocked = json['isBlocked'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'nickname': _nickname, 'portrait': _portrait, 'bio': _bio, 'birth': _birth?.format(), 'gender': _gender, 'city': _city, 'profession': _profession, 'username': _username, 'email': _email, 'phoneNumber': _phoneNumber, 'authStatus': _authStatus
+    'id': id, 'nickname': _nickname, 'portrait': _portrait, 'bio': _bio, 'birth': _birth?.format(), 'gender': _gender, 'city': _city, 'profession': _profession, 'username': _username, 'email': _email, 'phoneNumber': _phoneNumber, 'authStatus': _authStatus, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked
   };
 
   static final QueryField ID = QueryField(fieldName: "user.id");
@@ -203,6 +223,8 @@ class User extends Model {
   static final QueryField EMAIL = QueryField(fieldName: "email");
   static final QueryField PHONENUMBER = QueryField(fieldName: "phoneNumber");
   static final QueryField AUTHSTATUS = QueryField(fieldName: "authStatus");
+  static final QueryField ISDELETED = QueryField(fieldName: "isDeleted");
+  static final QueryField ISBLOCKED = QueryField(fieldName: "isBlocked");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
     modelSchemaDefinition.pluralName = "Users";
@@ -284,6 +306,18 @@ class User extends Model {
       key: User.AUTHSTATUS,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: User.ISDELETED,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: User.ISBLOCKED,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
   });
 }
