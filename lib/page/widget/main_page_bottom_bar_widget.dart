@@ -155,6 +155,7 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
 
   Widget menuButton(config) {
     return GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           var index = config['index'];
           eventController.recordEvent(
@@ -180,7 +181,8 @@ class _MainPageBottomBarWidgetState extends State<MainPageBottomBarWidget> {
         },
         child: Container(
           height: 45,
-          width: 48,
+          width: 100,
+          padding: EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
