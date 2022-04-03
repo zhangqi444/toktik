@@ -19,6 +19,7 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
+import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,8 +29,8 @@ import 'package:flutter/foundation.dart';
 class Like extends Model {
   static const classType = const _LikeModelType();
   final String id;
-  final String? _likeUserId;
-  final String? _likePostId;
+  final User? _user;
+  final Post? _post;
   final bool? _value;
 
   @override
@@ -40,43 +41,25 @@ class Like extends Model {
     return id;
   }
   
-  String get likeUserId {
-    try {
-      return _likeUserId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  User? get user {
+    return _user;
   }
   
-  String get likePostId {
-    try {
-      return _likePostId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  Post? get post {
+    return _post;
   }
   
   bool? get value {
     return _value;
   }
   
-  const Like._internal({required this.id, required likeUserId, required likePostId, value}): _likeUserId = likeUserId, _likePostId = likePostId, _value = value;
+  const Like._internal({required this.id, user, post, value}): _user = user, _post = post, _value = value;
   
-  factory Like({String? id, required String likeUserId, required String likePostId, bool? value}) {
+  factory Like({String? id, User? user, Post? post, bool? value}) {
     return Like._internal(
       id: id == null ? UUID.getUUID() : id,
-      likeUserId: likeUserId,
-      likePostId: likePostId,
+      user: user,
+      post: post,
       value: value);
   }
   
@@ -89,8 +72,8 @@ class Like extends Model {
     if (identical(other, this)) return true;
     return other is Like &&
       id == other.id &&
-      _likeUserId == other._likeUserId &&
-      _likePostId == other._likePostId &&
+      _user == other._user &&
+      _post == other._post &&
       _value == other._value;
   }
   
@@ -103,35 +86,43 @@ class Like extends Model {
     
     buffer.write("Like {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("likeUserId=" + "$_likeUserId" + ", ");
-    buffer.write("likePostId=" + "$_likePostId" + ", ");
+    buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
+    buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
     buffer.write("value=" + (_value != null ? _value!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Like copyWith({String? id, String? likeUserId, String? likePostId, bool? value}) {
+  Like copyWith({String? id, User? user, Post? post, bool? value}) {
     return Like(
       id: id ?? this.id,
-      likeUserId: likeUserId ?? this.likeUserId,
-      likePostId: likePostId ?? this.likePostId,
+      user: user ?? this.user,
+      post: post ?? this.post,
       value: value ?? this.value);
   }
   
   Like.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _likeUserId = json['likeUserId'],
-      _likePostId = json['likePostId'],
+      _user = json['user']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
+        : null,
+      _post = json['post']?['serializedData'] != null
+        ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
+        : null,
       _value = json['value'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'likeUserId': _likeUserId, 'likePostId': _likePostId, 'value': _value
+    'id': id, 'user': _user?.toJson(), 'post': _post?.toJson(), 'value': _value
   };
 
   static final QueryField ID = QueryField(fieldName: "like.id");
-  static final QueryField LIKEUSERID = QueryField(fieldName: "likeUserId");
-  static final QueryField LIKEPOSTID = QueryField(fieldName: "likePostId");
+  static final QueryField USER = QueryField(
+    fieldName: "user",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
+  static final QueryField POST = QueryField(
+    fieldName: "post",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
   static final QueryField VALUE = QueryField(fieldName: "value");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Like";
@@ -150,16 +141,18 @@ class Like extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Like.LIKEUSERID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Like.USER,
+      isRequired: false,
+      targetName: "likeUserId",
+      ofModelName: (User).toString()
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Like.LIKEPOSTID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Like.POST,
+      isRequired: false,
+      targetName: "likePostId",
+      ofModelName: (Post).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(

@@ -46,6 +46,7 @@ export 'Post.dart';
 export 'PostEx.dart';
 export 'Report.dart';
 export 'Share.dart';
+export 'Sortier.dart';
 export 'Tag.dart';
 export 'TranscribeAudioPartResult.dart';
 export 'User.dart';
@@ -53,7 +54,7 @@ export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "c9c67860fbc06c33c23252826610f7ef";
+  String version = "e5fe3eee46d236dc61316067e817b10d";
   @override
   List<ModelSchema> modelSchemas = [Category.schema, Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, Tag.schema, User.schema, View.schema];
   static final ModelProvider _instance = ModelProvider();

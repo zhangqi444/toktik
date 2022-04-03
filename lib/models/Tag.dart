@@ -29,6 +29,7 @@ class Tag extends Model {
   static const classType = const _TagModelType();
   final String id;
   final String? _name;
+  final String? _postTagsId;
 
   @override
   getInstanceType() => classType;
@@ -42,12 +43,17 @@ class Tag extends Model {
     return _name;
   }
   
-  const Tag._internal({required this.id, name}): _name = name;
+  String? get postTagsId {
+    return _postTagsId;
+  }
   
-  factory Tag({String? id, String? name}) {
+  const Tag._internal({required this.id, name, postTagsId}): _name = name, _postTagsId = postTagsId;
+  
+  factory Tag({String? id, String? name, String? postTagsId}) {
     return Tag._internal(
       id: id == null ? UUID.getUUID() : id,
-      name: name);
+      name: name,
+      postTagsId: postTagsId);
   }
   
   bool equals(Object other) {
@@ -59,7 +65,8 @@ class Tag extends Model {
     if (identical(other, this)) return true;
     return other is Tag &&
       id == other.id &&
-      _name == other._name;
+      _name == other._name &&
+      _postTagsId == other._postTagsId;
   }
   
   @override
@@ -71,28 +78,32 @@ class Tag extends Model {
     
     buffer.write("Tag {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("name=" + "$_name");
+    buffer.write("name=" + "$_name" + ", ");
+    buffer.write("postTagsId=" + "$_postTagsId");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Tag copyWith({String? id, String? name}) {
+  Tag copyWith({String? id, String? name, String? postTagsId}) {
     return Tag(
       id: id ?? this.id,
-      name: name ?? this.name);
+      name: name ?? this.name,
+      postTagsId: postTagsId ?? this.postTagsId);
   }
   
   Tag.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _name = json['name'];
+      _name = json['name'],
+      _postTagsId = json['postTagsId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name
+    'id': id, 'name': _name, 'postTagsId': _postTagsId
   };
 
   static final QueryField ID = QueryField(fieldName: "tag.id");
   static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField POSTTAGSID = QueryField(fieldName: "postTagsId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Tag";
     modelSchemaDefinition.pluralName = "Tags";
@@ -112,6 +123,12 @@ class Tag extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Tag.NAME,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Tag.POSTTAGSID,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));

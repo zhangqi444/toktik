@@ -19,6 +19,7 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
+import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,9 +29,9 @@ import 'package:flutter/foundation.dart';
 class Comment extends Model {
   static const classType = const _CommentModelType();
   final String id;
+  final User? _user;
+  final Post? _post;
   final String? _text;
-  final String? _commentUserId;
-  final String? _commentPostId;
 
   @override
   getInstanceType() => classType;
@@ -40,44 +41,26 @@ class Comment extends Model {
     return id;
   }
   
+  User? get user {
+    return _user;
+  }
+  
+  Post? get post {
+    return _post;
+  }
+  
   String? get text {
     return _text;
   }
   
-  String get commentUserId {
-    try {
-      return _commentUserId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
-  }
+  const Comment._internal({required this.id, user, post, text}): _user = user, _post = post, _text = text;
   
-  String get commentPostId {
-    try {
-      return _commentPostId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
-  }
-  
-  const Comment._internal({required this.id, text, required commentUserId, required commentPostId}): _text = text, _commentUserId = commentUserId, _commentPostId = commentPostId;
-  
-  factory Comment({String? id, String? text, required String commentUserId, required String commentPostId}) {
+  factory Comment({String? id, User? user, Post? post, String? text}) {
     return Comment._internal(
       id: id == null ? UUID.getUUID() : id,
-      text: text,
-      commentUserId: commentUserId,
-      commentPostId: commentPostId);
+      user: user,
+      post: post,
+      text: text);
   }
   
   bool equals(Object other) {
@@ -89,9 +72,9 @@ class Comment extends Model {
     if (identical(other, this)) return true;
     return other is Comment &&
       id == other.id &&
-      _text == other._text &&
-      _commentUserId == other._commentUserId &&
-      _commentPostId == other._commentPostId;
+      _user == other._user &&
+      _post == other._post &&
+      _text == other._text;
   }
   
   @override
@@ -103,36 +86,44 @@ class Comment extends Model {
     
     buffer.write("Comment {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("text=" + "$_text" + ", ");
-    buffer.write("commentUserId=" + "$_commentUserId" + ", ");
-    buffer.write("commentPostId=" + "$_commentPostId");
+    buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
+    buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
+    buffer.write("text=" + "$_text");
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Comment copyWith({String? id, String? text, String? commentUserId, String? commentPostId}) {
+  Comment copyWith({String? id, User? user, Post? post, String? text}) {
     return Comment(
       id: id ?? this.id,
-      text: text ?? this.text,
-      commentUserId: commentUserId ?? this.commentUserId,
-      commentPostId: commentPostId ?? this.commentPostId);
+      user: user ?? this.user,
+      post: post ?? this.post,
+      text: text ?? this.text);
   }
   
   Comment.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _text = json['text'],
-      _commentUserId = json['commentUserId'],
-      _commentPostId = json['commentPostId'];
+      _user = json['user']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
+        : null,
+      _post = json['post']?['serializedData'] != null
+        ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
+        : null,
+      _text = json['text'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'text': _text, 'commentUserId': _commentUserId, 'commentPostId': _commentPostId
+    'id': id, 'user': _user?.toJson(), 'post': _post?.toJson(), 'text': _text
   };
 
   static final QueryField ID = QueryField(fieldName: "comment.id");
+  static final QueryField USER = QueryField(
+    fieldName: "user",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
+  static final QueryField POST = QueryField(
+    fieldName: "post",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
   static final QueryField TEXT = QueryField(fieldName: "text");
-  static final QueryField COMMENTUSERID = QueryField(fieldName: "commentUserId");
-  static final QueryField COMMENTPOSTID = QueryField(fieldName: "commentPostId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Comment";
     modelSchemaDefinition.pluralName = "Comments";
@@ -150,21 +141,23 @@ class Comment extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Comment.USER,
+      isRequired: false,
+      targetName: "commentUserId",
+      ofModelName: (User).toString()
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Comment.POST,
+      isRequired: false,
+      targetName: "commentPostId",
+      ofModelName: (Post).toString()
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Comment.TEXT,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Comment.COMMENTUSERID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Comment.COMMENTPOSTID,
-      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });

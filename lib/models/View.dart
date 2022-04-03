@@ -19,6 +19,7 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
+import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,8 +29,8 @@ import 'package:flutter/foundation.dart';
 class View extends Model {
   static const classType = const _ViewModelType();
   final String id;
-  final String? _viewUserId;
-  final String? _viewPostId;
+  final Post? _post;
+  final User? _user;
 
   @override
   getInstanceType() => classType;
@@ -39,39 +40,21 @@ class View extends Model {
     return id;
   }
   
-  String get viewUserId {
-    try {
-      return _viewUserId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  Post? get post {
+    return _post;
   }
   
-  String get viewPostId {
-    try {
-      return _viewPostId!;
-    } catch(e) {
-      throw new DataStoreException(
-          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  User? get user {
+    return _user;
   }
   
-  const View._internal({required this.id, required viewUserId, required viewPostId}): _viewUserId = viewUserId, _viewPostId = viewPostId;
+  const View._internal({required this.id, post, user}): _post = post, _user = user;
   
-  factory View({String? id, required String viewUserId, required String viewPostId}) {
+  factory View({String? id, Post? post, User? user}) {
     return View._internal(
       id: id == null ? UUID.getUUID() : id,
-      viewUserId: viewUserId,
-      viewPostId: viewPostId);
+      post: post,
+      user: user);
   }
   
   bool equals(Object other) {
@@ -83,8 +66,8 @@ class View extends Model {
     if (identical(other, this)) return true;
     return other is View &&
       id == other.id &&
-      _viewUserId == other._viewUserId &&
-      _viewPostId == other._viewPostId;
+      _post == other._post &&
+      _user == other._user;
   }
   
   @override
@@ -96,32 +79,40 @@ class View extends Model {
     
     buffer.write("View {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("viewUserId=" + "$_viewUserId" + ", ");
-    buffer.write("viewPostId=" + "$_viewPostId");
+    buffer.write("post=" + (_post != null ? _post!.toString() : "null") + ", ");
+    buffer.write("user=" + (_user != null ? _user!.toString() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  View copyWith({String? id, String? viewUserId, String? viewPostId}) {
+  View copyWith({String? id, Post? post, User? user}) {
     return View(
       id: id ?? this.id,
-      viewUserId: viewUserId ?? this.viewUserId,
-      viewPostId: viewPostId ?? this.viewPostId);
+      post: post ?? this.post,
+      user: user ?? this.user);
   }
   
   View.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _viewUserId = json['viewUserId'],
-      _viewPostId = json['viewPostId'];
+      _post = json['post']?['serializedData'] != null
+        ? Post.fromJson(new Map<String, dynamic>.from(json['post']['serializedData']))
+        : null,
+      _user = json['user']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
+        : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'viewUserId': _viewUserId, 'viewPostId': _viewPostId
+    'id': id, 'post': _post?.toJson(), 'user': _user?.toJson()
   };
 
   static final QueryField ID = QueryField(fieldName: "view.id");
-  static final QueryField VIEWUSERID = QueryField(fieldName: "viewUserId");
-  static final QueryField VIEWPOSTID = QueryField(fieldName: "viewPostId");
+  static final QueryField POST = QueryField(
+    fieldName: "post",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Post).toString()));
+  static final QueryField USER = QueryField(
+    fieldName: "user",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "View";
     modelSchemaDefinition.pluralName = "Views";
@@ -139,16 +130,18 @@ class View extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: View.VIEWUSERID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: View.POST,
+      isRequired: false,
+      targetName: "viewPostId",
+      ofModelName: (Post).toString()
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: View.VIEWPOSTID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: View.USER,
+      isRequired: false,
+      targetName: "viewUserId",
+      ofModelName: (User).toString()
     ));
   });
 }
