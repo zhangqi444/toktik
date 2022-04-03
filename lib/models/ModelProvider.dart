@@ -20,7 +20,7 @@
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
-import 'Category.dart';
+import 'Categorization.dart';
 import 'Comment.dart';
 import 'Like.dart';
 import 'Music.dart';
@@ -35,7 +35,7 @@ import 'ModelPostExConnection.dart';
 import 'PostEx.dart';
 import 'TranscribeAudioPartResult.dart';
 
-export 'Category.dart';
+export 'Categorization.dart';
 export 'Comment.dart';
 export 'Like.dart';
 export 'ModelAttributeTypes.dart';
@@ -54,17 +54,17 @@ export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "e5fe3eee46d236dc61316067e817b10d";
+  String version = "541bfd7d71081e337354bae4656187d8";
   @override
-  List<ModelSchema> modelSchemas = [Category.schema, Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, Tag.schema, User.schema, View.schema];
+  List<ModelSchema> modelSchemas = [Categorization.schema, Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, Tag.schema, User.schema, View.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
   
   ModelType getModelTypeByModelName(String modelName) {
     switch(modelName) {
-      case "Category":
-        return Category.classType;
+      case "Categorization":
+        return Categorization.classType;
       case "Comment":
         return Comment.classType;
       case "Like":

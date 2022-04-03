@@ -110,18 +110,18 @@ type Like
   value: Boolean
 }
 
-type Category 
+type Categorization 
   @model
   @auth(rules: [{ allow: public }]) 
   @key(
     name: "name-index"
     fields: ["name"]
-    queryField: "getCategoryByName"
+    queryField: "getCategorizationByName"
   ) {
   id: ID!
   name: String
-  isSubcategory: Boolean
-  parentCategoryId: ID
+  isSubcategorization: Boolean
+  parentCategorizationId: ID
 }
 
 type Tag 
@@ -162,16 +162,15 @@ type Post
   description: String
   formatType: String
   source: String
-  category: Category @connection
+  categorization: Categorization @connection
   tags: [Tag] @connection
-  postCategoryId: ID
+  postCategorizationId: ID
   postTagIds: [ID]
   isDeleted: Boolean
   isBlocked: Boolean
   sortier: Sortier!
   updatedAt: AWSDateTime
   createdAt: AWSDateTime
-  __typename: String
 }
 
 enum Sortier {
@@ -222,7 +221,7 @@ type PostEx {
   viewCount: Int
   description: String
   formatType: String
-  category: Category
+  categorization: Categorization
   tags: [Tag]
   
   isLiked: Like
@@ -353,14 +352,13 @@ input UpdatePostInput {
   description: String
   formatType: String
   source: String
-  postCategoryId: ID
+  postCategorizationId: ID
   postTagIds: [ID]
   isDeleted: Boolean
   isBlocked: Boolean
   sortier: Sortier!
   updatedAt: AWSDateTime
   createdAt: AWSDateTime
-  __typename: String
   _version: Int
   postMusicId: ID
 }

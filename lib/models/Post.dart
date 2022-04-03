@@ -41,7 +41,7 @@ class Post extends Model {
   final String? _description;
   final String? _formatType;
   final String? _source;
-  final Category? _category;
+  final Categorization? _categorization;
   final List<Tag>? _tags;
   final List<String>? _postTagIds;
   final bool? _isDeleted;
@@ -103,8 +103,8 @@ class Post extends Model {
     return _source;
   }
   
-  Category? get category {
-    return _category;
+  Categorization? get categorization {
+    return _categorization;
   }
   
   List<Tag>? get tags {
@@ -148,9 +148,9 @@ class Post extends Model {
     return ___typename;
   }
   
-  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, description, formatType, source, category, tags, postTagIds, isDeleted, isBlocked, required sortier, updatedAt, createdAt, __typename}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _category = category, _tags = tags, _postTagIds = postTagIds, _isDeleted = isDeleted, _isBlocked = isBlocked, _sortier = sortier, _updatedAt = updatedAt, _createdAt = createdAt, ___typename = __typename;
+  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, description, formatType, source, categorization, tags, postTagIds, isDeleted, isBlocked, required sortier, updatedAt, createdAt, __typename}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _categorization = categorization, _tags = tags, _postTagIds = postTagIds, _isDeleted = isDeleted, _isBlocked = isBlocked, _sortier = sortier, _updatedAt = updatedAt, _createdAt = createdAt, ___typename = __typename;
   
-  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Category? category, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, required Sortier sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt, String? __typename}) {
+  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, required Sortier sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt, String? __typename}) {
     return Post._internal(
       id: id == null ? UUID.getUUID() : id,
       text: text,
@@ -164,7 +164,7 @@ class Post extends Model {
       description: description,
       formatType: formatType,
       source: source,
-      category: category,
+      categorization: categorization,
       tags: tags != null ? List<Tag>.unmodifiable(tags) : tags,
       postTagIds: postTagIds != null ? List<String>.unmodifiable(postTagIds) : postTagIds,
       isDeleted: isDeleted,
@@ -195,7 +195,7 @@ class Post extends Model {
       _description == other._description &&
       _formatType == other._formatType &&
       _source == other._source &&
-      _category == other._category &&
+      _categorization == other._categorization &&
       DeepCollectionEquality().equals(_tags, other._tags) &&
       DeepCollectionEquality().equals(_postTagIds, other._postTagIds) &&
       _isDeleted == other._isDeleted &&
@@ -226,7 +226,7 @@ class Post extends Model {
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("formatType=" + "$_formatType" + ", ");
     buffer.write("source=" + "$_source" + ", ");
-    buffer.write("category=" + (_category != null ? _category!.toString() : "null") + ", ");
+    buffer.write("categorization=" + (_categorization != null ? _categorization!.toString() : "null") + ", ");
     buffer.write("postTagIds=" + (_postTagIds != null ? _postTagIds!.toString() : "null") + ", ");
     buffer.write("isDeleted=" + (_isDeleted != null ? _isDeleted!.toString() : "null") + ", ");
     buffer.write("isBlocked=" + (_isBlocked != null ? _isBlocked!.toString() : "null") + ", ");
@@ -239,7 +239,7 @@ class Post extends Model {
     return buffer.toString();
   }
   
-  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Category? category, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, Sortier? sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt, String? __typename}) {
+  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, Sortier? sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt, String? __typename}) {
     return Post(
       id: id ?? this.id,
       text: text ?? this.text,
@@ -253,7 +253,7 @@ class Post extends Model {
       description: description ?? this.description,
       formatType: formatType ?? this.formatType,
       source: source ?? this.source,
-      category: category ?? this.category,
+      categorization: categorization ?? this.categorization,
       tags: tags ?? this.tags,
       postTagIds: postTagIds ?? this.postTagIds,
       isDeleted: isDeleted ?? this.isDeleted,
@@ -281,8 +281,8 @@ class Post extends Model {
       _description = json['description'],
       _formatType = json['formatType'],
       _source = json['source'],
-      _category = json['category']?['serializedData'] != null
-        ? Category.fromJson(new Map<String, dynamic>.from(json['category']['serializedData']))
+      _categorization = json['categorization']?['serializedData'] != null
+        ? Categorization.fromJson(new Map<String, dynamic>.from(json['categorization']['serializedData']))
         : null,
       _tags = json['tags'] is List
         ? (json['tags'] as List)
@@ -299,7 +299,7 @@ class Post extends Model {
       ___typename = json['__typename'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'category': _category?.toJson(), 'tags': _tags?.map((Tag? e) => e?.toJson()).toList(), 'postTagIds': _postTagIds, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked, 'sortier': enumToString(_sortier), 'updatedAt': _updatedAt?.format(), 'createdAt': _createdAt?.format(), '__typename': ___typename
+    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'categorization': _categorization?.toJson(), 'tags': _tags?.map((Tag? e) => e?.toJson()).toList(), 'postTagIds': _postTagIds, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked, 'sortier': enumToString(_sortier), 'updatedAt': _updatedAt?.format(), 'createdAt': _createdAt?.format(), '__typename': ___typename
   };
 
   static final QueryField ID = QueryField(fieldName: "post.id");
@@ -318,9 +318,9 @@ class Post extends Model {
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static final QueryField FORMATTYPE = QueryField(fieldName: "formatType");
   static final QueryField SOURCE = QueryField(fieldName: "source");
-  static final QueryField CATEGORY = QueryField(
-    fieldName: "category",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Category).toString()));
+  static final QueryField CATEGORIZATION = QueryField(
+    fieldName: "categorization",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Categorization).toString()));
   static final QueryField TAGS = QueryField(
     fieldName: "tags",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Tag).toString()));
@@ -417,10 +417,10 @@ class Post extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Post.CATEGORY,
+      key: Post.CATEGORIZATION,
       isRequired: false,
-      targetName: "postCategoryId",
-      ofModelName: (Category).toString()
+      targetName: "postCategorizationId",
+      ofModelName: (Categorization).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
