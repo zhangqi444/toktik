@@ -3,9 +3,10 @@ const axios = require('axios');
 const s3 = new AWS.S3();
 const imageType = require('image-type');
 
-const listObjects = (bucket, prefix) => {
+const listObjects = (bucket, prefix, param = {}) => {
     return new Promise((resolve, reject) => {
         s3.listObjects({
+            ...param,
             Bucket: bucket, 
             Prefix: prefix,
         }, function(err, data) {
@@ -15,7 +16,7 @@ const listObjects = (bucket, prefix) => {
     });
 }
 
-const putObjectFromUrl = (url, bucket, region, path) => {
+const putObjectFromUrl = (url, bucket, region, path, param) => {
     return new Promise((resolve, reject) => {
         axios.get(url, {
             decompress: false,
@@ -27,15 +28,16 @@ const putObjectFromUrl = (url, bucket, region, path) => {
             if (fileType && fileType.mime.startsWith('image') && !path.endsWith(fileType.ext)) {
                 path = `${path.split('.')[0]}.${fileType.ext}`;
             }
-            const res = await putObject(resp.data, bucket, region, path);
+            const res = await putObject(resp.data, bucket, region, path, param);
             resolve(res);
         }).catch(error => reject(error));
     });
 }
 
-const putObject = (data, bucket, region, path) => {
+const putObject = (data, bucket, region, path, param = {}) => {
     return new Promise((resolve, reject) => {
         s3.putObject({
+            ...param,
             Body: data,
             Key: path,
             Bucket: bucket

@@ -300,7 +300,6 @@ class Api {
           stacktrace.toString());
     }
   }
-  //
 
   ///获取用户资料信息(扩展)
   static Future<UserInfoExResponse?> getUserInfoExByUsername(

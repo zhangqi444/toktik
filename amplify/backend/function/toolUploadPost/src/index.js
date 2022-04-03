@@ -80,7 +80,8 @@ const parseUser = async (data) => {
                         portraitUrl, 
                         process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, 
                         process.env.REGION,
-                        portraitFileName
+                        portraitFileName,
+                        { ACL: "public-read" }
                     );
                 }
             } catch(e) {
@@ -135,7 +136,8 @@ const uploadAsset = async (airtableFieldValue, path) => {
         url, 
         process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, 
         process.env.REGION,
-        fileName
+        fileName,
+        { ACL: "public-read" },
     );
 }
 
