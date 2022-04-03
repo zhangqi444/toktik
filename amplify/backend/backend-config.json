@@ -123,6 +123,36 @@
           ]
         }
       ]
+    },
+    "toolUploadPost": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "toktik",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "storage",
+          "resourceName": "s3toktikstoraged847e71c",
+          "attributes": [
+            "BucketName"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "toktikgraphqlLambdaLayer",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "predictions": {

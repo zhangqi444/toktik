@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.26\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -28,9 +28,9 @@
       "Type": "String",
       "Default": "apitoktikGraphQLAPIKeyOutput"
     },
-    "storages3toktikstorage55239e93BucketName": {
+    "storages3toktikstoraged847e71cBucketName": {
       "Type": "String",
-      "Default": "storages3toktikstorage55239e93BucketName"
+      "Default": "storages3toktikstoraged847e71cBucketName"
     },
     "functiontoktikgraphqlLambdaLayerArn": {
       "Type": "String",
@@ -99,8 +99,8 @@
             "API_TOKTIK_GRAPHQLAPIKEYOUTPUT": {
               "Ref": "apitoktikGraphQLAPIKeyOutput"
             },
-            "STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME": {
-              "Ref": "storages3toktikstorage55239e93BucketName"
+            "STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME": {
+              "Ref": "storages3toktikstoraged847e71cBucketName"
             },
             "API_TOKTIK_POSTTABLE_NAME": {
               "Fn::ImportValue": {
@@ -163,13 +163,12 @@
           ]
         },
         "Runtime": "nodejs14.x",
-        "MemorySize": "1024",
         "Layers": [
           {
             "Ref": "functiontoktikgraphqlLambdaLayerArn"
           }
         ],
-        "Timeout": 900
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -178,12 +177,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "toktikLambdaRole15f9e035",
+            "toktikLambdaRole7db6564d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "toktikLambdaRole15f9e035",
+                  "toktikLambdaRole7db6564d",
                   "-",
                   {
                     "Ref": "env"
@@ -327,7 +326,7 @@
                     [
                       "arn:aws:s3:::",
                       {
-                        "Ref": "storages3toktikstorage55239e93BucketName"
+                        "Ref": "storages3toktikstoraged847e71cBucketName"
                       }
                     ]
                   ]
@@ -348,7 +347,7 @@
                     [
                       "arn:aws:s3:::",
                       {
-                        "Ref": "storages3toktikstorage55239e93BucketName"
+                        "Ref": "storages3toktikstoraged847e71cBucketName"
                       },
                       "/*"
                     ]

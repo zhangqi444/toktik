@@ -7,7 +7,7 @@
       ]
     },
     "storage": {
-      "s3toktikstorage55239e93": [
+      "s3toktikstoraged847e71c": [
         "create",
         "read",
         "update",
@@ -31,9 +31,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "toktikgraphqlLambdaLayer",
+      "env": "prod",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true,
-      "env": "staging"
+      "isLatestVersionSelected": true
     }
   ]
 }

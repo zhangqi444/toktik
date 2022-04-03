@@ -62,7 +62,7 @@
         },
         "toktikgraphqlLambdaLayer": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion7c0cf4ef-build.zip"
+          "s3Key": "amplify-builds/toktikgraphqlLambdaLayer-LambdaLayerVersion449a818c-build.zip"
         },
         "likePost": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
@@ -72,7 +72,10 @@
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
           "s3Key": "amplify-builds/viewPost-5a2b645067326e312b39-build.zip"
         },
-        "toolUploadPost": {}
+        "toolUploadPost": {
+          "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
+          "s3Key": "amplify-builds/toolUploadPost-645646415167434e6d58-build.zip"
+        }
       }
     }
   }
