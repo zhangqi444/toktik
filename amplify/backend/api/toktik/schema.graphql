@@ -110,6 +110,32 @@ type Like
   value: Boolean
 }
 
+type Categorization 
+  @model
+  @auth(rules: [{ allow: public }]) 
+  @key(
+    name: "name-index"
+    fields: ["name"]
+    queryField: "getCategorizationByName"
+  ) {
+  id: ID!
+  name: String
+  isSubcategorization: Boolean
+  parentCategorizationId: ID
+}
+
+type Tag 
+  @model
+  @auth(rules: [{ allow: public }]) 
+  @key(
+    name: "name-index"
+    fields: ["name"]
+    queryField: "getTagByName"
+  ) {
+  id: ID!
+  name: String
+}
+
 type Post
   @model
   @auth(rules: [{ allow: public }])
@@ -117,6 +143,11 @@ type Post
     name: "postUserId-index"
     fields: ["postUserId"]
     queryField: "postByUserId"
+  ) 
+  @key(
+    name: "sortier-createdAt-index"
+    fields: ["sortier", "createdAt"]
+    queryField: "getPostsOrderedByCreatedAt"
   ) {
   id: ID!
   text: String
@@ -128,8 +159,22 @@ type Post
   shareCount: Int
   postUserId: ID
   viewCount: Int
+  description: String
+  formatType: String
+  source: String
+  categorization: Categorization @connection
+  tags: [Tag] @connection
+  postCategorizationId: ID
+  postTagIds: [ID]
   isDeleted: Boolean
   isBlocked: Boolean
+  sortier: Sortier!
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+}
+
+enum Sortier {
+  SORTIER
 }
 
 type Music @model @auth(rules: [{ allow: public }]) {
@@ -138,7 +183,14 @@ type Music @model @auth(rules: [{ allow: public }]) {
   img: String
 }
 
-type User @model @auth(rules: [{ allow: public }]) {
+type User 
+  @model 
+  @auth(rules: [{ allow: public }])
+  @key(
+    name: "username-index"
+    fields: ["username"]
+    queryField: "getUserByUsername" 
+  ) {
   id: ID!
   nickname: String
   portrait: String
@@ -151,6 +203,8 @@ type User @model @auth(rules: [{ allow: public }]) {
   email: String
   phoneNumber: String
   authStatus: String
+  type: String
+  status: String
   isDeleted: Boolean
   isBlocked: Boolean
 }
@@ -165,6 +219,11 @@ type PostEx {
   commentCount: Int
   shareCount: Int
   viewCount: Int
+  description: String
+  formatType: String
+  categorization: Categorization
+  tags: [Tag]
+  
   isLiked: Like
   isDeleted: Boolean
   isBlocked: Boolean
@@ -288,8 +347,19 @@ input UpdatePostInput {
   likeCount: Int
   commentCount: Int
   shareCount: Int
-  _version: Int
   postUserId: ID
+  viewCount: Int
+  description: String
+  formatType: String
+  source: String
+  postCategorizationId: ID
+  postTagIds: [ID]
+  isDeleted: Boolean
+  isBlocked: Boolean
+  sortier: Sortier!
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  _version: Int
   postMusicId: ID
 }
 

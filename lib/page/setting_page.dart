@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:toktik/common/events.dart';
 import 'package:toktik/common/router_manager.dart';
 import 'package:toktik/common/strings.dart';
 import 'package:toktik/controller/self_controller.dart';
@@ -10,6 +11,7 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
 import '../common/configs.dart';
+import '../controller/event_controller.dart';
 import '../enum/navigation_argument.dart';
 
 //设置页面
@@ -23,7 +25,8 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  SelfController loginController = Get.put(SelfController());
+  final SelfController loginController = Get.put(SelfController());
+  final EventController eventController = Get.find();
   var platformInfo;
 
   @override
@@ -38,10 +41,9 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: ColorRes.light_background_color,
-      appBar:AppBarWidget(title: 'Setting'),
+      appBar:AppBarWidget(title: 'Settings and privacy'),
       body: _getBody(context),
     );
   }
@@ -76,69 +78,65 @@ class _SettingPageState extends State<SettingPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Padding(
-            //     padding: EdgeInsets.only(left: 20,right: 20),
-            //     child: Text('账号',style: TextStyle(color: ColorRes.color_2,fontSize: 12),)),
-            // ItemTurnWidget(img: 'assets/images/person.png',title: '账号与安全',onClick: (){EasyLoading.showToast('账号与安全');},),
-            // ItemTurnWidget(img: 'assets/images/lock.png',title: '隐私设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // Divider(color: ColorRes.color_2.withAlpha(20),),
-            // Padding(
-            //     padding: EdgeInsets.only(left: 20,right: 20),
-            //     child: Text('通用',style: TextStyle(color: ColorRes.color_2,fontSize: 12),)),
-            // ItemTurnWidget(img: 'assets/images/notice.png',title: '通知设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/active_wallpager.png',title: '动态壁纸',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/setting_common.png',title: '通用设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/color_palette.png',title: '背景设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // Divider(color: ColorRes.color_2.withAlpha(20),),
-            // Padding(
-            //     padding: EdgeInsets.only(left: 20,right: 20),
-            //     child: Text('账号互通',style: TextStyle(color: ColorRes.color_2,fontSize: 12),)),
-            // ItemTurnWidget(img: 'assets/images/share_app_toutiao.webp',title: '头条主页',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // ItemTurnWidget(img: 'assets/images/fensi.png',title: '粉丝',onClick: (){EasyLoading.showToast('功能待开发');},),
-            // Divider(color: ColorRes.color_2.withAlpha(20),),
-            _getHeader(SETTING_HEADER_ABOUT),
-            // ItemTurnWidget(img: 'assets/images/ad.png',title: '广告反馈与设置',onClick: (){EasyLoading.showToast('功能待开发');},),
-            ItemTurnWidget(img: 'assets/images/user_service.png',title: SETTING_TERMS_OF_SERVICE, onClick: (){
-              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: TERMS_OF_SERVICE_URL} );
-            }),
-            ItemTurnWidget(img: 'assets/images/community_service.png',title: SETTING_COMMUNITY_GUIDELINES, onClick: (){
-                  Get.toNamed(Routers.webView, arguments: {
-                    NavigationArgument.URL:
-                        "https://www.getbreeze.me/community-guidelines"
-                  });
-            }),
-            ItemTurnWidget(img: 'assets/images/private_service.png',title: SETTING_PRIVACY_POLICY, onClick: (){
-              Get.toNamed(Routers.webView, arguments: {NavigationArgument.URL: PRIVACY_POLICY_URL} );
-            }),
-            ItemTurnWidget(img: 'assets/images/sdk_list.png',title: SETTING_COPYRIGHT_POLICY, onClick: (){
-                  Get.toNamed(Routers.webView, arguments: {
-                    NavigationArgument.URL: "https://getbreeze.me/copyright"
-                  });
-            }),
-            ItemTurnWidget(img: 'assets/images/setting_about.png',title: SETTING_ABOUT, onClick: () {
-                  Get.toNamed(Routers.webView, arguments: {
-                    NavigationArgument.URL: "https://getbreeze.me"
-                  });
-            }),
-            // ItemTurnWidget(img: 'assets/images/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
+            _getDivider(),
+            _getHeader(_SettingPageMenuConfig.HEADER_ABOUT),
+            _SettingPageMenu(config: _SettingPageMenuConfig.TERMS_OF_SERVICE),
+            _SettingPageMenu(
+                config: _SettingPageMenuConfig.COMMUNITY_GUIDELINES),
+            _SettingPageMenu(config: _SettingPageMenuConfig.PRIVACY_POLICY),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/balance.png',title: "Balance", onClick: (){
+            //   Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me/copyright"} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/qr_code.png',title: "QR code", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/share_profile.png',title: "Share profile", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": "https://getbreeze.me"} );
+            _SettingPageMenu(config: _SettingPageMenuConfig.COPYRIGHT_POLICY),
+            _SettingPageMenu(config: _SettingPageMenuConfig.ABOUT),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/setting_delete.png',title: '清理占用空间',onClick: (){EasyLoading.showToast('功能待开发');},),
 
-            // ItemTurnWidget(img: 'assets/images/setting_exchange.png',title: '切换账号',onClick: (){
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/setting_exchange.png',title: '切换账号',onClick: (){
             //
             //   // SPUtil.remove(SPKeys.userUid);
             //   // SPUtil.remove(SPKeys.token);
             //
             //   Get.offNamed(Routers.login);},),
             _getDivider(),
-            _getHeader(SETTING_HEADER_SUPPORT),
-            ItemTurnWidget(img: 'assets/images/setting_feedback.png',title: SETTING_REPORT_PROBLEM, onClick: () {
-                  Get.toNamed(Routers.webView,
-                      arguments: {NavigationArgument.URL: FEEDBACK_URL});
-            }),
+            _getHeader(_SettingPageMenuConfig.HEADER_SUPPORT),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/push_notifications.png',title: "Push notifications", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/app_language.png',title: "App language", rightTitle: "English", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/dark_mode.png',title: "Dark mode", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/content_preferences.png',title: "Content preferences", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/ads.png',title: "Ads", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/digital_wellbeing.png',title: "Digital Wellbeing", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            // }),
+            // ItemTurnWidget(img: 'assets/images/setting_and_privacy/family_pairing.png',title: "Family Pairing", onClick: () {
+            //   Get.toNamed(Routers.webView, arguments: {"url": FEEDBACK_URL} );
+            // }),
+            _SettingPageMenu(config: _SettingPageMenuConfig.REPORT_PROBLEM),
             _getDivider(),
-            _getHeader(SETTING_HEADER_LOGIN),
-            ItemTurnWidget(img: 'assets/images/setting_logout.png',title: SETTING_LOGOUT, onClick: () async {
+            _getHeader(_SettingPageMenuConfig.HEADER_LOGIN),
+            _SettingPageMenu(
+                config: _SettingPageMenuConfig.LOGOUT,
+                callback: () async {
               await loginController.logout();
               Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
+              eventController.recordEvent(Event.SETTING_PAGE_MENU_PRESS, event: {
+                EventKey.NAME: _SettingPageMenuConfig.LOGOUT['type'],
+                EventKey.VALUE: 1,
+              });
             }),
             FutureBuilder<void>(
               future: _getVersionNumber(),
@@ -156,4 +154,87 @@ class _SettingPageState extends State<SettingPage> {
       ),
     );
   }
+}
+
+class _SettingPageMenu extends StatelessWidget {
+  final Map<String, String> config;
+  final Function? callback;
+  final EventController eventController = Get.find();
+
+  _SettingPageMenu({Key? key, required this.config, this.callback})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ItemTurnWidget(
+        img: config['img'],
+        title: config['name'],
+        onClick: () {
+          if (callback == null) {
+            Get.toNamed(Routers.webView,
+                arguments: {NavigationArgument.URL: config['url']});
+          } else {
+            callback!();
+          }
+
+          eventController.recordEvent(Event.SETTING_PAGE_MENU_PRESS, event: {
+            EventKey.NAME: config['type'],
+            EventKey.VALUE: 1,
+          });
+        });
+  }
+}
+
+class _SettingPageMenuConfig {
+  static const HEADER_ABOUT = "ABOUT";
+  static const HEADER_SUPPORT = "SUPPORT";
+  static const HEADER_LOGIN = "LOGIN";
+
+  static const Map<String, String> TERMS_OF_SERVICE = {
+    'name': "Terms of Service",
+    'type': "TERMS_OF_SERVICE",
+    'img': 'assets/images/setting_and_privacy/terms_of_service.png',
+    'url': TERMS_OF_SERVICE_URL
+  };
+
+  static const Map<String, String> COMMUNITY_GUIDELINES = {
+    'name': "Community Guidelines",
+    'type': "COMMUNITY_GUIDELINES",
+    'img': "assets/images/setting_and_privacy/community_guidelines.png",
+    'url': COMMUNITY_GUIDELINES_URL
+  };
+
+  static const Map<String, String> PRIVACY_POLICY = {
+    'name': "Privacy Policy",
+    'type': "PRIVACY_POLICY",
+    'img': 'assets/images/setting_and_privacy/privacy.png',
+    'url': PRIVACY_POLICY_URL
+  };
+
+  static const Map<String, String> COPYRIGHT_POLICY = {
+    'name': "Copyright Policy",
+    'type': "COPYRIGHT_POLICY",
+    'img': 'assets/images/setting_and_privacy/copyright_policy.png',
+    'url': COPYRIGHT_URL
+  };
+
+  static const Map<String, String> ABOUT = {
+    'name': "About $APP_NAME",
+    'type': "ABOUT",
+    'img': 'assets/images/setting_about.png',
+    'url': DOMAIN
+  };
+
+  static const Map<String, String> REPORT_PROBLEM = {
+    'name': "Report a problem",
+    'type': "REPORT_PROBLEM",
+    'img': "assets/images/setting_and_privacy/report_a_problem.png",
+    'url': FEEDBACK_URL
+  };
+
+  static const Map<String, String> LOGOUT = {
+    'name': "Logout",
+    'type': "LOGOUT",
+    'img': 'assets/images/setting_and_privacy/log_out.png',
+  };
 }

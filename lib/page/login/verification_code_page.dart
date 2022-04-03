@@ -1,9 +1,9 @@
-import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:toktik/common/events.dart';
 import 'package:toktik/common/router_manager.dart';
+import 'package:toktik/controller/event_controller.dart';
 import 'dart:async';
 
 import 'package:toktik/controller/self_controller.dart';
@@ -26,10 +26,10 @@ final TextStyle _unavailableStyle = TextStyle(
 
 class VerificationCodePage extends StatefulWidget {
   /// 倒计时的秒数，默认60秒。
-  int countdown = 60;
+  final int countdown = 60;
 
   /// 是否可以获取验证码，默认为`false`。
-  bool available = true;
+  final bool available = true;
 
   VerificationCodePage();
 
@@ -51,6 +51,12 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
   bool isResetPassword = false;
   String errorMessage = "";
 
+  String backEvent = "";
+  String completeEvent = "";
+  String resendEvent = "";
+  String loginEvent = "";
+
+  final EventController eventController = Get.find();
   SelfController loginController = Get.put(SelfController());
   TextEditingController textEditingController = TextEditingController();
   StreamController<ErrorAnimationType>? errorController;
@@ -99,12 +105,22 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
     _seconds = widget.countdown;
     errorController = StreamController<ErrorAnimationType>();
 
+    backEvent = Event.VERIFICATION_CODE_PAGE_BACK_PRESS;
+    completeEvent = Event.VERIFICATION_CODE_PAGE_CODE_COMPLETE;
+    resendEvent = Event.VERIFICATION_CODE_PAGE_RESEND_PRESS;
+    loginEvent = Event.VERIFICATION_CODE_PAGE_LOGIN_PRESS;
+
     if(argumentData != null) {
       setState(() {
         destination = argumentData[NavigationArgument.DESTINATION];
         if(argumentData[NavigationArgument.IS_RESET_PASSWORD] != null) {
           title = "Reset";
           isResetPassword = true;
+
+          backEvent = Event.RESET_PASSWORD_VERIFICATION_CODE_PAGE_BACK_PRESS;
+          completeEvent = Event.RESET_PASSWORD_VERIFICATION_CODE_PAGE_CODE_COMPLETE;
+          resendEvent = Event.RESET_PASSWORD_VERIFICATION_CODE_PAGE_RESEND_PRESS;
+          loginEvent = Event.RESET_PASSWORD_VERIFICATION_CODE_PAGE_LOGIN_PRESS;
         }
         account = argumentData[NavigationArgument.ACCOUNT];
         username = argumentData[NavigationArgument.USERNAME];
@@ -123,7 +139,9 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: LoginAppBarWidget(title: title),
+      appBar: LoginAppBarWidget(title: title, backCallback: () {
+        eventController.recordEvent(this.backEvent);
+      },),
       body: _layoutSignUp(context),
     );
   }
@@ -143,7 +161,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
             ),
             _getTitleText(),
             Text(
-              "Your code was sent to ${destination}.",
+              "Your code was sent to $destination.",
               style: TextStyle(color: Color(0xff888888), fontSize: 12),
             ),
             SizedBox(
@@ -175,6 +193,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
               controller: textEditingController,
               keyboardType: TextInputType.number,
               onCompleted: (v) async {
+                eventController.recordEvent(this.completeEvent);
                 String? status;
                 if(!isResetPassword) { // handle register
                   status = await loginController.registerVerify(username!, email, verificationCode);
@@ -182,7 +201,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                     || status == AuthStatus.SIGN_UP_DONE.toShortString()) {
                     Get.offAndToNamed(Routers.login, arguments: { NavigationArgument.ACCOUNT: username });
                   }  else {
-                    // TODO: add error message
+                    // todo: add error message
                   }
                 } else { // handle password reset
                   if(isStringNullOrEmpty(account) || isStringNullOrEmpty(password)) {
@@ -197,9 +216,9 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                         }
                     );
                   } else if(status == AuthStatus.CODE_MISMATCH.toShortString()) {
-                    // TODO: add error message
+                    // todo: add error message
                   } else {
-                    // TODO: add error message
+                    // todo: add error message
                   }
                 }
               },
@@ -237,8 +256,9 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
                               status = await loginController.resetPassword(account!);
                             }
                             if(status == null) {
-                              // TODO: add erroe message and reset the timer status
+                              // todo: add erroe message and reset the timer status
                             }
+                            eventController.recordEvent(this.resendEvent);
                           }
                         : () {},
                   )
@@ -254,7 +274,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
             SizedBox(
               height: 16,
             ),
-            /// TODO: disable phone call verification entry
+            /// todo: disable phone call verification entry
             // Row(
             //   children: [
             //     Text(
@@ -302,6 +322,7 @@ class _VerificationCodePageState extends State<VerificationCodePage> {
         ),
         onTap: () {
           Get.offNamedUntil(Routers.login, ModalRoute.withName(Routers.scroll));
+          eventController.recordEvent(loginEvent);
         }
       ),        
     );

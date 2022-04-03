@@ -300,7 +300,6 @@ class Api {
           stacktrace.toString());
     }
   }
-  //
 
   ///获取用户资料信息(扩展)
   static Future<UserInfoExResponse?> getUserInfoExByUsername(
@@ -405,23 +404,25 @@ class Api {
         : null;
   }
 
-  static void recordEvent(String eventName, Map<String, dynamic> events) {
-    AnalyticsEvent event = AnalyticsEvent(eventName);
-    events.forEach((key, value) {
-      if (value is String) {
-        event.properties.addStringProperty(key, value);
-      } else if (value is bool) {
-        event.properties.addBoolProperty(key, value);
-      } else if (value is int) {
-        event.properties.addIntProperty(key, value);
-      } else if (value is double) {
-        event.properties.addDoubleProperty(key, value);
-      } else {
-        return;
-      }
-    });
+  static void recordEvent(String eventName, {Map<String, dynamic>? event}) {
+    AnalyticsEvent analyticsEvent = AnalyticsEvent(eventName);
+    if(event != null) {
+      event.forEach((key, value) {
+        if (value is String) {
+          analyticsEvent.properties.addStringProperty(key, value);
+        } else if (value is bool) {
+          analyticsEvent.properties.addBoolProperty(key, value);
+        } else if (value is int) {
+          analyticsEvent.properties.addIntProperty(key, value);
+        } else if (value is double) {
+          analyticsEvent.properties.addDoubleProperty(key, value);
+        } else {
+          return;
+        }
+      });
+    }
 
-    Amplify.Analytics.recordEvent(event: event);
+    Amplify.Analytics.recordEvent(event: analyticsEvent);
     // todo: flush the event for every recording, as current the data is very sparse.
     Amplify.Analytics.flushEvents();
   }

@@ -787,8 +787,8 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
 
 constructs@^3.3.69:
-  version "3.3.253"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-3.3.253.tgz#6f849901a035faddb2d9e187f4cfe337b5722870"
+  version "3.3.257"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-3.3.257.tgz#1799e9460f60d378b6c345bbc3c152ee07fe94ae"
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -1294,8 +1294,8 @@ minimatch@^3.0.4:
     brace-expansion "^1.1.7"
 
 moment@^2.29.1:
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  version "2.29.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.2.tgz#00910c60b20843bcba52d37d58c628b47b1f20e4"
 
 ms@2.1.2:
   version "2.1.2"

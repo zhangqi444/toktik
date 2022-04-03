@@ -301,6 +301,8 @@ class _UserPageState extends State<UserPage> with TickerProviderStateMixin {
               _notInterestedController.notInterestedUser(user.id);
               Navigator.pop(context);
             },
+            pageType: "USER_MORE_BOTTOM_SHEET",
+            //TODO: add parameter pageType here, it needs to be add at 'types.dart' page
           );
         });
   }
@@ -332,3 +334,4 @@ class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
+

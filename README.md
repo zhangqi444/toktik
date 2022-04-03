@@ -102,3 +102,10 @@ https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-s3-access-logs-to-id
 
 ### How to override Amplify config?
 https://aws.amazon.com/blogs/mobile/override-amplify-generated-backend-resources-using-cdk/
+
+### How to solve the amplify push failure if schema.graphql syntax is wrong in cloud?
+If the `schema.graphql` has syntax error, it may be abled to be deployed still. This will result in failure for all future amplify push. For example an error message,
+
+`🛑 Your GraphQL schema is invalid. Update the schema to use proper syntax and try again.`
+
+Solution: https://github.com/aws-amplify/amplify-cli/issues/8439

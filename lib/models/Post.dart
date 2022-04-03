@@ -21,6 +21,7 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -37,8 +38,17 @@ class Post extends Model {
   final int? _commentCount;
   final int? _shareCount;
   final int? _viewCount;
+  final String? _description;
+  final String? _formatType;
+  final String? _source;
+  final Categorization? _categorization;
+  final List<Tag>? _tags;
+  final List<String>? _postTagIds;
   final bool? _isDeleted;
   final bool? _isBlocked;
+  final Sortier? _sortier;
+  final TemporalDateTime? _updatedAt;
+  final TemporalDateTime? _createdAt;
 
   @override
   getInstanceType() => classType;
@@ -80,6 +90,30 @@ class Post extends Model {
     return _viewCount;
   }
   
+  String? get description {
+    return _description;
+  }
+  
+  String? get formatType {
+    return _formatType;
+  }
+  
+  String? get source {
+    return _source;
+  }
+  
+  Categorization? get categorization {
+    return _categorization;
+  }
+  
+  List<Tag>? get tags {
+    return _tags;
+  }
+  
+  List<String>? get postTagIds {
+    return _postTagIds;
+  }
+  
   bool? get isDeleted {
     return _isDeleted;
   }
@@ -88,9 +122,30 @@ class Post extends Model {
     return _isBlocked;
   }
   
-  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, isDeleted, isBlocked}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _isDeleted = isDeleted, _isBlocked = isBlocked;
+  Sortier get sortier {
+    try {
+      return _sortier!;
+    } catch(e) {
+      throw new DataStoreException(
+          DataStoreExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            DataStoreExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
   
-  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, bool? isDeleted, bool? isBlocked}) {
+  TemporalDateTime? get updatedAt {
+    return _updatedAt;
+  }
+  
+  TemporalDateTime? get createdAt {
+    return _createdAt;
+  }
+  
+  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, description, formatType, source, categorization, tags, postTagIds, isDeleted, isBlocked, required sortier, updatedAt, createdAt}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _categorization = categorization, _tags = tags, _postTagIds = postTagIds, _isDeleted = isDeleted, _isBlocked = isBlocked, _sortier = sortier, _updatedAt = updatedAt, _createdAt = createdAt;
+  
+  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, required Sortier sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
     return Post._internal(
       id: id == null ? UUID.getUUID() : id,
       text: text,
@@ -101,8 +156,17 @@ class Post extends Model {
       commentCount: commentCount,
       shareCount: shareCount,
       viewCount: viewCount,
+      description: description,
+      formatType: formatType,
+      source: source,
+      categorization: categorization,
+      tags: tags != null ? List<Tag>.unmodifiable(tags) : tags,
+      postTagIds: postTagIds != null ? List<String>.unmodifiable(postTagIds) : postTagIds,
       isDeleted: isDeleted,
-      isBlocked: isBlocked);
+      isBlocked: isBlocked,
+      sortier: sortier,
+      updatedAt: updatedAt,
+      createdAt: createdAt);
   }
   
   bool equals(Object other) {
@@ -122,8 +186,17 @@ class Post extends Model {
       _commentCount == other._commentCount &&
       _shareCount == other._shareCount &&
       _viewCount == other._viewCount &&
+      _description == other._description &&
+      _formatType == other._formatType &&
+      _source == other._source &&
+      _categorization == other._categorization &&
+      DeepCollectionEquality().equals(_tags, other._tags) &&
+      DeepCollectionEquality().equals(_postTagIds, other._postTagIds) &&
       _isDeleted == other._isDeleted &&
-      _isBlocked == other._isBlocked;
+      _isBlocked == other._isBlocked &&
+      _sortier == other._sortier &&
+      _updatedAt == other._updatedAt &&
+      _createdAt == other._createdAt;
   }
   
   @override
@@ -143,14 +216,22 @@ class Post extends Model {
     buffer.write("commentCount=" + (_commentCount != null ? _commentCount!.toString() : "null") + ", ");
     buffer.write("shareCount=" + (_shareCount != null ? _shareCount!.toString() : "null") + ", ");
     buffer.write("viewCount=" + (_viewCount != null ? _viewCount!.toString() : "null") + ", ");
+    buffer.write("description=" + "$_description" + ", ");
+    buffer.write("formatType=" + "$_formatType" + ", ");
+    buffer.write("source=" + "$_source" + ", ");
+    buffer.write("categorization=" + (_categorization != null ? _categorization!.toString() : "null") + ", ");
+    buffer.write("postTagIds=" + (_postTagIds != null ? _postTagIds!.toString() : "null") + ", ");
     buffer.write("isDeleted=" + (_isDeleted != null ? _isDeleted!.toString() : "null") + ", ");
-    buffer.write("isBlocked=" + (_isBlocked != null ? _isBlocked!.toString() : "null"));
+    buffer.write("isBlocked=" + (_isBlocked != null ? _isBlocked!.toString() : "null") + ", ");
+    buffer.write("sortier=" + (_sortier != null ? enumToString(_sortier)! : "null") + ", ");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
+    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, bool? isDeleted, bool? isBlocked}) {
+  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, Sortier? sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
     return Post(
       id: id ?? this.id,
       text: text ?? this.text,
@@ -161,8 +242,17 @@ class Post extends Model {
       commentCount: commentCount ?? this.commentCount,
       shareCount: shareCount ?? this.shareCount,
       viewCount: viewCount ?? this.viewCount,
+      description: description ?? this.description,
+      formatType: formatType ?? this.formatType,
+      source: source ?? this.source,
+      categorization: categorization ?? this.categorization,
+      tags: tags ?? this.tags,
+      postTagIds: postTagIds ?? this.postTagIds,
       isDeleted: isDeleted ?? this.isDeleted,
-      isBlocked: isBlocked ?? this.isBlocked);
+      isBlocked: isBlocked ?? this.isBlocked,
+      sortier: sortier ?? this.sortier,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt);
   }
   
   Post.fromJson(Map<String, dynamic> json)  
@@ -179,11 +269,27 @@ class Post extends Model {
       _commentCount = (json['commentCount'] as num?)?.toInt(),
       _shareCount = (json['shareCount'] as num?)?.toInt(),
       _viewCount = (json['viewCount'] as num?)?.toInt(),
+      _description = json['description'],
+      _formatType = json['formatType'],
+      _source = json['source'],
+      _categorization = json['categorization']?['serializedData'] != null
+        ? Categorization.fromJson(new Map<String, dynamic>.from(json['categorization']['serializedData']))
+        : null,
+      _tags = json['tags'] is List
+        ? (json['tags'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Tag.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
+      _postTagIds = json['postTagIds']?.cast<String>(),
       _isDeleted = json['isDeleted'],
-      _isBlocked = json['isBlocked'];
+      _isBlocked = json['isBlocked'],
+      _sortier = enumFromString<Sortier>(json['sortier'], Sortier.values),
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
+      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked
+    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'categorization': _categorization?.toJson(), 'tags': _tags?.map((Tag? e) => e?.toJson()).toList(), 'postTagIds': _postTagIds, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked, 'sortier': enumToString(_sortier), 'updatedAt': _updatedAt?.format(), 'createdAt': _createdAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "post.id");
@@ -199,8 +305,21 @@ class Post extends Model {
   static final QueryField COMMENTCOUNT = QueryField(fieldName: "commentCount");
   static final QueryField SHARECOUNT = QueryField(fieldName: "shareCount");
   static final QueryField VIEWCOUNT = QueryField(fieldName: "viewCount");
+  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField FORMATTYPE = QueryField(fieldName: "formatType");
+  static final QueryField SOURCE = QueryField(fieldName: "source");
+  static final QueryField CATEGORIZATION = QueryField(
+    fieldName: "categorization",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Categorization).toString()));
+  static final QueryField TAGS = QueryField(
+    fieldName: "tags",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Tag).toString()));
+  static final QueryField POSTTAGIDS = QueryField(fieldName: "postTagIds");
   static final QueryField ISDELETED = QueryField(fieldName: "isDeleted");
   static final QueryField ISBLOCKED = QueryField(fieldName: "isBlocked");
+  static final QueryField SORTIER = QueryField(fieldName: "sortier");
+  static final QueryField UPDATEDAT = QueryField(fieldName: "updatedAt");
+  static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Post";
     modelSchemaDefinition.pluralName = "Posts";
@@ -269,6 +388,45 @@ class Post extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.DESCRIPTION,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.FORMATTYPE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.SOURCE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Post.CATEGORIZATION,
+      isRequired: false,
+      targetName: "postCategorizationId",
+      ofModelName: (Categorization).toString()
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Post.TAGS,
+      isRequired: false,
+      ofModelName: (Tag).toString(),
+      associatedKey: Tag.POSTTAGSID
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.POSTTAGIDS,
+      isRequired: false,
+      isArray: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.string))
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Post.ISDELETED,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
@@ -278,6 +436,24 @@ class Post extends Model {
       key: Post.ISBLOCKED,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.SORTIER,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.enumeration)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.UPDATEDAT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.CREATEDAT,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
   });
 }

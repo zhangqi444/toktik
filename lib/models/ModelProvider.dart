@@ -20,6 +20,7 @@
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'Categorization.dart';
 import 'Comment.dart';
 import 'Like.dart';
 import 'Music.dart';
@@ -27,12 +28,14 @@ import 'NotInterested.dart';
 import 'Post.dart';
 import 'Report.dart';
 import 'Share.dart';
+import 'Tag.dart';
 import 'User.dart';
 import 'View.dart';
 import 'ModelPostExConnection.dart';
 import 'PostEx.dart';
 import 'TranscribeAudioPartResult.dart';
 
+export 'Categorization.dart';
 export 'Comment.dart';
 export 'Like.dart';
 export 'ModelAttributeTypes.dart';
@@ -43,21 +46,25 @@ export 'Post.dart';
 export 'PostEx.dart';
 export 'Report.dart';
 export 'Share.dart';
+export 'Sortier.dart';
+export 'Tag.dart';
 export 'TranscribeAudioPartResult.dart';
 export 'User.dart';
 export 'View.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "e74b2c118d2f17d6eecb5fa99cf7f1c5";
+  String version = "68965b07082b4666f94a2f0c0db30eaa";
   @override
-  List<ModelSchema> modelSchemas = [Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, User.schema, View.schema];
+  List<ModelSchema> modelSchemas = [Categorization.schema, Comment.schema, Like.schema, Music.schema, NotInterested.schema, Post.schema, Report.schema, Share.schema, Tag.schema, User.schema, View.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
   
   ModelType getModelTypeByModelName(String modelName) {
     switch(modelName) {
+      case "Categorization":
+        return Categorization.classType;
       case "Comment":
         return Comment.classType;
       case "Like":
@@ -72,6 +79,8 @@ class ModelProvider implements ModelProviderInterface {
         return Report.classType;
       case "Share":
         return Share.classType;
+      case "Tag":
+        return Tag.classType;
       case "User":
         return User.classType;
       case "View":

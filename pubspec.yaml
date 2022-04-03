@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.3.4+4
+version: 1.3.5+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -80,6 +80,7 @@ flutter:
     - assets/images/main_page_bottom_icon/
     - assets/images/feed_publish/
     - assets/images/video_share_widget/
+    - assets/images/setting_and_privacy/
   fonts:
     - family: TikTokIcons
       fonts:
