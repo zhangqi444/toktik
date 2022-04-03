@@ -1,14 +1,18 @@
 /* Amplify Params - DO NOT EDIT
+	API_TOKTIK_CATEGORIZATIONTABLE_ARN
+	API_TOKTIK_CATEGORIZATIONTABLE_NAME
+	API_TOKTIK_GRAPHQLAPIENDPOINTOUTPUT
+	API_TOKTIK_GRAPHQLAPIIDOUTPUT
+	API_TOKTIK_GRAPHQLAPIKEYOUTPUT
+	API_TOKTIK_POSTTABLE_ARN
+	API_TOKTIK_POSTTABLE_NAME
+	API_TOKTIK_TAGTABLE_ARN
+	API_TOKTIK_TAGTABLE_NAME
+	API_TOKTIK_USERTABLE_ARN
+	API_TOKTIK_USERTABLE_NAME
 	ENV
 	REGION
-	API_TOKTIK_GRAPHQLAPIIDOUTPUT
-	API_TOKTIK_GRAPHQLAPIENDPOINTOUTPUT
-	API_TOKTIK_GRAPHQLAPIKEYOUTPUT
-	STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME
-	API_TOKTIK_POSTTABLE_NAME
-	API_TOKTIK_POSTTABLE_ARN
-	API_TOKTIK_USERTABLE_NAME
-	API_TOKTIK_USERTABLE_ARN
+	STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME
 Amplify Params - DO NOT EDIT */
 
 const { query, getCategorizationByName, getTagByName, createCategorization, createTag, createPost, getUserByUsername, createUser, listPosts, getPostsOrderedByCreatedAt, updatePost } = require('/opt/internal/utils/graphqlUtil');
@@ -78,7 +82,7 @@ const parseUser = async (data) => {
                     portraitFileName = portraitFileName && `${TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH}/${portraitFileName[0]}`;
                     input.portrait = await putObjectFromUrl(
                         portraitUrl, 
-                        process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, 
+                        process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME, 
                         process.env.REGION,
                         portraitFileName,
                         { ACL: "public-read" }
@@ -134,7 +138,7 @@ const uploadAsset = async (airtableFieldValue, path) => {
 
     return url && await putObjectFromUrl(
         url, 
-        process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME, 
+        process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME, 
         process.env.REGION,
         fileName,
         { ACL: "public-read" },
@@ -147,7 +151,7 @@ const uploadAsset = async (airtableFieldValue, path) => {
 exports.handler = async (event) => {
 
     let objects = await listObjects(
-        process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME,
+        process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME,
         "post-source/",
     );
     objects = objects.Contents
@@ -157,7 +161,7 @@ exports.handler = async (event) => {
     console.log(`Loading file ${key}...`);
 
     let data = await getObject({
-        Bucket: process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME,
+        Bucket: process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME,
         Key: key
     });
     data = papa.parse(data, {

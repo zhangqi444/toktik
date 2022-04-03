@@ -74,7 +74,7 @@
         },
         "toolUploadPost": {
           "deploymentBucketName": "amplify-toktik-prod-175430-deployment",
-          "s3Key": "amplify-builds/toolUploadPost-645646415167434e6d58-build.zip"
+          "s3Key": "amplify-builds/toolUploadPost-546f53556e4939442b38-build.zip"
         }
       }
     }

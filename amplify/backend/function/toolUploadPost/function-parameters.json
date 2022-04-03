@@ -13,6 +13,18 @@
         "update",
         "delete"
       ],
+      "Categorization:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "Tag:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
       "Post:@model(appsync)": [
         "create",
         "read",
