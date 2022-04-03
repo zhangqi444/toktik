@@ -213,6 +213,8 @@ exports.handler = async (event) => {
                 postTagIds: tags.map(t => tagMap[t]), 
                 postUserId: user && userMap[user],
                 sortier: constants.GRAPHQL_SORTIER,
+                isImported: true, isBlocked: false,
+                status: constants.INITIALIZED,
             };
             
             const existingPosts = await listPosts({ "filter": { "postUserId": { "eq": userMap[user] }, "text": { "eq": title } } });
