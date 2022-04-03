@@ -166,8 +166,10 @@ type Post
   tags: [Tag] @connection
   postCategorizationId: ID
   postTagIds: [ID]
+  status: String
   isDeleted: Boolean
   isBlocked: Boolean
+  isImported: Boolean
   sortier: Sortier!
   updatedAt: AWSDateTime
   createdAt: AWSDateTime
@@ -221,12 +223,20 @@ type PostEx {
   viewCount: Int
   description: String
   formatType: String
+  source: String
   categorization: Categorization
   tags: [Tag]
-  
-  isLiked: Like
+  postCategorizationId: ID
+  postTagIds: [ID]
+  status: String
   isDeleted: Boolean
   isBlocked: Boolean
+  isImported: Boolean
+  sortier: Sortier!
+  updatedAt: AWSDateTime
+  createdAt: AWSDateTime
+  
+  isLiked: Like
 }
 
 type ModelPostExConnection @aws_api_key @aws_iam {
@@ -354,8 +364,10 @@ input UpdatePostInput {
   source: String
   postCategorizationId: ID
   postTagIds: [ID]
+  status: String
   isDeleted: Boolean
   isBlocked: Boolean
+  isImported: Boolean
   sortier: Sortier!
   updatedAt: AWSDateTime
   createdAt: AWSDateTime
@@ -402,6 +414,8 @@ input ModelPostFilterInput {
   viewCount: ModelIntInput
   isDeleted: ModelBooleanInput
   isBlocked: ModelBooleanInput
+  isImport: ModelBooleanInput
+  status: ModelStringInput
   and: [ModelPostFilterInput]
   or: [ModelPostFilterInput]
   not: ModelPostFilterInput
