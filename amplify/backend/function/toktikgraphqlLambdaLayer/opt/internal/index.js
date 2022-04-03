@@ -20,4 +20,7 @@ module.exports.constants = {
         IMPORTED: "IMPORTED",
         DEFAULT: "DEFAULT",
     },
+    POST_STATUS: {
+        INITIALIZED: "INITIALIZED",
+    },
 };
