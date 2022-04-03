@@ -49,7 +49,6 @@ class Post extends Model {
   final Sortier? _sortier;
   final TemporalDateTime? _updatedAt;
   final TemporalDateTime? _createdAt;
-  final String? ___typename;
 
   @override
   getInstanceType() => classType;
@@ -144,13 +143,9 @@ class Post extends Model {
     return _createdAt;
   }
   
-  String? get __typename {
-    return ___typename;
-  }
+  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, description, formatType, source, categorization, tags, postTagIds, isDeleted, isBlocked, required sortier, updatedAt, createdAt}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _categorization = categorization, _tags = tags, _postTagIds = postTagIds, _isDeleted = isDeleted, _isBlocked = isBlocked, _sortier = sortier, _updatedAt = updatedAt, _createdAt = createdAt;
   
-  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, description, formatType, source, categorization, tags, postTagIds, isDeleted, isBlocked, required sortier, updatedAt, createdAt, __typename}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _categorization = categorization, _tags = tags, _postTagIds = postTagIds, _isDeleted = isDeleted, _isBlocked = isBlocked, _sortier = sortier, _updatedAt = updatedAt, _createdAt = createdAt, ___typename = __typename;
-  
-  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, required Sortier sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt, String? __typename}) {
+  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, required Sortier sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
     return Post._internal(
       id: id == null ? UUID.getUUID() : id,
       text: text,
@@ -171,8 +166,7 @@ class Post extends Model {
       isBlocked: isBlocked,
       sortier: sortier,
       updatedAt: updatedAt,
-      createdAt: createdAt,
-      __typename: __typename);
+      createdAt: createdAt);
   }
   
   bool equals(Object other) {
@@ -202,8 +196,7 @@ class Post extends Model {
       _isBlocked == other._isBlocked &&
       _sortier == other._sortier &&
       _updatedAt == other._updatedAt &&
-      _createdAt == other._createdAt &&
-      ___typename == other.___typename;
+      _createdAt == other._createdAt;
   }
   
   @override
@@ -232,14 +225,13 @@ class Post extends Model {
     buffer.write("isBlocked=" + (_isBlocked != null ? _isBlocked!.toString() : "null") + ", ");
     buffer.write("sortier=" + (_sortier != null ? enumToString(_sortier)! : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("__typename=" + "$___typename");
+    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, Sortier? sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt, String? __typename}) {
+  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, Sortier? sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
     return Post(
       id: id ?? this.id,
       text: text ?? this.text,
@@ -260,8 +252,7 @@ class Post extends Model {
       isBlocked: isBlocked ?? this.isBlocked,
       sortier: sortier ?? this.sortier,
       updatedAt: updatedAt ?? this.updatedAt,
-      createdAt: createdAt ?? this.createdAt,
-      __typename: __typename ?? this.__typename);
+      createdAt: createdAt ?? this.createdAt);
   }
   
   Post.fromJson(Map<String, dynamic> json)  
@@ -295,11 +286,10 @@ class Post extends Model {
       _isBlocked = json['isBlocked'],
       _sortier = enumFromString<Sortier>(json['sortier'], Sortier.values),
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
-      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      ___typename = json['__typename'];
+      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'categorization': _categorization?.toJson(), 'tags': _tags?.map((Tag? e) => e?.toJson()).toList(), 'postTagIds': _postTagIds, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked, 'sortier': enumToString(_sortier), 'updatedAt': _updatedAt?.format(), 'createdAt': _createdAt?.format(), '__typename': ___typename
+    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'categorization': _categorization?.toJson(), 'tags': _tags?.map((Tag? e) => e?.toJson()).toList(), 'postTagIds': _postTagIds, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked, 'sortier': enumToString(_sortier), 'updatedAt': _updatedAt?.format(), 'createdAt': _createdAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "post.id");
@@ -330,7 +320,6 @@ class Post extends Model {
   static final QueryField SORTIER = QueryField(fieldName: "sortier");
   static final QueryField UPDATEDAT = QueryField(fieldName: "updatedAt");
   static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
-  static final QueryField __TYPENAME = QueryField(fieldName: "__typename");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Post";
     modelSchemaDefinition.pluralName = "Posts";
@@ -465,12 +454,6 @@ class Post extends Model {
       key: Post.CREATEDAT,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Post.__TYPENAME,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }
