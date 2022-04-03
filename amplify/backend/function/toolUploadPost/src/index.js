@@ -11,7 +11,7 @@
 	API_TOKTIK_USERTABLE_ARN
 Amplify Params - DO NOT EDIT */
 
-const { query, getCategoryByName, getTagByName, createCategory, createTag, createPost, getUserByUsername, createUser, listPosts, getPostsOrderedByCreatedAt, updatePost } = require('/opt/internal/utils/graphqlUtil');
+const { query, getCategorizationByName, getTagByName, createCategorization, createTag, createPost, getUserByUsername, createUser, listPosts, getPostsOrderedByCreatedAt, updatePost } = require('/opt/internal/utils/graphqlUtil');
 const { putObjectFromUrl, getObject, listObjects } = require('/opt/internal/utils/s3Util');
 const { constants } = require('/opt/internal/index');
 const papa = require('papaparse'); 
@@ -19,21 +19,21 @@ const papa = require('papaparse');
 const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
 const TOKTIK_VIDEOS_PATH = 'videos';
 
-const parseCategory = async (data) => {
+const parseCategorization = async (data) => {
     if(!data) return;
 
     const map = {};
     data.forEach(d => {
-        if(!d || !d.category) return;
-        map[d.category] = null;
+        if(!d || !d.categorization) return;
+        map[d.categorization] = null;
     });
     
     let count = 0;
     await Promise.all(Object.keys(map).map(async name => {
-        let res = await getCategoryByName(name);
+        let res = await getCategorizationByName(name);
         res = res && res.items && res.items[0];
         if(!res) {
-            res = await createCategory({ name, isSubcategory: false });
+            res = await createCategorization({ name, isSubcategorization: false });
             count++;
         }
         map[name] = res.id;
@@ -167,7 +167,7 @@ exports.handler = async (event) => {
         escapeChar: "_",
         columns: [ 
             "title", "uploaded", "videoURL", "videoAttachments",
-            "user", "formatType", "category", "source", "tags", "description", 
+            "user", "formatType", "categorization", "source", "tags", "description", 
             "userPortrait", "userNickname", "userBio", "userId", "createdAt", "updatedAt"
         ]
     }).data;
@@ -181,7 +181,7 @@ exports.handler = async (event) => {
     lastUpdatedPost = lastUpdatedPost && lastUpdatedPost.items && lastUpdatedPost.items[0] && lastUpdatedPost.items[0].createdAt;
     data = data.filter(d => {
         let valid = !lastUpdatedPost || (Date.parse(`${d.updatedAt} GMT`) > Date.parse(lastUpdatedPost));
-        valid = valid && d.user && d.title && d.formatType && d.category && (d.videoURL || d.videoAttachments) && !d.uploaded;
+        valid = valid && d.user && d.title && d.formatType && d.categorization && (d.videoURL || d.videoAttachments) && !d.uploaded;
         return valid;
     });
     
@@ -192,7 +192,7 @@ exports.handler = async (event) => {
     console.log(`Loaded ${data.length} rows of data.`);
     if(data.length <= 0) return;
 
-    const categoryMap = await parseCategory(data);
+    const categorizationMap = await parseCategorization(data);
     const tagMap = await parseTag(data);
     const userMap = await parseUser(data);
     
@@ -200,7 +200,7 @@ exports.handler = async (event) => {
     try {
         for (var i = 0; i < data.length; i++) {
             const d = data[i];
-            let { videoAttachments, videoURL, title, category, formatType, description, tags, user, source } = d;
+            let { videoAttachments, videoURL, title, categorization, formatType, description, tags, user, source } = d;
             let url = await uploadAsset(videoAttachments, TOKTIK_VIDEOS_PATH);
             url = url || videoURL;
             if(!url) return;
@@ -209,7 +209,7 @@ exports.handler = async (event) => {
             let input = {
                 text: title, description, formatType, source,
                 attachments: JSON.stringify({ data: [ { url } ] }),
-                postCategoryId: category && categoryMap[category], 
+                postCategorizationId: categorization && categorizationMap[categorization], 
                 postTagIds: tags.map(t => tagMap[t]), 
                 postUserId: user && userMap[user],
                 sortier: constants.GRAPHQL_SORTIER,

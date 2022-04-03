@@ -25,18 +25,18 @@ const query = async (data, queryName) => {
 };
 
 // query
-const getCategoryByName = async (name) => {
+const getCategorizationByName = async (name) => {
     const q = {
         query: print(gql`
-            query getCategoryByName($name: String) {
-                getCategoryByName(name: $name) {
+            query getCategorizationByName($name: String) {
+                getCategorizationByName(name: $name) {
                     items { id }
                 }
             }
         `),
         variables: { name }
     };
-    return await query(q, "getCategoryByName");
+    return await query(q, "getCategorizationByName");
 }
 
 const getTagByName = async (name) => {
@@ -101,18 +101,18 @@ const getPostsOrderedByCreatedAt = async (sortDirection, limit, mask, nextToken)
 
 // mutation
 
-const createCategory = async (input) => {
+const createCategorization = async (input) => {
     const data = {
         query: print(gql`
-            mutation createCategory($input: CreateCategoryInput!) {
-                createCategory(input: $input) {
+            mutation createCategorization($input: CreateCategorizationInput!) {
+                createCategorization(input: $input) {
                     id
                 }
             }
         `),
         variables: { input }
     };
-    return await query(data, "createCategory");
+    return await query(data, "createCategorization");
 }
 
 const createTag = async (input) => {
@@ -176,7 +176,7 @@ module.exports = {
     query,
 
     getUserByUsername,
-    getCategoryByName,
+    getCategorizationByName,
     getTagByName,
     listPosts,
     getPostsOrderedByCreatedAt,
@@ -184,6 +184,6 @@ module.exports = {
     createPost,
     createUser,
     createTag,
-    createCategory,
+    createCategorization,
     updatePost,
 };
