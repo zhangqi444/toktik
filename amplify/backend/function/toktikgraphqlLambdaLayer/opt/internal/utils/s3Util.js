@@ -3,6 +3,10 @@ const axios = require('axios');
 const s3 = new AWS.S3();
 const imageType = require('image-type');
 
+const STORAGE_S3TOKTIKSTORAGE_BUCKETNAME = process.env.ENV === "prod"
+    ? process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME
+    : process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME;
+
 const listObjects = (bucket, prefix, param = {}) => {
     return new Promise((resolve, reject) => {
         s3.listObjects({
@@ -45,7 +49,16 @@ const putObject = (data, bucket, region, path, param = {}) => {
             if (error) {
                 reject(error);
             } else {
-                resolve(`https://${bucket || process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME}.s3.${region || process.env.REGION}.amazonaws.com/${path}`);
+                // S3 specific url encoding
+                const pathParts = path.split('/');
+                if(pathParts > 1) {
+                    // abc/a+b-c.jpg -> abc/a%2Bb-c.jpg
+                    path = `${pathParts[0]}/${encodeURIComponent(pathParts[1])}`;
+                } else {
+                    // a+b-c.jpg -> a%2Bb-c.jpg
+                    path = encodeURIComponent(path);
+                }
+                resolve(`https://${bucket || STORAGE_S3TOKTIKSTORAGE_BUCKETNAME}.s3.${region || process.env.REGION}.amazonaws.com/${path}`);
             }
         });
     });
