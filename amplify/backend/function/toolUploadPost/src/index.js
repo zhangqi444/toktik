@@ -12,7 +12,7 @@
 	API_TOKTIK_USERTABLE_NAME
 	ENV
 	REGION
-	STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME
+	STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME
 Amplify Params - DO NOT EDIT */
 
 const { query, getCategorizationByName, getTagByName, createCategorization, createTag, createPost, getUserByUsername, createUser, listPosts, getPostsOrderedByCreatedAt, updatePost } = require('/opt/internal/utils/graphqlUtil');
@@ -22,7 +22,13 @@ const papa = require('papaparse');
 
 const TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH = 'user-portrait-images';
 const TOKTIK_VIDEOS_PATH = 'videos';
+const STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME = "toktik-storage-55239e9360500-staging";
+const STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME = "toktik-storage-d847e71c175430-prod";
+const STORAGE_S3TOKTIKSTORAGE_BUCKETNAME = process.env.ENV === "prod" 
+    ? STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME
+    : STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME;
 
+console.log(process.env.ENV)
 const parseCategorization = async (data) => {
     if(!data) return;
 
@@ -76,15 +82,12 @@ const parseUser = async (data) => {
             try {
                 const { portrait } = input;
                 if(portrait) {
-                    let portraitUrl = airtableAttachmentRegexMatch(portrait);
-                    portraitUrl = portraitUrl && portraitUrl[0];
-                    let portraitFileName = portrait.split(' ');
-                    portraitFileName = portraitFileName && `${TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH}/${portraitFileName[0]}`;
+                    const { fileName, url } = parseAirtableAttachmentPath(portrait, TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH)
                     input.portrait = await putObjectFromUrl(
-                        portraitUrl, 
-                        process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME, 
+                        url, 
+                        STORAGE_S3TOKTIKSTORAGE_BUCKETNAME, 
                         process.env.REGION,
-                        portraitFileName,
+                        fileName,
                         { ACL: "public-read" }
                     );
                 }
@@ -128,17 +131,22 @@ const parseTag = async (data) => {
     return map;
 }
 
-const uploadAsset = async (airtableFieldValue, path) => {
+const parseAirtableAttachmentPath = (airtableFieldValue, path = "") => {
     airtableFieldValue = airtableFieldValue.replace(/"/g, '');
     let lastIndexOf = airtableFieldValue.lastIndexOf('(');
     let fileName = airtableFieldValue.slice(0, lastIndexOf) || '';
-    
     fileName = fileName && `${path}/${fileName.trim().replace(/ /g, '+')}`;
     let url = airtableFieldValue.slice(lastIndexOf+1, airtableFieldValue.length-1);
+    
+    return { fileName, url };
+}
+
+const uploadAsset = async (airtableFieldValue, path) => {
+    const { fileName, url } = parseAirtableAttachmentPath(airtableFieldValue, path)
 
     return url && await putObjectFromUrl(
         url, 
-        process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME, 
+        STORAGE_S3TOKTIKSTORAGE_BUCKETNAME, 
         process.env.REGION,
         fileName,
         { ACL: "public-read" },
@@ -151,7 +159,7 @@ const uploadAsset = async (airtableFieldValue, path) => {
 exports.handler = async (event) => {
 
     let objects = await listObjects(
-        process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME,
+        STORAGE_S3TOKTIKSTORAGE_BUCKETNAME,
         "post-source/",
     );
     objects = objects.Contents
@@ -161,7 +169,7 @@ exports.handler = async (event) => {
     console.log(`Loading file ${key}...`);
 
     let data = await getObject({
-        Bucket: process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME,
+        Bucket: STORAGE_S3TOKTIKSTORAGE_BUCKETNAME,
         Key: key
     });
     data = papa.parse(data, {
@@ -180,7 +188,7 @@ exports.handler = async (event) => {
         console.log(`Failed to parse the data.`);
         return;
     }
-    
+
     let lastUpdatedPost = await getPostsOrderedByCreatedAt(constants.GRAPHQL_MODEL_SORT_DIRECTION.DESC, 1);
     lastUpdatedPost = lastUpdatedPost && lastUpdatedPost.items && lastUpdatedPost.items[0] && lastUpdatedPost.items[0].createdAt;
     data = data.filter(d => {
