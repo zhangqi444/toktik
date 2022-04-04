@@ -28,7 +28,6 @@ const STORAGE_S3TOKTIKSTORAGE_BUCKETNAME = process.env.ENV === "prod"
     ? process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME
     : process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME;
 
-console.log(process.env.ENV)
 const parseCategorization = async (data) => {
     if(!data) return;
 
@@ -188,7 +187,7 @@ exports.handler = async (event) => {
         console.log(`Failed to parse the data.`);
         return;
     }
-
+    
     let lastUpdatedPost = await getPostsOrderedByCreatedAt(constants.GRAPHQL_MODEL_SORT_DIRECTION.DESC, 1);
     lastUpdatedPost = lastUpdatedPost && lastUpdatedPost.items && lastUpdatedPost.items[0] && lastUpdatedPost.items[0].createdAt;
     data = data.filter(d => {
@@ -225,18 +224,23 @@ exports.handler = async (event) => {
                 postTagIds: tags.map(t => tagMap[t]), 
                 postUserId: user && userMap[user],
                 sortier: constants.GRAPHQL_SORTIER,
-                isImported: true, isBlocked: false,
-                status: constants.INITIALIZED,
             };
             
             const existingPosts = await listPosts({ "filter": { "postUserId": { "eq": userMap[user] }, "text": { "eq": title } } });
             let cp;
             if(existingPosts && existingPosts.items && existingPosts.items.length > 0) {
-                input.updatedAt = Date.now();
+                input.updatedAt = new Date().toISOString();
+                input.id = existingPosts.items[0].id;
                 cp = await updatePost(input);
             } else {
                 count++;
-                input = { ...input, commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000) }; 
+                input = { 
+                    ...input,
+                    commentCount: 0, viewCount: 0, shareCount: 0, 
+                    likeCount: Math.floor(Math.random() * 1000), 
+                    isImported: true, isBlocked: false,
+                    status: constants.INITIALIZED, 
+                }; 
                 cp = await createPost(input);
             }
             console.log(`Loaded post: ${title}.`);
@@ -249,7 +253,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ message: `${count} post added.` }),
         };
     } catch(e) {
-        console.error('error: ' + e);
+        console.error('error: ' + JSON.stringify(e));
         return {
             statusCode: 500,
             body: JSON.stringify({ e }),
