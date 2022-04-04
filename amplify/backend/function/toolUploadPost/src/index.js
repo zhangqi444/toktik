@@ -224,18 +224,23 @@ exports.handler = async (event) => {
                 postTagIds: tags.map(t => tagMap[t]), 
                 postUserId: user && userMap[user],
                 sortier: constants.GRAPHQL_SORTIER,
-                isImported: true, isBlocked: false,
-                status: constants.INITIALIZED,
             };
             
             const existingPosts = await listPosts({ "filter": { "postUserId": { "eq": userMap[user] }, "text": { "eq": title } } });
             let cp;
             if(existingPosts && existingPosts.items && existingPosts.items.length > 0) {
-                input.updatedAt = Date.now();
+                input.updatedAt = new Date().toISOString();
+                input.id = existingPosts.items[0].id;
                 cp = await updatePost(input);
             } else {
                 count++;
-                input = { ...input, commentCount: 0, viewCount: 0, shareCount: 0, likeCount: Math.floor(Math.random() * 1000) }; 
+                input = { 
+                    ...input,
+                    commentCount: 0, viewCount: 0, shareCount: 0, 
+                    likeCount: Math.floor(Math.random() * 1000), 
+                    isImported: true, isBlocked: false,
+                    status: constants.INITIALIZED, 
+                }; 
                 cp = await createPost(input);
             }
             console.log(`Loaded post: ${title}.`);
@@ -248,7 +253,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ message: `${count} post added.` }),
         };
     } catch(e) {
-        console.error('error: ' + e);
+        console.error('error: ' + JSON.stringify(e));
         return {
             statusCode: 500,
             body: JSON.stringify({ e }),
