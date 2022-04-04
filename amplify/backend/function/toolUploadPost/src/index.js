@@ -25,8 +25,8 @@ const TOKTIK_VIDEOS_PATH = 'videos';
 const STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME = "toktik-storage-55239e9360500-staging";
 const STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME = "toktik-storage-d847e71c175430-prod";
 const STORAGE_S3TOKTIKSTORAGE_BUCKETNAME = process.env.ENV === "prod" 
-    ? STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME
-    : STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME;
+    ? process.env.STORAGE_S3TOKTIKSTORAGED847E71C_BUCKETNAME
+    : process.env.STORAGE_S3TOKTIKSTORAGE55239E93_BUCKETNAME;
 
 console.log(process.env.ENV)
 const parseCategorization = async (data) => {
@@ -82,13 +82,13 @@ const parseUser = async (data) => {
             try {
                 const { portrait } = input;
                 if(portrait) {
-                    const { fileName, url } = parseAirtableAttachmentPath(portrait, TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH)
+                    const { fileName, url } = parseAirtableAttachmentPath(portrait, TOKTIK_BUCKET_USER_PORTRAIT_IMAGES_PATH);
                     input.portrait = await putObjectFromUrl(
                         url, 
                         STORAGE_S3TOKTIKSTORAGE_BUCKETNAME, 
                         process.env.REGION,
                         fileName,
-                        { ACL: "public-read" }
+                        // { ACL: "public-read" }
                     );
                 }
             } catch(e) {
@@ -142,14 +142,14 @@ const parseAirtableAttachmentPath = (airtableFieldValue, path = "") => {
 }
 
 const uploadAsset = async (airtableFieldValue, path) => {
-    const { fileName, url } = parseAirtableAttachmentPath(airtableFieldValue, path)
+    const { fileName, url } = parseAirtableAttachmentPath(airtableFieldValue, path);
 
     return url && await putObjectFromUrl(
         url, 
         STORAGE_S3TOKTIKSTORAGE_BUCKETNAME, 
         process.env.REGION,
         fileName,
-        { ACL: "public-read" },
+        // { ACL: "public-read" },
     );
 }
 
