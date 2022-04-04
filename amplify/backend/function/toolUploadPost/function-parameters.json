@@ -43,9 +43,9 @@
     {
       "type": "ProjectLayer",
       "resourceName": "toktikgraphqlLambdaLayer",
-      "env": "prod",
       "version": "Always choose latest version",
-      "isLatestVersionSelected": true
+      "isLatestVersionSelected": true,
+      "env": "prod"
     }
   ]
 }
