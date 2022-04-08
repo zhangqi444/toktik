@@ -30,8 +30,6 @@ class _SettingPageState extends State<SettingPage> {
   final EventController eventController = Get.find();
   final AppController appController = Get.find();
 
-  var platformInfo;
-
   @override
   void initState() {
     super.initState();
@@ -141,7 +139,7 @@ class _SettingPageState extends State<SettingPage> {
                 margin: EdgeInsets.only(top: 30, bottom: 30),
                 alignment: Alignment.center,
                 child: Text(
-                  platformInfo == null ? "" : "v${appController.platformInfo?.version}",
+                  appController.platformInfo == null ? "" : "v${appController.platformInfo?.version}",
                   style: TextStyle(
                       color: ColorRes.light_background_sub_color, fontSize: 14),
                 ))
