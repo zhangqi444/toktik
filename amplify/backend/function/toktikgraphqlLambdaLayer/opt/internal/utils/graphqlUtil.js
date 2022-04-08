@@ -74,7 +74,8 @@ const listPosts = async (args) => {
             query listPosts($filter: ModelPostFilterInput, $limit: Int, $nextToken: String) {
                 listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
                     nextToken startedAt items {
-                        id text attachments likeCount commentCount shareCount viewCount
+                        id text attachments likeCount commentCount shareCount viewCount source
+                        postCategorizationId postTagIds formatType isBlocked isImported
                         user { id _deleted _lastChangedAt _version bio birth city
                             createdAt gender nickname portrait profession updatedAt username }
                         music { id _deleted _lastChangedAt _version img url createdAt updatedAt }
