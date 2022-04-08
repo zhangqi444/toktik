@@ -69,7 +69,6 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
         color: Colors.white,
       ),
       child: Container(
-        height: 300,
         margin: EdgeInsets.only(top: 57),
         child: Column(
           children: [

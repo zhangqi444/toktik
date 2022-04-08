@@ -5,7 +5,7 @@ build/**/*
 .packages
 .flutter-plugins
 ios/build/**/*
-
+yarn-error.log
 .DS_Store
 
 .vscode/settings.json
