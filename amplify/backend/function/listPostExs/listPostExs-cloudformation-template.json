@@ -892,6 +892,25 @@
                   ]
                 }
               ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ssm:GetDocument",
+                "ssm:ListDocuments",
+                "appconfig:ListApplications",
+                "appconfig:GetApplication",
+                "appconfig:ListEnvironments",
+                "appconfig:GetEnvironment",
+                "appconfig:ListConfigurationProfiles",
+                "appconfig:GetConfigurationProfile",
+                "appconfig:ListDeploymentStrategies",
+                "appconfig:GetDeploymentStrategy",
+                "appconfig:GetConfiguration",
+                "appconfig:ListDeployments",
+                "appconfig:GetDeployment"
+              ],
+              "Resource": "*"
             }
           ]
         }

@@ -86,6 +86,22 @@ const listPosts = async (args) => {
     }, 'listPosts');
 }
 
+const listCategorizations = async (args) => {
+    const { nextToken, limit, filter } = args;
+    return await query({
+        query: print(gql`
+            query listCategorizations($filter: ModelCategorizationFilterInput, $limit: Int, $nextToken: String) {
+                listCategorizations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    nextToken startedAt items {
+                        id name
+                    }
+                }
+            }
+        `),
+        variables: { filter, limit, nextToken }
+    }, 'listPosts');
+}
+
 const getPostsOrderedByCreatedAt = async (sortDirection, limit, mask, nextToken) => {
     const q = {
         query: print(gql`
@@ -179,6 +195,7 @@ module.exports = {
     getCategorizationByName,
     getTagByName,
     listPosts,
+    listCategorizations,
     getPostsOrderedByCreatedAt,
 
     createPost,

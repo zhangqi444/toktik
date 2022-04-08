@@ -28,8 +28,10 @@ const axios = require('axios');
 const gql = require('graphql-tag');
 const graphql = require('graphql');
 const { print } = graphql;
-const { query } = require('/opt/internal/utils/graphqlUtil');
+const { query, listCategorizations } = require('/opt/internal/utils/graphqlUtil');
 const { constants } = require('/opt/internal/index');
+
+const appconfig = new AWS.AppConfig();
 
 const getPosts = async (args) => {
     const { nextToken, limit, filter } = args;
@@ -97,7 +99,60 @@ const getIsLiked = async (requesterId, posts) => {
     return isLikedMap;
 }
 
+const check = (op, actual, expected) => {
+    if (!op || !op.op) return false;
+
+    switch (op.op) {
+        case 'eq':
+            return actual === expected;
+        default:
+            return false;
+    }
+}
+
+const isEnabled = (config, param) => {
+    if (config || !config.enabled) return false;
+
+    let flag = true
+    const keys = Object.keys(config);
+    for (var i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        switch (key) {
+            case 'mobileAppVersion':
+                if (!param.mobileAppVersion || !param.mobileAppVersion.op) {
+                    flag = false;
+                }
+                flag &= check(param.mobileAppVersion.op, param.mobileAppVersion, param.mobileAppVersion.value);
+                break;
+
+            default:
+                // code
+                break;
+        }
+        if (!flag) break;
+    }
+    return flag;
+}
+
 exports.handler = async (event, context) => {
+    var params = {
+        Application: "Breeze",
+        ClientId: "example-id",
+        Configuration: "inv6u7k",
+        Environment: "prod"
+    };
+    const getConfiguration = () => new Promise(
+        (resolve, reject) => {
+            appconfig.getConfiguration(params, function (err, data) {
+                if (err) reject(err); // an error occurred
+                else resolve(data);     // successful response
+            });
+        });
+
+    let config = await getConfiguration();
+    config = config && config.Content && JSON.parse(config.Content);
+
+
     try {
         const args = event['arguments'];
         const requesterId = args['userId'];
@@ -139,8 +194,29 @@ exports.handler = async (event, context) => {
             })
         }
         
+        let categorizations;
+        if (isEnabled(config, { mobileAppVersion: args.mobileAppVersion })) {
+            categorizations = await listCategorizations(
+                {
+                    filter: {
+                        or: [
+                            { name: { eq: "Business & startup" } },
+                            { name: { eq: "Science & Technology" } },
+                        ]
+                    }
+                }
+            );
+            categorizations = categorizations && categorizations.data;
+        }
+
         const posts = items
-            .filter(post => !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId])
+            .filter(post => {
+                let res = !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId];
+                if (isEnabled(config, { mobileAppVersion: args.mobileAppVersion })) {
+                    res &= post.postCategorizationId === categorizations[0].id || post.postCategorizationId === categorizations[1].id;
+                }
+                return res;
+            })
             .map(post => {
                 const result = { ...post };
                 if(isLikedMap) result['isLiked'] = isLikedMap[post['id']];
