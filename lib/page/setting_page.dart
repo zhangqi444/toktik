@@ -11,6 +11,7 @@ import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
 
 import '../common/configs.dart';
+import '../controller/app_controller.dart';
 import '../controller/event_controller.dart';
 import '../enum/navigation_argument.dart';
 
@@ -27,6 +28,8 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   final SelfController loginController = Get.put(SelfController());
   final EventController eventController = Get.find();
+  final AppController appController = Get.find();
+
   var platformInfo;
 
   @override
@@ -63,10 +66,6 @@ class _SettingPageState extends State<SettingPage> {
         color: ColorRes.light_foreground_color.withAlpha(80),
       )
     );
-  }
-
-  _getVersionNumber() async {
-    platformInfo = await PackageInfo.fromPlatform();
   }
 
   _getBody(BuildContext context) {
@@ -138,17 +137,14 @@ class _SettingPageState extends State<SettingPage> {
                 EventKey.VALUE: 1,
               });
             }),
-            FutureBuilder<void>(
-              future: _getVersionNumber(),
-              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                return Container(
-                    margin: EdgeInsets.only(top: 30,bottom: 30),
-                    alignment: Alignment.center,
-                    child: Text(platformInfo == null ? "" : "v${platformInfo.version}", style: TextStyle(color: ColorRes.light_background_sub_color,fontSize: 14),)
-                );
-              },
-            )
-
+            Container(
+                margin: EdgeInsets.only(top: 30, bottom: 30),
+                alignment: Alignment.center,
+                child: Text(
+                  platformInfo == null ? "" : "v${appController.platformInfo?.version}",
+                  style: TextStyle(
+                      color: ColorRes.light_background_sub_color, fontSize: 14),
+                ))
           ],
         ),
       ),

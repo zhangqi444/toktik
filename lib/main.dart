@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+import 'package:toktik/controller/app_controller.dart';
 import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/util/receive_sharing_intent.dart';
 
@@ -22,6 +23,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription _intentDataStreamSubscription;
+
+  AppController _appController = Get.put(AppController());
 
   @override
   void initState() {
@@ -43,6 +46,10 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> init() async {
+    await _appController.load();
+  }
+
   @override
   void dispose() {
     _intentDataStreamSubscription.cancel();
@@ -56,15 +63,21 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      // defaultTransition: Transition
-      //     .rightToLeft, // https://github.com/jonataslaw/getx/issues/317
-      customTransition: SlideLeftTransitions(),
-      getPages: RouterManager.routes,
-      // TODO: switch to splash page whenever we have the requirement
-      initialRoute: Routers.scroll,
-      builder: EasyLoading.init(),
+    return FutureBuilder<void>(
+      future: init(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          // defaultTransition: Transition
+          //     .rightToLeft, // https://github.com/jonataslaw/getx/issues/317
+          customTransition: SlideLeftTransitions(),
+          getPages: RouterManager.routes,
+          // TODO: switch to splash page whenever we have the requirement
+          initialRoute: Routers.scroll,
+          builder: EasyLoading.init(),
+        );
+      },
     );
+    
   }
 }

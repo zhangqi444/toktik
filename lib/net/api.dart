@@ -10,6 +10,7 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:toktik/common/sp_keys.dart';
 import 'package:toktik/enum/auth_status.dart';
 import 'package:toktik/model/request/follow_request.dart';
@@ -42,17 +43,16 @@ import 'package:toktik/models/ModelProvider.dart';
 import 'package:toktik/net/http/http_manager.dart';
 import 'package:toktik/net/http/http_method.dart';
 import 'package:toktik/net/http_constant.dart';
-import 'package:toktik/util/sp_util.dart';
 
+import '../controller/app_controller.dart';
 import '../model/comment_model.dart';
 import '../model/response/get_current_user_response.dart';
 import '../util/string_util.dart';
 
 class Api {
-  /// ----------------------------------接口api--------------------------------------------------------
-  //
+  
+  static AppController appController = Get.find();
 
-  ///登录
   static Future<LoginResponse?> login(String username, String password) async {
     await logout();
 
@@ -93,10 +93,10 @@ class Api {
     AuthSession authSession = await Amplify.Auth.fetchAuthSession(
       options: CognitoSessionOptions(getAWSCredentials: true),
     );
-    if (authSession != null &&
-        (authSession as CognitoAuthSession).identityId != null) {
+    if ((authSession as CognitoAuthSession).identityId != null) {
       return authSession.userPoolTokens!.accessToken;
     }
+    return null;
   }
 
   static Future<LogoutResponse?> logout() async {
@@ -107,7 +107,6 @@ class Api {
         result['status'] = AuthStatus.UNKNOWN.toShortString();
       } else {
         result['status'] = AuthStatus.SIGN_OUT_DONE.toShortString();
-        ;
         return LogoutResponse.fromJson(result);
       }
     } on AuthException catch (e, stacktrack) {
@@ -430,9 +429,7 @@ class Api {
   static Future<FeedListResponse?> _parsePosts(response) async {
     String? newNextToken = response['nextToken'];
 
-    var rng = new Random(DateTime.now().millisecondsSinceEpoch);
-    List posts =
-        (response['items'] != null) ? (response['items']..shuffle(rng)) : [];
+    List posts = (response['items'] != null) ? response['items'] : [];
     posts = posts.where((f) => f['attachments'] != null).toList();
     Map<String, dynamic> convert(Map<String, dynamic> post) {
       post['content'] = {
@@ -454,41 +451,27 @@ class Api {
 
   static Future<FeedListResponse?> getHotFeedList(String? nextToken, int limit, String userId) async{
     try {
-      var response;
-      var localPosts;
-      if(userId.isEmpty) {
-        localPosts = await SPUtil.getString(SPKeys.POSTS);
-        if (localPosts != null) {
-          localPosts = jsonDecode(localPosts);
-        }
-        response = await _query(
-          '''query ListPosts(\$limit: Int, \$nextToken: String, \$filter: ModelPostFilterInput) {
-            listPosts(limit: \$limit, nextToken: \$nextToken, filter: \$filter) {
-              nextToken
-              items {
-                id attachments music { id } text likeCount
-                user { id nickname username portrait }
-              }
+      var response = await _query(
+          '''query ListPostExs(\$limit: Int, \$userId: ID!, \$nextToken: String, \$filter: ModelPostFilterInput, \$metadata: AWSJSON) {
+          listPostExs(limit: \$limit, userId: \$userId, nextToken: \$nextToken, filter: \$filter, metadata: \$metadata) {
+            nextToken
+            items {
+              id attachments music { id } text likeCount isLiked { value }
+              user { id nickname username portrait }
             }
-          }''',
-          { 'limit': limit, 'nextToken': nextToken, 'filter': { "isDeleted": { "ne": true }, "isBlocked": { "ne": true } } },
-          'listPosts'
-        );
-      } else {
-        response = await _query(
-          '''query ListPostExs(\$limit: Int, \$userId: ID!, \$nextToken: String, \$filter: ModelPostFilterInput) {
-            listPostExs(limit: \$limit, userId: \$userId, nextToken: \$nextToken, filter: \$filter) {
-              nextToken
-              items {
-                id attachments music { id } text likeCount isLiked { value }
-                user { id nickname username portrait }
-              }
-            }
-          }''',
-          { 'limit': limit, 'userId': userId, 'nextToken': nextToken, 'filter': { "isDeleted": { "ne": true }, "isBlocked": { "ne": true } } },
-          'listPostExs'
-        );
-      }
+          }
+        }''',
+        {
+          'limit': limit,
+          'userId': userId,
+          'nextToken': nextToken,
+          'filter': {
+            "isDeleted": {"ne": true},
+            "isBlocked": {"ne": true}
+          },
+        },
+        'listPostExs'
+      );
       return await _parsePosts(response);
     } catch (e, stacktrace) {
       debugPrint("Fail to get post lists: " + e.toString() + stacktrace.toString());
@@ -545,6 +528,13 @@ class Api {
 
   static Future<dynamic> _query(document, variables, key) async {
     try {
+      if(variables['metadata'] == null) {
+        variables['metadata'] = {};
+      }
+
+      variables['metadata']['mobileAppVersion'] = appController.platformInfo?.version;
+      variables['metadata'] = json.encode(variables['metadata']);
+
       var operation = Amplify.API.query(
           request:
               GraphQLRequest<String>(document: document, variables: variables));

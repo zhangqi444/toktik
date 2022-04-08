@@ -74,7 +74,8 @@ const listPosts = async (args) => {
             query listPosts($filter: ModelPostFilterInput, $limit: Int, $nextToken: String) {
                 listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
                     nextToken startedAt items {
-                        id text attachments likeCount commentCount shareCount viewCount
+                        id text attachments likeCount commentCount shareCount viewCount source
+                        postCategorizationId postTagIds formatType isBlocked isImported
                         user { id _deleted _lastChangedAt _version bio birth city
                             createdAt gender nickname portrait profession updatedAt username }
                         music { id _deleted _lastChangedAt _version img url createdAt updatedAt }
@@ -84,6 +85,38 @@ const listPosts = async (args) => {
         `),
         variables: { filter, limit, nextToken }
     }, 'listPosts');
+}
+
+const listCategorizations = async (args) => {
+    const { nextToken, limit, filter } = args;
+    return await query({
+        query: print(gql`
+            query listCategorizations($filter: ModelCategorizationFilterInput, $limit: Int, $nextToken: String) {
+                listCategorizations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    nextToken startedAt items {
+                        id name
+                    }
+                }
+            }
+        `),
+        variables: { filter, limit, nextToken }
+    }, 'listCategorizations');
+}
+
+const listNotInterestedsByUserId = async (userId) => {
+    const data = {
+        query: print(gql`
+            query listNotInteresteds($filter: ModelNotInterestedFilterInput, $limit: Int, $nextToken: String) {
+                listNotInteresteds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+                    nextToken startedAt items {
+                        id notInterestedPostId notInterestedTargetUserId type
+                    }
+                }
+            }
+        `),
+        variables: { filter: { notInterestedUserId: { eq: userId } } }
+    };
+    return await query(data, "listNotInteresteds");
 }
 
 const getPostsOrderedByCreatedAt = async (sortDirection, limit, mask, nextToken) => {
@@ -179,6 +212,8 @@ module.exports = {
     getCategorizationByName,
     getTagByName,
     listPosts,
+    listCategorizations,
+    listNotInterestedsByUserId,
     getPostsOrderedByCreatedAt,
 
     createPost,

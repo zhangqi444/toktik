@@ -24,53 +24,10 @@ Amplify Params - DO NOT EDIT */
 
 const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
-const axios = require('axios');
-const gql = require('graphql-tag');
-const graphql = require('graphql');
-const { print } = graphql;
-const { query } = require('/opt/internal/utils/graphqlUtil');
+const { listPosts, listNotInterestedsByUserId } = require('/opt/internal/utils/graphqlUtil');
 const { constants } = require('/opt/internal/index');
-
-const getPosts = async (args) => {
-    const { nextToken, limit, filter } = args;
-    const graphqlData = await axios({
-        url: process.env.API_TOKTIK_GRAPHQLAPIENDPOINTOUTPUT,
-        method: 'post',
-        headers: { 'x-api-key': process.env.API_TOKTIK_GRAPHQLAPIKEYOUTPUT },
-        data: {
-            query: print(gql`
-                query listPosts($filter: ModelPostFilterInput, $limit: Int, $nextToken: String) {
-                    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-                        nextToken startedAt items {
-                            id text attachments likeCount commentCount shareCount viewCount
-                            user { id _deleted _lastChangedAt _version bio birth city
-                                createdAt gender nickname portrait profession updatedAt username }
-                            music { id _deleted _lastChangedAt _version img url createdAt updatedAt }
-                        }
-                    }
-                }
-            `),
-            variables: { filter, limit, nextToken }
-        }
-    });
-    if(!graphqlData.data.errors) return graphqlData.data.data.listPosts;
-}
-
-const getNotInteresteds = async (userId) => {
-    const data = {
-        query: print(gql`
-            query listNotInteresteds($filter: ModelNotInterestedFilterInput, $limit: Int, $nextToken: String) {
-                listNotInteresteds(filter: $filter, limit: $limit, nextToken: $nextToken) {
-                    nextToken startedAt items {
-                        id notInterestedPostId notInterestedTargetUserId type
-                    }
-                }
-            }
-        `),
-        variables: { filter: { notInterestedUserId: { eq: userId } } }
-    };
-    return await query(data, "listNotInteresteds");
-}
+const { getConfig, CONFIG_CATEGORIZATION, CATEGORIZATION } = require('/opt/internal/config');
+const { FEATURE_FLAGS, isEnabled } = require('/opt/internal/utils/featureFlagUtil');
 
 const getIsLiked = async (requesterId, posts) => {
     const postIdMap = {};
@@ -98,12 +55,18 @@ const getIsLiked = async (requesterId, posts) => {
 }
 
 exports.handler = async (event, context) => {
+
+    const args = event['arguments'];
+    if (!args) return {
+        error: "Bad Request",
+        statusCode: 400,
+    };
+
     try {
-        const args = event['arguments'];
         const requesterId = args['userId'];
 
         const result = await Promise.all([
-            getPosts(args), getNotInteresteds(requesterId)
+            listPosts(args), listNotInterestedsByUserId(requesterId)
         ]);
         const postsData = result[0];
         const notInteresteds = result[1];
@@ -138,15 +101,36 @@ exports.handler = async (event, context) => {
                 isLikedMap = { ...isLikedMap, ...q };
             })
         }
-        
-        const posts = items
-            .filter(post => !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId])
+
+        const sortedItems = items
+            .filter(post => {
+                return !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId];
+            })
             .map(post => {
                 const result = { ...post };
                 if(isLikedMap) result['isLiked'] = isLikedMap[post['id']];
                 result['attachments'] = JSON.parse(result['attachments']);
                 return result;
-            });
+            })
+            .sort(() => Math.random() - 0.5);
+        
+        let posts = sortedItems;
+        let enabled = await isEnabled(FEATURE_FLAGS.BREEZE_CATEGORY_EXPERIMENT, args.metadata);
+        if (enabled) {
+            posts = [];
+            const cateConfig = getConfig(CONFIG_CATEGORIZATION);
+            const categorizations = [
+                cateConfig[CATEGORIZATION.BUSINESS_AND_STARTUP],
+                cateConfig[CATEGORIZATION.SCIENCE_AND_TECHNOLOGY],
+            ].map(c => c.id);
+            categorizations && sortedItems.forEach(p => {
+                if (categorizations.indexOf(p.postCategorizationId) !== -1) {
+                    posts.unshift(p);
+                } else {
+                    posts.push(p);
+                }
+            }); 
+        } 
 
         return {
             items: posts, nextToken, startedAt,
