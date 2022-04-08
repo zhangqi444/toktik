@@ -303,6 +303,12 @@ class Api {
   ///获取用户资料信息(扩展)
   static Future<UserInfoExResponse?> getUserInfoExByUsername(
       String? username) async {
+    Map<String, dynamic> variables = {
+      'filter': {
+        "username": {"eq": username}
+      }
+    };
+
     try {
       var response =
           await _query('''query ListUsers(\$filter: ModelUserFilterInput) {
@@ -311,11 +317,7 @@ class Api {
                 id username email phoneNumber portrait nickname gender bio city birth
               }
             }
-          }''', {
-        'filter': {
-          "username": {"eq": username}
-        }
-      }, 'listUsers');
+          }''', variables, 'listUsers');
       return _parseUsers(response['items'] ?? [], {username: username});
     } catch (e, stacktrace) {
       print("Could not query server: " +
@@ -334,7 +336,7 @@ class Api {
                 id username email phoneNumber portrait nickname gender bio city birth
               }
             }
-          }''', {
+          }''', <String, dynamic>{
         'filter': {
           "email": {"eq": email}
         }
@@ -356,7 +358,7 @@ class Api {
               id username email phoneNumber portrait nickname gender bio city birth
             }
           }''',
-          { 'id': id },
+          <String, dynamic>{ 'id': id },
           'getUser'
       );
       return response == null ? null : _parseUsers([response], {id: id});
@@ -461,7 +463,7 @@ class Api {
             }
           }
         }''',
-        {
+        <String, dynamic>{
           'limit': limit,
           'userId': userId,
           'nextToken': nextToken,
@@ -490,7 +492,7 @@ class Api {
               }
             }
           }''',
-          { 'limit': limit, 'filter': { 'postUserId': { 'eq': userId} } },
+          <String, dynamic>{ 'limit': limit, 'filter': { 'postUserId': { 'eq': userId} } },
           'listPosts'
       );
 
@@ -532,8 +534,8 @@ class Api {
         variables['metadata'] = {};
       }
 
-      variables['metadata']['mobileAppVersion'] = appController.platformInfo?.version;
-      variables['metadata'] = json.encode(variables['metadata']);
+      variables['metadata'] = json
+          .encode({'mobileAppVersion': appController.platformInfo?.version});
 
       var operation = Amplify.API.query(
           request:
