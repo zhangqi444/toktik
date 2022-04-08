@@ -1,11 +1,18 @@
 const AWS = require('aws-sdk');
 const appConfig = new AWS.AppConfig();
 
-const listObjects = (application, configuration, environment, clientId = "breeze", param = {}) => {
+const APP_CONFIG_APPLICATION_BREEZE = "Breeze";
+const APP_CONFIG_CLIENT_ID = "breeze";
+
+const APP_CONFIG_ENV = {
+  PROD: 'prod',
+};
+
+const getConfiguration = (configuration, environment, param = {}) => {
   const params = {
     ...param,
-    Application: application,
-    ClientId: clientId,
+    Application: APP_CONFIG_APPLICATION_BREEZE,
+    ClientId: APP_CONFIG_CLIENT_ID,
     Configuration: configuration,
     Environment: environment,
   }
@@ -20,5 +27,6 @@ const listObjects = (application, configuration, environment, clientId = "breeze
 }
 
 module.exports = {
-  listObjects,
+  getConfiguration,
+  APP_CONFIG_ENV,
 }

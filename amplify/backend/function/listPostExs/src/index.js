@@ -24,55 +24,10 @@ Amplify Params - DO NOT EDIT */
 
 const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
-const axios = require('axios');
-const gql = require('graphql-tag');
-const graphql = require('graphql');
-const { print } = graphql;
-const { query, listCategorizations } = require('/opt/internal/utils/graphqlUtil');
+const { listPosts, listNotInterestedsByUserId } = require('/opt/internal/utils/graphqlUtil');
 const { constants } = require('/opt/internal/index');
-
-const appconfig = new AWS.AppConfig();
-
-const getPosts = async (args) => {
-    const { nextToken, limit, filter } = args;
-    const graphqlData = await axios({
-        url: process.env.API_TOKTIK_GRAPHQLAPIENDPOINTOUTPUT,
-        method: 'post',
-        headers: { 'x-api-key': process.env.API_TOKTIK_GRAPHQLAPIKEYOUTPUT },
-        data: {
-            query: print(gql`
-                query listPosts($filter: ModelPostFilterInput, $limit: Int, $nextToken: String) {
-                    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-                        nextToken startedAt items {
-                            id text attachments likeCount commentCount shareCount viewCount
-                            user { id _deleted _lastChangedAt _version bio birth city
-                                createdAt gender nickname portrait profession updatedAt username }
-                            music { id _deleted _lastChangedAt _version img url createdAt updatedAt }
-                        }
-                    }
-                }
-            `),
-            variables: { filter, limit, nextToken }
-        }
-    });
-    if(!graphqlData.data.errors) return graphqlData.data.data.listPosts;
-}
-
-const getNotInteresteds = async (userId) => {
-    const data = {
-        query: print(gql`
-            query listNotInteresteds($filter: ModelNotInterestedFilterInput, $limit: Int, $nextToken: String) {
-                listNotInteresteds(filter: $filter, limit: $limit, nextToken: $nextToken) {
-                    nextToken startedAt items {
-                        id notInterestedPostId notInterestedTargetUserId type
-                    }
-                }
-            }
-        `),
-        variables: { filter: { notInterestedUserId: { eq: userId } } }
-    };
-    return await query(data, "listNotInteresteds");
-}
+const { getConfig, CONFIG_CATEGORIZATION, CATEGORIZATION } = require('/opt/internal/config');
+const { FEATURE_FLAGS, isEnabled } = require('/opt/internal/utils/featureFlagUtil');
 
 const getIsLiked = async (requesterId, posts) => {
     const postIdMap = {};
@@ -99,66 +54,19 @@ const getIsLiked = async (requesterId, posts) => {
     return isLikedMap;
 }
 
-const check = (op, actual, expected) => {
-    if (!op || !op.op) return false;
-
-    switch (op.op) {
-        case 'eq':
-            return actual === expected;
-        default:
-            return false;
-    }
-}
-
-const isEnabled = (config, param) => {
-    if (config || !config.enabled) return false;
-
-    let flag = true
-    const keys = Object.keys(config);
-    for (var i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        switch (key) {
-            case 'mobileAppVersion':
-                if (!param.mobileAppVersion || !param.mobileAppVersion.op) {
-                    flag = false;
-                }
-                flag &= check(param.mobileAppVersion.op, param.mobileAppVersion, param.mobileAppVersion.value);
-                break;
-
-            default:
-                // code
-                break;
-        }
-        if (!flag) break;
-    }
-    return flag;
-}
-
 exports.handler = async (event, context) => {
-    var params = {
-        Application: "Breeze",
-        ClientId: "example-id",
-        Configuration: "inv6u7k",
-        Environment: "prod"
+
+    const args = event['arguments'];
+    if (!args) return {
+        error: "Bad Request",
+        statusCode: 400,
     };
-    const getConfiguration = () => new Promise(
-        (resolve, reject) => {
-            appconfig.getConfiguration(params, function (err, data) {
-                if (err) reject(err); // an error occurred
-                else resolve(data);     // successful response
-            });
-        });
-
-    let config = await getConfiguration();
-    config = config && config.Content && JSON.parse(config.Content);
-
 
     try {
-        const args = event['arguments'];
         const requesterId = args['userId'];
 
         const result = await Promise.all([
-            getPosts(args), getNotInteresteds(requesterId)
+            listPosts(args), listNotInterestedsByUserId(requesterId)
         ]);
         const postsData = result[0];
         const notInteresteds = result[1];
@@ -193,36 +101,36 @@ exports.handler = async (event, context) => {
                 isLikedMap = { ...isLikedMap, ...q };
             })
         }
-        
-        let categorizations;
-        if (isEnabled(config, { mobileAppVersion: args.mobileAppVersion })) {
-            categorizations = await listCategorizations(
-                {
-                    filter: {
-                        or: [
-                            { name: { eq: "Business & startup" } },
-                            { name: { eq: "Science & Technology" } },
-                        ]
-                    }
-                }
-            );
-            categorizations = categorizations && categorizations.data;
-        }
 
-        const posts = items
+        const sortedItems = items
             .filter(post => {
-                let res = !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId];
-                if (isEnabled(config, { mobileAppVersion: args.mobileAppVersion })) {
-                    res &= post.postCategorizationId === categorizations[0].id || post.postCategorizationId === categorizations[1].id;
-                }
-                return res;
+                return !notInterestedPosts[post.id] && !notInterestedTargetUsers[post.postUserId];
             })
             .map(post => {
                 const result = { ...post };
                 if(isLikedMap) result['isLiked'] = isLikedMap[post['id']];
                 result['attachments'] = JSON.parse(result['attachments']);
                 return result;
-            });
+            })
+            .sort(() => Math.random() - 0.5);
+        
+        let posts = sortedItems;
+        let enabled = await isEnabled(FEATURE_FLAGS.BREEZE_CATEGORY_EXPERIMENT, args.metadata);
+        if (enabled) {
+            posts = [];
+            const cateConfig = getConfig(CONFIG_CATEGORIZATION);
+            const categorizations = [
+                cateConfig[CATEGORIZATION.BUSINESS_AND_STARTUP],
+                cateConfig[CATEGORIZATION.SCIENCE_AND_TECHNOLOGY],
+            ].map(c => c.id);
+            categorizations && sortedItems.forEach(p => {
+                if (categorizations.indexOf(p.postCategorizationId) !== -1) {
+                    posts.unshift(p);
+                } else {
+                    posts.push(p);
+                }
+            }); 
+        } 
 
         return {
             items: posts, nextToken, startedAt,

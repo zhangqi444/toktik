@@ -462,5 +462,6 @@ type Query {
     userId: ID!
     limit: Int
     nextToken: String
+    metadata: AWSJSON
   ): ModelPostExConnection @function(name: "listPostExs-${env}")
 }
