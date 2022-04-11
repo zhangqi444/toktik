@@ -119,12 +119,13 @@ exports.handler = async (event, context) => {
         if (enabled) {
             posts = [];
             const cateConfig = getConfig(CONFIG_CATEGORIZATION);
-            const categorizations = [
+            const categorizations = [];
+            [
                 cateConfig[CATEGORIZATION.FACTS],
                 cateConfig[CATEGORIZATION.INSPIRATION],
                 cateConfig[CATEGORIZATION.HISTORY],
                 cateConfig[CATEGORIZATION.NEWS],
-            ].map(c => c.id);
+            ].forEach(c => c && categorizations.push(c.id));
             categorizations && sortedItems.forEach(p => {
                 if (categorizations.indexOf(p.postCategorizationId) !== -1) {
                     posts.unshift(p);
