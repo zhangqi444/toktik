@@ -44,8 +44,10 @@ class Post extends Model {
   final Categorization? _categorization;
   final List<Tag>? _tags;
   final List<String>? _postTagIds;
+  final String? _status;
   final bool? _isDeleted;
   final bool? _isBlocked;
+  final bool? _isImported;
   final Sortier? _sortier;
   final TemporalDateTime? _updatedAt;
   final TemporalDateTime? _createdAt;
@@ -114,12 +116,20 @@ class Post extends Model {
     return _postTagIds;
   }
   
+  String? get status {
+    return _status;
+  }
+  
   bool? get isDeleted {
     return _isDeleted;
   }
   
   bool? get isBlocked {
     return _isBlocked;
+  }
+  
+  bool? get isImported {
+    return _isImported;
   }
   
   Sortier get sortier {
@@ -143,9 +153,9 @@ class Post extends Model {
     return _createdAt;
   }
   
-  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, description, formatType, source, categorization, tags, postTagIds, isDeleted, isBlocked, required sortier, updatedAt, createdAt}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _categorization = categorization, _tags = tags, _postTagIds = postTagIds, _isDeleted = isDeleted, _isBlocked = isBlocked, _sortier = sortier, _updatedAt = updatedAt, _createdAt = createdAt;
+  const Post._internal({required this.id, text, user, music, attachments, likeCount, commentCount, shareCount, viewCount, description, formatType, source, categorization, tags, postTagIds, status, isDeleted, isBlocked, isImported, required sortier, updatedAt, createdAt}): _text = text, _user = user, _music = music, _attachments = attachments, _likeCount = likeCount, _commentCount = commentCount, _shareCount = shareCount, _viewCount = viewCount, _description = description, _formatType = formatType, _source = source, _categorization = categorization, _tags = tags, _postTagIds = postTagIds, _status = status, _isDeleted = isDeleted, _isBlocked = isBlocked, _isImported = isImported, _sortier = sortier, _updatedAt = updatedAt, _createdAt = createdAt;
   
-  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, required Sortier sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
+  factory Post({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, String? status, bool? isDeleted, bool? isBlocked, bool? isImported, required Sortier sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
     return Post._internal(
       id: id == null ? UUID.getUUID() : id,
       text: text,
@@ -162,8 +172,10 @@ class Post extends Model {
       categorization: categorization,
       tags: tags != null ? List<Tag>.unmodifiable(tags) : tags,
       postTagIds: postTagIds != null ? List<String>.unmodifiable(postTagIds) : postTagIds,
+      status: status,
       isDeleted: isDeleted,
       isBlocked: isBlocked,
+      isImported: isImported,
       sortier: sortier,
       updatedAt: updatedAt,
       createdAt: createdAt);
@@ -192,8 +204,10 @@ class Post extends Model {
       _categorization == other._categorization &&
       DeepCollectionEquality().equals(_tags, other._tags) &&
       DeepCollectionEquality().equals(_postTagIds, other._postTagIds) &&
+      _status == other._status &&
       _isDeleted == other._isDeleted &&
       _isBlocked == other._isBlocked &&
+      _isImported == other._isImported &&
       _sortier == other._sortier &&
       _updatedAt == other._updatedAt &&
       _createdAt == other._createdAt;
@@ -221,8 +235,10 @@ class Post extends Model {
     buffer.write("source=" + "$_source" + ", ");
     buffer.write("categorization=" + (_categorization != null ? _categorization!.toString() : "null") + ", ");
     buffer.write("postTagIds=" + (_postTagIds != null ? _postTagIds!.toString() : "null") + ", ");
+    buffer.write("status=" + "$_status" + ", ");
     buffer.write("isDeleted=" + (_isDeleted != null ? _isDeleted!.toString() : "null") + ", ");
     buffer.write("isBlocked=" + (_isBlocked != null ? _isBlocked!.toString() : "null") + ", ");
+    buffer.write("isImported=" + (_isImported != null ? _isImported!.toString() : "null") + ", ");
     buffer.write("sortier=" + (_sortier != null ? enumToString(_sortier)! : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null"));
@@ -231,7 +247,7 @@ class Post extends Model {
     return buffer.toString();
   }
   
-  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, bool? isDeleted, bool? isBlocked, Sortier? sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
+  Post copyWith({String? id, String? text, User? user, Music? music, String? attachments, int? likeCount, int? commentCount, int? shareCount, int? viewCount, String? description, String? formatType, String? source, Categorization? categorization, List<Tag>? tags, List<String>? postTagIds, String? status, bool? isDeleted, bool? isBlocked, bool? isImported, Sortier? sortier, TemporalDateTime? updatedAt, TemporalDateTime? createdAt}) {
     return Post(
       id: id ?? this.id,
       text: text ?? this.text,
@@ -248,8 +264,10 @@ class Post extends Model {
       categorization: categorization ?? this.categorization,
       tags: tags ?? this.tags,
       postTagIds: postTagIds ?? this.postTagIds,
+      status: status ?? this.status,
       isDeleted: isDeleted ?? this.isDeleted,
       isBlocked: isBlocked ?? this.isBlocked,
+      isImported: isImported ?? this.isImported,
       sortier: sortier ?? this.sortier,
       updatedAt: updatedAt ?? this.updatedAt,
       createdAt: createdAt ?? this.createdAt);
@@ -282,14 +300,16 @@ class Post extends Model {
           .toList()
         : null,
       _postTagIds = json['postTagIds']?.cast<String>(),
+      _status = json['status'],
       _isDeleted = json['isDeleted'],
       _isBlocked = json['isBlocked'],
+      _isImported = json['isImported'],
       _sortier = enumFromString<Sortier>(json['sortier'], Sortier.values),
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'categorization': _categorization?.toJson(), 'tags': _tags?.map((Tag? e) => e?.toJson()).toList(), 'postTagIds': _postTagIds, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked, 'sortier': enumToString(_sortier), 'updatedAt': _updatedAt?.format(), 'createdAt': _createdAt?.format()
+    'id': id, 'text': _text, 'user': _user?.toJson(), 'music': _music?.toJson(), 'attachments': _attachments, 'likeCount': _likeCount, 'commentCount': _commentCount, 'shareCount': _shareCount, 'viewCount': _viewCount, 'description': _description, 'formatType': _formatType, 'source': _source, 'categorization': _categorization?.toJson(), 'tags': _tags?.map((Tag? e) => e?.toJson()).toList(), 'postTagIds': _postTagIds, 'status': _status, 'isDeleted': _isDeleted, 'isBlocked': _isBlocked, 'isImported': _isImported, 'sortier': enumToString(_sortier), 'updatedAt': _updatedAt?.format(), 'createdAt': _createdAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "post.id");
@@ -315,8 +335,10 @@ class Post extends Model {
     fieldName: "tags",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Tag).toString()));
   static final QueryField POSTTAGIDS = QueryField(fieldName: "postTagIds");
+  static final QueryField STATUS = QueryField(fieldName: "status");
   static final QueryField ISDELETED = QueryField(fieldName: "isDeleted");
   static final QueryField ISBLOCKED = QueryField(fieldName: "isBlocked");
+  static final QueryField ISIMPORTED = QueryField(fieldName: "isImported");
   static final QueryField SORTIER = QueryField(fieldName: "sortier");
   static final QueryField UPDATEDAT = QueryField(fieldName: "updatedAt");
   static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
@@ -427,6 +449,12 @@ class Post extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.STATUS,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Post.ISDELETED,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
@@ -434,6 +462,12 @@ class Post extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Post.ISBLOCKED,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.bool)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Post.ISIMPORTED,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
