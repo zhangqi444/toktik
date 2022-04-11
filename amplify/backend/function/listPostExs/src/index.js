@@ -120,8 +120,10 @@ exports.handler = async (event, context) => {
             posts = [];
             const cateConfig = getConfig(CONFIG_CATEGORIZATION);
             const categorizations = [
-                cateConfig[CATEGORIZATION.BUSINESS_AND_STARTUP],
-                cateConfig[CATEGORIZATION.SCIENCE_AND_TECHNOLOGY],
+                cateConfig[CATEGORIZATION.FACTS],
+                cateConfig[CATEGORIZATION.INSPIRATION],
+                cateConfig[CATEGORIZATION.HISTORY],
+                cateConfig[CATEGORIZATION.NEWS],
             ].map(c => c.id);
             categorizations && sortedItems.forEach(p => {
                 if (categorizations.indexOf(p.postCategorizationId) !== -1) {
