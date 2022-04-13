@@ -6,7 +6,7 @@ import 'self_controller.dart';
 
 class EventController extends GetxController {
 
-  final SelfController _selfController = Get.put(SelfController());
+  final SelfController _selfController = Get.find();
 
   void recordEvent(String eventName, {Map<String, dynamic>? event}) {
     if(event == null) {

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:toktik/controller/app_controller.dart';
+import 'package:toktik/controller/event_controller.dart';
+import 'package:toktik/controller/main_page_scroll_controller.dart';
+import 'package:toktik/controller/self_controller.dart';
 import 'package:toktik/enum/navigation_argument.dart';
 import 'package:toktik/util/receive_sharing_intent.dart';
 
@@ -25,6 +28,9 @@ class _MyAppState extends State<MyApp> {
   late StreamSubscription _intentDataStreamSubscription;
 
   AppController _appController = Get.put(AppController());
+  MainPageScrollController _mainPageScrollController = Get.put(MainPageScrollController());
+  SelfController _selfController = Get.put(SelfController());
+  EventController _eventController = Get.put(EventController());
 
   @override
   void initState() {

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:toktik/net/api.dart';
 ///用来控制首页滑动、存储当前播放视频的用户model数据
 class MainPageScrollController extends GetxController {
-  final EventController eventController = Get.put(EventController());
 
   var amplifyConfigured = false.obs;
 
