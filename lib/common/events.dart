@@ -9,6 +9,7 @@ class EventKey {
   static final TEXT = 'TEXT';
   static final POST_ID = 'POST_ID';
   static final USER_ID = 'USER_ID';
+  static final SELF_USER_ID = 'SELF_USER_ID';
   static final ID = 'ID';
   static final PAGE_TYPE = 'PAGE_TYPE';
 }
