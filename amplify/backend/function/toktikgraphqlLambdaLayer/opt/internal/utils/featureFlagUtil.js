@@ -9,10 +9,18 @@ const check = (config, actual) => {
 
   switch (op) {
     case 'eq':
-    return actual === value;
-  default:
-    return false;
-}
+      return actual === value;
+    case 'gte':
+      return actual >= value;
+    case 'gt':
+      return actual > value;
+    case 'lte':
+      return actual <= value;
+    case 'lt':
+      return actual < value;
+    default:
+      return false;
+  }
 }
 
 const isEnabled = async (configName, metadata) => {
