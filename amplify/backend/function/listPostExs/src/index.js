@@ -121,10 +121,8 @@ exports.handler = async (event, context) => {
             const cateConfig = getConfig(CONFIG_CATEGORIZATION);
             const categorizations = [];
             [
-                cateConfig[CATEGORIZATION.FACTS],
-                cateConfig[CATEGORIZATION.INSPIRATION],
-                cateConfig[CATEGORIZATION.HISTORY],
-                cateConfig[CATEGORIZATION.NEWS],
+                cateConfig[CATEGORIZATION.BUSINESS_AND_STARTUP],
+                cateConfig[CATEGORIZATION.SCIENCE_AND_TECHNOLOGY],
             ].forEach(c => c && categorizations.push(c.id));
             categorizations && sortedItems.forEach(p => {
                 if (categorizations.indexOf(p.postCategorizationId) !== -1) {
