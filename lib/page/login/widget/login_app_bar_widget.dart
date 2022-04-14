@@ -34,6 +34,7 @@ class _LoginAppBarWidgetState extends State<LoginAppBarWidget> {
       //   )
       // ],
       leading: TextButton(
+        style: ButtonStyle(overlayColor: MaterialStateProperty.all<Color>(Colors.transparent)),
         onPressed: () {
           Get.back();
           if(widget.backCallback != null) {
