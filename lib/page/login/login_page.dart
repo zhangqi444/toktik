@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (argumentData != null) {
       if (!isStringNullOrEmpty(
-              argumentData[NavigationArgument.AUTH_STATUS]) &&
+          argumentData[NavigationArgument.AUTH_STATUS]) &&
           argumentData[NavigationArgument.AUTH_STATUS] ==
               AuthStatus.ALIAS_EXISTS.toShortString()) {
         title = "You've signed up already.";
@@ -85,7 +85,9 @@ class _LoginPageState extends State<LoginPage> {
         margin: EdgeInsets.only(left: 30, right: 30),
         child: Stack(
           children: [
-            Column(
+          Opacity(
+            opacity: isLoading ? 0.5 : 0,
+            child: Column(
               children: [
                 isForSignedUpAccount ? _getTitle() : Container(),
                 Container(
@@ -139,8 +141,9 @@ class _LoginPageState extends State<LoginPage> {
                 _getBottomLayout(context),
                 _getLogin(context),
               ],
-            ),
-            SpinnerWidget(isLoading)
+          )),
+          Positioned(
+                child: SpinnerWidget(isLoading),)
           ],
         )
       ),
