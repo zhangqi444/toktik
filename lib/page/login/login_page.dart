@@ -206,6 +206,7 @@ class _LoginPageState extends State<LoginPage> {
           Positioned(
               left: 0,
               child: TextButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all<Color>(Colors.transparent)),
                 onPressed: () {
                   Get.toNamed(Routers.resetPassword);
                   eventController.recordEvent(Event.LOGIN_PAGE_FORGOT_PASSWORD_PRESS);
@@ -218,6 +219,7 @@ class _LoginPageState extends State<LoginPage> {
           Positioned(
               right: 0,
               child: TextButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all<Color>(Colors.transparent)),
                 onPressed: () {
                   Get.toNamed(Routers.signUp);
                   eventController.recordEvent(Event.LOGIN_PAGE_SIGN_UP_PRESS);
