@@ -11,6 +11,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:toktik/util/string_util.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
+import 'package:phone_number/phone_number.dart';
 
 import '../../common/configs.dart';
 import '../../common/events.dart';
@@ -30,7 +31,7 @@ class SignUpEmailPage extends StatefulWidget {
 class _SignUpEmailPageState extends State<SignUpEmailPage> {
   TextField? accountField;
   String appBarTitle = "Sign up";
-  String? email;
+  String? emailOrPhone;
   String? username;
   String? password;
   String? errorMessage;
@@ -75,11 +76,11 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
             Container(
               margin: EdgeInsets.only(left: 30, right: 30),
               child: LoginTextFieldWidget(
-                  initText: email,
-                  hintText: 'Email address',
+                  initText: emailOrPhone,
+                  hintText: 'Email address Or Phone number',
                   onChanged: (text) {
-                    email = text;
-                    if (!isStringNullOrEmpty(email)) {
+                    emailOrPhone = text;
+                    if (!isStringNullOrEmpty(emailOrPhone)) {
                       setState(() {
                         isButtonActived = true;
                       });
@@ -116,16 +117,38 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
           setState(() {
             errorMessage = '';
           });
-          if (!EmailValidator.validate(email!)) {
+
+          PhoneNumberUtil plugin = PhoneNumberUtil();
+          RegionInfo region = RegionInfo(prefix: 1, name: 'US', code: 'US');
+
+          bool isValidPhone = await plugin.validate(emailOrPhone!, region.code);
+          bool isValidEmail = EmailValidator.validate(emailOrPhone!);
+
+          if (!isValidPhone && !isValidEmail) {
             setState(() {
               errorMessage =
-                  'The email address is invalid, please check and try again.';
+              'The phone number or email is invalid, please check and try again.';
             });
+
             return;
           }
 
-          String? status = await loginController.registerByEmail(
-              email, username, password, password);
+          String signUpType = isValidPhone ? 'phone' : 'email';
+
+          String? finalEmailOrPhone;
+
+          if (signUpType == 'phone') {
+            PhoneNumber phoneNumber = await plugin.parse(emailOrPhone!);
+            finalEmailOrPhone = phoneNumber.e164;
+          }
+
+          if (signUpType == 'email') {
+            finalEmailOrPhone = emailOrPhone!;
+          }
+
+          String? status = await loginController.registerByEmailOrPhone(
+              finalEmailOrPhone , username, password, password, signUpType);
+
           if (status == AuthStatus.SIGN_UP_DONE.toShortString()) {
             Get.offNamedUntil(
                 Routers.login, ModalRoute.withName(Routers.scroll));
@@ -139,10 +162,10 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
           } else if (status ==
               AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
             Get.toNamed(Routers.verificationCode, arguments: {
-              NavigationArgument.DESTINATION: email,
+              NavigationArgument.DESTINATION: emailOrPhone,
               NavigationArgument.USERNAME: username,
               NavigationArgument.PASSWORD: password,
-              NavigationArgument.EMAIL: email,
+              NavigationArgument.EMAIL: emailOrPhone,
             });
           } else {
             setState(() {

@@ -20,14 +20,16 @@ class _LoginErrorMessageWidgetState extends State<LoginErrorMessageWidget> {
           SizedBox(height: 10),
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 20,
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+            height: 40,
             child: Text(
               widget.text!,
+              softWrap: true,
               style: TextStyle(
                   color: Color(0xffff0000),
                   fontSize: 14,
                   fontWeight: FontWeight.normal),
-              maxLines: 1,
+              maxLines: 2,
             ),
           ),
           SizedBox(height: 10),

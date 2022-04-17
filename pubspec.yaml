@@ -35,6 +35,7 @@ dependencies:
   stacked: ^2.1.7
   cached_network_image: ^3.0.0
   event_bus: ^2.0.0
+  phone_number: ^0.12.0+2
   # 相机插件，还在开发中
   camera:
     git:
