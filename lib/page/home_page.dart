@@ -11,6 +11,7 @@ import 'package:toktik/event/stop_play_event.dart';
 import 'package:toktik/page/home_tab_recommend_page.dart';
 import 'package:toktik/res/colors.dart';
 import 'package:get/get.dart';
+import 'package:wakelock/wakelock.dart';
 
 ///首页
 class HomePage extends StatefulWidget {
@@ -35,6 +36,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin, Auto
   @override
   void initState() {
     super.initState();
+
+    //ensure screen stays awake
+    Wakelock.enable();
 
     _tabController = TabController(length: 1, vsync: this, initialIndex: 0);
     _pageController = PageController(initialPage: 0, keepPage: true);
