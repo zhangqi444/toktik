@@ -81,8 +81,17 @@ class SelfController extends GetxController{
   }
 
   ///注册
-  Future<String?> registerByEmailOrPhone(emailOrPhone, username, password, confirmPassword, signUpType) async {
-    var response = await Api.registerByEmailOrPhone(emailOrPhone, username, password, confirmPassword, signUpType);
+  Future<String?> registerByEmail(email, username, password, confirmPassword) async {
+    var response = await Api.registerUser('email', email, username, password, confirmPassword);
+    if(response != null) {
+      return response.status;
+    }
+    return null;
+  }
+
+  Future<String?> registerByPhone(phone, username, password, confirmPassword) async {
+    var response = await Api.registerUser('phone_number', phone, username, password, confirmPassword);
+
     if(response != null) {
       return response.status;
     }
