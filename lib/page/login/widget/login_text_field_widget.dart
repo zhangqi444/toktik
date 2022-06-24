@@ -4,11 +4,12 @@ import 'package:toktik/res/colors.dart';
 class LoginTextFieldWidget extends StatefulWidget {
   String? text;
   String? initText;
+  Widget? prefixIcon;
   Function? onChanged;
   String? hintText;
   bool obscureText;
   bool readOnly;
-  LoginTextFieldWidget({this.text, this.initText, this.onChanged, this.hintText, this.obscureText = false, this.readOnly = false});
+  LoginTextFieldWidget({this.text, this.initText, this.prefixIcon, this.onChanged, this.hintText, this.obscureText = false, this.readOnly = false});
 
   @override
   _LoginTextFieldWidgetState createState() {
@@ -33,7 +34,7 @@ class _LoginTextFieldWidgetState extends State<LoginTextFieldWidget> {
         obscureText: widget.obscureText,
         initialValue: widget.initText,
         readOnly: widget.readOnly,
-        decoration: InputDecoration(border: InputBorder.none, hintText: widget.hintText),
+        decoration: InputDecoration(prefixIcon: widget.prefixIcon, prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),border: InputBorder.none, hintText: widget.hintText),
         onChanged: (text) {
           widget.onChanged!(text);
         },

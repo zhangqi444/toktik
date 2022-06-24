@@ -11,6 +11,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:toktik/util/string_util.dart';
 import 'package:toktik/page/login/widget/login_text_field_widget.dart';
 import 'package:toktik/page/login/widget/login_primary_button_widget.dart';
+import 'package:phone_number/phone_number.dart';
 
 import '../../common/configs.dart';
 import '../../common/events.dart';
@@ -30,10 +31,12 @@ class SignUpEmailPage extends StatefulWidget {
 class _SignUpEmailPageState extends State<SignUpEmailPage> {
   TextField? accountField;
   String appBarTitle = "Sign up";
+  String? phone;
   String? email;
   String? username;
   String? password;
-  String? errorMessage;
+  String? errorPhoneMessage;
+  String? errorEmailMessage;
   bool isButtonActived = false;
   SelfController loginController = Get.put(SelfController());
   final EventController eventController = Get.find();
@@ -55,11 +58,27 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: LoginAppBarWidget(title: appBarTitle, backCallback: () {
-        eventController.recordEvent(Event.SIGN_UP_EMAIL_PAGE_BACK_PRESS);
-      },),
-      body: _layoutSignUp(context),
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 2,
+      child: Scaffold(
+        appBar: LoginAppBarWidget(
+          title: appBarTitle,
+          backCallback: () {
+            eventController.recordEvent(Event.SIGN_UP_EMAIL_PAGE_BACK_PRESS);
+          },
+          bottom: TabBar(
+            labelColor: Colors.black,
+            indicatorColor: Colors.black,
+            labelPadding: EdgeInsets.only(bottom: 11),
+            tabs: [
+              Text('Phone'),
+              Text('Email'),
+            ],
+          ),
+        ),
+        body: _layoutSignUp(context),
+      )
     );
   }
 
@@ -69,42 +88,78 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
         color: Colors.white,
       ),
       child: Container(
-        margin: EdgeInsets.only(top: 57),
-        child: Column(
+        margin: EdgeInsets.only(top: 37),
+        child: TabBarView(
           children: [
-            Container(
-              margin: EdgeInsets.only(left: 30, right: 30),
-              child: LoginTextFieldWidget(
-                  initText: email,
-                  hintText: 'Email address',
-                  onChanged: (text) {
-                    email = text;
-                    if (!isStringNullOrEmpty(email)) {
-                      setState(() {
-                        isButtonActived = true;
-                      });
-                    } else {
-                      setState(() {
-                        isButtonActived = false;
-                      });
-                    }
-                  }),
+            Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 30, right: 30),
+                  child: LoginTextFieldWidget(
+                      initText: phone,
+                      prefixIcon: Text('US +1 '),
+                      hintText: 'Phone number',
+                      onChanged: (text) {
+                        phone = text;
+                        if (!isStringNullOrEmpty(phone)) {
+                          setState(() {
+                            isButtonActived = true;
+                          });
+                        } else {
+                          setState(() {
+                            isButtonActived = false;
+                          });
+                        }
+                      }),
+                ),
+                !isStringNullOrEmpty(errorPhoneMessage)
+                    ? LoginErrorMessageWidget(text: errorPhoneMessage)
+                    : SizedBox(height: 10),
+                _getBottomLayout(context),
+                SizedBox(
+                  height: 20,
+                ),
+                _getSignUpByPhone(context),
+              ],
             ),
-            !isStringNullOrEmpty(errorMessage)
-                ? LoginErrorMessageWidget(text: errorMessage)
-                : SizedBox(height: 10),
-            _getBottomLayout(context),
-            SizedBox(
-              height: 20,
-            ),
-            _getSignUp(context),
+            Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 30, right: 30),
+                  child: LoginTextFieldWidget(
+                      initText: email,
+                      hintText: 'Email address',
+                      onChanged: (text) {
+                        email = text;
+                        if (!isStringNullOrEmpty(email)) {
+                          setState(() {
+                            isButtonActived = true;
+                          });
+                        } else {
+                          setState(() {
+                            isButtonActived = false;
+                          });
+                        }
+                      }),
+                ),
+                !isStringNullOrEmpty(errorEmailMessage)
+                    ? LoginErrorMessageWidget(text: errorEmailMessage)
+                    : SizedBox(height: 10),
+                _getBottomLayout(context),
+                SizedBox(
+                  height: 20,
+                ),
+                _getSignUpByEmail(context),
+              ],
+            )
           ],
         ),
       ),
     );
   }
 
-  _getSignUp(BuildContext context) {
+
+  _getSignUpByPhone(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 30, right: 30),
       height: 50,
@@ -114,46 +169,101 @@ class _SignUpEmailPageState extends State<SignUpEmailPage> {
         onPressed: () async {
           eventController.recordEvent(Event.SIGN_UP_EMAIL_PAGE_NEXT_PRESS);
           setState(() {
-            errorMessage = '';
+            errorPhoneMessage = '';
           });
-          if (!EmailValidator.validate(email!)) {
+
+          PhoneNumberUtil plugin = PhoneNumberUtil();
+          RegionInfo region = RegionInfo(prefix: 1, name: 'US', code: 'US');
+
+          bool isValidPhone = await plugin.validate(phone!, region.code);
+
+          if (!isValidPhone) {
             setState(() {
-              errorMessage =
-                  'The email address is invalid, please check and try again.';
+              errorPhoneMessage =
+              'The phone number is invalid, please check and try again.';
             });
+
             return;
           }
 
-          String? status = await loginController.registerByEmail(
-              email, username, password, password);
-          if (status == AuthStatus.SIGN_UP_DONE.toShortString()) {
-            Get.offNamedUntil(
-                Routers.login, ModalRoute.withName(Routers.scroll));
-          } else if (status == AuthStatus.USERNAME_EXISTS.toShortString()) {
-            Get.until(ModalRoute.withName(Routers.signUp));
-            Get.toNamed(Routers.createUsername, arguments: {
-              NavigationArgument.ERROR_MESSAGE:
-                  'The username is not valid or already existing, please try another one.',
-              NavigationArgument.USERNAME: username
-            });
-          } else if (status ==
-              AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
-            Get.toNamed(Routers.verificationCode, arguments: {
-              NavigationArgument.DESTINATION: email,
-              NavigationArgument.USERNAME: username,
-              NavigationArgument.PASSWORD: password,
-              NavigationArgument.EMAIL: email,
-            });
-          } else {
-            setState(() {
-              errorMessage =
-                  'Failed to send verification code, please try again.';
-            });
-          }
+          PhoneNumber phoneNumber = await plugin.parse(phone!);
+          String? finalPhone = phoneNumber.e164;
+
+          String? status = await loginController.registerByPhone(
+              finalPhone , username, password, password);
+
+          _processSignUpStatus(status!, 'phone');
         },
         buttonEnabled: isButtonActived,
       ),
     );
+  }
+  _getSignUpByEmail(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 30, right: 30),
+      height: 50,
+      width: MediaQuery.of(context).size.width,
+      child: LoginPrimaryButtonWidget(
+        text: 'Next',
+        onPressed: () async {
+          eventController.recordEvent(Event.SIGN_UP_EMAIL_PAGE_NEXT_PRESS);
+          setState(() {
+            errorEmailMessage = '';
+          });
+
+          bool isValidEmail = EmailValidator.validate(email!);
+
+          if (!isValidEmail) {
+            setState(() {
+              errorEmailMessage =
+              'The email is invalid, please check and try again.';
+            });
+
+            return;
+          }
+
+          String? status = await loginController.registerByEmail(
+              email , username, password, password);
+
+          _processSignUpStatus(status!, 'email');
+        },
+        buttonEnabled: isButtonActived,
+      ),
+    );
+  }
+
+  _processSignUpStatus(String status, String errorType) {
+    if (status == AuthStatus.SIGN_UP_DONE.toShortString()) {
+      Get.offNamedUntil(
+          Routers.login, ModalRoute.withName(Routers.scroll));
+    } else if (status == AuthStatus.USERNAME_EXISTS.toShortString()) {
+      Get.until(ModalRoute.withName(Routers.signUp));
+      Get.toNamed(Routers.createUsername, arguments: {
+        NavigationArgument.ERROR_MESSAGE:
+        'The username is not valid or already existing, please try another one.',
+        NavigationArgument.USERNAME: username
+      });
+    } else if (status ==
+        AuthStatus.CONFIRM_SIGN_UP_STEP.toShortString()) {
+      String? userInputPhoneOrEmail = email != null || email != '' ? email : phone;
+
+      Get.toNamed(Routers.verificationCode, arguments: {
+        NavigationArgument.DESTINATION: userInputPhoneOrEmail,
+        NavigationArgument.USERNAME: username,
+        NavigationArgument.PASSWORD: password,
+        NavigationArgument.EMAIL: userInputPhoneOrEmail,
+      });
+    } else {
+      if (errorType == 'phone') {
+        setState(() {
+          errorPhoneMessage = 'Failed to send email verification code, please try again.';
+        });
+      }
+
+      if (errorType == 'email') {
+        errorEmailMessage = 'Failed to send phone verification code, please try again.';
+      }
+    }
   }
 
   _getBottomLayout(BuildContext context) {

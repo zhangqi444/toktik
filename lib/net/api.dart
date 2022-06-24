@@ -154,13 +154,15 @@ class Api {
   }
 
   ///注册
-  static Future<RegisterResponse?> registerByEmail(
-      String email, String username, String? pwd, String? pwdRepeat) async {
+  static Future<RegisterResponse?> registerUser(
+      String signUpType, String attributeValue, String username, String? pwd, String? pwdRepeat) async {
     Map<String, dynamic> result = HashMap();
     result['username'] = username;
     try {
       Map<String, String> userAttributes = HashMap();
-      userAttributes['email'] = email;
+
+      userAttributes[signUpType] = attributeValue;
+
       SignUpResult res = await Amplify.Auth.signUp(
           username: username,
           password: pwd,

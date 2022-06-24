@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 class LoginAppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
   final Function? backCallback;
-  LoginAppBarWidget({Key? key, this.title, this.backCallback}) : preferredSize = Size.fromHeight(kToolbarHeight), super(key: key);
+  final PreferredSizeWidget? bottom;
+  LoginAppBarWidget({Key? key, this.title, this.backCallback, this.bottom}) : preferredSize = Size.fromHeight(bottom == null ? kToolbarHeight : kToolbarHeightWithBottom), super(key: key);
 
   @override
   _LoginAppBarWidgetState createState() {
@@ -44,6 +45,7 @@ class _LoginAppBarWidgetState extends State<LoginAppBarWidget> {
         child: Image.asset('assets/images/login/nav-arrow-left.png',
             color: Color(0xff2A2A2A), width: 24, height: 24),
       ),
+      bottom: widget.bottom
     );
   }
 }
