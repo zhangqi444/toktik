@@ -1,4 +1,4 @@
-# toktik
+# Toktik - a TikTok clone built by Flutter and AWS Amplify.
 
 ## Set up
 
@@ -9,11 +9,10 @@ https://stackoverflow.com/questions/64917744/cannot-run-with-sound-null-safety-b
 ### 2. set up amplify CLI
 https://docs.amplify.aws/start/getting-started/installation/q/integration/flutter/#option-2-follow-the-instructions
 
-When setting amplify,you will be asked to specify aws region,choose the following option:
-us-west-2
+When setting amplify, you will be asked to specify aws region, choose the following option: `us-west-2` or your desired AWS region.
 
 ### 3. init amplify
-`amplify pull --appId d1mt6rg0ztrl8w --envName staging`
+`amplify pull --appId YOUR_AWS_AMPLIFY_APP_ID --envName staging`
 
 
 ## Env
