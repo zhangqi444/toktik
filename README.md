@@ -15,9 +15,8 @@
   <img src="https://img.shields.io/badge/ask%20me-anything-1abc9c.svg" alt="Ask Me Anything." />
 </p>
 
-## Demo
 
-
+<img src="https://user-images.githubusercontent.com/5424267/183352712-f76229ef-c18b-48fc-a5e4-fb25f4a78987.gif" alt="Gugu logo" width="20%" align="right" />
 
 ## Tech stack
 
