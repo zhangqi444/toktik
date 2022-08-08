@@ -94,7 +94,7 @@ If the backend is not successfully switched, but without seeing any error. Pleas
 
 1. delete `amplify/#current-cloud-backend` folder.
 2. run `amplify init`, and you may see error message here.
-3. run `amplify pull --appId d1mt6rg0ztrl8w --envName YOUR_ENV`
+3. run `amplify pull --appId YOUR_APP_ID --envName YOUR_ENV`
 
 https://docs.amplify.aws/cli/teams/overview/
 https://docs.aws.amazon.com/amplify/latest/userguide/team-workflows-with-amplify-cli-backend-environments.html
