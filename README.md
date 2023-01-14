@@ -135,7 +135,7 @@ Solution: https://github.com/aws-amplify/amplify-cli/issues/8439
 
 ## Discussions
 
-Please open an issue for any questions，and I will respond as soon as possible。
+Please open an issue for any questions, and I will respond as soon as possible。
 
 ## Contributors
 
